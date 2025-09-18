@@ -1,0 +1,2 @@
+import{e as r}from"./index-8cd23c11.js";const s="https://your-api-domain.com/api",o=r.create({baseURL:s,headers:{"Content-Type":"application/json"}});o.interceptors.request.use(e=>{const t=localStorage.getItem("token");return t&&(e.headers.Authorization=`Bearer ${t}`),e},e=>Promise.reject(e));o.interceptors.response.use(e=>e,e=>{var t;return((t=e.response)==null?void 0:t.status)===401&&(localStorage.removeItem("token"),localStorage.removeItem("user"),window.location.href="/login"),Promise.reject(e)});export{o as a};
+//# sourceMappingURL=axios-92e9fcdb.js.map
