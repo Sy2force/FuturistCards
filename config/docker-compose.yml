@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  # MongoDB database
+  mongodb:
+    image: mongo:7.0
+    container_name: futuristcards-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: futurist2025
+      MONGO_INITDB_DATABASE: futuristcards
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - futuristcards-network
+
+  # Backend service
+  backend:
+    build:
+      context: .
+      target: backend
+    container_name: futuristcards-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+      MONGODB_URI: mongodb://admin:futurist2025@mongodb:27017/futuristcards?authSource=admin
+      JWT_SECRET: unSecretUltraFortPourProduction2025
+      JWT_EXPIRE: 7d
+      JWT_REFRESH_EXPIRE: 30d
+      CORS_ORIGIN: http://localhost
+      CLIENT_URL: http://localhost
+      BCRYPT_ROUNDS: 12
+      MAX_FILE_SIZE: 5242880
+      UPLOAD_PATH: ./uploads
+    ports:
+      - "5001:5001"
+    volumes:
+      - uploads_data:/app/backend/uploads
+    depends_on:
+      - mongodb
+    networks:
+      - futuristcards-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend service (Nginx + built React app)
+  frontend:
+    build:
+      context: .
+      target: frontend-builder
+    container_name: futuristcards-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - futuristcards-network
+
+  # Full production service (Nginx + Backend + Frontend)
+  app:
+    build:
+      context: .
+      target: production
+    container_name: futuristcards-app
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 5001
+      MONGODB_URI: mongodb://admin:futurist2025@mongodb:27017/futuristcards?authSource=admin
+      JWT_SECRET: unSecretUltraFortPourProduction2025
+      JWT_EXPIRE: 7d
+      JWT_REFRESH_EXPIRE: 30d
+      CORS_ORIGIN: http://localhost
+      CLIENT_URL: http://localhost
+      BCRYPT_ROUNDS: 12
+      MAX_FILE_SIZE: 5242880
+      UPLOAD_PATH: ./uploads
+    ports:
+      - "80:80"
+      - "5001:5001"
+    volumes:
+      - uploads_data:/app/backend/uploads
+    depends_on:
+      - mongodb
+    networks:
+      - futuristcards-network
+    profiles:
+      - production
+
+volumes:
+  mongodb_data:
+    driver: local
+  uploads_data:
+    driver: local
+
+networks:
+  futuristcards-network:
+    driver: bridge
