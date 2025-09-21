@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Debug FuturistCards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #581c87 50%, #0f172a 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .success { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; }
+        .error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
+        .warning { background: rgba(245, 158, 11, 0.2); border: 1px solid #f59e0b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glass">
+            <h1>🚀 FuturistCards - Test Debug</h1>
+            <p>Si vous voyez cette page, votre navigateur fonctionne correctement.</p>
+            
+            <div class="status success">
+                ✅ HTML statique chargé avec succès
+            </div>
+            
+            <div class="status warning">
+                ⚠️ React App ne se charge pas - Vérification en cours...
+            </div>
+            
+            <h2>Tests à effectuer :</h2>
+            <ol style="text-align: left; max-width: 500px; margin: 0 auto;">
+                <li>Ouvrir la console développeur (F12)</li>
+                <li>Vérifier les erreurs JavaScript</li>
+                <li>Tester l'URL : <a href="http://localhost:3000" style="color: #60a5fa;">http://localhost:3000</a></li>
+                <li>Vider le cache navigateur (Cmd+Shift+R)</li>
+            </ol>
+            
+            <div style="margin-top: 30px;">
+                <button onclick="window.location.href='http://localhost:3000'" 
+                        style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); 
+                               color: white; border: none; padding: 12px 24px; 
+                               border-radius: 8px; cursor: pointer; font-size: 16px;">
+                    🔄 Retenter FuturistCards
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        console.log('🔍 Debug HTML chargé avec succès');
+        console.log('🌐 URL actuelle:', window.location.href);
+        console.log('📱 User Agent:', navigator.userAgent);
+        
+        // Test de connectivité vers le serveur React
+        fetch('http://localhost:3000')
+            .then(response => {
+                console.log('✅ Serveur React répond:', response.status);
+                if (response.ok) {
+                    document.querySelector('.warning').innerHTML = '✅ Serveur React accessible - Problème de rendu détecté';
+                    document.querySelector('.warning').className = 'status error';
+                }
+            })
+            .catch(error => {
+                console.error('❌ Serveur React inaccessible:', error);
+                document.querySelector('.warning').innerHTML = '❌ Serveur React inaccessible';
+                document.querySelector('.warning').className = 'status error';
+            });
+    </script>
+</body>
+</html>

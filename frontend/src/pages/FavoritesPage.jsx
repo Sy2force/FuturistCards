@@ -1,472 +1,416 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import {
+// FavoritesPage - Page des cartes favorites de l'utilisateur
+import React, { useState, useEffect, useCallback } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { 
   HeartIcon,
   MagnifyingGlassIcon,
   TrashIcon,
-  EyeIcon,
-  Squares2X2Icon,
-  ListBulletIcon
+  EyeIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../context/AuthContext';
-import { favoriteService } from '../api/favoriteService';
+import CardFavorite from '../components/cards/CardFavorite';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import ButtonGlass from '../components/common/ButtonGlass';
+import ContactModal from '../components/ContactModal';
+// import * as cardsAPI from '../services/cards'; // Unused - using localStorage instead
 import toast from 'react-hot-toast';
 
 const FavoritesPage = () => {
   const { user } = useAuth();
-  const [favorites, setFavorites] = useState([]);
+  const navigate = useNavigate();
+  const [favoriteCards, setFavoriteCards] = useState([]);
+  const [filteredCards, setFilteredCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [viewMode, setViewMode] = useState('grid');
-  const [sortBy, setSortBy] = useState('recent');
-
-  const categories = [
-    { value: 'all', label: 'Toutes les catégories' },
-    { value: 'technology', label: 'Technologie' },
-    { value: 'business', label: 'Business' },
-    { value: 'creative', label: 'Créatif' },
-    { value: 'healthcare', label: 'Santé' },
-    { value: 'education', label: 'Éducation' },
-    { value: 'other', label: 'Autre' }
-  ];
+  const [sortBy, setSortBy] = useState('newest');
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState(null);
 
   const sortOptions = [
-    { value: 'recent', label: 'Plus récents' },
-    { value: 'oldest', label: 'Plus anciens' },
-    { value: 'alphabetical', label: 'Alphabétique' },
-    { value: 'category', label: 'Par catégorie' }
+    { value: 'newest', label: 'Ajoutés récemment' },
+    { value: 'oldest', label: 'Ajoutés en premier' },
+    { value: 'title', label: 'Titre A-Z' },
+    { value: 'company', label: 'Entreprise A-Z' }
   ];
 
+
   useEffect(() => {
-    if (user) {
-      fetchFavorites();
+    if (!user) {
+      navigate('/login');
+      return;
     }
-  }, [user]);
-
-  const fetchFavorites = async () => {
-    try {
-      setLoading(true);
-      const response = await favoriteService.getFavorites();
-      setFavorites(response.data || []);
-    } catch (error) {
-      console.error('Error fetching favorites:', error);
-      toast.error('Erreur lors du chargement des favoris');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRemoveFavorite = async (cardId) => {
-    try {
-      await favoriteService.removeFavorite(cardId);
-      setFavorites(favorites.filter(fav => fav.card._id !== cardId));
-      toast.success('Retiré des favoris');
-    } catch (error) {
-      console.error('Error removing favorite:', error);
-      toast.error('Erreur lors de la suppression');
-    }
-  };
-
-  const handleClearAllFavorites = async () => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer tous vos favoris ?')) return;
     
-    try {
-      await favoriteService.clearAllFavorites();
-      setFavorites([]);
-      toast.success('Tous les favoris ont été supprimés');
-    } catch (error) {
-      console.error('Error clearing favorites:', error);
-      toast.error('Erreur lors de la suppression');
-    }
-  };
+    loadFavorites();
+  }, [user, navigate]);
 
-  // Filter and sort favorites
-  const filteredAndSortedFavorites = favorites
-    .filter(favorite => {
-      const card = favorite.card;
-      const matchesSearch = card.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           card.subtitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           card.description?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = selectedCategory === 'all' || card.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
+  const filterAndSortCards = useCallback(() => {
+    let filtered = [...favoriteCards];
+
+    // Filtrage par recherche
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(card => 
+        card.title?.toLowerCase().includes(term) ||
+        card.subtitle?.toLowerCase().includes(term) ||
+        card.description?.toLowerCase().includes(term) ||
+        card.email?.toLowerCase().includes(term)
+      );
+    }
+
+    // Tri
+    filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'recent':
+        case 'newest':
           return new Date(b.createdAt) - new Date(a.createdAt);
         case 'oldest':
           return new Date(a.createdAt) - new Date(b.createdAt);
-        case 'alphabetical':
-          return a.card.title.localeCompare(b.card.title);
-        case 'category':
-          return a.card.category.localeCompare(b.card.category);
+        case 'title':
+          return (a.title || '').localeCompare(b.title || '');
+        case 'company':
+          return (a.subtitle || '').localeCompare(b.subtitle || '');
         default:
           return 0;
       }
     });
 
-  const FavoriteCard = ({ favorite }) => {
-    const card = favorite.card;
-    
-    return (
-      <motion.div
-        layout
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.9 }}
-        whileHover={{ y: -5 }}
-        className="card-glass hover-lift group cursor-pointer relative"
-      >
-        {/* Remove Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleRemoveFavorite(card._id);
-          }}
-          className="absolute top-3 right-3 z-10 p-2 bg-red-500/20 backdrop-blur-sm rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-500/30"
-        >
-          <TrashIcon className="w-4 h-4 text-white" />
-        </button>
+    setFilteredCards(filtered);
+  }, [favoriteCards, searchTerm, sortBy]);
 
-        {/* Favorite Badge */}
-        <div className="absolute top-3 left-3 z-10">
-          <div className="p-2 bg-red-500/30 backdrop-blur-sm rounded-full">
-            <HeartSolidIcon className="w-4 h-4 text-red-500" />
-          </div>
-        </div>
+  useEffect(() => {
+    filterAndSortCards();
+  }, [filterAndSortCards]);
 
-        {/* Card Image */}
-        <div className="relative h-48 mb-4 rounded-xl overflow-hidden">
-          <img
-            src={card.image?.url || 'https://via.placeholder.com/400x300?text=No+Image'}
-            alt={card.image?.alt || card.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-          
-          {/* Category Badge */}
-          <div className="absolute bottom-3 left-3">
-            <span className="px-3 py-1 bg-blue-500/30 backdrop-blur-sm rounded-full text-xs text-white font-medium">
-              {categories.find(cat => cat.value === card.category)?.label || 'Autre'}
-            </span>
-          </div>
-        </div>
-
-        {/* Card Content */}
-        <div className="space-y-3">
-          <div>
-            <h3 className="text-xl font-bold text-white mb-1 line-clamp-1">
-              {card.title}
-            </h3>
-            <p className="text-blue-300 text-sm font-medium">
-              {card.subtitle}
-            </p>
-          </div>
-
-          <p className="text-white/70 text-sm line-clamp-2">
-            {card.description}
-          </p>
-
-          {/* Contact Info */}
-          <div className="space-y-2">
-            {card.email && (
-              <p className="text-white/60 text-sm flex items-center gap-2">
-                <span>📧</span> {card.email}
-              </p>
-            )}
-            {card.phone && (
-              <p className="text-white/60 text-sm flex items-center gap-2">
-                <span>📱</span> {card.phone}
-              </p>
-            )}
-          </div>
-
-          {/* Stats and Date */}
-          <div className="flex items-center justify-between pt-3 border-t border-white/10">
-            <div className="flex items-center gap-4 text-sm text-white/60">
-              <span className="flex items-center gap-1">
-                <HeartIcon className="w-4 h-4" />
-                {card.likes || 0}
-              </span>
-              <span className="flex items-center gap-1">
-                <EyeIcon className="w-4 h-4" />
-                {card.views || 0}
-              </span>
-            </div>
-            <span className="text-xs text-white/40">
-              Ajouté le {new Date(favorite.createdAt).toLocaleDateString('fr-FR')}
-            </span>
-          </div>
-        </div>
-      </motion.div>
-    );
+  const loadFavorites = async () => {
+    try {
+      setLoading(true);
+      
+      // Mode mock - charger depuis localStorage
+      const favorites = JSON.parse(localStorage.getItem('userFavorites') || '[]');
+      
+      // Ajouter des favoris d'exemple si aucun favori
+      if (favorites.length === 0) {
+        const mockFavorites = [
+          {
+            _id: 'fav-1',
+            title: 'Marketing Digital Expert',
+            subtitle: 'Stratégie & Growth Hacking',
+            description: 'Expert en marketing digital avec 8 ans d\'expérience dans la croissance d\'entreprises tech.',
+            category: 'Marketing',
+            skills: ['SEO', 'Google Ads', 'Analytics', 'Growth Hacking'],
+            email: 'marketing@example.com',
+            phone: '+33 6 11 22 33 44',
+            website: 'https://marketing-expert.com',
+            linkedin: 'https://linkedin.com/in/marketing-expert',
+            views: 89,
+            likes: 23,
+            createdAt: new Date(Date.now() - 172800000).toISOString(),
+            addedToFavoritesAt: new Date().toISOString()
+          },
+          {
+            _id: 'fav-2',
+            title: 'Architecte Solutions Cloud',
+            subtitle: 'AWS & Azure Specialist',
+            description: 'Architecte cloud certifié spécialisé dans la migration et l\'optimisation d\'infrastructures.',
+            category: 'Technology',
+            skills: ['AWS', 'Azure', 'Kubernetes', 'DevOps', 'Terraform'],
+            email: 'cloud@example.com',
+            phone: '+33 6 55 66 77 88',
+            website: 'https://cloud-architect.com',
+            github: 'https://github.com/cloud-architect',
+            views: 67,
+            likes: 18,
+            createdAt: new Date(Date.now() - 259200000).toISOString(),
+            addedToFavoritesAt: new Date(Date.now() - 86400000).toISOString()
+          }
+        ];
+        
+        localStorage.setItem('userFavorites', JSON.stringify(mockFavorites));
+        setFavoriteCards(mockFavorites);
+        setFilteredCards(mockFavorites);
+      } else {
+        setFavoriteCards(favorites);
+        setFilteredCards(favorites);
+      }
+      
+    } catch (error) {
+      toast.error('Erreur lors du chargement de vos favoris');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const ListView = ({ favorites }) => (
-    <div className="space-y-4">
-      {favorites.map(favorite => {
-        const card = favorite.card;
-        return (
-          <motion.div
-            key={favorite._id}
-            layout
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="card-glass p-6 hover-lift group cursor-pointer"
-          >
-            <div className="flex gap-6">
-              {/* Image */}
-              <div className="w-32 h-24 rounded-lg overflow-hidden flex-shrink-0 relative">
-                <img
-                  src={card.image?.url || 'https://via.placeholder.com/200x150?text=No+Image'}
-                  alt={card.image?.alt || card.title}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute top-2 left-2">
-                  <HeartSolidIcon className="w-4 h-4 text-red-500" />
-                </div>
-              </div>
+  const handleToggleFavorite = async (cardId) => {
+    try {
+      // Mode mock - gérer les favoris localement
+      const favorites = JSON.parse(localStorage.getItem('userFavorites') || '[]');
+      const updatedFavorites = favorites.filter(id => id !== cardId);
+      localStorage.setItem('userFavorites', JSON.stringify(updatedFavorites));
+      
+      // Optimistic update - retirer de la liste des favoris
+      setFavoriteCards(prevCards => 
+        prevCards.filter(card => card._id !== cardId)
+      );
+      
+      toast.success('Carte retirée des favoris');
+    } catch (error) {
+      toast.error('Erreur lors de la mise à jour des favoris');
+      
+      // Revert optimistic update
+      loadFavorites();
+    }
+  };
 
-              {/* Content */}
-              <div className="flex-1 space-y-2">
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h3 className="text-lg font-bold text-white">{card.title}</h3>
-                    <p className="text-blue-300 text-sm">{card.subtitle}</p>
-                  </div>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleRemoveFavorite(card._id);
-                    }}
-                    className="p-2 hover:bg-red-500/20 rounded-lg transition-colors"
-                  >
-                    <TrashIcon className="w-5 h-5 text-red-400" />
-                  </button>
-                </div>
+  const handleClearAllFavorites = async () => {
+    if (!window.confirm('Êtes-vous sûr de vouloir retirer toutes les cartes de vos favoris ?')) {
+      return;
+    }
 
-                <p className="text-white/70 text-sm line-clamp-2">{card.description}</p>
+    try {
+      // Mode mock - vider localStorage
+      localStorage.setItem('userFavorites', JSON.stringify([]));
+      setFavoriteCards([]);
+      setFilteredCards([]);
+      toast.success('Tous les favoris ont été supprimés');
+    } catch (error) {
+      toast.error('Erreur lors de la suppression des favoris');
+    }
+  };
 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm text-white/60">
-                    <span>{card.email}</span>
-                    <span>{card.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-white/60">
-                    <span className="flex items-center gap-1">
-                      <HeartIcon className="w-4 h-4" />
-                      {card.likes || 0}
-                    </span>
-                    <span>Ajouté le {new Date(favorite.createdAt).toLocaleDateString('fr-FR')}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        );
-      })}
-    </div>
-  );
-
-  if (!user) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="glass-card p-12 text-center max-w-md">
-          <HeartIcon className="w-16 h-16 text-white/40 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-white mb-4">
-            Login Required
-          </h2>
-          <p className="text-white/60 mb-6">
-            You must be logged in to view your favorites.
-          </p>
-          <button className="btn-glass btn-primary">
-            Sign In
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const handleContactClick = (card) => {
+    setSelectedCard(card);
+    setIsContactModalOpen(true);
+  };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="spinner"></div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
-    <div className="min-h-screen p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8"
-          >
-            <h1 className="text-4xl font-bold gradient-text mb-4 flex items-center justify-center gap-3">
-              <HeartSolidIcon className="w-10 h-10 text-red-500" />
-              Mes Favoris
+    <div className="min-h-screen py-8 px-4">
+      <div className="container mx-auto max-w-7xl">
+        {/* En-tête */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-8"
+        >
+          <div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-red-400 bg-clip-text text-transparent mb-2">
+              Mes favoris
             </h1>
-            <p className="text-white/70 text-lg max-w-2xl mx-auto">
-              Retrouvez toutes les cartes de visite que vous avez sauvegardées
+            <p className="text-xl text-gray-700 dark:text-gray-200">
+              Vos cartes de visite préférées en un seul endroit
             </p>
-          </motion.div>
+          </div>
+          
+          {favoriteCards.length > 0 && (
+            <div className="flex gap-3 mt-4 lg:mt-0">
+              <Link to="/cards">
+                <ButtonGlass variant="secondary">
+                  Découvrir plus de cartes
+                </ButtonGlass>
+              </Link>
+              <ButtonGlass
+                onClick={handleClearAllFavorites}
+                variant="danger"
+                className="group"
+              >
+                <TrashIcon className="w-4 h-4 mr-2" />
+                Tout supprimer
+              </ButtonGlass>
+            </div>
+          )}
+        </motion.div>
 
-          {/* Controls */}
-          <div className="glass-card p-6 mb-6">
-            <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-              {/* Search */}
-              <div className="relative flex-1 max-w-md">
-                <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-white/40" />
-                <input
-                  type="text"
-                  placeholder="Rechercher dans mes favoris..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="form-input pl-10"
-                />
+        {/* Statistiques */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 mb-8"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center justify-center w-12 h-12 bg-pink-500/20 rounded-full">
+                <HeartSolidIcon className="w-6 h-6 text-pink-400" />
               </div>
-
-              {/* Filters and Controls */}
-              <div className="flex items-center gap-4">
-                {/* Category Filter */}
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="form-input min-w-[180px]"
-                >
-                  {categories.map(category => (
-                    <option key={category.value} value={category.value}>
-                      {category.label}
-                    </option>
-                  ))}
-                </select>
-
-                {/* Sort */}
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="form-input min-w-[150px]"
-                >
-                  {sortOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-
-                {/* View Mode Toggle */}
-                <div className="flex bg-white/5 rounded-lg p-1">
-                  <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded-md transition-colors ${
-                      viewMode === 'grid' 
-                        ? 'bg-blue-500/30 text-white' 
-                        : 'text-white/60 hover:text-white'
-                    }`}
-                  >
-                    <Squares2X2Icon className="h-5 w-5" />
-                  </button>
-                  <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-2 rounded-md transition-colors ${
-                      viewMode === 'list' 
-                        ? 'bg-blue-500/30 text-white' 
-                        : 'text-white/60 hover:text-white'
-                    }`}
-                  >
-                    <ListBulletIcon className="h-5 w-5" />
-                  </button>
+              <div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {favoriteCards.length}
                 </div>
-
-                {/* Clear All Button */}
-                {favorites.length > 0 && (
-                  <button
-                    onClick={handleClearAllFavorites}
-                    className="btn-glass btn-danger flex items-center gap-2"
-                  >
-                    <TrashIcon className="w-4 h-4" />
-                    Tout supprimer
-                  </button>
-                )}
+                <div className="text-gray-600 dark:text-gray-400">
+                  Carte{favoriteCards.length !== 1 ? 's' : ''} favorite{favoriteCards.length !== 1 ? 's' : ''}
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Results Count */}
-        <div className="mb-6 flex items-center justify-between">
-          <p className="text-white/60">
-            {filteredAndSortedFavorites.length} favori{filteredAndSortedFavorites.length !== 1 ? 's' : ''}
-            {searchTerm && ` trouvé${filteredAndSortedFavorites.length !== 1 ? 's' : ''}`}
-          </p>
-          {favorites.length > 0 && (
-            <p className="text-white/40 text-sm">
-              Total: {favorites.length} favori{favorites.length !== 1 ? 's' : ''}
-            </p>
-          )}
-        </div>
-
-        {/* Favorites Grid/List */}
-        <AnimatePresence mode="wait">
-          {filteredAndSortedFavorites.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="text-center py-12"
-            >
-              <div className="glass-card p-12">
-                <div className="w-24 h-24 mx-auto mb-6 bg-white/5 rounded-full flex items-center justify-center">
-                  <HeartIcon className="w-12 h-12 text-white/40" />
+            
+            {favoriteCards.length > 0 && (
+              <div className="text-right">
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  Dernière ajoutée
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  {searchTerm || selectedCategory !== 'all' 
-                    ? 'Aucun favori trouvé' 
-                    : 'Aucun favori pour le moment'
-                  }
-                </h3>
-                <p className="text-white/60 mb-6">
-                  {searchTerm || selectedCategory !== 'all'
-                    ? 'Essayez de modifier vos critères de recherche.'
-                    : 'Commencez à explorer les cartes et ajoutez vos préférées à vos favoris.'
-                  }
+                <div className="text-gray-900 dark:text-white">
+                  {new Date(Math.max(...favoriteCards.map(card => new Date(card.createdAt)))).toLocaleDateString('fr-FR')}
+                </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        {favoriteCards.length > 0 ? (
+          <>
+            {/* Barre de recherche et filtres */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="bg-white/10 dark:bg-white/5 backdrop-blur-sm border border-gray-300 dark:border-white/10 rounded-2xl p-6 mb-8"
+            >
+              <div className="flex flex-col lg:flex-row gap-4 items-center">
+                {/* Recherche */}
+                <div className="flex-1 relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <MagnifyingGlassIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                  </div>
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Rechercher dans vos favoris..."
+                    className="block w-full pl-10 pr-3 py-3 bg-white/10 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all"
+                  />
+                </div>
+
+                {/* Tri */}
+                <div className="relative">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none bg-white/10 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all pr-10"
+                  >
+                    {sortOptions.map(option => (
+                      <option key={option.value} value={option.value} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Statistiques de recherche */}
+              <div className="mt-4 pt-4 border-t border-gray-300 dark:border-white/10">
+                <p className="text-gray-400 text-sm">
+                  {filteredCards.length} carte{filteredCards.length !== 1 ? 's' : ''} 
+                  {searchTerm && ` trouvée${filteredCards.length !== 1 ? 's' : ''} pour "${searchTerm}"`}
                 </p>
-                <button className="btn-glass btn-primary">
-                  Explorer les cartes
-                </button>
               </div>
             </motion.div>
-          ) : viewMode === 'grid' ? (
+
+            {/* Grille des cartes */}
             <motion.div
-              key="grid"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <AnimatePresence>
-                {filteredAndSortedFavorites.map(favorite => (
-                  <FavoriteCard key={favorite._id} favorite={favorite} />
-                ))}
-              </AnimatePresence>
+              {filteredCards.length > 0 ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                  {filteredCards.map((card) => (
+                    <CardFavorite
+                      key={card._id}
+                      card={card}
+                      onRemoveFavorite={handleToggleFavorite}
+                      onViewCard={(cardId) => navigate(`/cards/${cardId}`)}
+                      onContact={() => handleContactClick(card)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16">
+                  <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-12 max-w-md mx-auto">
+                    <MagnifyingGlassIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      Aucune carte trouvée
+                    </h3>
+                    <p className="text-gray-400 mb-6">
+                      Essayez de modifier votre recherche
+                    </p>
+                    <ButtonGlass
+                      onClick={() => setSearchTerm('')}
+                    >
+                      Effacer la recherche
+                    </ButtonGlass>
+                  </div>
+                </div>
+              )}
             </motion.div>
-          ) : (
-            <motion.div
-              key="list"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <ListView favorites={filteredAndSortedFavorites} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+          </>
+        ) : (
+          /* État vide */
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-center py-16"
+          >
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-12 max-w-md mx-auto">
+              <HeartIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">
+                Aucun favori pour le moment
+              </h3>
+              <p className="text-gray-400 mb-6">
+                Explorez les cartes et ajoutez celles qui vous intéressent à vos favoris
+              </p>
+              <Link to="/cards">
+                <ButtonGlass>
+                  <EyeIcon className="w-4 h-4 mr-2" />
+                  Découvrir les cartes
+                </ButtonGlass>
+              </Link>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Conseils */}
+        {favoriteCards.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-16"
+          >
+            <div className="bg-gradient-to-r from-pink-600/20 via-red-600/20 to-orange-600/20 backdrop-blur-sm border border-white/10 rounded-3xl p-8">
+              <h3 className="text-2xl font-bold text-white mb-4 text-center">
+                💡 Le saviez-vous ?
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
+                <div>
+                  <HeartIcon className="w-8 h-8 text-pink-400 mx-auto mb-2" />
+                  <h4 className="font-semibold text-white mb-2">Favoris synchronisés</h4>
+                  <p className="text-gray-400 text-sm">
+                    Vos favoris sont sauvegardés et accessibles depuis tous vos appareils
+                  </p>
+                </div>
+                <div>
+                  <EyeIcon className="w-8 h-8 text-red-400 mx-auto mb-2" />
+                  <h4 className="font-semibold text-white mb-2">Accès rapide</h4>
+                  <p className="text-gray-400 text-sm">
+                    Retrouvez facilement les cartes qui vous intéressent le plus
+                  </p>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Contact Modal */}
+        <ContactModal
+          isOpen={isContactModalOpen}
+          onClose={() => setIsContactModalOpen(false)}
+          card={selectedCard}
+        />
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import ButtonGlass from './ButtonGlass';
 
 const Pagination = ({ 
@@ -8,10 +9,10 @@ const Pagination = ({
   onPageChange, 
   showInfo = true,
   totalItems = 0,
-  itemsPerPage = 10
+  itemsPerPage = 10,
+  className = ''
 }) => {
-  if (totalPages <= 1) return null;
-
+  // Calculer les pages à afficher
   const getVisiblePages = () => {
     const delta = 2;
     const range = [];
@@ -34,7 +35,9 @@ const Pagination = ({
     if (currentPage + delta < totalPages - 1) {
       rangeWithDots.push('...', totalPages);
     } else {
-      rangeWithDots.push(totalPages);
+      if (totalPages > 1) {
+        rangeWithDots.push(totalPages);
+      }
     }
 
     return rangeWithDots;
@@ -44,36 +47,36 @@ const Pagination = ({
   const startItem = (currentPage - 1) * itemsPerPage + 1;
   const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
+  if (totalPages <= 1) return null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0"
+      className={`flex flex-col sm:flex-row items-center justify-between gap-4 ${className}`}
     >
-      {/* Info */}
-      {showInfo && totalItems > 0 && (
+      {/* Informations sur les éléments */}
+      {showInfo && (
         <div className="text-sm text-white/70">
-          Showing {startItem} to {endItem} of {totalItems} results
+          Affichage de {startItem} à {endItem} sur {totalItems} résultats
         </div>
       )}
 
-      {/* Pagination Controls */}
+      {/* Navigation de pagination */}
       <div className="flex items-center space-x-2">
-        {/* Previous Button */}
+        {/* Bouton Précédent */}
         <ButtonGlass
-          variant="ghost"
-          size="sm"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="px-3"
+          variant="ghost"
+          size="sm"
+          className="px-3 py-2"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="ml-1 hidden sm:inline">Previous</span>
+          <ChevronLeftIcon className="h-4 w-4" />
+          <span className="hidden sm:inline ml-1">Précédent</span>
         </ButtonGlass>
 
-        {/* Page Numbers */}
+        {/* Numéros de page */}
         <div className="flex items-center space-x-1">
           {visiblePages.map((page, index) => (
             <React.Fragment key={index}>
@@ -86,9 +89,9 @@ const Pagination = ({
                   onClick={() => onPageChange(page)}
                   className={`
                     px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                    ${currentPage === page
-                      ? 'bg-primary-500/30 text-primary-300 border border-primary-400/50'
-                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                    ${page === currentPage
+                      ? 'bg-blue-500/20 text-blue-400 border border-blue-400/30 shadow-lg shadow-blue-500/20'
+                      : 'text-white/70 hover:text-white hover:bg-white/10 border border-transparent'
                     }
                   `}
                 >
@@ -99,21 +102,50 @@ const Pagination = ({
           ))}
         </div>
 
-        {/* Next Button */}
+        {/* Bouton Suivant */}
         <ButtonGlass
-          variant="ghost"
-          size="sm"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="px-3"
+          variant="ghost"
+          size="sm"
+          className="px-3 py-2"
         >
-          <span className="mr-1 hidden sm:inline">Next</span>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
+          <span className="hidden sm:inline mr-1">Suivant</span>
+          <ChevronRightIcon className="h-4 w-4" />
         </ButtonGlass>
       </div>
     </motion.div>
+  );
+};
+
+// Composant de pagination simple pour les cas basiques
+export const SimplePagination = ({ currentPage, totalPages, onPageChange }) => {
+  if (totalPages <= 1) return null;
+
+  return (
+    <div className="flex items-center justify-center space-x-4">
+      <ButtonGlass
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        variant="ghost"
+        size="sm"
+      >
+        <ChevronLeftIcon className="h-4 w-4" />
+      </ButtonGlass>
+      
+      <span className="text-white/70 text-sm">
+        Page {currentPage} sur {totalPages}
+      </span>
+      
+      <ButtonGlass
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        variant="ghost"
+        size="sm"
+      >
+        <ChevronRightIcon className="h-4 w-4" />
+      </ButtonGlass>
+    </div>
   );
 };
 

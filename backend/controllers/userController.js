@@ -8,23 +8,23 @@ const { validationResult } = require('express-validator');
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
     res.json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (error) {
     console.error('Get profile error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Server error',
     });
   }
 };
@@ -35,16 +35,16 @@ const getProfile = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    
+
     res.status(200).json({
       success: true,
-      data: user.getPublicProfile()
+      data: user.getPublicProfile(),
     });
   } catch (error) {
     console.error('Get user profile error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error getting user profile'
+      message: 'Server error getting user profile',
     });
   }
 };
@@ -59,22 +59,29 @@ const updateProfile = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
-        errors: errors.array()
+        errors: errors.array(),
       });
     }
 
     const user = await User.findById(req.user.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
     // Update profile fields
-    const profileFields = ['firstName', 'middleName', 'lastName', 'phone', 'address', 'image'];
-    profileFields.forEach(field => {
+    const profileFields = [
+      'firstName',
+      'middleName',
+      'lastName',
+      'phone',
+      'address',
+      'image',
+    ];
+    profileFields.forEach((field) => {
       if (req.body[field] !== undefined) {
         user[field] = req.body[field];
       }
@@ -83,33 +90,47 @@ const updateProfile = async (req, res) => {
     // Update preferences if provided
     if (req.body.preferences) {
       const { preferences } = req.body;
-      
+
       // Validate and update each preference
-      if (preferences.color && /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(preferences.color)) {
+      if (
+        preferences.color &&
+        /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(preferences.color)
+      ) {
         user.preferences.color = preferences.color;
       }
-      
+
       if (preferences.theme && ['light', 'dark'].includes(preferences.theme)) {
         user.preferences.theme = preferences.theme;
       }
-      
-      if (preferences.font && ['Inter', 'Orbitron', 'Roboto', 'Poppins', 'Montserrat'].includes(preferences.font)) {
+
+      if (
+        preferences.font &&
+        ['Inter', 'Orbitron', 'Roboto', 'Poppins', 'Montserrat'].includes(
+          preferences.font
+        )
+      ) {
         user.preferences.font = preferences.font;
       }
-      
-      if (preferences.layout && ['grid', 'table', 'compact'].includes(preferences.layout)) {
+
+      if (
+        preferences.layout &&
+        ['grid', 'table', 'compact'].includes(preferences.layout)
+      ) {
         user.preferences.layout = preferences.layout;
       }
-      
+
       if (preferences.avatarUrl !== undefined) {
         user.preferences.avatarUrl = preferences.avatarUrl;
       }
-      
+
       if (preferences.animations !== undefined) {
         user.preferences.animations = Boolean(preferences.animations);
       }
-      
-      if (preferences.language && ['en', 'fr', 'es', 'de'].includes(preferences.language)) {
+
+      if (
+        preferences.language &&
+        ['en', 'fr', 'es', 'de'].includes(preferences.language)
+      ) {
         user.preferences.language = preferences.language;
       }
     }
@@ -119,13 +140,13 @@ const updateProfile = async (req, res) => {
     res.json({
       success: true,
       message: 'Profile updated successfully',
-      data: user
+      data: user,
     });
   } catch (error) {
     console.error('Update profile error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Server error',
     });
   }
 };
@@ -140,7 +161,7 @@ const updateUserProfile = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: 'Validation failed',
-        errors: errors.array()
+        errors: errors.array(),
       });
     }
 
@@ -150,33 +171,29 @@ const updateUserProfile = async (req, res) => {
       lastName: req.body.lastName,
       phone: req.body.phone,
       image: req.body.image,
-      address: req.body.address
+      address: req.body.address,
     };
 
-    Object.keys(fieldsToUpdate).forEach(key => {
+    Object.keys(fieldsToUpdate).forEach((key) => {
       if (fieldsToUpdate[key] === undefined) {
         delete fieldsToUpdate[key];
       }
     });
 
-    const user = await User.findByIdAndUpdate(
-      req.user.id,
-      fieldsToUpdate,
-      {
-        new: true,
-        runValidators: true
-      }
-    );
+    const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+      new: true,
+      runValidators: true,
+    });
 
     res.status(200).json({
       success: true,
-      data: user.getPublicProfile()
+      data: user.getPublicProfile(),
     });
   } catch (error) {
     console.error('Update user profile error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error updating user profile'
+      message: 'Server error updating user profile',
     });
   }
 };
@@ -189,35 +206,35 @@ const getAllUsers = async (req, res) => {
     const page = parseInt(req.query.page, 10) || 1;
     const limit = parseInt(req.query.limit, 10) || 10;
     const startIndex = (page - 1) * limit;
-    
+
     const { search, role, isActive } = req.query;
-    
+
     let query = {};
-    
+
     if (search) {
       query.$or = [
         { firstName: { $regex: search, $options: 'i' } },
         { lastName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } }
+        { email: { $regex: search, $options: 'i' } },
       ];
     }
-    
+
     if (role && role !== 'all') {
       query.role = role;
     }
-    
+
     if (isActive !== undefined) {
       query.isActive = isActive === 'true';
     }
-    
+
     const users = await User.find(query)
       .select('-password -refreshToken')
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip(startIndex);
-    
+
     const total = await User.countDocuments(query);
-    
+
     res.status(200).json({
       success: true,
       count: users.length,
@@ -225,15 +242,15 @@ const getAllUsers = async (req, res) => {
       pagination: {
         page,
         pages: Math.ceil(total / limit),
-        limit
+        limit,
       },
-      data: users
+      data: users,
     });
   } catch (error) {
     console.error('Get all users error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error getting users'
+      message: 'Server error getting users',
     });
   }
 };
@@ -244,45 +261,45 @@ const getAllUsers = async (req, res) => {
 const updateUserRole = async (req, res) => {
   try {
     const { role } = req.body;
-    
+
     if (!['user', 'business', 'admin'].includes(role)) {
       return res.status(400).json({
         success: false,
-        message: 'Invalid role'
+        message: 'Invalid role',
       });
     }
-    
+
     const user = await User.findById(req.params.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
-    
+
     if (user._id.toString() === req.user.id) {
       return res.status(400).json({
         success: false,
-        message: 'Cannot change your own role'
+        message: 'Cannot change your own role',
       });
     }
-    
+
     user.role = role;
     user.isBusiness = role === 'business' || role === 'admin';
     user.isAdmin = role === 'admin';
-    
+
     await user.save();
-    
+
     res.status(200).json({
       success: true,
-      data: user.getPublicProfile()
+      data: user.getPublicProfile(),
     });
   } catch (error) {
     console.error('Update user role error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error updating user role'
+      message: 'Server error updating user role',
     });
   }
 };
@@ -293,35 +310,35 @@ const updateUserRole = async (req, res) => {
 const updateUserStatus = async (req, res) => {
   try {
     const { isActive } = req.body;
-    
+
     const user = await User.findById(req.params.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
-    
+
     if (user._id.toString() === req.user.id) {
       return res.status(400).json({
         success: false,
-        message: 'Cannot change your own status'
+        message: 'Cannot change your own status',
       });
     }
-    
+
     user.isActive = isActive;
     await user.save();
-    
+
     res.status(200).json({
       success: true,
-      data: user.getPublicProfile()
+      data: user.getPublicProfile(),
     });
   } catch (error) {
     console.error('Update user status error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error updating user status'
+      message: 'Server error updating user status',
     });
   }
 };
@@ -332,33 +349,33 @@ const updateUserStatus = async (req, res) => {
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
-    
+
     if (user._id.toString() === req.user.id) {
       return res.status(400).json({
         success: false,
-        message: 'Cannot delete your own account'
+        message: 'Cannot delete your own account',
       });
     }
-    
+
     await Card.deleteMany({ user_id: req.params.id });
     await User.findByIdAndDelete(req.params.id);
-    
+
     res.status(200).json({
       success: true,
-      message: 'User deleted successfully'
+      message: 'User deleted successfully',
     });
   } catch (error) {
     console.error('Delete user error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error deleting user'
+      message: 'Server error deleting user',
     });
   }
 };
@@ -372,49 +389,49 @@ const getPlatformStats = async (req, res) => {
     const activeUsers = await User.countDocuments({ isActive: true });
     const businessUsers = await User.countDocuments({ isBusiness: true });
     const adminUsers = await User.countDocuments({ isAdmin: true });
-    
+
     const totalCards = await Card.countDocuments();
     const activeCards = await Card.countDocuments({ isActive: true });
     const featuredCards = await Card.countDocuments({ featured: true });
-    
+
     const sixMonthsAgo = new Date();
     sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
-    
+
     const userRegistrations = await User.aggregate([
       {
         $match: {
-          createdAt: { $gte: sixMonthsAgo }
-        }
+          createdAt: { $gte: sixMonthsAgo },
+        },
       },
       {
         $group: {
           _id: {
             year: { $year: '$createdAt' },
-            month: { $month: '$createdAt' }
+            month: { $month: '$createdAt' },
           },
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
-        $sort: { '_id.year': 1, '_id.month': 1 }
-      }
+        $sort: { '_id.year': 1, '_id.month': 1 },
+      },
     ]);
-    
+
     const categoryStats = await Card.aggregate([
       {
-        $match: { isActive: true }
+        $match: { isActive: true },
       },
       {
         $group: {
           _id: '$category',
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
-        $sort: { count: -1 }
-      }
+        $sort: { count: -1 },
+      },
     ]);
-    
+
     res.status(200).json({
       success: true,
       data: {
@@ -422,22 +439,22 @@ const getPlatformStats = async (req, res) => {
           total: totalUsers,
           active: activeUsers,
           business: businessUsers,
-          admin: adminUsers
+          admin: adminUsers,
         },
         cards: {
           total: totalCards,
           active: activeCards,
-          featured: featuredCards
+          featured: featuredCards,
         },
         registrations: userRegistrations,
-        categories: categoryStats
-      }
+        categories: categoryStats,
+      },
     });
   } catch (error) {
     console.error('Get platform stats error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error getting platform statistics'
+      message: 'Server error getting platform statistics',
     });
   }
 };
@@ -448,29 +465,29 @@ const getPlatformStats = async (req, res) => {
 const deleteAccount = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: 'User not found',
       });
     }
 
     // Delete user's cards first
     await Card.deleteMany({ user: req.user.id });
-    
+
     // Delete user account
     await User.findByIdAndDelete(req.user.id);
 
     res.json({
       success: true,
-      message: 'Account deleted successfully'
+      message: 'Account deleted successfully',
     });
   } catch (error) {
     console.error('Delete account error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Server error',
     });
   }
 };
@@ -485,5 +502,5 @@ module.exports = {
   updateUserRole,
   updateUserStatus,
   deleteUser,
-  getPlatformStats
+  getPlatformStats,
 };

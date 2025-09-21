@@ -6,7 +6,7 @@ const {
   checkFavorite,
   getFavoriteCount,
   clearAllFavorites,
-  getFavoriteStats
+  getFavoriteStats,
 } = require('../controllers/favoriteController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -14,7 +14,7 @@ const router = express.Router();
 
 // Protected routes
 router.get('/stats', protect, getFavoriteStats);
-router.post('/:cardId', protect, toggleFavorite);
+router.post('/toggle', protect, toggleFavorite);
 router.get('/', protect, getFavorites);
 router.delete('/', protect, clearAllFavorites);
 router.delete('/:cardId', protect, removeFavorite);

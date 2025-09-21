@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { XMarkIcon } from '@heroicons/react/24/outline';
-import { useTheme } from '../../hooks/useTheme';
+import { useTheme } from '../../context/ThemeContext';
 import GlassContainer from './GlassContainer';
 
-const Modal = ({ 
-  isOpen, 
-  onClose, 
-  title, 
-  children, 
+const Modal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
   size = 'md',
   showCloseButton = true,
   closeOnOverlayClick = true,
-  actions = null
+  actions = null,
 }) => {
   const { reducedMotion } = useTheme();
 
@@ -29,7 +28,7 @@ const Modal = ({
   }, [isOpen]);
 
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = e => {
       if (e.key === 'Escape' && isOpen) {
         onClose();
       }
@@ -44,38 +43,38 @@ const Modal = ({
     md: 'max-w-lg',
     lg: 'max-w-2xl',
     xl: 'max-w-4xl',
-    full: 'max-w-full mx-4'
+    full: 'max-w-full mx-4',
   };
 
   const overlayVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1 }
+    visible: { opacity: 1 },
   };
 
   const modalVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       scale: reducedMotion ? 1 : 0.95,
-      y: reducedMotion ? 0 : 20
+      y: reducedMotion ? 0 : 20,
     },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       scale: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: 'spring',
         damping: 25,
-        stiffness: 300
-      }
+        stiffness: 300,
+      },
     },
-    exit: { 
-      opacity: 0, 
+    exit: {
+      opacity: 0,
       scale: reducedMotion ? 1 : 0.95,
       y: reducedMotion ? 0 : 20,
       transition: {
-        duration: 0.2
-      }
-    }
+        duration: 0.2,
+      },
+    },
   };
 
   return (
@@ -99,7 +98,7 @@ const Modal = ({
             animate="visible"
             exit="exit"
             className={`relative w-full ${sizeClasses[size]} max-h-[90vh] overflow-hidden`}
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
           >
             <GlassContainer className="relative">
               {/* Header */}
@@ -116,8 +115,18 @@ const Modal = ({
                       className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
                       aria-label="Close modal"
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
                       </svg>
                     </button>
                   )}

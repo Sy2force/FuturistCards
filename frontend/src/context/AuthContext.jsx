@@ -1,9 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { authAPI } from '../api/auth';
-import toast from 'react-hot-toast';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -15,190 +14,119 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [, setToken] = useState(localStorage.getItem('token'));
 
-  // Check if user is logged in on app start
   useEffect(() => {
-    const checkAuth = async () => {
-      console.log('🔍 Checking auth on startup...');
+    // Restore user from localStorage on app start
+    const savedUser = localStorage.getItem('user');
+    const savedToken = localStorage.getItem('token');
+    
+    if (savedUser && savedToken) {
       try {
-        const token = localStorage.getItem('token');
-        const savedUser = localStorage.getItem('user');
-        
-        console.log('📦 Found in localStorage:', { 
-          hasToken: !!token, 
-          hasUser: !!savedUser,
-          token: token?.substring(0, 20) + '...',
-          user: savedUser ? JSON.parse(savedUser).email : null
-        });
-        
-        if (token && savedUser) {
-          // Restore user from localStorage
-          const userData = JSON.parse(savedUser);
-          console.log('✅ Restoring user:', userData.email);
-          setUser(userData);
-          
-          // Optionally verify token with backend (but don't fail if it doesn't work)
-          try {
-            const verifiedUser = await authAPI.verifyToken();
-            if (verifiedUser) {
-              console.log('🔄 Token verified, updating user data');
-              setUser(verifiedUser);
-              localStorage.setItem('user', JSON.stringify(verifiedUser));
-            }
-          } catch (verifyError) {
-            // Keep the saved user even if verification fails - NEVER auto-logout
-            console.log('⚠️ Token verification failed, using saved user data');
-          }
-        } else {
-          console.log('❌ No saved auth data found');
-        }
+        setUser(JSON.parse(savedUser));
+        setToken(savedToken);
       } catch (error) {
-        console.error('❌ Auth check failed:', error);
-        // Don't remove tokens on error - keep user logged in
-      } finally {
-        setLoading(false);
+        // User logged in successfully
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
       }
-    };
-
-    checkAuth();
+    }
+    setLoading(false);
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (email) => {
     try {
-      setLoading(true);
-      setError(null);
-      
-      const response = await authAPI.login(email, password);
-      
-      // Store tokens and user data
-      console.log('💾 Saving login data to localStorage:', response.user.email);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-      if (response.refreshToken) {
-        localStorage.setItem('refreshToken', response.refreshToken);
+      // Mode mock : créer différents utilisateurs selon l'email
+      let mockUser;
+      if (email.includes('admin')) {
+        mockUser = {
+          id: 'mock-admin-001',
+          firstName: 'Admin',
+          lastName: 'Demo',
+          email: 'admin@futuristcards.com',
+          role: 'admin',
+          createdAt: new Date().toISOString()
+        };
+      } else if (email.includes('business')) {
+        mockUser = {
+          id: 'mock-business-001',
+          firstName: 'Business',
+          lastName: 'User',
+          email: 'business@futuristcards.com',
+          role: 'business',
+          createdAt: new Date().toISOString()
+        };
+      } else {
+        mockUser = {
+          id: 'mock-user-001',
+          firstName: 'Regular',
+          lastName: 'User',
+          email: 'user@futuristcards.com',
+          role: 'user',
+          createdAt: new Date().toISOString()
+        };
       }
+
+      const mockToken = `mock-jwt-token-${mockUser.role}`;
       
-      // Verify storage worked
-      const savedToken = localStorage.getItem('token');
-      const savedUser = localStorage.getItem('user');
-      console.log('✅ Verification - Saved successfully:', { 
-        hasToken: !!savedToken, 
-        hasUser: !!savedUser 
-      });
+      setUser(mockUser);
+      setToken(mockToken);
+      localStorage.setItem('token', mockToken);
+      localStorage.setItem('user', JSON.stringify(mockUser));
       
-      setUser(response.user);
-      toast.success(`Welcome ${response.user.firstName}!`);
-      return response;
+      return { success: true, user: mockUser };
     } catch (error) {
-      setError(error.message);
-      toast.error(error.message || 'Connection error');
-      throw error;
-    } finally {
-      setLoading(false);
+      return { 
+        success: false, 
+        message: 'Login failed' 
+      };
     }
   };
 
   const register = async (userData) => {
     try {
-      setLoading(true);
-      setError(null);
+      // Mode mock : créer un utilisateur basé sur les données fournies
+      const mockUser = {
+        id: `mock-${userData.role || 'user'}-${Date.now()}`,
+        firstName: userData.firstName || 'New',
+        lastName: userData.lastName || 'User',
+        email: userData.email,
+        role: userData.role || 'user',
+        createdAt: new Date().toISOString()
+      };
+
+      const mockToken = `mock-jwt-token-${mockUser.role}`;
       
-      const response = await authAPI.register(userData);
+      setUser(mockUser);
+      setToken(mockToken);
+      localStorage.setItem('token', mockToken);
+      localStorage.setItem('user', JSON.stringify(mockUser));
       
-      // Store tokens and user data
-      console.log('💾 Saving registration data to localStorage:', response.user.email);
-      localStorage.setItem('token', response.token);
-      localStorage.setItem('user', JSON.stringify(response.user));
-      if (response.refreshToken) {
-        localStorage.setItem('refreshToken', response.refreshToken);
-      }
-      
-      // Verify storage worked
-      const savedToken = localStorage.getItem('token');
-      const savedUser = localStorage.getItem('user');
-      console.log('✅ Verification - Saved successfully:', { 
-        hasToken: !!savedToken, 
-        hasUser: !!savedUser 
-      });
-      
-      setUser(response.user);
-      toast.success('Compte créé avec succès !');
-      return response;
+      return { success: true, user: mockUser };
     } catch (error) {
-      setError(error.message);
-      toast.error(error.message || 'Erreur lors de l\'inscription');
-      throw error;
-    } finally {
-      setLoading(false);
+      return { 
+        success: false, 
+        message: 'Registration failed' 
+      };
     }
   };
 
-  const logout = async () => {
-    try {
-      console.log('🚪 Logging out user:', user?.email);
-      await authAPI.logout();
-      toast.success('Logout successful');
-    } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      // Clear local storage and state regardless of API call success
-      console.log('🧹 Clearing localStorage and user state');
-      localStorage.removeItem('token');
-      localStorage.removeItem('refreshToken');
-      localStorage.removeItem('user');
-      setUser(null);
-      setError(null);
-    }
-  };
-
-  const updateProfile = async (profileData) => {
-    try {
-      setLoading(true);
-      const updatedUser = await authAPI.updateProfile(profileData);
-      setUser(updatedUser);
-      toast.success('Profil mis à jour !');
-      return updatedUser;
-    } catch (error) {
-      setError(error.message);
-      toast.error(error.message || 'Erreur de mise à jour');
-      throw error;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const refreshToken = async () => {
-    try {
-      const refreshToken = localStorage.getItem('refreshToken');
-      if (!refreshToken) {
-        throw new Error('No refresh token available');
-      }
-      
-      const response = await authAPI.refreshToken(refreshToken);
-      localStorage.setItem('token', response.token);
-      
-      return response.token;
-    } catch (error) {
-      // If refresh fails, logout user
-      logout();
-      throw error;
-    }
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
   };
 
   const value = {
     user,
     loading,
-    error,
     login,
     register,
     logout,
-    updateProfile,
-    refreshToken,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
-    isBusiness: user?.role === 'business' || user?.role === 'admin',
-    clearError: () => setError(null)
+    isBusiness: user?.role === 'business' || user?.role === 'admin'
   };
 
   return (
@@ -207,3 +135,5 @@ export const AuthProvider = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
+export default AuthContext;

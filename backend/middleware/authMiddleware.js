@@ -1,48 +1,68 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const mongoose = require('mongoose');
-const { mockAuth } = require('../controllers/mockAuthController');
 
 // Protect routes - verify JWT token
 const protect = async (req, res, next) => {
   let token;
 
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
       
-      // Check if MongoDB is connected, use mock if not
-      if (!mongoose.connection.readyState) {
-        const mockResult = await mockAuth.getProfile(decoded.id);
-        if (mockResult.success) {
-          req.user = {
-            id: decoded.id,
-            _id: decoded.id,
-            ...mockResult.user
-          };
-          return next();
-        } else {
-          return res.status(401).json({
-            success: false,
-            message: 'User not found'
-          });
-        }
+      // Check if JWT_SECRET exists
+      if (!process.env.JWT_SECRET) {
+        return res.status(500).json({
+          success: false,
+          message: 'JWT secret not configured',
+        });
       }
 
-      req.user = await User.findById(decoded.id).select('-password -refreshToken');
+      // Check if token is empty or undefined
+      if (!token || token === 'undefined' || token === 'null') {
+        return res.status(401).json({
+          success: false,
+          message: 'Invalid token format',
+        });
+      }
+
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      // Check if MongoDB is connected, use mock if not
+      if (!mongoose.connection.readyState) {
+        // Mock user pour les tests sans MongoDB
+        req.user = {
+          id: decoded.id,
+          _id: decoded.id,
+          email: decoded.email || 'test@example.com',
+          firstName: decoded.firstName || 'Test',
+          lastName: decoded.lastName || 'User',
+          role: decoded.role || 'user',
+          isActive: true,
+          isBusiness: decoded.role === 'business',
+          isAdmin: decoded.role === 'admin'
+        };
+        return next();
+      }
+
+      req.user = await User.findById(decoded.id).select(
+        '-password -refreshToken'
+      );
 
       if (!req.user) {
         return res.status(401).json({
           success: false,
-          message: 'User not found'
+          message: 'User not found',
         });
       }
 
       if (!req.user.isActive) {
         return res.status(401).json({
           success: false,
-          message: 'Account is deactivated'
+          message: 'Account is deactivated',
         });
       }
 
@@ -51,7 +71,7 @@ const protect = async (req, res, next) => {
       console.error('Token verification error:', error);
       return res.status(401).json({
         success: false,
-        message: 'Not authorized, token failed'
+        message: 'Not authorized, token failed',
       });
     }
   }
@@ -59,7 +79,7 @@ const protect = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({
       success: false,
-      message: 'Not authorized, no token'
+      message: 'Not authorized, no token',
     });
   }
 };
@@ -70,14 +90,14 @@ const authorize = (...roles) => {
     if (!req.user) {
       return res.status(401).json({
         success: false,
-        message: 'Not authorized'
+        message: 'Not authorized',
       });
     }
 
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         success: false,
-        message: `User role ${req.user.role} is not authorized to access this route`
+        message: `User role ${req.user.role} is not authorized to access this route`,
       });
     }
     next();
@@ -89,14 +109,14 @@ const requireBusiness = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({
       success: false,
-      message: 'Not authorized'
+      message: 'Not authorized',
     });
   }
 
   if (!req.user.isBusiness && !req.user.isAdmin) {
     return res.status(403).json({
       success: false,
-      message: 'Business account required'
+      message: 'Business account required',
     });
   }
   next();
@@ -107,14 +127,14 @@ const requireAdmin = (req, res, next) => {
   if (!req.user) {
     return res.status(401).json({
       success: false,
-      message: 'Not authorized'
+      message: 'Not authorized',
     });
   }
 
   if (!req.user.isAdmin) {
     return res.status(403).json({
       success: false,
-      message: 'Admin access required'
+      message: 'Admin access required',
     });
   }
   next();
@@ -124,5 +144,5 @@ module.exports = {
   protect,
   authorize,
   requireBusiness,
-  requireAdmin
+  requireAdmin,
 };

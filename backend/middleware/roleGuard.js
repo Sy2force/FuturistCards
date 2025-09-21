@@ -1,20 +1,51 @@
 const Card = require('../models/Card');
 
+// Middleware pour vérifier les rôles requis
+const roleGuard = (allowedRoles) => {
+  return (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Accès non autorisé - utilisateur non authentifié',
+        });
+      }
+
+      const userRole = req.user.role || 'user';
+      
+      if (!allowedRoles.includes(userRole)) {
+        return res.status(403).json({
+          success: false,
+          message: 'Accès refusé - permissions insuffisantes',
+        });
+      }
+
+      next();
+    } catch (error) {
+      console.error('Role guard error:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Erreur serveur lors de la vérification des permissions',
+      });
+    }
+  };
+};
+
 // Check if user owns the resource or is admin
 const checkOwnership = (Model, paramName = 'id') => {
   return async (req, res, next) => {
     try {
       const resource = await Model.findById(req.params[paramName]);
-      
+
       if (!resource) {
         return res.status(404).json({
           success: false,
-          message: 'Resource not found'
+          message: 'Resource not found',
         });
       }
 
       // Admin can access everything
-      if (req.user.isAdmin) {
+      if (req.user.role === 'admin') {
         req.resource = resource;
         return next();
       }
@@ -24,7 +55,7 @@ const checkOwnership = (Model, paramName = 'id') => {
       if (resourceUserId.toString() !== req.user._id.toString()) {
         return res.status(403).json({
           success: false,
-          message: 'Not authorized to access this resource'
+          message: 'Not authorized to access this resource',
         });
       }
 
@@ -34,7 +65,7 @@ const checkOwnership = (Model, paramName = 'id') => {
       console.error('Ownership check error:', error);
       return res.status(500).json({
         success: false,
-        message: 'Server error during ownership check'
+        message: 'Server error during ownership check',
       });
     }
   };
@@ -44,16 +75,16 @@ const checkOwnership = (Model, paramName = 'id') => {
 const canEditCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.id);
-    
+
     if (!card) {
       return res.status(404).json({
         success: false,
-        message: 'Card not found'
+        message: 'Card not found',
       });
     }
 
     // Admin can edit any card
-    if (req.user.isAdmin) {
+    if (req.user.role === 'admin') {
       req.card = card;
       return next();
     }
@@ -62,7 +93,7 @@ const canEditCard = async (req, res, next) => {
     if (card.user_id.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: 'Not authorized to edit this card'
+        message: 'Not authorized to edit this card',
       });
     }
 
@@ -72,7 +103,7 @@ const canEditCard = async (req, res, next) => {
     console.error('Card edit permission error:', error);
     return res.status(500).json({
       success: false,
-      message: 'Server error checking card permissions'
+      message: 'Server error checking card permissions',
     });
   }
 };
@@ -81,16 +112,16 @@ const canEditCard = async (req, res, next) => {
 const canDeleteCard = async (req, res, next) => {
   try {
     const card = await Card.findById(req.params.id);
-    
+
     if (!card) {
       return res.status(404).json({
         success: false,
-        message: 'Card not found'
+        message: 'Card not found',
       });
     }
 
     // Admin can delete any card
-    if (req.user.isAdmin) {
+    if (req.user.role === 'admin') {
       req.card = card;
       return next();
     }
@@ -99,7 +130,7 @@ const canDeleteCard = async (req, res, next) => {
     if (card.user_id.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: 'Not authorized to delete this card'
+        message: 'Not authorized to delete this card',
       });
     }
 
@@ -109,13 +140,14 @@ const canDeleteCard = async (req, res, next) => {
     console.error('Card delete permission error:', error);
     return res.status(500).json({
       success: false,
-      message: 'Server error checking card permissions'
+      message: 'Server error checking card permissions',
     });
   }
 };
 
 module.exports = {
+  roleGuard,
   checkOwnership,
   canEditCard,
-  canDeleteCard
+  canDeleteCard,
 };

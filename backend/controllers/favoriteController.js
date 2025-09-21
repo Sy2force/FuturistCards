@@ -1,20 +1,29 @@
 const Favorite = require('../models/Favorite');
 const Card = require('../models/Card');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 
 // @desc    Toggle favorite card
-// @route   POST /api/favorites/:cardId
+// @route   POST /api/favorites/toggle
 // @access  Private
 const toggleFavorite = async (req, res) => {
   try {
-    const { cardId } = req.params;
+    const { cardId } = req.body;
     const userId = req.user.id;
+
+    // Validate cardId format
+    if (!mongoose.Types.ObjectId.isValid(cardId)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid card ID format',
+      });
+    }
 
     const card = await Card.findById(cardId);
     if (!card || !card.isActive) {
       return res.status(404).json({
         success: false,
-        message: 'Card not found'
+        message: 'Card not found',
       });
     }
 
@@ -27,87 +36,171 @@ const toggleFavorite = async (req, res) => {
       }
     } else {
       user.favoriteCards = user.favoriteCards.filter(
-        id => id.toString() !== cardId.toString()
+        (id) => id.toString() !== cardId.toString()
       );
     }
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: result.action === 'added' ? 'Card added to favorites' : 'Card removed from favorites',
+      message:
+        result.action === 'added'
+          ? 'Card added to favorites'
+          : 'Card removed from favorites',
       data: {
         action: result.action,
-        favorite: result.favorite
-      }
+        favorite: result.favorite,
+      },
     });
   } catch (error) {
     console.error('Toggle favorite error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error toggling favorite'
+      message: 'Server error toggling favorite',
     });
   }
 };
 
-// @desc    Get user's favorite cards
+// @desc    Get user favorites
 // @route   GET /api/favorites
 // @access  Private
 const getFavorites = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const startIndex = (page - 1) * limit;
-    const { search, category, sortBy } = req.query;
+    const userId = req.user.id;
+    const { page = 1, limit = 10, search, category, sortBy } = req.query;
 
-    // Handle both ObjectId and string user IDs for mock compatibility
-    let userId = req.user.id;
-    if (typeof userId === 'string' && userId.length !== 24) {
-      // For mock users with non-ObjectId IDs, use string comparison
-      const favorites = [];
+    const startIndex = (page - 1) * limit;
+
+    // Mock data for testing when MongoDB is disconnected
+    if (!mongoose.connection.readyState) {
+      let favorites = [
+        {
+          _id: 'fav-1',
+          user: userId,
+          card: {
+            _id: 'card-1',
+            title: 'Design Studio Pro',
+            subtitle: 'Creative Solutions',
+            description: 'Studio de design créatif spécialisé dans l\'identité visuelle',
+            category: 'Design',
+            image: { url: 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?w=400', alt: 'Design Studio' },
+            views: 156,
+            likesCount: 23,
+            isActive: true,
+            user_id: { firstName: 'John', lastName: 'Doe' }
+          },
+          createdAt: new Date().toISOString()
+        },
+        {
+          _id: 'fav-2',
+          user: userId,
+          card: {
+            _id: 'card-2',
+            title: 'Tech Innovators',
+            subtitle: 'Solutions Technologiques',
+            description: 'Développement d\'applications mobiles et web',
+            category: 'Technology',
+            image: { url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400', alt: 'Tech Company' },
+            views: 89,
+            likesCount: 15,
+            isActive: true,
+            user_id: { firstName: 'Jane', lastName: 'Smith' }
+          },
+          createdAt: new Date(Date.now() - 86400000).toISOString()
+        }
+      ];
+
+      // Apply search filter
+      if (search) {
+        favorites = favorites.filter(
+          fav =>
+            fav.card.title.toLowerCase().includes(search.toLowerCase()) ||
+            fav.card.description.toLowerCase().includes(search.toLowerCase()) ||
+            fav.card.category.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+
+      // Apply category filter
+      if (category) {
+        favorites = favorites.filter(
+          fav => fav.card.category === category
+        );
+      }
+
+      // Apply sorting
+      if (sortBy) {
+        switch (sortBy) {
+          case 'alphabetical':
+            favorites.sort((a, b) =>
+              a.card.title.localeCompare(b.card.title)
+            );
+            break;
+          case 'category':
+            favorites.sort((a, b) =>
+              a.card.category.localeCompare(b.card.category)
+            );
+            break;
+          case 'oldest':
+            favorites.sort(
+              (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+            );
+            break;
+          default: // 'recent'
+            favorites.sort(
+              (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+            );
+        }
+      }
+
+      const total = favorites.length;
+      const paginatedFavorites = favorites.slice(startIndex, startIndex + parseInt(limit));
+
       return res.status(200).json({
         success: true,
-        count: 0,
-        total: 0,
+        count: paginatedFavorites.length,
+        total,
         pagination: {
-          page,
-          pages: 0,
-          limit
+          page: parseInt(page),
+          pages: Math.ceil(total / limit),
+          limit: parseInt(limit),
         },
-        data: favorites
+        data: paginatedFavorites,
       });
     }
 
+    // MongoDB connecté - utiliser la base de données
     let query = { user: userId };
-    
+
     const favorites = await Favorite.find(query)
       .populate({
         path: 'card',
         match: { isActive: true },
         populate: {
           path: 'user_id',
-          select: 'firstName lastName'
-        }
+          select: 'firstName lastName',
+        },
       })
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip(startIndex);
 
     // Filter out favorites where card is null (deleted cards)
-    let validFavorites = favorites.filter(fav => fav.card !== null);
+    let validFavorites = favorites.filter((fav) => fav.card !== null);
 
     // Apply search filter
     if (search) {
-      validFavorites = validFavorites.filter(fav => 
-        fav.card.title.toLowerCase().includes(search.toLowerCase()) ||
-        fav.card.subtitle.toLowerCase().includes(search.toLowerCase()) ||
-        fav.card.description.toLowerCase().includes(search.toLowerCase())
+      validFavorites = validFavorites.filter(
+        (fav) =>
+          fav.card.title.toLowerCase().includes(search.toLowerCase()) ||
+          fav.card.description.toLowerCase().includes(search.toLowerCase()) ||
+          fav.card.category.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     // Apply category filter
-    if (category && category !== 'all') {
-      validFavorites = validFavorites.filter(fav => 
-        fav.card.category === category
+    if (category) {
+      validFavorites = validFavorites.filter(
+        (fav) => fav.card.category === category
       );
     }
 
@@ -115,37 +208,46 @@ const getFavorites = async (req, res) => {
     if (sortBy) {
       switch (sortBy) {
         case 'alphabetical':
-          validFavorites.sort((a, b) => a.card.title.localeCompare(b.card.title));
+          validFavorites.sort((a, b) =>
+            a.card.title.localeCompare(b.card.title)
+          );
           break;
         case 'category':
-          validFavorites.sort((a, b) => a.card.category.localeCompare(b.card.category));
+          validFavorites.sort((a, b) =>
+            a.card.category.localeCompare(b.card.category)
+          );
           break;
         case 'oldest':
-          validFavorites.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+          validFavorites.sort(
+            (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+          );
           break;
         default: // 'recent'
-          validFavorites.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+          validFavorites.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
       }
     }
 
-    const total = await Favorite.countDocuments(query);
+    const total = validFavorites.length;
+    const paginatedFavorites = validFavorites.slice(startIndex, startIndex + parseInt(limit));
 
     res.status(200).json({
       success: true,
-      count: validFavorites.length,
+      count: paginatedFavorites.length,
       total,
       pagination: {
-        page,
+        page: parseInt(page),
         pages: Math.ceil(total / limit),
-        limit
+        limit: parseInt(limit),
       },
-      data: validFavorites
+      data: paginatedFavorites,
     });
   } catch (error) {
     console.error('Get favorites error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error getting favorites'
+      message: 'Server error getting favorites',
     });
   }
 };
@@ -159,11 +261,11 @@ const removeFavorite = async (req, res) => {
     const userId = req.user.id;
 
     const favorite = await Favorite.findOne({ user: userId, card: cardId });
-    
+
     if (!favorite) {
       return res.status(404).json({
         success: false,
-        message: 'Favorite not found'
+        message: 'Favorite not found',
       });
     }
 
@@ -171,19 +273,19 @@ const removeFavorite = async (req, res) => {
 
     const user = await User.findById(userId);
     user.favoriteCards = user.favoriteCards.filter(
-      id => id.toString() !== cardId.toString()
+      (id) => id.toString() !== cardId.toString()
     );
     await user.save();
 
     res.status(200).json({
       success: true,
-      message: 'Card removed from favorites'
+      message: 'Card removed from favorites',
     });
   } catch (error) {
     console.error('Remove favorite error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error removing favorite'
+      message: 'Server error removing favorite',
     });
   }
 };
@@ -201,14 +303,14 @@ const checkFavorite = async (req, res) => {
     res.status(200).json({
       success: true,
       data: {
-        isFavorited: !!isFavorited
-      }
+        isFavorited: !!isFavorited,
+      },
     });
   } catch (error) {
     console.error('Check favorite error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error checking favorite'
+      message: 'Server error checking favorite',
     });
   }
 };
@@ -225,14 +327,14 @@ const getFavoriteCount = async (req, res) => {
     res.status(200).json({
       success: true,
       data: {
-        count
-      }
+        count,
+      },
     });
   } catch (error) {
     console.error('Get favorite count error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error getting favorite count'
+      message: 'Server error getting favorite count',
     });
   }
 };
@@ -252,13 +354,13 @@ const clearAllFavorites = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'All favorites cleared successfully'
+      message: 'All favorites cleared successfully',
     });
   } catch (error) {
     console.error('Clear all favorites error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error clearing favorites'
+      message: 'Server error clearing favorites',
     });
   }
 };
@@ -271,7 +373,7 @@ const getFavoriteStats = async (req, res) => {
     const userId = req.user.id;
 
     const totalFavorites = await Favorite.countDocuments({ user: userId });
-    
+
     const categoryStats = await Favorite.aggregate([
       { $match: { user: userId } },
       {
@@ -279,25 +381,25 @@ const getFavoriteStats = async (req, res) => {
           from: 'cards',
           localField: 'card',
           foreignField: '_id',
-          as: 'cardData'
-        }
+          as: 'cardData',
+        },
       },
       { $unwind: '$cardData' },
       { $match: { 'cardData.isActive': true } },
       {
         $group: {
           _id: '$cardData.category',
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
-      { $sort: { count: -1 } }
+      { $sort: { count: -1 } },
     ]);
 
     const recentFavorites = await Favorite.find({ user: userId })
       .populate({
         path: 'card',
         match: { isActive: true },
-        select: 'title category createdAt'
+        select: 'title category createdAt',
       })
       .sort({ createdAt: -1 })
       .limit(5);
@@ -307,14 +409,14 @@ const getFavoriteStats = async (req, res) => {
       data: {
         totalFavorites,
         categoryStats,
-        recentFavorites: recentFavorites.filter(fav => fav.card !== null)
-      }
+        recentFavorites: recentFavorites.filter((fav) => fav.card !== null),
+      },
     });
   } catch (error) {
     console.error('Get favorite stats error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error getting favorite statistics'
+      message: 'Server error getting favorite statistics',
     });
   }
 };
@@ -326,5 +428,5 @@ module.exports = {
   checkFavorite,
   getFavoriteCount,
   clearAllFavorites,
-  getFavoriteStats
+  getFavoriteStats,
 };

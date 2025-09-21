@@ -1,17 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
-const { 
+const {
   getProfile,
   updateProfile,
   deleteAccount,
-  getUserProfile, 
-  updateUserProfile, 
-  getAllUsers, 
-  updateUserRole, 
-  updateUserStatus, 
+  getUserProfile,
+  updateUserProfile,
+  getAllUsers,
+  updateUserRole,
+  updateUserStatus,
   deleteUser,
-  getPlatformStats
+  getPlatformStats,
 } = require('../controllers/userController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
@@ -30,7 +30,7 @@ const updateProfileValidation = [
   body('phone')
     .optional()
     .matches(/^0[2-9]\d{7,8}$/)
-    .withMessage('Please provide a valid Israeli phone number')
+    .withMessage('Please provide a valid Israeli phone number'),
 ];
 
 // User profile routes
