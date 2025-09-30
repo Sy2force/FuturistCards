@@ -1,310 +1,367 @@
-# FuturistCards - Final Project (HackerU 2025)
+# FuturistCards
 
-🚀 **Plateforme SaaS de cartes de visite numériques avec design futuriste, authentification sécurisée, gestion CRUD, système de favoris et rôles utilisateurs.**
+A comprehensive digital business card platform that allows users to create, manage, and share professional business cards online. Built with modern web technologies and featuring a glassmorphism design with multilingual support.
 
-## 🔧 Stack Technique
+**Live Demo:** https://sy2force.github.io/Project-react/
+
+## Project Overview
+
+FuturistCards is a full-stack web application that digitizes the traditional business card experience. Users can create beautiful, interactive business cards, browse cards from other professionals, and manage their networking contacts all in one place.
+
+### Key Features
+
+**Card Management:**
+- Create professional business cards with custom information
+- Upload profile images and company logos
+- Edit and update card details in real-time
+- Delete cards with confirmation prompts
+- View card statistics and engagement metrics
+
+**User Experience:**
+- Responsive design optimized for all devices
+- Dark and light theme toggle with smooth transitions
+- Multilingual support (English, French, Hebrew) with RTL support
+- Advanced search and filtering capabilities
+- Favorites system for saving important contacts
+- Glassmorphism UI design with modern animations
+
+**Authentication & Security:**
+- JWT-based authentication system
+- Role-based access control (User, Business, Admin)
+- Protected routes and API endpoints
+- Mock authentication for development and demo purposes
+- Secure password handling with bcrypt
+
+## Technology Stack
 
 ### Frontend
-- **React 18** - Framework moderne avec hooks et context
-- **Vite** - Build tool rapide et serveur de développement
-- **Tailwind CSS** - Framework CSS utility-first
-- **Framer Motion** - Animations et transitions fluides
-- **React Router v6** - Routage côté client
-- **Axios** - Client HTTP pour les appels API
+- **React 18** - Modern React with hooks and functional components
+- **Vite** - Fast build tool and development server
+- **Tailwind CSS** - Utility-first CSS framework for styling
+- **Framer Motion** - Animation library for smooth transitions
+- **React Router v6** - Client-side routing with protected routes
+- **Axios** - HTTP client for API communication
+- **React Hot Toast** - Toast notifications for user feedback
 
 ### Backend
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework d'application web
-- **MongoDB Atlas** - Base de données cloud
-- **Mongoose** - Modélisation d'objets MongoDB
-- **JWT** - Tokens d'authentification JSON
-- **bcrypt** - Hachage de mots de passe
-- **Joi** - Validation des données
+- **Node.js** - JavaScript runtime environment
+- **Express.js** - Web application framework
+- **MongoDB** - NoSQL database for data storage
+- **Mongoose** - MongoDB object modeling
+- **JWT** - JSON Web Tokens for authentication
+- **bcryptjs** - Password hashing library
+- **Helmet** - Security middleware
+- **CORS** - Cross-origin resource sharing
 
-### DevOps & Tests
-- **Docker** - Containerisation
-- **Playwright** - Tests end-to-end
-- **Jest** - Tests unitaires
-- **ESLint** - Linting du code
-- **Prettier** - Formatage du code
+### Development Tools
+- **ESLint** - Code linting and quality assurance
+- **Prettier** - Code formatting
+- **Playwright** - End-to-end testing framework
+- **Jest** - Unit testing framework
 
-## 📁 Structure du Projet
+## Project Structure
 
 ```
 FuturistCards/
-├── frontend/                 # Application React frontend
+├── frontend/                    # React application
+│   ├── public/                 # Static assets
 │   ├── src/
-│   │   ├── components/      # Composants UI réutilisables
-│   │   ├── pages/          # Composants de pages
-│   │   ├── context/        # Providers React context
-│   │   ├── hooks/          # Hooks React personnalisés
-│   │   ├── services/       # Fonctions de service API
-│   │   └── api/            # Configuration Axios
-│   ├── public/             # Assets statiques
-│   └── tests/              # Tests frontend (E2E)
-├── backend/                 # API Node.js backend
-│   ├── controllers/        # Contrôleurs de routes
-│   ├── models/            # Modèles de base de données
-│   ├── routes/            # Routes API
-│   ├── middleware/        # Middleware personnalisé
-│   ├── utils/             # Fonctions utilitaires
-│   └── tests/             # Tests backend (Jest)
-├── .env.example            # Variables d'environnement exemple
-├── README.md              # Documentation du projet
-├── docker-compose.yml     # Configuration Docker
-└── package.json           # Scripts et dépendances racine
+│   │   ├── components/         # Reusable UI components
+│   │   │   ├── Card.jsx       # Business card component
+│   │   │   ├── Footer.jsx     # Application footer
+│   │   │   ├── Header.jsx     # Navigation header
+│   │   │   └── ...
+│   │   ├── pages/             # Main application pages
+│   │   │   ├── HomePage.jsx   # Landing page
+│   │   │   ├── CardsPage.jsx  # Card gallery
+│   │   │   ├── CreateCardPage.jsx
+│   │   │   ├── MyCardsPage.jsx
+│   │   │   └── ...
+│   │   ├── context/           # React Context providers
+│   │   │   ├── AuthContext.jsx
+│   │   │   ├── ThemeContext.jsx
+│   │   │   └── LanguageContext.jsx
+│   │   ├── hooks/             # Custom React hooks
+│   │   ├── services/          # API service functions
+│   │   │   └── api.js         # Axios configuration
+│   │   └── utils/             # Utility functions
+│   ├── package.json
+│   └── vite.config.js
+├── backend/                     # Node.js API server
+│   ├── config/                 # Configuration files
+│   │   └── db.js              # Database connection
+│   ├── controllers/            # Business logic
+│   │   ├── authController.js   # Authentication logic
+│   │   ├── cardController.js   # Card CRUD operations
+│   │   └── favoriteController.js
+│   ├── middleware/             # Express middleware
+│   │   ├── authMiddleware.js   # JWT verification
+│   │   ├── requireRole.js      # Role-based access
+│   │   └── errorHandler.js     # Error handling
+│   ├── models/                 # MongoDB schemas
+│   │   ├── User.js            # User model
+│   │   ├── Card.js            # Business card model
+│   │   └── Favorite.js        # Favorites model
+│   ├── routes/                 # API endpoints
+│   │   ├── auth.js            # Authentication routes
+│   │   ├── cards.js           # Card management routes
+│   │   └── favorites.js       # Favorites routes
+│   ├── utils/                  # Utility functions
+│   ├── package.json
+│   └── server.js              # Main server file
+├── scripts/                     # Utility scripts
+│   ├── reset-clean.sh         # Environment cleanup
+│   └── free-port.sh           # Port management
+└── README.md                   # This file
 ```
 
-## 📦 Fonctionnalités
+## Installation & Setup
 
-### 🔐 Authentification & Autorisation
-- Inscription et connexion utilisateur sécurisées
-- Authentification basée sur JWT avec tokens de rafraîchissement
-- Contrôle d'accès basé sur les rôles (user, business, admin)
-- Validation de mot de passe avec regex strict
-- Routes protégées et middleware
-
-### 📇 Gestion des Cartes de Visite
-- **Create** - Créer des cartes personnalisées
-- **Read** - Parcourir et rechercher des cartes
-- **Update** - Modifier les cartes existantes
-- **Delete** - Supprimer les cartes (propriétaire/admin uniquement)
-- Filtrage avancé et fonctionnalité de recherche
-- Organisation par catégories
-- Support d'upload d'images (URL et base64)
-
-### 💫 Expérience Utilisateur
-- **Design Responsive** - Approche mobile-first
-- **Mode Sombre/Clair** - Changement de thème avec persistance
-- **Multilingue** - Support FR, EN, AR, HE avec RTL
-- **UI Glassmorphisme** - Design moderne et futuriste
-- **Animations Fluides** - Transitions Framer Motion
-- **États de Chargement** - Feedback utilisateur amélioré
-
-### 📊 Fonctionnalités Sociales
-- Système Like/Unlike des cartes
-- Système de favoris
-- Suivi des vues
-- Profils utilisateur
-- Dashboard d'activité
-
-### 🛡️ Sécurité
-- Validation et assainissement des entrées
-- Limitation du taux de requêtes
-- Protection CORS
-- En-têtes de sécurité Helmet
-- Protection des variables d'environnement
-- Prévention des injections SQL
-
-## 🚀 Lancement Local
-
-### Prérequis
-- Node.js 18+ et npm
-- Compte MongoDB Atlas
+### Prerequisites
+- Node.js (version 16 or higher)
+- npm or yarn package manager
+- MongoDB (for production use)
 - Git
 
-### Installation
+### Quick Start
 
-```bash
-# 1. Cloner le repository
-git clone https://github.com/shayacoca/futuristcards.git
-cd futuristcards
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Sy2force/Project-react.git
+   cd Project-react
+   ```
 
-# 2. Installer les dépendances backend
-cd backend
-npm install
+2. **Backend Setup**
+   ```bash
+   cd backend
+   npm install
+   
+   # Create environment file
+   cp .env.example .env
+   # Edit .env with your configuration
+   
+   # Start development server
+   npm run dev
+   # Server runs on http://localhost:5001
+   ```
 
-# 3. Installer les dépendances frontend
-cd ../frontend
-npm install
-
-# 4. Configuration environnement
-# Copier et éditer les fichiers .env.example
-
-# 5. Démarrer l'application
-# Backend (port 5001)
-cd backend
-npm run dev
-
-# Frontend (port 3000)
-cd frontend
-npm run dev
-```
-
-## 🧪 Testing
-
-### Test Accounts
-- **Admin**: admin@futuristcards.com / AdminPass123!
-- **Business**: john.doe@example.com / Password123!
-- **User**: test@example.com / TestPass123!
-
-### API Testing
-```bash
-# Health check
-curl http://localhost:5001/api/health
-
-# Register user
-curl -X POST http://localhost:5001/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"firstName":"Test","lastName":"User","email":"test@example.com","password":"TestPass123!","role":"user"}'
-
-# Login
-curl -X POST http://localhost:5001/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"TestPass123!"}'
-```
-
-## 📱 Screenshots
-
-### Homepage
-![Homepage](./docs/screenshots/homepage.png)
-*Modern glassmorphic design with hero section and featured cards*
-
-### Cards Gallery
-![Cards Gallery](./docs/screenshots/cards.png)
-*Browse and search through business cards with filtering options*
-
-### Authentication
-![Login](./docs/screenshots/login.png)
-*Secure login with JWT authentication*
-
-### Dashboard
-![Dashboard](./docs/screenshots/dashboard.png)
-*Admin dashboard with user management and analytics*
-
-## 🔧 Configuration
+3. **Frontend Setup**
+   ```bash
+   cd frontend
+   npm install
+   
+   # Start development server
+   npm run dev
+   # Application runs on http://localhost:3000
+   ```
 
 ### Environment Variables
 
-#### Backend (.env)
+**Backend (.env)**
 ```env
-# Server Configuration
 PORT=5001
+MONGO_URI=mongodb://localhost:27017/futuristcards
+JWT_SECRET=your-super-secret-jwt-key-here
 NODE_ENV=development
-
-# Database
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/futuristcards
-
-# JWT Configuration
-JWT_SECRET=your-super-secret-jwt-key-minimum-32-characters
-JWT_REFRESH_SECRET=your-refresh-token-secret-key
-JWT_EXPIRE=7d
-JWT_REFRESH_EXPIRE=30d
-
-# CORS
-CLIENT_URL=http://localhost:3000
-
-# Rate Limiting
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
 ```
 
-#### Frontend (.env)
+**Frontend (.env)**
 ```env
 VITE_API_URL=http://localhost:5001/api
-VITE_APP_NAME=FuturistCards
-VITE_APP_VERSION=1.0.0
 ```
 
-## 🏗️ Project Structure
+## Usage Guide
 
-```
-FuturistCards/
-├── backend/                 # Node.js API
-│   ├── config/             # Database configuration
-│   ├── controllers/        # Route controllers
-│   ├── middleware/         # Custom middleware
-│   ├── models/            # MongoDB models
-│   ├── routes/            # API routes
-│   ├── utils/             # Utility functions
-│   └── server.js          # Entry point
-├── frontend/               # React application
-│   ├── src/
-│   │   ├── api/           # API services
-│   │   ├── components/    # React components
-│   │   ├── context/       # Context providers
-│   │   ├── hooks/         # Custom hooks
-│   │   ├── pages/         # Page components
-│   │   └── utils/         # Utility functions
-│   ├── public/            # Static assets
-│   └── index.html         # HTML template
-├── docs/                  # Documentation
-└── README.md             # This file
+### Authentication System
+
+The application uses a mock authentication system for development and demonstration:
+
+- **Login**: Use any valid email address
+- **Password**: Minimum 6 characters required
+- **Role Assignment**:
+  - Emails containing "admin" → Admin privileges
+  - Emails containing "business" or "company" → Business user (can create cards)
+  - All other emails → Regular user (browse and favorite only)
+
+### Creating Business Cards
+
+1. Log in with a business or admin account
+2. Navigate to "Create Card" in the navigation menu
+3. Fill in the required information:
+   - Full name and title
+   - Company name and description
+   - Contact information (phone, email, website)
+   - Business address
+   - Upload profile image (optional)
+4. Save the card to make it publicly available
+
+### Managing Cards
+
+- **View Cards**: Browse all public cards on the main gallery page
+- **Search**: Use the search bar to find specific people or companies
+- **Favorites**: Click the heart icon to save cards to your favorites
+- **My Cards**: View and manage all your created cards
+- **Edit**: Update card information at any time
+- **Delete**: Remove cards with confirmation prompt
+
+## API Documentation
+
+### Authentication Endpoints
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `GET /api/auth/profile` - Get current user profile
+
+### Card Management Endpoints
+- `GET /api/cards` - Get all public cards
+- `GET /api/cards/my-cards` - Get current user's cards
+- `POST /api/cards` - Create new business card
+- `PUT /api/cards/:id` - Update existing card
+- `DELETE /api/cards/:id` - Delete card
+- `GET /api/cards/:id` - Get specific card details
+
+### Favorites Endpoints
+- `GET /api/favorites` - Get user's favorite cards
+- `POST /api/favorites/:cardId` - Add card to favorites
+- `DELETE /api/favorites/:cardId` - Remove card from favorites
+
+## Testing
+
+### Frontend Testing
+```bash
+cd frontend
+npm run test        # Run unit tests
+npm run test:e2e    # Run end-to-end tests with Playwright
 ```
 
-## 🐛 Troubleshooting
+### Backend Testing
+```bash
+cd backend
+npm test           # Run API tests
+npm run test:watch # Run tests in watch mode
+```
+
+## Deployment
+
+### Production Build
+```bash
+# Build frontend for production
+cd frontend
+npm run build
+
+# The built files will be in the dist/ directory
+```
+
+### GitHub Pages Deployment
+The frontend is automatically deployed to GitHub Pages:
+- **Live URL**: https://sy2force.github.io/Project-react/
+- **Branch**: gh-pages (auto-deployed)
+
+### Backend Deployment
+The backend can be deployed to any Node.js hosting service:
+- Heroku
+- Vercel
+- Railway
+- DigitalOcean App Platform
+
+## Development Workflow
+
+1. **Feature Development**
+   - Create feature branch from main
+   - Implement changes in both frontend and backend
+   - Test locally with both servers running
+   - Commit changes with descriptive messages
+
+2. **Code Quality**
+   - Run ESLint for code linting
+   - Use Prettier for consistent formatting
+   - Write unit tests for new features
+   - Run E2E tests before deployment
+
+3. **Deployment Process**
+   - Build frontend for production
+   - Test production build locally
+   - Deploy backend to hosting service
+   - Deploy frontend to GitHub Pages
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers (iOS Safari, Chrome Mobile)
+
+## Performance Optimizations
+
+- Code splitting with React.lazy()
+- Image optimization and lazy loading
+- Bundle size optimization with Vite
+- Efficient state management with React Context
+- Memoization of expensive computations
+- Responsive images with multiple sizes
+
+## Security Features
+
+- JWT token authentication with expiration
+- Password hashing with bcrypt
+- Input validation and sanitization
+- CORS protection for API endpoints
+- Rate limiting to prevent abuse
+- Secure HTTP headers with Helmet.js
+- Protected routes on both frontend and backend
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-feature`)
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Commit your changes (`git commit -m 'Add new feature'`)
+7. Push to the branch (`git push origin feature/new-feature`)
+8. Open a Pull Request
+
+## Troubleshooting
 
 ### Common Issues
 
-#### Port Already in Use
+**Port Already in Use**
 ```bash
 # Kill processes on ports 3000 and 5001
-lsof -ti:3000 | xargs kill -9
-lsof -ti:5001 | xargs kill -9
+./scripts/free-port.sh
 ```
 
-#### MongoDB Connection Error
-- Verify MongoDB Atlas connection string
-- Check network access in MongoDB Atlas
-- Ensure IP address is whitelisted
-- Application runs in mock mode if MongoDB unavailable
+**Database Connection Issues**
+- Ensure MongoDB is running locally
+- Check MONGO_URI in backend .env file
+- Verify network connectivity
 
-#### Build Errors
+**Build Errors**
 ```bash
-# Clear node_modules and reinstall
+# Clean install dependencies
 rm -rf node_modules package-lock.json
 npm install
 ```
 
-#### CORS Issues
-- Verify CLIENT_URL in backend .env
-- Check API_URL in frontend .env
-- Ensure ports match configuration
+**Authentication Issues**
+- Clear browser localStorage
+- Check JWT_SECRET in backend .env
+- Verify API_URL in frontend .env
 
-## 🚀 Deployment
+## License
 
-### Netlify (Frontend)
-1. Build the frontend: `npm run build`
-2. Deploy the `dist` folder to Netlify
-3. Set environment variables in Netlify dashboard
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-### Heroku (Backend)
-1. Create Heroku app: `heroku create futuristcards-api`
-2. Set environment variables: `heroku config:set MONGO_URI=...`
-3. Deploy: `git push heroku main`
+## Acknowledgments
 
-### Docker
-```bash
-# Build and run with Docker Compose
-docker-compose up --build
-```
-
-## 📊 Performance
-
-- **Frontend Bundle Size**: ~335KB (112KB gzipped)
-- **API Response Time**: <100ms average
-- **Database Queries**: Optimized with indexes
-- **Image Loading**: Lazy loading implemented
-- **Caching**: Browser caching for static assets
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open Pull Request
-
-## 📝 License
-
-MIT License - see [LICENSE](LICENSE) file for details
-
-## 👨‍💻 Author
-
-**Shaï Acoca** - Full Stack Developer
-- GitHub: [@shayacoca](https://github.com/shayacoca)
-- Email: shay@futuristcards.com
+- React team for the excellent framework
+- Tailwind CSS for the utility-first approach
+- Framer Motion for smooth animations
+- MongoDB team for the flexible database
+- All open-source contributors
 
 ---
 
-Built with ❤️ using React, Node.js, and MongoDB
+**Project Status**: Production Ready  
+**Last Updated**: September 2025  
+**Version**: 1.0.0

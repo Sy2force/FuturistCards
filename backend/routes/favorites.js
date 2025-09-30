@@ -1,26 +1,18 @@
-const express = require('express');
-const {
-  toggleFavorite,
-  getFavorites,
-  removeFavorite,
-  checkFavorite,
-  getFavoriteCount,
-  clearAllFavorites,
-  getFavoriteStats,
-} = require('../controllers/favoriteController');
-const { protect } = require('../middleware/authMiddleware');
+import express from 'express';
+import favoriteController from '../controllers/favoriteController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
-// Protected routes
-router.get('/stats', protect, getFavoriteStats);
-router.post('/toggle', protect, toggleFavorite);
-router.get('/', protect, getFavorites);
-router.delete('/', protect, clearAllFavorites);
-router.delete('/:cardId', protect, removeFavorite);
-router.get('/:cardId/check', protect, checkFavorite);
+// Protected routes - all require authentication
+router.get('/stats', authMiddleware, favoriteController.getFavoriteStats);
+router.post('/toggle', authMiddleware, favoriteController.toggleFavorite);
+router.get('/', authMiddleware, favoriteController.getFavorites);
+router.delete('/', authMiddleware, favoriteController.clearAllFavorites);
+router.delete('/:cardId', authMiddleware, favoriteController.removeFavorite);
+router.get('/:cardId/check', authMiddleware, favoriteController.checkFavorite);
 
 // Public routes
-router.get('/count/:cardId', getFavoriteCount);
+router.get('/count/:cardId', favoriteController.getFavoriteCount);
 
-module.exports = router;
+export default router;

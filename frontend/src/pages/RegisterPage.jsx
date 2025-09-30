@@ -1,310 +1,203 @@
-// RegisterPage - Inscription utilisateur
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { 
-  UserIcon,
-  EnvelopeIcon, 
-  LockClosedIcon, 
-  EyeIcon, 
-  EyeSlashIcon,
-  PhoneIcon,
-  BuildingOfficeIcon
-} from '@heroicons/react/24/outline';
-import { useAuth } from '../context/AuthContext';
-import ButtonGlass from '../components/common/ButtonGlass';
-import toast from 'react-hot-toast';
+import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../context/LanguageContext';
 
-const RegisterPage = () => {
-  // État du formulaire
+const RegisterPageSimple = () => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    phone: '',
     email: '',
     password: '',
     confirmPassword: '',
-    isBusiness: false,
-    acceptTerms: false
+    role: 'user'
   });
-  
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState('');
 
-  const { register, user } = useAuth();
   const navigate = useNavigate();
+  const { register } = useAuth();
+  const { t } = useLanguage();
 
-  // Redirection si déjà connecté
-  useEffect(() => {
-    if (user) {
-      navigate('/', { replace: true });
-    }
-  }, [user, navigate]);
-
-  // Gestion des changements de formulaire
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }));
-    
-    // Effacer l'erreur du champ modifié
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
+    setError('');
   };
 
-  // Validation du formulaire
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Le prénom est requis';
-    }
-    
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Le nom est requis';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'L\'email est requis';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email invalide';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Le mot de passe est requis';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 8 caractères';
-    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/.test(formData.password)) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial (!@#$%^&*_-)';
-    }
-    
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
-    }
-
-    if (!formData.acceptTerms) {
-      newErrors.acceptTerms = 'Vous devez accepter les conditions d\'utilisation';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
+    setLoading(true);
+    setError('');
+
+    if (formData.password !== formData.confirmPassword) {
+      setError(t('passwordsDoNotMatch'));
+      setLoading(false);
+      return;
+    }
 
     try {
-      setLoading(true);
       await register(formData);
-      toast.success('Compte créé avec succès !');
       navigate('/');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Erreur lors de l\'inscription');
+      setError(error.message || t('registrationError'));
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
       <div className="max-w-md w-full space-y-8">
         {/* En-tête */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center"
-        >
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            Créer un compte
-          </h2>
-          <p className="mt-2 text-gray-400">
-            Rejoignez FuturistCards aujourd&apos;hui
+        <div className="text-center">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2">
+            {t('registration')}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-lg">
+            {t('createYourAccount')}
           </p>
-        </motion.div>
+        </div>
 
         {/* Formulaire */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10"
-        >
+        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Nom et prénom */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Prénom *
-                </label>
-                <div className="relative">
-                  <UserIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Prénom"
-                  />
-                </div>
-                {errors.firstName && <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>}
+            {error && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
               </div>
+            )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Nom *
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Nom"
-                />
-                {errors.lastName && <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>}
-              </div>
+            {/* Prénom */}
+            <div>
+              <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('firstName')}
+              </label>
+              <input
+                type="text"
+                name="firstName"
+                id="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+                placeholder={t('firstNamePlaceholder')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
+            </div>
+
+            {/* Nom */}
+            <div>
+              <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('lastName')}
+              </label>
+              <input
+                type="text"
+                name="lastName"
+                id="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+                placeholder={t('lastNamePlaceholder')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
             </div>
 
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email *
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('emailAddress')}
               </label>
-              <div className="relative">
-                <EnvelopeIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="votre@email.com"
-                />
-              </div>
-              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder={t('emailPlaceholder')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
             </div>
 
-            {/* Téléphone */}
+            {/* Rôle */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Téléphone
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('accountType')}
               </label>
-              <div className="relative">
-                <PhoneIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="+33 1 23 45 67 89"
-                />
-              </div>
+              <select
+                name="role"
+                id="role"
+                value={formData.role}
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              >
+                <option value="user">{t('user')}</option>
+                <option value="business">{t('professional')}</option>
+              </select>
             </div>
 
             {/* Mot de passe */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Mot de passe *
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('password')}
               </label>
-              <div className="relative">
-                <LockClosedIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className="w-full pl-10 pr-12 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Mot de passe"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-white"
-                >
-                  {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
-                </button>
-              </div>
-              {errors.password && <p className="text-red-400 text-sm mt-1">{errors.password}</p>}
+              <input
+                type="password"
+                name="password"
+                id="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                placeholder={t('passwordMinLength')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+              />
             </div>
 
             {/* Confirmation mot de passe */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Confirmer le mot de passe *
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {t('confirmPassword')}
               </label>
-              <div className="relative">
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/10 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent pr-12"
-                  placeholder="Confirmer votre mot de passe"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-3 text-gray-400 hover:text-white"
-                >
-                  {showConfirmPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
-                </button>
-              </div>
-              {errors.confirmPassword && <p className="text-red-400 text-sm mt-1">{errors.confirmPassword}</p>}
-            </div>
-
-            {/* Compte professionnel */}
-            <div className="flex items-center">
               <input
-                type="checkbox"
-                name="isBusiness"
-                checked={formData.isBusiness}
+                type="password"
+                name="confirmPassword"
+                id="confirmPassword"
+                value={formData.confirmPassword}
                 onChange={handleChange}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                required
+                placeholder={t('confirmPasswordPlaceholder')}
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
-              <label className="ml-2 block text-sm text-gray-300">
-                <BuildingOfficeIcon className="inline w-4 h-4 mr-1" />
-                Compte professionnel (pour créer des cartes)
-              </label>
             </div>
 
-            {/* Bouton de soumission */}
-            <ButtonGlass
+            {/* Bouton d'inscription */}
+            <button
               type="submit"
               disabled={loading}
-              className="w-full"
-              size="lg"
+              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-300 text-white py-3 px-4 rounded-lg font-medium transition-colors"
             >
-              {loading ? 'Création...' : 'Créer mon compte'}
-            </ButtonGlass>
+              {loading ? t('registering') : t('signUp')}
+            </button>
           </form>
 
-          {/* Lien de connexion */}
           <div className="mt-6 text-center">
-            <p className="text-gray-400">
-              Déjà un compte ?{' '}
-              <Link to="/login" className="text-blue-400 hover:text-blue-300">
-                Se connecter
+            <p className="text-gray-600 dark:text-gray-400">
+              {t('alreadyHaveAccount')}{' '}
+              <Link 
+                to="/login" 
+                className="text-blue-500 hover:text-blue-600 font-medium"
+              >
+                {t('signIn')}
               </Link>
             </p>
           </div>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default RegisterPage;
+export default RegisterPageSimple;

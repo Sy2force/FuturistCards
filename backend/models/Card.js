@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const cardSchema = new mongoose.Schema(
   {
@@ -491,4 +491,4 @@ cardSchema.statics.getCardsByCategory = function (category, limit = 20) {
     .limit(limit);
 };
 
-module.exports = mongoose.model('Card', cardSchema);
+export default mongoose.model('Card', cardSchema);

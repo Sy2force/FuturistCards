@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const favoriteSchema = new mongoose.Schema(
   {
@@ -66,4 +66,4 @@ favoriteSchema.statics.getFavoriteCount = function (cardId) {
   return this.countDocuments({ card: cardId });
 };
 
-module.exports = mongoose.model('Favorite', favoriteSchema);
+export default mongoose.model('Favorite', favoriteSchema);

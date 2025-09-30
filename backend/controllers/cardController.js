@@ -1,7 +1,7 @@
 // Contrôleur des cartes - Version corrigée avec favorites et views
-const mongoose = require('mongoose');
-const Card = require('../models/Card');
-const Favorite = require('../models/Favorite');
+import Card from '../models/Card.js';
+import User from '../models/User.js';
+import Favorite from '../models/Favorite.js';
 
 // Données simulées avec viewCount et favoris
 const mockCards = [
@@ -475,14 +475,146 @@ const toggleFavorite = async (req, res) => {
   }
 };
 
-module.exports = {
+// Recherche de cartes avec filtres
+const searchCards = async (req, res) => {
+  try {
+    const { q, category, skills, location, page = 1, limit = 12 } = req.query;
+    
+    // Simuler la recherche avec les données mockées
+    let filteredCards = [...mockCards];
+    
+    // Filtrer par requête de recherche
+    if (q && q.trim()) {
+      const searchTerm = q.toLowerCase();
+      filteredCards = filteredCards.filter(card => 
+        card.title.toLowerCase().includes(searchTerm) ||
+        card.description.toLowerCase().includes(searchTerm) ||
+        card.company.toLowerCase().includes(searchTerm) ||
+        card.position.toLowerCase().includes(searchTerm) ||
+        card.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+      );
+    }
+    
+    // Filtrer par catégorie
+    if (category && category !== '') {
+      filteredCards = filteredCards.filter(card => 
+        card.category.toLowerCase() === category.toLowerCase()
+      );
+    }
+    
+    // Filtrer par compétences
+    if (skills) {
+      const skillsArray = Array.isArray(skills) ? skills : [skills];
+      filteredCards = filteredCards.filter(card =>
+        skillsArray.some(skill => 
+          card.tags.some(tag => tag.toLowerCase().includes(skill.toLowerCase()))
+        )
+      );
+    }
+    
+    // Filtrer par localisation
+    if (location && location.trim()) {
+      const locationTerm = location.toLowerCase();
+      filteredCards = filteredCards.filter(card =>
+        card.address.toLowerCase().includes(locationTerm)
+      );
+    }
+    
+    // Pagination
+    const startIndex = (page - 1) * limit;
+    const endIndex = startIndex + parseInt(limit);
+    const paginatedCards = filteredCards.slice(startIndex, endIndex);
+    
+    // Calculer les métadonnées de pagination
+    const totalPages = Math.ceil(filteredCards.length / limit);
+    
+    res.json({
+      success: true,
+      data: paginatedCards,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total: filteredCards.length,
+        totalPages,
+        hasNext: page < totalPages,
+        hasPrev: page > 1
+      }
+    });
+  } catch (error) {
+    console.error('Erreur lors de la recherche:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la recherche'
+    });
+  }
+};
+
+// Obtenir des suggestions de recherche
+const getSuggestions = async (req, res) => {
+  try {
+    const { q } = req.query;
+    
+    if (!q || q.trim().length < 2) {
+      return res.json({
+        success: true,
+        data: []
+      });
+    }
+    
+    const searchTerm = q.toLowerCase();
+    const suggestions = new Set();
+    
+    // Collecter les suggestions depuis les données mockées
+    mockCards.forEach(card => {
+      // Suggestions basées sur les titres
+      if (card.title.toLowerCase().includes(searchTerm)) {
+        suggestions.add(card.title);
+      }
+      
+      // Suggestions basées sur les entreprises
+      if (card.company.toLowerCase().includes(searchTerm)) {
+        suggestions.add(card.company);
+      }
+      
+      // Suggestions basées sur les positions
+      if (card.position.toLowerCase().includes(searchTerm)) {
+        suggestions.add(card.position);
+      }
+      
+      // Suggestions basées sur les tags
+      card.tags.forEach(tag => {
+        if (tag.toLowerCase().includes(searchTerm)) {
+          suggestions.add(tag);
+        }
+      });
+    });
+    
+    // Limiter à 5 suggestions
+    const suggestionArray = Array.from(suggestions).slice(0, 5);
+    
+    res.json({
+      success: true,
+      data: suggestionArray
+    });
+  } catch (error) {
+    console.error('Erreur lors de la récupération des suggestions:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la récupération des suggestions'
+    });
+  }
+};
+
+export default {
   getCards,
   getCard,
   createCard,
   updateCard,
   deleteCard,
-  likeCard,
-  getMyCards,
   getFavorites,
-  toggleFavorite
+  getMyCards,
+  likeCard,
+  toggleFavorite,
+  searchCards,
+  getSearchSuggestions: getSuggestions
 };

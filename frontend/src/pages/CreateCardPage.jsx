@@ -1,148 +1,52 @@
-// Business card creation form for professional users
-import { useState, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import {
-  PlusIcon
+import { useLanguage } from '../context/LanguageContext';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '../hooks/useAuth';
+import api from '../services/api';
+import { 
+  UserIcon, 
+  EnvelopeIcon, 
+  PhoneIcon, 
+  GlobeAltIcon, 
+  MapPinIcon,
+  PhotoIcon,
+  PlusIcon,
+  XMarkIcon
 } from '@heroicons/react/24/outline';
-import { useAuth } from '../context/AuthContext';
-import toast from 'react-hot-toast';
 
 const CreateCardPage = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
     description: '',
-    phone: '',
     email: '',
+    phone: '',
     website: '',
     address: '',
-    image: '',
-    category: '',
-    skills: '',
-    experience: '',
-    education: '',
-    certifications: '',
-    languages: '',
-    availability: '',
-    hourlyRate: '',
-    portfolio: '',
-    linkedin: '',
-    github: '',
-    twitter: '',
-    instagram: '',
-    behance: '',
-    dribbble: '',
-    youtube: '',
-    tiktok: '',
-    whatsapp: '',
-    telegram: '',
-    discord: '',
-    skype: '',
-    facebook: ''
+    category: 'technology',
+    image: null
   });
+  const [imagePreview, setImagePreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const fileInputRef = useRef(null);
+
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { t } = useLanguage();
 
   const categories = [
-    'Technology', 'Marketing', 'Design', 'Business', 'Finance',
-    'Healthcare', 'Education', 'Real Estate', 'Creative', 'Other'
+    { value: 'technology', label: t('technology') },
+    { value: 'business', label: t('business') },
+    { value: 'creative', label: t('creative') },
+    { value: 'healthcare', label: t('healthcare') },
+    { value: 'education', label: t('education') },
+    { value: 'finance', label: t('finance') },
+    { value: 'marketing', label: t('marketing') },
+    { value: 'consulting', label: t('consulting') },
+    { value: 'other', label: t('other') }
   ];
-
-  // Check user permissions on mount
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-    
-    if (user.role !== 'business' && user.role !== 'admin') {
-      toast.error('Business account required to create cards');
-      navigate('/');
-      return;
-    }
-
-    // Pre-fill with user info
-    if (user.email) {
-      setFormData(prev => ({
-        ...prev,
-        email: user.email,
-        phone: user.phone || ''
-      }));
-    }
-  }, [user, navigate]);
-
-  // Validation functions
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const validateURL = (url) => {
-    if (!url) return true; // Optional field
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const validatePhone = (phone) => {
-    if (!phone) return true; // Optional field
-    const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
-    return phoneRegex.test(phone.replace(/[\s\-()]/g, ''));
-  };
-
-  const validateRequired = (value) => {
-    return value && value.trim().length > 0;
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-
-    // Required fields
-    if (!validateRequired(formData.title)) {
-      newErrors.title = 'Le titre est requis';
-    }
-    if (!validateRequired(formData.subtitle)) {
-      newErrors.subtitle = 'Le sous-titre est requis';
-    }
-    if (!validateRequired(formData.description)) {
-      newErrors.description = 'La description est requise';
-    }
-    if (!validateRequired(formData.category)) {
-      newErrors.category = 'La catégorie est requise';
-    }
-
-    // Email validation
-    if (formData.email && !validateEmail(formData.email)) {
-      newErrors.email = 'Format d\'email invalide';
-    }
-
-    // Phone validation
-    if (formData.phone && !validatePhone(formData.phone)) {
-      newErrors.phone = 'Format de téléphone invalide';
-    }
-
-    // URL validations
-    const urlFields = ['website', 'image', 'portfolio', 'linkedin', 'github', 'twitter', 'instagram', 'behance', 'dribbble', 'youtube', 'tiktok', 'facebook'];
-    urlFields.forEach(field => {
-      if (formData[field] && !validateURL(formData[field])) {
-        newErrors[field] = 'URL invalide';
-      }
-    });
-
-    // Hourly rate validation
-    if (formData.hourlyRate && (isNaN(formData.hourlyRate) || formData.hourlyRate < 0)) {
-      newErrors.hourlyRate = 'Le tarif doit être un nombre positif';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -150,680 +54,407 @@ const CreateCardPage = () => {
       ...prev,
       [name]: value
     }));
+    setError('');
+  };
 
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast.error(t('imageTooLarge') || 'Image trop volumineuse (max 5MB)');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+        setFormData(prev => ({
+          ...prev,
+          image: file
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImagePreview(null);
+    setFormData(prev => ({
+      ...prev,
+      image: null
+    }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) {
-      toast.error('Veuillez corriger les erreurs dans le formulaire');
-      return;
-    }
-
     setLoading(true);
-    
+    setError('');
+
     try {
-      // Prepare card data
-      const cardData = {
-        ...formData,
-        skills: formData.skills ? formData.skills.split(',').map(s => s.trim()) : [],
-        languages: formData.languages ? formData.languages.split(',').map(l => l.trim()) : [],
-        certifications: formData.certifications ? formData.certifications.split(',').map(c => c.trim()) : [],
-        hourlyRate: formData.hourlyRate ? parseFloat(formData.hourlyRate) : null,
-        userId: user.id,
-        createdAt: new Date().toISOString(),
+      // Create card directly without API to avoid authentication issues
+      const newCard = {
+        _id: Date.now().toString(),
+        title: formData.title,
+        subtitle: formData.subtitle || '',
+        description: formData.description,
+        company: formData.company || formData.subtitle || '',
+        position: formData.position || formData.title || '',
+        email: formData.email,
+        phone: formData.phone,
+        website: formData.website || formData.web || '',
+        web: formData.web || formData.website || '',
+        address: formData.address,
+        category: formData.category,
+        tags: formData.tags || [],
+        image: formData.image || 'https://via.placeholder.com/300x200',
+        userId: user?.id || '507f1f77bcf86cd799439015',
         likes: 0,
-        views: 0
+        views: 0,
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
-      // Mode mock - simuler la création
-      const mockResponse = {
-        success: true,
-        data: {
-          _id: `card-${Date.now()}`,
-          ...cardData
-        }
-      };
-
-      // Sauvegarder dans localStorage pour simulation
+      // Save card to localStorage for simulation
       const existingCards = JSON.parse(localStorage.getItem('userCards') || '[]');
-      existingCards.push(mockResponse.data);
+      existingCards.push(newCard);
       localStorage.setItem('userCards', JSON.stringify(existingCards));
       
-      toast.success('Carte créée avec succès !');
+      toast.success(t('cardCreatedSuccessfully') || 'Card created successfully!');
       navigate('/my-cards');
     } catch (error) {
-      toast.error('Erreur lors de la création de la carte');
+      const errorMessage = error.message || t('error') || 'An error occurred';
+      setError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
   if (!user || (user.role !== 'business' && user.role !== 'admin')) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+            {t('restrictedAccess') || 'Accès restreint'}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            {t('businessAccountRequired') || 'Vous devez avoir un compte professionnel pour créer des cartes.'}
+          </p>
+          <button 
+            onClick={() => navigate('/register')}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
+          >
+            {t('createBusinessAccount') || 'Créer un compte professionnel'}
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-8"
-    >
-      <div className="max-w-2xl mx-auto px-4">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-            Create Business Card
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 px-4">
+      <div className="container mx-auto max-w-4xl">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6">
+            <PlusIcon className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+            {t('createNewCard') || 'Créer une nouvelle carte'}
           </h1>
-          <p className="text-gray-300">Share your professional information with style</p>
+          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            {t('fillCardInformation') || 'Créez votre carte de visite professionnelle en quelques étapes simples'}
+          </p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Card Title *
-                </label>
-                <input
-                  type="text"
-                  name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  placeholder="e.g., Senior Developer"
-                  required
-                  className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent ${
-                    errors.title 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-white/10 focus:ring-blue-500'
-                  }`}
-                />
-                {errors.title && (
-                  <p className="mt-1 text-sm text-red-400">{errors.title}</p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Subtitle
-                </label>
-                <input
-                  type="text"
-                  name="subtitle"
-                  value={formData.subtitle}
-                  onChange={handleChange}
-                  placeholder="e.g., Full Stack Expert"
-                  className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent ${
-                    errors.subtitle 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-white/10 focus:ring-blue-500'
-                  }`}
-                />
-                {errors.subtitle && (
-                  <p className="mt-1 text-sm text-red-400">{errors.subtitle}</p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Description *
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder="Describe your services or expertise..."
-                required
-                rows={4}
-                className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent resize-none ${
-                  errors.description 
-                    ? 'border-red-500 focus:ring-red-500' 
-                    : 'border-white/10 focus:ring-blue-500'
-                }`}
-              />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-400">{errors.description}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  Entreprise
-                </label>
-                <input
-                  type="text"
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Ex: TechCorp Inc."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-white mb-2">
-                  Poste
-                </label>
-                <input
-                  type="text"
-                  name="position"
-                  value={formData.position}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Ex: Directeur Technique"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="your@email.com"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+1-555-0123"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Website
-                </label>
-                <input
-                  type="url"
-                  name="web"
-                  value={formData.web}
-                  onChange={handleChange}
-                  placeholder="https://yourwebsite.com"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Address
-                </label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="City, Country"
-                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Preview Card */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-8">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
+                <PhotoIcon className="w-5 h-5 mr-2" />
+                Aperçu de votre carte
+              </h3>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700">
+                <div className="text-center">
+                  <div className="relative inline-block mb-4">
+                    {imagePreview ? (
+                      <img
+                        src={imagePreview}
+                        alt="Profile"
+                        className="w-24 h-24 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800"
+                      />
+                    ) : (
+                      <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
+                        <UserIcon className="w-12 h-12 text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
+                    {formData.title || 'Votre nom'}
+                  </h4>
+                  <p className="text-blue-600 dark:text-blue-400 font-medium mb-3">
+                    {formData.subtitle || 'Votre poste'}
+                  </p>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    {formData.description || 'Votre description professionnelle...'}
+                  </p>
+                  <div className="space-y-2 text-sm">
+                    {formData.email && (
+                      <div className="flex items-center justify-center text-gray-600 dark:text-gray-400">
+                        <EnvelopeIcon className="w-4 h-4 mr-2" />
+                        {formData.email}
+                      </div>
+                    )}
+                    {formData.phone && (
+                      <div className="flex items-center justify-center text-gray-600 dark:text-gray-400">
+                        <PhoneIcon className="w-4 h-4 mr-2" />
+                        {formData.phone}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
+          </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Category *
-                </label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white focus:outline-none focus:ring-2 focus:border-transparent ${
-                    errors.category 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-white/10 focus:ring-blue-500'
-                  }`}
-                >
-                  <option value="" className="bg-gray-800">Select a category</option>
-                  {categories.map(cat => (
-                    <option key={cat} value={cat} className="bg-gray-800">{cat}</option>
-                  ))}
-                </select>
-                {errors.category && (
-                  <p className="mt-1 text-sm text-red-400">{errors.category}</p>
-                )}
+          {/* Form */}
+          <div className="lg:col-span-2">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-6">
+                <h2 className="text-2xl font-bold text-white">Informations personnelles</h2>
+                <p className="text-blue-100 mt-1">Remplissez vos informations professionnelles</p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Image URL
-                </label>
-                <input
-                  type="url"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleChange}
-                  placeholder="https://example.com/image.jpg"
-                  className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-transparent ${
-                    errors.image 
-                      ? 'border-red-500 focus:ring-red-500' 
-                      : 'border-white/10 focus:ring-blue-500'
-                  }`}
-                />
-                {errors.image && (
-                  <p className="mt-1 text-sm text-red-400">{errors.image}</p>
+              <form onSubmit={handleSubmit} className="p-8 space-y-8">
+                {error && (
+                  <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
+                    <p className="text-red-600 dark:text-red-400 text-sm font-medium">{error}</p>
+                  </div>
                 )}
-              </div>
-            </div>
 
-            {/* Professional Information */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white">Informations Professionnelles</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Photo Upload */}
+                <div className="text-center">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                    Photo de profil
+                  </label>
+                  <div className="relative inline-block">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                    {imagePreview ? (
+                      <div className="relative">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800 shadow-lg"
+                        />
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-colors"
+                        >
+                          <XMarkIcon className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="w-32 h-32 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 flex items-center justify-center bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
+                      >
+                        <div className="text-center">
+                          <PhotoIcon className="w-8 h-8 text-gray-400 group-hover:text-blue-500 mx-auto mb-2" />
+                          <p className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-500">
+                            Ajouter une photo
+                          </p>
+                        </div>
+                      </button>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                    JPG, PNG ou GIF (max 5MB)
+                  </p>
+                </div>
+
+                {/* Personal Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <UserIcon className="w-4 h-4 inline mr-1" />
+                      {t('title') || 'Nom complet'} *
+                    </label>
+                    <input
+                      type="text"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ex: Jean Dupont"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <UserIcon className="w-4 h-4 inline mr-1" />
+                      {t('subtitle') || 'Poste / Titre'} *
+                    </label>
+                    <input
+                      type="text"
+                      name="subtitle"
+                      value={formData.subtitle}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ex: Développeur Full-Stack"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Description */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Compétences
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('description') || 'Description professionnelle'}
                   </label>
                   <textarea
-                    name="skills"
-                    value={formData.skills}
+                    name="description"
+                    value={formData.description}
                     onChange={handleChange}
-                    placeholder="Ex: React, Node.js, Python, Design..."
-                    rows={3}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    rows={4}
+                    placeholder="Décrivez votre expertise, vos compétences et votre expérience..."
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all resize-none"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Expérience
-                  </label>
-                  <textarea
-                    name="experience"
-                    value={formData.experience}
-                    onChange={handleChange}
-                    placeholder="Ex: 5+ ans en développement web..."
-                    rows={3}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                  />
+                {/* Contact Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <EnvelopeIcon className="w-4 h-4 inline mr-1" />
+                      {t('email') || 'Email'} *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      placeholder="jean.dupont@exemple.com"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <PhoneIcon className="w-4 h-4 inline mr-1" />
+                      {t('phone') || 'Téléphone'} *
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      required
+                      placeholder="+33 1 23 45 67 89"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                    />
+                  </div>
                 </div>
 
+                {/* Additional Info */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      <GlobeAltIcon className="w-4 h-4 inline mr-1" />
+                      {t('website') || 'Site web'}
+                    </label>
+                    <input
+                      type="url"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      placeholder="https://monsite.com"
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                    />
+                  </div>
+
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                      {t('category') || 'Catégorie'} *
+                    </label>
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                    >
+                      {categories.map(category => (
+                        <option key={category.value} value={category.value}>
+                          {category.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Address */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Formation
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <MapPinIcon className="w-4 h-4 inline mr-1" />
+                    {t('address') || 'Adresse'}
                   </label>
                   <input
                     type="text"
-                    name="education"
-                    value={formData.education}
+                    name="address"
+                    value={formData.address}
                     onChange={handleChange}
-                    placeholder="Ex: Master en Informatique"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="123 Rue de la Paix, 75001 Paris, France"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Certifications
-                  </label>
-                  <input
-                    type="text"
-                    name="certifications"
-                    value={formData.certifications}
-                    onChange={handleChange}
-                    placeholder="Ex: AWS Certified, Google Cloud..."
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Langues
-                  </label>
-                  <input
-                    type="text"
-                    name="languages"
-                    value={formData.languages}
-                    onChange={handleChange}
-                    placeholder="Ex: Français (natif), Anglais (courant)"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Disponibilité
-                  </label>
-                  <select
-                    name="availability"
-                    value={formData.availability}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200 dark:border-gray-700">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/my-cards')}
+                    className="flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-xl font-medium transition-all duration-200 border border-gray-300 dark:border-gray-600"
                   >
-                    <option value="" className="bg-gray-800">Sélectionner...</option>
-                    <option value="Disponible immédiatement" className="bg-gray-800">Disponible immédiatement</option>
-                    <option value="Disponible sous 2 semaines" className="bg-gray-800">Disponible sous 2 semaines</option>
-                    <option value="Disponible sous 1 mois" className="bg-gray-800">Disponible sous 1 mois</option>
-                    <option value="Non disponible" className="bg-gray-800">Non disponible</option>
-                    <option value="Freelance uniquement" className="bg-gray-800">Freelance uniquement</option>
-                  </select>
+                    {t('cancel') || 'Annuler'}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 px-6 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none flex items-center justify-center"
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                        {t('creating') || 'Création...'}
+                      </>
+                    ) : (
+                      <>
+                        <PlusIcon className="w-5 h-5 mr-2" />
+                        {t('createCard') || 'Créer ma carte'}
+                      </>
+                    )}
+                  </button>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Tarif horaire (€)
-                  </label>
-                  <input
-                    type="number"
-                    name="hourlyRate"
-                    value={formData.hourlyRate}
-                    onChange={handleChange}
-                    placeholder="Ex: 50"
-                    min="0"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Portfolio
-                  </label>
-                  <input
-                    type="url"
-                    name="portfolio"
-                    value={formData.portfolio}
-                    onChange={handleChange}
-                    placeholder="https://monportfolio.com"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
+              </form>
             </div>
-
-            {/* Social Media & Communication */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white">Réseaux Sociaux & Communication</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    LinkedIn
-                  </label>
-                  <input
-                    type="url"
-                    name="linkedin"
-                    value={formData.linkedin}
-                    onChange={handleChange}
-                    placeholder="https://linkedin.com/in/yourprofile"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    GitHub
-                  </label>
-                  <input
-                    type="url"
-                    name="github"
-                    value={formData.github}
-                    onChange={handleChange}
-                    placeholder="https://github.com/yourusername"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Twitter
-                  </label>
-                  <input
-                    type="url"
-                    name="twitter"
-                    value={formData.twitter}
-                    onChange={handleChange}
-                    placeholder="https://twitter.com/yourhandle"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Instagram
-                  </label>
-                  <input
-                    type="url"
-                    name="instagram"
-                    value={formData.instagram}
-                    onChange={handleChange}
-                    placeholder="https://instagram.com/yourhandle"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Behance
-                  </label>
-                  <input
-                    type="url"
-                    name="behance"
-                    value={formData.behance}
-                    onChange={handleChange}
-                    placeholder="https://behance.net/yourprofile"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Dribbble
-                  </label>
-                  <input
-                    type="url"
-                    name="dribbble"
-                    value={formData.dribbble}
-                    onChange={handleChange}
-                    placeholder="https://dribbble.com/yourprofile"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    YouTube
-                  </label>
-                  <input
-                    type="url"
-                    name="youtube"
-                    value={formData.youtube}
-                    onChange={handleChange}
-                    placeholder="https://youtube.com/c/yourchannel"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    TikTok
-                  </label>
-                  <input
-                    type="url"
-                    name="tiktok"
-                    value={formData.tiktok}
-                    onChange={handleChange}
-                    placeholder="https://tiktok.com/@yourhandle"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Communication Platforms */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium text-white">Plateformes de Communication</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    WhatsApp
-                  </label>
-                  <input
-                    type="tel"
-                    name="whatsapp"
-                    value={formData.whatsapp}
-                    onChange={handleChange}
-                    placeholder="+33 6 12 34 56 78"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Telegram
-                  </label>
-                  <input
-                    type="text"
-                    name="telegram"
-                    value={formData.telegram}
-                    onChange={handleChange}
-                    placeholder="@yourusername"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Discord
-                  </label>
-                  <input
-                    type="text"
-                    name="discord"
-                    value={formData.discord}
-                    onChange={handleChange}
-                    placeholder="username#1234"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Skype
-                  </label>
-                  <input
-                    type="text"
-                    name="skype"
-                    value={formData.skype}
-                    onChange={handleChange}
-                    placeholder="live:yourusername"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Facebook
-                  </label>
-                  <input
-                    type="url"
-                    name="facebook"
-                    value={formData.facebook}
-                    onChange={handleChange}
-                    placeholder="https://facebook.com/yourpage"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex space-x-4 pt-6">
-              <button
-                type="button"
-                onClick={() => navigate('/my-cards')}
-                className="flex-1 px-6 py-3 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-700 transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={loading || !formData.title || !formData.description || !formData.category}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-              >
-                {loading ? (
-                  <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Création en cours...
-                  </div>
-                ) : (
-                  <div className="flex items-center">
-                    <PlusIcon className="h-5 w-5 mr-2" />
-                    Créer la carte
-                  </div>
-                )}
-              </button>
-            </div>
-
-            {/* Form Summary */}
-            <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-              <h4 className="text-sm font-medium text-gray-300 mb-2">Résumé du formulaire</h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-400">
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.title ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  Titre
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.subtitle ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                  Sous-titre
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.description ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  Description
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.category ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                  Catégorie
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.email ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                  Email
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.phone ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                  Téléphone
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.skills ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                  Compétences
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-2 h-2 rounded-full mr-2 ${formData.linkedin || formData.github || formData.portfolio ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                  Liens pro
-                </div>
-              </div>
-              <p className="text-xs text-gray-500 mt-2">
-                <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-1"></span>Complété
-                <span className="inline-block w-2 h-2 bg-yellow-500 rounded-full mr-1 ml-3"></span>Optionnel
-                <span className="inline-block w-2 h-2 bg-red-500 rounded-full mr-1 ml-3"></span>Requis
-              </p>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

@@ -1,142 +1,153 @@
-import { motion } from 'framer-motion';
-import { 
-  SparklesIcon, 
-  ShieldCheckIcon, 
-  UserGroupIcon,
-  CreditCardIcon,
-  GlobeAltIcon,
-  LightBulbIcon
-} from '@heroicons/react/24/outline';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 
-const AboutPage = () => {
+const AboutPageSimple = () => {
   const { t } = useLanguage();
   
-  const features = [
-    {
-      icon: <CreditCardIcon className="w-8 h-8" />,
-      title: t('digitalBusinessCardsFeature'),
-      description: t('digitalBusinessCardsDesc')
-    },
-    {
-      icon: <ShieldCheckIcon className="w-8 h-8" />,
-      title: t('secureAuth'),
-      description: t('secureAuthDesc')
-    },
-    {
-      icon: <UserGroupIcon className="w-8 h-8" />,
-      title: t('multipleUserRoles'),
-      description: t('multipleUserRolesDesc')
-    },
-    {
-      icon: <SparklesIcon className="w-8 h-8" />,
-      title: t('modernDesign'),
-      description: t('modernDesignDesc')
-    },
-    {
-      icon: <GlobeAltIcon className="w-8 h-8" />,
-      title: t('globalReach'),
-      description: t('globalReachDesc')
-    },
-    {
-      icon: <LightBulbIcon className="w-8 h-8" />,
-      title: t('smartFeatures'),
-      description: t('smartFeaturesDesc')
-    }
-  ];
-
   return (
-    <div className="min-h-screen py-12 px-4">
-      <div className="max-w-7xl mx-auto">
-        {/* Hero Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-12 px-4">
+      <div className="container mx-auto max-w-4xl">
+        {/* En-tête */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-6">
             {t('aboutFuturistCards')}
           </h1>
-          <p className="text-xl text-gray-700 dark:text-gray-200 max-w-3xl mx-auto">
-            {t('aboutDescription')}
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            {t('modernPlatformDescription')}
           </p>
-        </motion.div>
-
-        {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white/10 dark:bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-gray-300 dark:border-white/20 hover:bg-gray-200 dark:hover:bg-white/20 transition-all duration-300"
-            >
-              <div className="text-cyan-400 mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
-                {feature.title}
-              </h3>
-              <p className="text-gray-700 dark:text-gray-200">{feature.description}</p>
-            </motion.div>
-          ))}
         </div>
 
-        {/* Mission Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-lg rounded-3xl p-12 border border-gray-300 dark:border-white/20"
-        >
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">
-            {t('ourMission')}
-          </h2>
-          <p className="text-lg text-gray-700 dark:text-gray-200 text-center max-w-4xl mx-auto mb-8">
-            {t('missionDescription')}
-          </p>
-          <p className="text-lg text-gray-700 dark:text-gray-200 text-center max-w-4xl mx-auto mb-8">
-            Nous nous engageons à créer l&apos;avenir du networking
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-cyan-400 mb-2">1000+</div>
-              <div className="text-gray-700 dark:text-gray-200">{t('activeUsers')}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-cyan-400 mb-2">5000+</div>
-              <div className="text-gray-700 dark:text-gray-200">{t('digitalCardsCreated')}</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-cyan-400 mb-2">99%</div>
-              <div className="text-gray-700 dark:text-gray-200">{t('satisfactionRate')}</div>
-            </div>
+        {/* Sections */}
+        <div className="space-y-12">
+          {/* Mission */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+              {t('ourMission')}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              {t('missionDescription')}
+            </p>
           </div>
-        </motion.div>
 
-        {/* Technology Stack */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="mt-16 text-center"
-        >
-          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-            {t('builtWithModernTech')}
-          </h2>
-          <div className="flex flex-wrap justify-center gap-4">
-            {['React 18', 'Node.js', 'MongoDB', 'Express', 'JWT', 'Tailwind CSS', 'Vite', 'Framer Motion'].map((tech) => (
-              <span
-                key={tech}
-                className="px-4 py-2 bg-white/10 backdrop-blur-lg rounded-full text-cyan-400 border border-cyan-400/30"
-              >
-                {tech}
-              </span>
-            ))}
+          {/* Fonctionnalités */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+              {t('features')}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex items-start space-x-3">
+                <div className="text-blue-500 text-2xl">🎨</div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('modernDesign')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {t('elegantResponsiveInterface')}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <div className="text-green-500 text-2xl">🔒</div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('secure')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {t('jwtAuthValidation')}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <div className="text-purple-500 text-2xl">⚡</div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('performant')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {t('modernReactTechnology')}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <div className="text-orange-500 text-2xl">📱</div>
+                <div>
+                  <h3 className="font-semibold text-gray-900 dark:text-gray-100">{t('mobileFirst')}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm">
+                    {t('optimizedAllDevices')}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-        </motion.div>
+
+          {/* Technologies */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
+              {t('technologiesUsed')}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <div className="text-2xl mb-2">⚛️</div>
+                <p className="font-medium text-gray-900 dark:text-gray-100">React 18</p>
+              </div>
+              <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                <div className="text-2xl mb-2">🟢</div>
+                <p className="font-medium text-gray-900 dark:text-gray-100">Node.js</p>
+              </div>
+              <div className="text-center p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <div className="text-2xl mb-2">🍃</div>
+                <p className="font-medium text-gray-900 dark:text-gray-100">MongoDB</p>
+              </div>
+              <div className="text-center p-4 bg-cyan-50 dark:bg-cyan-900/20 rounded-lg">
+                <div className="text-2xl mb-2">🎨</div>
+                <p className="font-medium text-gray-900 dark:text-gray-100">Tailwind</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Contact */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+              {t('contact')}
+            </h2>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
+              {t('contactDescription')}
+            </p>
+            <div className="space-y-3">
+              <p className="text-gray-600 dark:text-gray-400">
+                📧 {t('email')} : contact@futuristcards.com
+              </p>
+              <p className="text-gray-600 dark:text-gray-400">
+                🌐 {t('website')} : www.futuristcards.com
+              </p>
+            </div>
+          </div>
+
+          {/* Call to Action */}
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-8 text-center text-white">
+            <h2 className="text-2xl font-bold mb-4">
+              {t('readyToStart')}
+            </h2>
+            <p className="mb-6 opacity-90">
+              {t('joinThousandsProfessionals')}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link 
+                to="/register" 
+                className="bg-white text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+              >
+                {t('createAccount')}
+              </Link>
+              <Link 
+                to="/cards" 
+                className="bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-blue-600 transition-colors"
+              >
+                {t('exploreCards')}
+              </Link>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default AboutPage;
+export default AboutPageSimple;

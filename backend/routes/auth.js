@@ -1,8 +1,9 @@
-const express = require('express');
+import express from 'express';
+import { check, validationResult } from 'express-validator';
+import authController from '../controllers/authController.js';
+import { protect } from '../middleware/authMiddleware.js';
+
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
-const authController = require('../controllers/authController');
-const { protect } = require('../middleware/authMiddleware');
 
 // @route   POST /api/auth/register
 // @desc    Register a new user
@@ -45,4 +46,4 @@ router.post('/change-password', protect, [
 // @access  Private
 router.post('/logout', protect, authController.logout);
 
-module.exports = router;
+export default router;

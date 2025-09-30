@@ -1,21 +1,20 @@
-const jwt = require('jsonwebtoken');
-const { jwtConfig } = require('../config');
+import jwt from 'jsonwebtoken';
 
 // Generate JWT token
 const generateToken = (userId, role) => {
   return jwt.sign(
-    { userId, role },
-    jwtConfig.secret,
-    { expiresIn: jwtConfig.expiresIn }
+    { id: userId, userId, role },
+    process.env.JWT_SECRET || 'fallback_secret_key_for_development',
+    { expiresIn: process.env.JWT_EXPIRES_IN || '30d' }
   );
 };
 
 // Verify JWT token
 const verifyToken = (token) => {
-  return jwt.verify(token, jwtConfig.secret);
+  return jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key_for_development');
 };
 
-module.exports = {
+export {
   generateToken,
   verifyToken
 };

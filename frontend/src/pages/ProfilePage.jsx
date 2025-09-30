@@ -1,332 +1,321 @@
-// ProfilePage - Gestion du profil utilisateur
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import {
-  EyeIcon,
-  PencilIcon,
-  ShieldCheckIcon,
-  EyeSlashIcon
-} from '@heroicons/react/24/outline';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import LoadingSpinner from '../components/common/LoadingSpinner';
-import ButtonGlass from '../components/common/ButtonGlass';
-import { authAPI } from '../services/axios';
-import toast from 'react-hot-toast';
+import { useLanguage } from '../context/LanguageContext';
+import { UserCircleIcon, CameraIcon, PencilIcon } from '@heroicons/react/24/outline';
 
 const ProfilePage = () => {
-  const { user, updateUser } = useAuth();
-  const [loading, setLoading] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [showPasswordForm, setShowPasswordForm] = useState(false);
-  
-  // Données du formulaire
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    phone: '',
-    email: ''
+  const { user, updateProfile } = useAuth();
+  const { t } = useLanguage();
+  const [isEditing, setIsEditing] = useState(false);
+  const [profileData, setProfileData] = useState({
+    firstName: user?.firstName || '',
+    lastName: user?.lastName || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    company: user?.company || '',
+    position: user?.position || '',
+    bio: user?.bio || '',
+    website: user?.website || '',
+    profileImage: user?.profileImage || null
   });
 
-  // Données du mot de passe
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
-
-  const [showPasswords, setShowPasswords] = useState({
-    current: false,
-    new: false,
-    confirm: false
-  });
-
-  const [errors, setErrors] = useState({});
-
-  // Initialiser les données utilisateur
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        firstName: user.firstName || '',
-        lastName: user.lastName || '',
-        phone: user.phone || '',
-        email: user.email || ''
-      });
-    }
-  }, [user]);
-
-
-
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setProfileData(prev => ({
+          ...prev,
+          profileImage: e.target.result
+        }));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  // Gestion des changements de mot de passe
-  const handlePasswordChange = (e) => {
-    const { name, value } = e.target;
-    setPasswordData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  // Validation du formulaire
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Le prénom est requis';
-    }
-    
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Le nom est requis';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'L\'email est requis';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email invalide';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Sauvegarder le profil
-  const handleSaveProfile = async () => {
-    if (!validateForm()) return;
-
+  const handleSave = async () => {
     try {
-      setLoading(true);
-      const response = await authAPI.updateProfile(formData);
-      updateUser(response.data);
-      toast.success('Profil mis à jour avec succès');
-      setEditing(false);
+      await updateProfile(profileData);
+      setIsEditing(false);
     } catch (error) {
-      toast.error('Erreur lors de la mise à jour du profil');
-    } finally {
-      setLoading(false);
+      console.error('Profile save error:', error);
     }
   };
 
-  // Changer le mot de passe
-  const handleChangePassword = async () => {
-    if (passwordData.newPassword !== passwordData.confirmPassword) {
-      toast.error('Les mots de passe ne correspondent pas');
-      return;
-    }
-
-    if (passwordData.newPassword.length < 8) {
-      toast.error('Le mot de passe doit contenir au moins 8 caractères');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await authAPI.changePassword(passwordData);
-      toast.success('Mot de passe modifié avec succès');
-      setShowPasswordForm(false);
-      setPasswordData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      });
-    } catch (error) {
-      toast.error('Erreur lors du changement de mot de passe');
-    } finally {
-      setLoading(false);
-    }
+  const handleCancel = () => {
+    setProfileData({
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      company: user?.company || '',
+      position: user?.position || '',
+      bio: user?.bio || '',
+      website: user?.website || '',
+      profileImage: user?.profileImage || null
+    });
+    setIsEditing(false);
   };
 
   if (!user) {
-    return <LoadingSpinner />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            {t('accessDenied')}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t('mustBeLoggedIn')}
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen py-8 px-4">
-      <div className="container mx-auto max-w-2xl">
-        {/* En-tête */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-8"
-        >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-            Mon Profil
-          </h1>
-          <p className="text-gray-700 dark:text-gray-200">Gérez vos informations personnelles</p>
-        </motion.div>
-
-        {/* Informations du profil */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="bg-white/10 dark:bg-white/5 backdrop-blur-sm border border-gray-300 dark:border-white/10 rounded-2xl p-6 mb-6"
-        >
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Informations personnelles</h2>
-            <ButtonGlass
-              onClick={() => setEditing(!editing)}
-              size="sm"
-            >
-              <PencilIcon className="w-4 h-4 mr-2" />
-              {editing ? 'Annuler' : 'Modifier'}
-            </ButtonGlass>
-          </div>
-
-          <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Prénom
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  disabled={!editing}
-                  className="w-full px-4 py-3 bg-white/10 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                />
-                {errors.firstName && <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Nom
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  disabled={!editing}
-                  className="w-full px-4 py-3 bg-white/10 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                />
-                {errors.lastName && <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>}
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-32"></div>
+          
+          <div className="relative px-6 pb-6">
+            {/* Photo de profil */}
+            <div className="relative -mt-16 mb-4">
+              <div className="relative inline-block">
+                {profileData.profileImage ? (
+                  <img
+                    src={profileData.profileImage}
+                    alt={t('profileImageAlt')}
+                    className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-800 object-cover"
+                  />
+                ) : (
+                  <UserCircleIcon className="w-32 h-32 text-gray-400 bg-white dark:bg-gray-800 rounded-full border-4 border-white dark:border-gray-800" />
+                )}
+                
+                {isEditing && (
+                  <label className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full cursor-pointer">
+                    <CameraIcon className="w-5 h-5" />
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="hidden"
+                    />
+                  </label>
+                )}
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                disabled={!editing}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-              />
-              {errors.email && <p className="text-red-400 text-sm mt-1">{errors.email}</p>}
+            {/* Informations utilisateur */}
+            <div className="flex justify-between items-start mb-6">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                  {profileData.firstName} {profileData.lastName}
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                  {profileData.position} {profileData.company && `chez ${profileData.company}`}
+                </p>
+                <div className="mt-2">
+                  <div className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    user.role === 'admin' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' :
+                    user.role === 'business' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
+                    'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
+                  }`}>
+                    {user.role === 'admin' ? t('administrator') : 
+                     user.role === 'business' ? t('business') : t('user')}
+                  </div>
+                </div>
+              </div>
+              
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+              >
+                <PencilIcon className="w-4 h-4 mr-2" />
+                {isEditing ? t('cancel') : t('edit')}
+              </button>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Téléphone
-              </label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                disabled={!editing}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-              />
-            </div>
-
-            {editing && (
-              <div className="flex gap-4 pt-4">
-                <ButtonGlass
-                  onClick={handleSaveProfile}
-                  disabled={loading}
-                  className="flex-1"
-                >
-                  {loading ? 'Sauvegarde...' : 'Sauvegarder'}
-                </ButtonGlass>
+            {/* Formulaire d'édition */}
+            {isEditing ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('firstName')}
+                  </label>
+                  <input
+                    type="text"
+                    value={profileData.firstName}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, firstName: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('lastName')}
+                  </label>
+                  <input
+                    type="text"
+                    value={profileData.lastName}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, lastName: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('email')}
+                  </label>
+                  <input
+                    type="email"
+                    value={profileData.email}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('phone')}
+                  </label>
+                  <input
+                    type="tel"
+                    value={profileData.phone}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('company')}
+                  </label>
+                  <input
+                    type="text"
+                    value={profileData.company}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, company: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('position')}
+                  </label>
+                  <input
+                    type="text"
+                    value={profileData.position}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, position: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('website')}
+                  </label>
+                  <input
+                    type="url"
+                    value={profileData.website}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, website: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('bio')}
+                  </label>
+                  <textarea
+                    value={profileData.bio}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                    rows={4}
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
+                    placeholder={t('tellUsAboutYou')}
+                  />
+                </div>
+                
+                <div className="md:col-span-2 flex justify-end space-x-4">
+                  <button
+                    onClick={handleCancel}
+                    className="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  >
+                    {t('cancel')}
+                  </button>
+                  <button
+                    onClick={handleSave}
+                    className="px-6 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors"
+                  >
+                    {t('save')}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Affichage des informations */
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    {t('personalInfo')}
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">{t('email')}:</span>
+                      <p className="text-gray-900 dark:text-white">{profileData.email}</p>
+                    </div>
+                    {profileData.phone && (
+                      <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{t('phone')}:</span>
+                        <p className="text-gray-900 dark:text-white">{profileData.phone}</p>
+                      </div>
+                    )}
+                    {profileData.website && (
+                      <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{t('website')}:</span>
+                        <a href={profileData.website} target="_blank" rel="noopener noreferrer" 
+                           className="text-blue-500 hover:text-blue-600">
+                          {profileData.website}
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    {t('professionalInfo')}
+                  </h3>
+                  <div className="space-y-3">
+                    {profileData.company && (
+                      <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{t('company')}:</span>
+                        <p className="text-gray-900 dark:text-white">{profileData.company}</p>
+                      </div>
+                    )}
+                    {profileData.position && (
+                      <div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{t('position')}:</span>
+                        <p className="text-gray-900 dark:text-white">{profileData.position}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {profileData.bio && (
+                  <div className="md:col-span-2">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                      {t('aboutSection')}
+                    </h3>
+                    <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {profileData.bio}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
           </div>
-        </motion.div>
-
-        {/* Changement de mot de passe */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white/10 dark:bg-white/5 backdrop-blur-sm border border-gray-300 dark:border-white/10 rounded-2xl p-6"
-        >
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Sécurité</h2>
-            <ButtonGlass
-              onClick={() => setShowPasswordForm(!showPasswordForm)}
-              size="sm"
-            >
-              <ShieldCheckIcon className="w-4 h-4 mr-2" />
-              Changer le mot de passe
-            </ButtonGlass>
-          </div>
-
-          {showPasswordForm && (
-            <div className="space-y-4">
-              {['currentPassword', 'newPassword', 'confirmPassword'].map((field) => (
-                <div key={field}>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {field === 'currentPassword' ? 'Mot de passe actuel' :
-                     field === 'newPassword' ? 'Nouveau mot de passe' :
-                     'Confirmer le mot de passe'}
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPasswords[field.replace('Password', '')] ? 'text' : 'password'}
-                      name={field}
-                      value={passwordData[field]}
-                      onChange={handlePasswordChange}
-                      className="w-full px-4 py-3 bg-white/10 dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPasswords(prev => ({
-                        ...prev,
-                        [field.replace('Password', '')]: !prev[field.replace('Password', '')]
-                      }))}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
-                    >
-                      {showPasswords[field.replace('Password', '')] ? 
-                        <EyeSlashIcon className="w-5 h-5" /> : 
-                        <EyeIcon className="w-5 h-5" />
-                      }
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              <div className="flex gap-4 pt-4">
-                <ButtonGlass
-                  onClick={handleChangePassword}
-                  disabled={loading}
-                  className="flex-1"
-                >
-                  {loading ? 'Modification...' : 'Modifier le mot de passe'}
-                </ButtonGlass>
-              </div>
-            </div>
-          )}
-        </motion.div>
+        </div>
       </div>
     </div>
   );

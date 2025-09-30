@@ -18,16 +18,13 @@ export const ThemeProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-    const html = document.documentElement;
-    
-    // Système de thème simplifié - utilise uniquement la classe 'dark' sur html
-    // Compatible avec Tailwind CSS dark: prefix
+    const root = document.documentElement;
     if (theme === 'dark') {
-      html.classList.add('dark');
+      root.classList.add('dark');
     } else {
-      html.classList.remove('dark');
+      root.classList.remove('dark');
     }
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => {
@@ -36,8 +33,7 @@ export const ThemeProvider = ({ children }) => {
 
   const value = {
     theme,
-    toggleTheme,
-    isDark: theme === 'dark'
+    toggleTheme
   };
 
   return (

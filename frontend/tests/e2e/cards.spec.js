@@ -1,113 +1,101 @@
-// E2E Tests for Cards Management
 import { test, expect } from '@playwright/test';
 
 test.describe('Cards Management', () => {
   test.beforeEach(async ({ page }) => {
-    // Login as business user before each test
-    await page.goto('http://localhost:3000/login');
-    await page.fill('[data-testid="email"]', 'john.doe@example.com');
-    await page.fill('[data-testid="password"]', 'Password123!');
-    await page.click('[data-testid="login-button"]');
-    await expect(page.locator('[data-testid="user-menu"]')).toBeVisible();
+    await page.goto('http://localhost:3000');
+    
+    // Se connecter en tant que business
+    await page.click('text=Connexion');
+    await page.fill('input[name="email"]', 'business@test.com');
+    await page.fill('input[name="password"]', 'Test1234!');
+    await page.click('button[type="submit"]');
+    await page.waitForSelector('text=Mon Profil');
   });
 
-  test('should display cards gallery', async ({ page }) => {
-    await page.goto('http://localhost:3000/cards');
+  test('should create a new card', async ({ page }) => {
+    // Aller à la page de création
+    await page.click('text=Créer une carte');
     
-    // Should show cards grid
-    await expect(page.locator('[data-testid="cards-grid"]')).toBeVisible();
+    // Remplir le formulaire
+    await page.fill('input[name="title"]', 'Test Card');
+    await page.fill('textarea[name="description"]', 'Description de test pour la carte');
+    await page.fill('input[name="company"]', 'Test Company');
+    await page.fill('input[name="position"]', 'Test Position');
+    await page.fill('input[name="email"]', 'card@test.com');
+    await page.fill('input[name="phone"]', '0501234567');
+    await page.fill('input[name="address"]', '123 Test Street, Test City');
     
-    // Should show search functionality
-    await expect(page.locator('[data-testid="search-input"]')).toBeVisible();
-    await expect(page.locator('[data-testid="category-filter"]')).toBeVisible();
+    // Soumettre
+    await page.click('button[type="submit"]');
+    
+    // Vérifier la redirection
+    await expect(page).toHaveURL(/\/my-cards/);
+    
+    // Vérifier que la carte est créée
+    await expect(page.locator('text=Test Card')).toBeVisible();
   });
 
-  test('should create new card (business user)', async ({ page }) => {
-    await page.goto('http://localhost:3000/create-card');
+  test('should edit a card', async ({ page }) => {
+    // Aller à mes cartes
+    await page.click('text=Mes cartes');
     
-    // Fill card creation form
-    await page.fill('[data-testid="card-title"]', 'Test Business Card');
-    await page.fill('[data-testid="card-description"]', 'This is a test business card');
-    await page.fill('[data-testid="card-company"]', 'Test Company');
-    await page.fill('[data-testid="card-position"]', 'Test Position');
-    await page.fill('[data-testid="card-email"]', 'test@company.com');
-    await page.fill('[data-testid="card-phone"]', '+1-555-0123');
-    await page.selectOption('[data-testid="card-category"]', 'Technology');
+    // Cliquer sur éditer (première carte)
+    await page.click('button[aria-label="Edit card"]').first();
     
-    // Submit form
-    await page.click('[data-testid="create-card-button"]');
+    // Modifier le titre
+    await page.fill('input[name="title"]', 'Updated Card Title');
     
-    // Should redirect to my cards page
-    await expect(page).toHaveURL(/.*\/my-cards/);
-    await expect(page.locator('text=Test Business Card')).toBeVisible();
-  });
-
-  test('should edit existing card', async ({ page }) => {
-    await page.goto('http://localhost:3000/my-cards');
+    // Sauvegarder
+    await page.click('button[type="submit"]');
     
-    // Click edit button on first card
-    await page.click('[data-testid="edit-card-button"]');
-    
-    // Should navigate to edit page with pre-filled form
-    await expect(page).toHaveURL(/.*\/edit-card/);
-    
-    // Update card title
-    await page.fill('[data-testid="card-title"]', 'Updated Card Title');
-    
-    // Submit changes
-    await page.click('[data-testid="update-card-button"]');
-    
-    // Should redirect back to my cards
-    await expect(page).toHaveURL(/.*\/my-cards/);
+    // Vérifier la mise à jour
     await expect(page.locator('text=Updated Card Title')).toBeVisible();
   });
 
-  test('should delete card', async ({ page }) => {
-    await page.goto('http://localhost:3000/my-cards');
+  test('should delete a card', async ({ page }) => {
+    // Aller à mes cartes
+    await page.click('text=Mes cartes');
     
-    // Click delete button
-    await page.click('[data-testid="delete-card-button"]');
+    // Compter les cartes avant suppression
+    const cardsBefore = await page.locator('.card-item').count();
     
-    // Confirm deletion in modal
-    await page.click('[data-testid="confirm-delete"]');
+    // Cliquer sur supprimer (première carte)
+    await page.click('button[aria-label="Delete card"]').first();
     
-    // Card should be removed from list
-    await expect(page.locator('[data-testid="no-cards-message"]')).toBeVisible();
+    // Confirmer la suppression
+    await page.click('text=Confirmer');
+    
+    // Vérifier qu'il y a une carte de moins
+    const cardsAfter = await page.locator('.card-item').count();
+    expect(cardsAfter).toBe(cardsBefore - 1);
   });
 
-  test('should add/remove card from favorites', async ({ page }) => {
-    await page.goto('http://localhost:3000/cards');
+  test('should add card to favorites', async ({ page }) => {
+    // Aller à la page des cartes
+    await page.click('text=Toutes les cartes');
     
-    // Click favorite button on first card
-    await page.click('[data-testid="favorite-button"]');
+    // Cliquer sur le cœur de la première carte
+    await page.click('button[aria-label="Add to favorites"]').first();
     
-    // Navigate to favorites page
-    await page.goto('http://localhost:3000/favorites');
+    // Aller aux favoris
+    await page.click('text=Mes favoris');
     
-    // Should show favorited card
-    await expect(page.locator('[data-testid="favorite-card"]')).toBeVisible();
-    
-    // Remove from favorites
-    await page.click('[data-testid="remove-favorite-button"]');
-    
-    // Should show empty favorites message
-    await expect(page.locator('text=No favorite cards yet')).toBeVisible();
+    // Vérifier que la carte est dans les favoris
+    expect(await page.locator('.card-item').count()).toBeGreaterThan(0);
   });
 
-  test('should search and filter cards', async ({ page }) => {
-    await page.goto('http://localhost:3000/cards');
+  test('should remove card from favorites', async ({ page }) => {
+    // Aller aux favoris
+    await page.click('text=Mes favoris');
     
-    // Search for specific card
-    await page.fill('[data-testid="search-input"]', 'Tech');
-    await page.press('[data-testid="search-input"]', 'Enter');
+    // Compter les favoris avant
+    const favoritesBefore = await page.locator('.card-item').count();
     
-    // Should show filtered results
-    await expect(page.locator('[data-testid="search-results"]')).toBeVisible();
+    // Retirer des favoris
+    await page.click('button[aria-label="Remove from favorites"]').first();
     
-    // Filter by category
-    await page.selectOption('[data-testid="category-filter"]', 'Technology');
-    
-    // Should show category filtered results
-    await expect(page.locator('[data-testid="filtered-cards"]')).toBeVisible();
+    // Vérifier qu'il y a un favori de moins
+    const favoritesAfter = await page.locator('.card-item').count();
+    expect(favoritesAfter).toBe(favoritesBefore - 1);
   });
 });

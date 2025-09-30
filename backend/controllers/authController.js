@@ -1,6 +1,7 @@
-const bcrypt = require('bcryptjs');
-const { generateToken } = require('../utils/jwt');
-const { validatePassword, validateEmail } = require('../utils/validators');
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import { generateToken } from '../utils/jwt.js';
+// Validation functions moved to middleware/validation.js
 
 // @desc    Register user
 // @route   POST /api/auth/register
@@ -9,20 +10,11 @@ const register = async (req, res) => {
   try {
     const { email, password, firstName, lastName, phone, role } = req.body;
 
-    // Validate input
-    const emailError = validateEmail(email);
-    if (emailError) {
+    // Basic validation (detailed validation in middleware)
+    if (!email || !password || !firstName || !lastName || !phone) {
       return res.status(400).json({
         success: false,
-        message: emailError
-      });
-    }
-
-    const passwordError = validatePassword(password);
-    if (passwordError) {
-      return res.status(400).json({
-        success: false,
-        message: passwordError
+        message: 'Tous les champs sont requis'
       });
     }
 
@@ -69,12 +61,11 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Validate input
-    const emailError = validateEmail(email);
-    if (emailError) {
+    // Basic email validation
+    if (!email || !email.includes('@')) {
       return res.status(400).json({
         success: false,
-        message: emailError
+        message: 'Valid email is required'
       });
     }
 
@@ -85,16 +76,39 @@ const login = async (req, res) => {
       });
     }
 
-    // Mock login - accept any valid email/password format
-    const mockUser = {
-      _id: '507f1f77bcf86cd799439014',
-      firstName: 'Test',
-      lastName: 'User',
-      email: email,
-      role: 'user',
-      lastLogin: new Date(),
-      loginCount: 1
-    };
+    // Mock login - determine role based on email
+    let mockUser;
+    if (email.includes('admin')) {
+      mockUser = {
+        _id: '507f1f77bcf86cd799439016',
+        firstName: 'Admin',
+        lastName: 'System',
+        email: email,
+        role: 'admin',
+        lastLogin: new Date(),
+        loginCount: 1
+      };
+    } else if (email.includes('business')) {
+      mockUser = {
+        _id: '507f1f77bcf86cd799439015',
+        firstName: 'Business',
+        lastName: 'Owner',
+        email: email,
+        role: 'business',
+        lastLogin: new Date(),
+        loginCount: 1
+      };
+    } else {
+      mockUser = {
+        _id: '507f1f77bcf86cd799439014',
+        firstName: 'Test',
+        lastName: 'User',
+        email: email,
+        role: 'user',
+        lastLogin: new Date(),
+        loginCount: 1
+      };
+    }
 
     // Generate token
     const token = generateToken(mockUser._id, mockUser.role);
@@ -126,26 +140,31 @@ const login = async (req, res) => {
 // @access  Private
 const getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId).select('-password');
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
+    // Mock mode - return mock user data
+    const mockUser = {
+      _id: req.user.id || req.user.userId,
+      firstName: 'Test',
+      lastName: 'User',
+      email: req.user.email || 'test@example.com',
+      role: req.user.role || 'user',
+      phone: '',
+      createdAt: new Date(),
+      lastLogin: new Date(),
+      loginCount: 1
+    };
 
     res.json({
       success: true,
       user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        phone: user.phone,
-        createdAt: user.createdAt,
-        lastLogin: user.lastLogin,
-        loginCount: user.loginCount
+        id: mockUser._id,
+        firstName: mockUser.firstName,
+        lastName: mockUser.lastName,
+        email: mockUser.email,
+        role: mockUser.role,
+        phone: mockUser.phone,
+        createdAt: mockUser.createdAt,
+        lastLogin: mockUser.lastLogin,
+        loginCount: mockUser.loginCount
       }
     });
 
@@ -165,31 +184,26 @@ const updateProfile = async (req, res) => {
   try {
     const { firstName, lastName, phone } = req.body;
 
-    const user = await User.findById(req.user.userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    // Update fields
-    if (firstName) user.firstName = firstName;
-    if (lastName) user.lastName = lastName;
-    if (phone) user.phone = phone;
-
-    await user.save();
+    // Mock mode - simulate profile update
+    const mockUser = {
+      _id: req.user.id || req.user.userId,
+      firstName: firstName || 'Test',
+      lastName: lastName || 'User',
+      email: req.user.email || 'test@example.com',
+      role: req.user.role || 'user',
+      phone: phone || ''
+    };
 
     res.json({
       success: true,
-      message: 'Profile updated successfully',
+      message: 'Profile updated successfully (mock mode)',
       user: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        role: user.role,
-        phone: user.phone
+        id: mockUser._id,
+        firstName: mockUser.firstName,
+        lastName: mockUser.lastName,
+        email: mockUser.email,
+        role: mockUser.role,
+        phone: mockUser.phone
       }
     });
 
@@ -209,23 +223,6 @@ const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
 
-    const user = await User.findById(req.user.userId);
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found'
-      });
-    }
-
-    // Check current password
-    const isMatch = await bcrypt.compare(currentPassword, user.password);
-    if (!isMatch) {
-      return res.status(400).json({
-        success: false,
-        message: 'Current password is incorrect'
-      });
-    }
-
     // Validate new password
     const passwordError = validatePassword(newPassword);
     if (passwordError) {
@@ -235,13 +232,10 @@ const changePassword = async (req, res) => {
       });
     }
 
-    // Update password
-    user.password = newPassword;
-    await user.save();
-
+    // Mock mode - simulate password change
     res.json({
       success: true,
-      message: 'Password changed successfully'
+      message: 'Password changed successfully (mock mode)'
     });
 
   } catch (error) {
@@ -271,7 +265,7 @@ const logout = async (req, res) => {
   }
 };
 
-module.exports = {
+export default {
   register,
   login,
   getProfile,
