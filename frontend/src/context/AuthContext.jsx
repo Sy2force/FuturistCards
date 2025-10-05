@@ -66,12 +66,19 @@ export const AuthProvider = ({ children }) => {
       }
 
       // Create mock user based on email
+      let role = 'user';
+      if (email.includes('admin')) {
+        role = 'admin';
+      } else if (email.includes('business')) {
+        role = 'business';
+      }
+      
       const userData = {
         id: '507f1f77bcf86cd799439015',
         email: email,
         firstName: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
         lastName: 'User',
-        role: userData.role || 'user'
+        role: role
       };
 
       // Create simple token for development

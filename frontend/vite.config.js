@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { fileURLToPath, URL } from 'node:url'
+import { fileURLToPath, URL } from 'url'
 
 export default defineConfig({
-  base: '/',
+  base: '/Project-react/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -25,7 +25,7 @@ export default defineConfig({
     hmr: {
       overlay: false
     },
-    historyApiFallback: true
+    // historyApiFallback: true  // This option doesn't exist in Vite server config
   },
   preview: {
     port: 3001,
@@ -72,7 +72,7 @@ export default defineConfig({
   },
   define: {
     __APP_VERSION__: JSON.stringify('1.0.0'),
-    'process.env.NODE_ENV': JSON.stringify('development'),
+    // 'process.env.NODE_ENV': JSON.stringify('development'),  // Vite handles this automatically
   },
   optimizeDeps: {
     include: [

@@ -224,11 +224,10 @@ const changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body;
 
     // Validate new password
-    const passwordError = validatePassword(newPassword);
-    if (passwordError) {
+    if (!newPassword || newPassword.length < 6) {
       return res.status(400).json({
         success: false,
-        message: passwordError
+        message: 'Password must be at least 6 characters long'
       });
     }
 

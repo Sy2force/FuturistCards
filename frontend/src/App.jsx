@@ -25,7 +25,7 @@ function App() {
       <ThemeProvider>
         <AuthProvider>
           <FavoritesProvider>
-            <Router>
+            <Router basename="/Project-react">
               <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors flex flex-col">
                 <Navbar />
                 <main className="flex-1">

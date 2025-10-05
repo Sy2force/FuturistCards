@@ -95,8 +95,8 @@ const translations = {
     registrationError: 'Erreur lors de l\'inscription',
     role: 'Rôle',
     user: 'Utilisateur',
-    business: 'Entreprise',
-    admin: 'Administrateur',
+    business: 'Business',
+    administrator: 'Administrateur',
     selectRole: 'Sélectionnez votre rôle',
     
     // Cards Pages
@@ -135,10 +135,7 @@ const translations = {
     confirmDeleteCard: "Êtes-vous sûr de vouloir supprimer cette carte ?",
     errorDeletingCard: "Erreur lors de la suppression de la carte",
     loading: "Chargement...",
-    error: "Erreur",
-    view: "Voir",
-    edit: "Modifier",
-    delete: "Supprimer",
+    // Removed duplicates - these are defined in Common section
     imageTooLarge: 'Image trop volumineuse (max 5MB)',
     enterAddress: '123 Rue de la Paix, 75001 Paris, France',
     creating: 'Création...',
@@ -152,7 +149,6 @@ const translations = {
     startByCreatingFirstCard: 'Commencez votre parcours professionnel en créant votre première carte de visite numérique.',
     createMyFirstCard: 'Créer Ma Première Carte',
     noMyCards: 'Vous n\'avez pas encore créé de cartes.',
-    createNewCard: 'Créer une nouvelle carte',
     
     // Favorites
     favoritesTitle: 'Mes Favoris',
@@ -198,13 +194,11 @@ const translations = {
     
     // Footer
     quickLinks: 'Liens rapides',
-    allCards: 'Toutes les cartes',
     contact: 'Contact',
     footerDescription: 'FuturistCards est une plateforme moderne de cartes de visite digitales.',
     rightsReserved: ' 2025 FuturistCards - Projet HackerU React',
     
     // Common
-    loading: 'Chargement...',
     error: 'Erreur',
     success: 'Succès',
     delete: 'Supprimer',
@@ -215,7 +209,6 @@ const translations = {
     previous: 'Précédent',
     submit: 'Soumettre',
     reset: 'Réinitialiser',
-    search: 'Rechercher',
     filter: 'Filtrer',
     sort: 'Trier',
     view: 'Voir',
@@ -238,7 +231,6 @@ const translations = {
     updateError: 'Erreur lors de la mise à jour',
     
     // Roles
-    administrator: 'Administrateur',
     businessUser: 'Utilisateur Entreprise',
     regularUser: 'Utilisateur',
     
@@ -283,7 +275,7 @@ const translations = {
     
     // Categories
     technology: 'Technologie',
-    business: 'Business',
+    businessCategory: 'Business',
     creative: 'Créatif',
     healthcare: 'Santé',
     education: 'Éducation',
@@ -322,7 +314,7 @@ const translations = {
     
     // Card actions
     viewCard: 'Voir la carte',
-    editCard: 'Modifier la carte',
+    editCardAction: 'Modifier la carte',
     deleteCard: 'Supprimer la carte',
     shareCard: 'Partager la carte',
     downloadCard: 'Télécharger la carte',
@@ -419,7 +411,7 @@ const translations = {
     role: 'Role',
     user: 'User',
     business: 'Business',
-    admin: 'Administrator',
+    administrator: 'Administrator',
     selectRole: 'Select your role',
     
     // Cards Pages
@@ -458,10 +450,7 @@ const translations = {
     confirmDeleteCard: "Are you sure you want to delete this card?",
     errorDeletingCard: "Error deleting card",
     loading: "Loading...",
-    error: "Error",
-    view: "View",
-    edit: "Edit",
-    delete: "Delete",
+    // Removed duplicates - these are defined in Common section
     imageTooLarge: 'Image too large (max 5MB)',
     enterAddress: '123 Peace Street, 75001 Paris, France',
     creating: 'Creating...',
@@ -475,7 +464,6 @@ const translations = {
     startByCreatingFirstCard: 'Start your professional journey by creating your first digital business card.',
     createMyFirstCard: 'Create My First Card',
     noMyCards: 'You haven\'t created any cards yet.',
-    createNewCard: 'Create New Card',
     
     // Favorites
     favoritesTitle: 'My Favorites',
@@ -521,13 +509,12 @@ const translations = {
     
     // Footer
     quickLinks: 'Quick Links',
-    allCards: 'All Cards',
+    viewAllCards: 'All Cards',
     contact: 'Contact',
     footerDescription: 'FuturistCards is a modern digital business card platform.',
     rightsReserved: ' 2025 FuturistCards - HackerU React Project',
     
     // Common
-    loading: 'Loading...',
     error: 'Error',
     success: 'Success',
     delete: 'Delete',
@@ -538,7 +525,6 @@ const translations = {
     previous: 'Previous',
     submit: 'Submit',
     reset: 'Reset',
-    search: 'Search',
     filter: 'Filter',
     sort: 'Sort',
     view: 'View',
@@ -561,7 +547,6 @@ const translations = {
     updateError: 'Error updating',
     
     // Roles
-    administrator: 'Administrator',
     businessUser: 'Business User',
     regularUser: 'User',
     
@@ -606,7 +591,7 @@ const translations = {
     
     // Categories
     technology: 'Technology',
-    business: 'Business',
+    businessCategory: 'Business',
     creative: 'Creative',
     healthcare: 'Healthcare',
     education: 'Education',
@@ -645,7 +630,7 @@ const translations = {
     
     // Card actions
     viewCard: 'View Card',
-    editCard: 'Edit Card',
+    editCardAction: 'Edit Card',
     deleteCard: 'Delete Card',
     shareCard: 'Share Card',
     downloadCard: 'Download Card',
@@ -742,7 +727,7 @@ const translations = {
     role: 'תפקיד',
     user: 'משתמש',
     business: 'עסק',
-    admin: 'מנהל',
+    administrator: 'מנהל',
     selectRole: 'בחר את התפקיד שלך',
     
     // Cards Pages
@@ -781,10 +766,7 @@ const translations = {
     confirmDeleteCard: 'האם אתה בטוח שברצונך למחוק את הכרטיס הזה?',
     errorDeletingCard: 'שגיאה במחיקת הכרטיס',
     loading: 'טוען...',
-    error: 'שגיאה',
-    view: 'צפה',
-    edit: 'ערוך',
-    delete: 'מחק',
+    // Removed duplicates - these are defined in Common section
     imageTooLarge: 'התמונה גדולה מדי (מקסימום 5MB)',
     enterAddress: 'רחוב השלום 123, 75001 פריז, צרפת',
     creating: 'יוצר...',
@@ -798,7 +780,6 @@ const translations = {
     startByCreatingFirstCard: 'התחל את המסע המקצועי שלך ביצירת כרטיס הביקור הדיגיטלי הראשון שלך.',
     createMyFirstCard: 'צור את הכרטיס הראשון שלי',
     noMyCards: 'לא יצרת עדיין כרטיסים.',
-    createNewCard: 'צור כרטיס חדש',
     
     // Favorites
     favoritesTitle: 'המועדפים שלי',
@@ -844,13 +825,12 @@ const translations = {
     
     // Footer
     quickLinks: 'קישורים מהירים',
-    allCards: 'כל הכרטיסים',
+    viewAllCards: 'כל הכרטיסים',
     contact: 'צור קשר',
     footerDescription: 'FuturistCards היא פלטפורמה מודרנית לכרטיסי ביקור דיגיטליים.',
     rightsReserved: '© 2025 FuturistCards - פרויקט HackerU React',
     
     // Common
-    loading: 'טוען...',
     error: 'שגיאה',
     success: 'הצלחה',
     delete: 'מחק',
@@ -861,7 +841,6 @@ const translations = {
     previous: 'הקודם',
     submit: 'שלח',
     reset: 'איפוס',
-    search: 'חיפוש',
     filter: 'סנן',
     sort: 'מיין',
     view: 'הצג',
@@ -884,7 +863,6 @@ const translations = {
     updateError: 'שגיאה בעדכון',
     
     // Roles
-    administrator: 'מנהל',
     businessUser: 'משתמש עסקי',
     regularUser: 'משתמש',
     
@@ -929,7 +907,7 @@ const translations = {
     
     // Categories
     technology: 'טכנולוגיה',
-    business: 'עסקים',
+    businessCategory: 'עסקים',
     creative: 'יצירתי',
     healthcare: 'בריאות',
     education: 'חינוך',
@@ -968,7 +946,7 @@ const translations = {
     
     // Card actions
     viewCard: 'הצג כרטיס',
-    editCard: 'ערוך כרטיס',
+    editCardAction: 'ערוך כרטיס',
     deleteCard: 'מחק כרטיס',
     shareCard: 'שתף כרטיס',
     downloadCard: 'הורד כרטיס',
