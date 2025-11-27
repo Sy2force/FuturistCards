@@ -186,7 +186,7 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-const PORT = process.env.PORT || 5010;
+const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
   if (process.env.NODE_ENV === 'development') {
