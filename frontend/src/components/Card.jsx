@@ -1,5 +1,4 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { 
@@ -15,6 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useFavorites } from '../context/FavoritesContext';
+import CardPreview from './CardPreview';
 
 const Card = ({ 
   card, 
@@ -24,6 +24,7 @@ const Card = ({
 }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
   const { t } = useTranslation();
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   
   return (
     <motion.div 
@@ -33,25 +34,44 @@ const Card = ({
       data-testid="card-item"
       className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
     >
-      <Link to={`/cards/${card._id}`}>
-        <div className="relative overflow-hidden">
-          <img 
-            src={card.image?.url || card.image || 'https://via.placeholder.com/300x200'} 
-            alt={card.image?.alt || card.title}
-            className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300">
-            <div className="absolute bottom-4 right-4">
-              <motion.div 
-                whileHover={{ scale: 1.1 }}
-                className="bg-white/90 dark:bg-gray-800/90 p-2 rounded-full shadow-lg"
-              >
-                <EyeIcon className="w-5 h-5 text-primary-600 dark:text-primary-400" />
-              </motion.div>
+      <div className="relative overflow-hidden">
+        <div className="relative w-full h-48 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900">
+          {(card.image?.url || card.image) ? (
+            <img 
+              src={card.image?.url || card.image} 
+              alt={card.image?.alt || card.title}
+              className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110 cursor-pointer"
+              onClick={() => setIsPreviewOpen(true)}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+          ) : null}
+          <div 
+            className={`absolute inset-0 flex items-center justify-center cursor-pointer ${(card.image?.url || card.image) ? 'hidden' : 'flex'}`}
+            onClick={() => setIsPreviewOpen(true)}
+          >
+            <div className="text-center">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-3">
+                <UserIcon className="w-10 h-10 text-white" />
+              </div>
+              <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{card.title}</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? t(card.category) || card.category : t('category')}</p>
             </div>
           </div>
         </div>
-      </Link>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute bottom-4 right-4">
+            <motion.div 
+              whileHover={{ scale: 1.1 }}
+              className="bg-white/90 dark:bg-gray-800/90 p-2 rounded-full shadow-lg"
+            >
+              <EyeIcon className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+            </motion.div>
+          </div>
+        </div>
+      </div>
       
       <div className="p-5">
         <div className="mb-4">
@@ -63,7 +83,7 @@ const Card = ({
             <span className="mr-2">{card.subtitle || t('position')}</span>
             <span className="text-gray-400">•</span>
             <UserIcon className="w-4 h-4 ml-2 mr-1" />
-            <span>{card.category || t('category')}</span>
+            <span>{card.category ? t(card.category) || card.category : t('category')}</span>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed">
             {card.description}
@@ -117,7 +137,7 @@ const Card = ({
                   onClick={() => onEdit(card._id || card.id)}
                   data-testid="edit-card-btn"
                   className="p-2 text-primary-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 shadow-sm"
-                  aria-label="Edit card"
+                  aria-label={t('editCard')}
                 >
                   <PencilIcon className="w-4 h-4" />
                 </motion.button>
@@ -129,7 +149,7 @@ const Card = ({
                   onClick={() => onDelete(card._id || card.id)}
                   data-testid="delete-card-btn"
                   className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 shadow-sm"
-                  aria-label="Delete card"
+                  aria-label={t('deleteCard')}
                 >
                   <TrashIcon className="w-4 h-4" />
                 </motion.button>
@@ -138,6 +158,13 @@ const Card = ({
           )}
         </div>
       </div>
+
+      {/* Aperçu de la carte */}
+      <CardPreview 
+        card={card}
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+      />
     </motion.div>
   );
 };

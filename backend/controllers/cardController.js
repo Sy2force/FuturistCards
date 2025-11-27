@@ -1,7 +1,156 @@
-// Contrôleur des cartes - Version MongoDB exclusive
+// Contrôleur des cartes - Version Mock + MongoDB
 import Card from '../models/Card.js';
 import User from '../models/User.js';
 import Favorite from '../models/Favorite.js';
+
+// Mock data pour les cartes en mode développement
+const mockCards = [
+  {
+    _id: '1',
+    id: '1',
+    title: 'John Doe - Développeur Full Stack',
+    subtitle: 'Expert React & Node.js',
+    description: 'Développeur passionné avec 5 ans d\'expérience en développement web moderne. Spécialisé en React, Node.js, et MongoDB.',
+    phone: '+33 1 23 45 67 89',
+    email: 'john.doe@example.com',
+    web: 'https://johndoe.dev',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+    address: {
+      state: 'Paris',
+      country: 'France',
+      city: 'Paris',
+      street: '123 Rue de la Paix',
+      houseNumber: '123',
+      zip: '75001'
+    },
+    category: 'Technology',
+    isPublic: true,
+    isBusiness: true,
+    bizNumber: 'B12345',
+    user_id: 'mock-user-1',
+    likes: [],
+    likeCount: 15,
+    views: 234,
+    createdAt: new Date('2024-01-15'),
+    updatedAt: new Date('2024-01-15')
+  },
+  {
+    _id: '2', 
+    id: '2',
+    title: 'Sophie Martin - Designer UX/UI',
+    subtitle: 'Créatrice d\'expériences digitales',
+    description: 'Designer UX/UI passionnée par la création d\'interfaces intuitives et esthétiques. Portfolio riche de projets variés.',
+    phone: '+33 1 98 76 54 32',
+    email: 'sophie.martin@design.com',
+    web: 'https://sophiedesign.fr',
+    image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face',
+    address: {
+      state: 'Lyon',
+      country: 'France', 
+      city: 'Lyon',
+      street: '456 Avenue des Arts',
+      houseNumber: '456',
+      zip: '69002'
+    },
+    category: 'Design',
+    isPublic: true,
+    isBusiness: true,
+    bizNumber: 'B67890',
+    user_id: 'mock-user-2',
+    likes: [],
+    likeCount: 28,
+    views: 187,
+    createdAt: new Date('2024-01-20'),
+    updatedAt: new Date('2024-01-20')
+  },
+  {
+    _id: '3',
+    id: '3', 
+    title: 'Pierre Dubois - Consultant Marketing',
+    subtitle: 'Stratégie digitale & Growth Hacking',
+    description: 'Consultant en marketing digital spécialisé dans la croissance des startups. Expert en SEO, SEM et stratégies d\'acquisition.',
+    phone: '+33 1 45 67 89 01',
+    email: 'pierre.dubois@marketing.fr',
+    web: 'https://pierremarketing.com',
+    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+    address: {
+      state: 'Marseille',
+      country: 'France',
+      city: 'Marseille', 
+      street: '789 Boulevard du Commerce',
+      houseNumber: '789',
+      zip: '13001'
+    },
+    category: 'Marketing',
+    isPublic: true,
+    isBusiness: true,
+    bizNumber: 'B13579',
+    user_id: 'mock-user-3',
+    likes: [],
+    likeCount: 42,
+    views: 356,
+    createdAt: new Date('2024-01-25'),
+    updatedAt: new Date('2024-01-25')
+  },
+  {
+    _id: '4',
+    id: '4',
+    title: 'Marie Laurent - Architecte',
+    subtitle: 'Architecture moderne & éco-responsable', 
+    description: 'Architecte spécialisée dans les constructions durables et l\'architecture moderne. Projets résidentiels et commerciaux.',
+    phone: '+33 1 11 22 33 44',
+    email: 'marie.laurent@archi.com',
+    web: 'https://marie-architecte.fr',
+    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
+    address: {
+      state: 'Nice',
+      country: 'France',
+      city: 'Nice',
+      street: '321 Promenade des Anglais', 
+      houseNumber: '321',
+      zip: '06000'
+    },
+    category: 'Architecture',
+    isPublic: true,
+    isBusiness: true,
+    bizNumber: 'B24680',
+    user_id: 'mock-user-4',
+    likes: [],
+    likeCount: 19,
+    views: 298,
+    createdAt: new Date('2024-02-01'),
+    updatedAt: new Date('2024-02-01')
+  },
+  {
+    _id: '5',
+    id: '5',
+    title: 'Thomas Chen - Chef Cuisinier',
+    subtitle: 'Cuisine fusion asiatique-française',
+    description: 'Chef étoilé spécialisé dans la fusion culinaire. Restaurant gastronomique à Paris avec influences asiatiques.',
+    phone: '+33 1 55 66 77 88',
+    email: 'thomas.chen@restaurant.com',
+    web: 'https://chefthomas.fr',
+    image: 'https://images.unsplash.com/photo-1566492031773-4f4e44671d66?w=400&h=400&fit=crop&crop=face',
+    address: {
+      state: 'Paris',
+      country: 'France',
+      city: 'Paris',
+      street: '159 Rue Gourmande',
+      houseNumber: '159',
+      zip: '75008'
+    },
+    category: 'Culinary',
+    isPublic: true,
+    isBusiness: true,
+    bizNumber: 'B97531',
+    user_id: 'mock-user-5',
+    likes: [],
+    likeCount: 73,
+    views: 512,
+    createdAt: new Date('2024-02-05'),
+    updatedAt: new Date('2024-02-05')
+  }
+];
 
 // @desc    Get all cards
 // @route   GET /api/cards
@@ -10,25 +159,39 @@ const getCards = async (req, res) => {
   try {
     const { search, category, page = 1, limit = 10 } = req.query;
     
-    const options = {
-      search,
-      category,
-      page: parseInt(page),
-      limit: parseInt(limit),
-      sortBy: 'recent'
-    };
+    // Mode mock - utiliser les données de test
+    let filteredCards = [...mockCards];
     
-    const cards = await Card.findPublicCards(options);
+    // Filtrer par catégorie
+    if (category) {
+      filteredCards = filteredCards.filter(card => 
+        card.category.toLowerCase().includes(category.toLowerCase())
+      );
+    }
     
-    console.log(`✅ Récupération de ${cards.length} cartes depuis MongoDB`);
+    // Filtrer par recherche
+    if (search) {
+      filteredCards = filteredCards.filter(card =>
+        card.title.toLowerCase().includes(search.toLowerCase()) ||
+        card.description.toLowerCase().includes(search.toLowerCase()) ||
+        card.category.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+    
+    // Pagination
+    const startIndex = (parseInt(page) - 1) * parseInt(limit);
+    const endIndex = startIndex + parseInt(limit);
+    const paginatedCards = filteredCards.slice(startIndex, endIndex);
+    
+    console.log(`✅ Récupération de ${paginatedCards.length} cartes (mode mock)`);
     
     res.json({
       success: true,
-      count: cards.length,
-      total: cards.length,
+      count: paginatedCards.length,
+      total: filteredCards.length,
       page: parseInt(page),
-      pages: Math.ceil(cards.length / limit),
-      data: cards
+      pages: Math.ceil(filteredCards.length / parseInt(limit)),
+      data: paginatedCards
     });
     
   } catch (error) {
@@ -101,7 +264,8 @@ const getMyCards = async (req, res) => {
 // @access  Public
 const getCard = async (req, res) => {
   try {
-    const card = await Card.findById(req.params.id).populate('user_id', 'name email');
+    // Mode mock - chercher dans les données de test
+    const card = mockCards.find(c => c._id === req.params.id || c.id === req.params.id);
     
     if (!card) {
       return res.status(404).json({
@@ -110,8 +274,10 @@ const getCard = async (req, res) => {
       });
     }
     
-    // Increment views
-    await Card.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
+    // Simuler l'incrémentation des vues
+    card.views += 1;
+    
+    console.log(`✅ Récupération carte ${card._id} (mode mock)`);
     
     res.json({
       success: true,
@@ -141,15 +307,26 @@ const searchCards = async (req, res) => {
       });
     }
     
-    const options = { category };
-    const cards = await Card.searchCards(searchTerm, options);
+    // Mode mock - recherche dans les données de test
+    let results = mockCards.filter(card =>
+      card.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      card.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      card.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
     
-    console.log(`✅ Recherche '${searchTerm}': ${cards.length} résultats depuis MongoDB`);
+    // Filtrer par catégorie si spécifiée
+    if (category) {
+      results = results.filter(card => 
+        card.category.toLowerCase().includes(category.toLowerCase())
+      );
+    }
+    
+    console.log(`✅ Recherche '${searchTerm}': ${results.length} résultats (mode mock)`);
     
     res.json({
       success: true,
-      count: cards.length,
-      data: cards
+      count: results.length,
+      data: results
     });
   } catch (error) {
     console.error('Search cards error:', error);
