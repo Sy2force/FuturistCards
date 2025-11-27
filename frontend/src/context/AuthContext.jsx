@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import api from '../services/api';
 
 const AuthContext = createContext();
@@ -17,114 +18,104 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [, setToken] = useState(localStorage.getItem('token'));
 
-  useEffect(() => {
-    // Retrieve user from localStorage on startup
-    const savedUser = localStorage.getItem('user');
-    const savedToken = localStorage.getItem('token');
-    const tokenExpiry = localStorage.getItem('tokenExpiry');
+  // Fonction pour valider les tokens JWT réels
+  const validateToken = async (token) => {
+    if (!token) return null;
     
-    if (savedUser && savedToken) {
-      try {
-        // Check if token is not expired
-        if (tokenExpiry && Date.now() < parseInt(tokenExpiry)) {
-          setUser(JSON.parse(savedUser));
-          setToken(savedToken);
-        } else {
-          // Token expired, clean up
-          localStorage.removeItem('user');
-          localStorage.removeItem('token');
-          localStorage.removeItem('tokenExpiry');
-        }
-      } catch (error) {
-        // If it doesn't work, clean up
-        localStorage.removeItem('user');
-        localStorage.removeItem('token');
-        localStorage.removeItem('tokenExpiry');
+    try {
+      // Vérifier le token avec l'API
+      const response = await api.getProfile();
+      if (response.success && response.user) {
+        return response.user;
       }
+      return null;
+    } catch (error) {
+      // Token validation failed
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return null;
     }
-    setLoading(false);
+  };
+
+  useEffect(() => {
+    const initAuth = async () => {
+      // Récupérer le token au démarrage
+      const savedToken = localStorage.getItem('token');
+      
+      if (savedToken) {
+        setToken(savedToken);
+        // Valider le token avec l'API MongoDB
+        const validatedUser = await validateToken(savedToken);
+        if (validatedUser) {
+          setUser(validatedUser);
+          localStorage.setItem('user', JSON.stringify(validatedUser));
+        } else {
+          // Token invalide, nettoyer le localStorage
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
+      setLoading(false);
+    };
+
+    initAuth();
   }, []);
 
-  // Simplified login function for development
+
+  // Fonction de connexion - API MongoDB réelle
   const login = async (email, password) => {
     setLoading(true);
     try {
-      // Basic validation
+      // Validation email et mot de passe
       if (!email || !password) {
-        throw new Error('Email and password are required');
-      }
-
-      // Email format validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        throw new Error('Invalid email format');
-      }
-
-      // Password length validation
-      if (password.length < 6) {
-        throw new Error('Password must be at least 6 characters long');
-      }
-
-      // Create mock user based on email
-      let role = 'user';
-      if (email.includes('admin')) {
-        role = 'admin';
-      } else if (email.includes('business')) {
-        role = 'business';
+        throw new Error('Email et mot de passe requis');
       }
       
-      const userData = {
-        id: '507f1f77bcf86cd799439015',
-        email: email,
-        firstName: email.split('@')[0].charAt(0).toUpperCase() + email.split('@')[0].slice(1),
-        lastName: 'User',
-        role: role
-      };
-
-      // Create simple token for development
-      const mockToken = `mock-jwt-token-${userData.role}`;
+      // Appel API MongoDB réel
+      const response = await api.login({ email, password });
       
-      // Save to localStorage
-      localStorage.setItem('token', mockToken);
-      localStorage.setItem('user', JSON.stringify(userData));
-      localStorage.setItem('tokenExpiry', (Date.now() + (30 * 24 * 60 * 60 * 1000)).toString()); // 30 days
+      if (response.success) {
+        const { user: userData, token } = response;
+        
+        // Stocker les données réelles du backend
+        localStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('token', token);
+        
+        setUser(userData);
+        setToken(token);
+        
+        toast.success('Connexion réussie !');
+      } else {
+        throw new Error(response.message || 'Erreur de connexion');
+      }
       
-      setUser(userData);
-      setToken(mockToken);
-      
-      return { user: userData, token: mockToken };
     } catch (error) {
-      throw new Error(error.message || 'Login error');
+      const errorMessage = error.message || error.response?.data?.message || 'Erreur de connexion';
+      toast.error(errorMessage);
+      throw error;
     } finally {
       setLoading(false);
     }
   };
 
   const register = async (userData) => {
+    setLoading(true);
     try {
-      // Mock mode: create user based on provided data
-      const mockUser = {
-        id: `mock-${userData.role || 'user'}-${Date.now()}`,
-        firstName: userData.firstName || 'New',
-        lastName: userData.lastName || 'User',
-        email: userData.email,
-        role: userData.role || 'user',
-        createdAt: new Date().toISOString()
-      };
-
-      const mockToken = `mock-jwt-token-${mockUser.role}`;
+      // Appel API MongoDB réel pour l'inscription
+      const response = await api.register(userData);
       
-      setUser(mockUser);
-      setToken(mockToken);
-      localStorage.setItem('token', mockToken);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      
-      return { success: true, user: mockUser };
+      if (response.success) {
+        toast.success('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
+        return { success: true, user: response.user };
+      } else {
+        throw new Error(response.message || 'Erreur lors de la création du compte');
+      }
     } catch (error) {
-      return { 
-        success: false, 
-        message: 'Registration failed' 
-      };
+      const errorMessage = error.message || error.response?.data?.message || 'Erreur lors de la création du compte';
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -133,7 +124,6 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('tokenExpiry');
   };
 
   // Fonctions utilitaires pour vérifier les permissions
@@ -148,13 +138,27 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateProfile = async (profileData) => {
+    setLoading(true);
     try {
-      const updatedUser = { ...user, ...profileData };
-      setUser(updatedUser);
-      localStorage.setItem('user', JSON.stringify(updatedUser));
-      return { success: true };
+      // Mise à jour réelle via l'API backend MongoDB
+      const response = await api.updateProfile(profileData);
+      
+      if (response.success) {
+        const updatedUser = { ...user, ...response.user };
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        
+        toast.success('Profil mis à jour avec succès !');
+        return { success: true };
+      } else {
+        throw new Error(response.message || 'Erreur lors de la mise à jour du profil');
+      }
     } catch (error) {
-      throw new Error('Profile update failed');
+      const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la mise à jour du profil';
+      toast.error(errorMessage);
+      throw new Error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -1,22 +1,55 @@
-import React from 'react';
-import { useParams, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import api from '../services/api';
+import toast from 'react-hot-toast';
 
 const CardDetailsPageSimple = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [card, setCard] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Données mock pour la démo
-  const card = {
-    _id: id,
-    title: 'Sarah Cohen',
-    subtitle: 'Senior Full-Stack Developer',
-    description: 'React, Node.js & MongoDB specialist with 7+ years experience. Passionate about modern technologies and innovation.',
-    email: 'sarah.cohen@techcorp.com',
-    phone: '+972-50-123-4567',
-    website: 'https://sarahcohen.dev',
-    address: '123 Rue de la Tech, 75001 Paris',
-    category: 'technology',
-    createdAt: new Date().toISOString()
-  };
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const response = await api.get(`/cards/${id}`);
+        if (response.data.success) {
+          setCard(response.data.data);
+        }
+      } catch (error) {
+        // Error handling for card fetch
+        toast.error(t('errorOccurred'));
+        navigate('/cards');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchCard();
+    }
+  }, [id, navigate, t]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  if (!card) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('cardNotFound')}</h2>
+          <Link to="/cards" className="text-blue-500 hover:text-blue-600">{t('backToCards')}</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-8 px-4">
@@ -27,7 +60,7 @@ const CardDetailsPageSimple = () => {
             to="/cards" 
             className="inline-flex items-center text-blue-500 hover:text-blue-600 font-medium"
           >
-            ← Retour aux cartes
+            ← {t('backToCards')}
           </Link>
         </div>
 
@@ -36,11 +69,19 @@ const CardDetailsPageSimple = () => {
           {/* En-tête avec gradient */}
           <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
             <div className="text-center">
-              <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-2xl font-bold">
-                  {card.title.split(' ').map(n => n[0]).join('')}
-                </span>
-              </div>
+              {card.image?.url ? (
+                <img 
+                  src={card.image.url} 
+                  alt={card.image.alt || card.title}
+                  className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-white/20"
+                />
+              ) : (
+                <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold">
+                    {card.title.split(' ').map(n => n[0]).join('')}
+                  </span>
+                </div>
+              )}
               <h1 className="text-3xl font-bold mb-2">{card.title}</h1>
               <p className="text-xl opacity-90">{card.subtitle}</p>
             </div>
@@ -51,7 +92,7 @@ const CardDetailsPageSimple = () => {
             {/* Description */}
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                À propos
+                {t('about')}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                 {card.description}
@@ -62,13 +103,13 @@ const CardDetailsPageSimple = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  Contact
+                  {t('contact')}
                 </h3>
                 
                 <div className="flex items-center space-x-3">
                   <div className="text-blue-500">📧</div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('email')}</p>
                     <a 
                       href={`mailto:${card.email}`}
                       className="text-blue-500 hover:text-blue-600"
@@ -81,7 +122,7 @@ const CardDetailsPageSimple = () => {
                 <div className="flex items-center space-x-3">
                   <div className="text-green-500">📞</div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Téléphone</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('phone')}</p>
                     <a 
                       href={`tel:${card.phone}`}
                       className="text-green-500 hover:text-green-600"
@@ -95,7 +136,7 @@ const CardDetailsPageSimple = () => {
                   <div className="flex items-center space-x-3">
                     <div className="text-purple-500">🌐</div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Site web</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('website')}</p>
                       <a 
                         href={card.website}
                         target="_blank"
@@ -111,14 +152,14 @@ const CardDetailsPageSimple = () => {
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  Informations
+                  {t('information')}
                 </h3>
                 
                 {card.address && (
                   <div className="flex items-center space-x-3">
                     <div className="text-red-500">📍</div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">Adresse</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('address')}</p>
                       <p className="text-gray-700 dark:text-gray-300">{card.address}</p>
                     </div>
                   </div>
@@ -127,9 +168,9 @@ const CardDetailsPageSimple = () => {
                 <div className="flex items-center space-x-3">
                   <div className="text-orange-500">🏷️</div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">Catégorie</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('category')}</p>
                     <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full">
-                      {card.category}
+                      {t(`createCard.${card.category}`) || card.category}
                     </span>
                   </div>
                 </div>
@@ -139,13 +180,13 @@ const CardDetailsPageSimple = () => {
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 dark:border-gray-600">
               <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                Ajouter aux favoris
+                {t('addToFavorites')}
               </button>
               <button className="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                Partager
+                {t('share')}
               </button>
               <button className="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                Télécharger vCard
+                {t('downloadVCard')}
               </button>
             </div>
           </div>
@@ -154,22 +195,22 @@ const CardDetailsPageSimple = () => {
         {/* Cartes similaires */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-            Cartes similaires
+            {t('similarCards')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map(i => (
               <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
                 <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">
-                  Personne {i}
+                  {t('person')} {i}
                 </h3>
                 <p className="text-blue-600 dark:text-blue-400 text-sm mb-4">
-                  Métier similaire
+                  {t('similarProfession')}
                 </p>
                 <Link 
                   to={`/cards/${i}`}
                   className="text-blue-500 hover:text-blue-600 text-sm font-medium"
                 >
-                  Voir détails →
+                  {t('viewDetails')} →
                 </Link>
               </div>
             ))}

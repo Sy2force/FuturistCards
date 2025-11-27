@@ -1,135 +1,7 @@
-// Contrôleur des cartes - Version corrigée avec favorites et views
+// Contrôleur des cartes - Version MongoDB exclusive
 import Card from '../models/Card.js';
 import User from '../models/User.js';
 import Favorite from '../models/Favorite.js';
-
-// Données simulées avec viewCount et favoris
-const mockCards = [
-  {
-    _id: '507f1f77bcf86cd799439011',
-    title: 'Tech Innovator',
-    description: 'Full-stack developer specializing in React and Node.js',
-    company: 'TechCorp',
-    position: 'Senior Developer',
-    email: 'john@techcorp.com',
-    phone: '+1-555-0123',
-    website: 'https://johndoe.dev',
-    address: 'San Francisco, CA',
-    category: 'Technology',
-    tags: ['React', 'Node.js', 'JavaScript'],
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop',
-    userId: '507f1f77bcf86cd799439014',
-    likes: 15,
-    views: 120,
-    viewCount: 120,
-    isFavorite: false,
-    createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15')
-  },
-  {
-    _id: '507f1f77bcf86cd799439012',
-    title: 'Creative Designer',
-    description: 'UI/UX Designer with passion for modern interfaces',
-    company: 'DesignStudio',
-    position: 'Lead Designer',
-    email: 'sarah@designstudio.com',
-    phone: '+1-555-0124',
-    website: 'https://sarahdesigns.com',
-    address: 'New York, NY',
-    category: 'Design',
-    tags: ['UI/UX', 'Figma', 'Adobe'],
-    image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=300&h=200&fit=crop',
-    userId: '507f1f77bcf86cd799439015',
-    likes: 28,
-    views: 200,
-    viewCount: 200,
-    isFavorite: true,
-    createdAt: new Date('2024-01-20'),
-    updatedAt: new Date('2024-01-20')
-  },
-  {
-    _id: '507f1f77bcf86cd799439013',
-    title: 'Marketing Expert',
-    description: 'Digital marketing strategist with 10+ years experience',
-    company: 'MarketPro',
-    position: 'Marketing Director',
-    email: 'mike@marketpro.com',
-    phone: '+1-555-0125',
-    website: 'https://mikemarketing.com',
-    address: 'Los Angeles, CA',
-    category: 'Marketing',
-    tags: ['SEO', 'Social Media', 'Analytics'],
-    image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=200&fit=crop',
-    userId: '507f1f77bcf86cd799439016',
-    likes: 42,
-    views: 350,
-    viewCount: 350,
-    isFavorite: false,
-    createdAt: new Date('2024-01-25'),
-    updatedAt: new Date('2024-01-25')
-  },
-  {
-    _id: '507f1f77bcf86cd799439014',
-    title: 'Business Consultant',
-    description: 'Strategic business advisor for startups and enterprises',
-    company: 'ConsultCorp',
-    position: 'Senior Consultant',
-    email: 'emma@consultcorp.com',
-    phone: '+1-555-0126',
-    website: 'https://emmaconsults.com',
-    address: 'Chicago, IL',
-    category: 'Business',
-    tags: ['Strategy', 'Growth', 'Analytics'],
-    image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&h=200&fit=crop',
-    userId: '507f1f77bcf86cd799439017',
-    likes: 33,
-    views: 280,
-    viewCount: 280,
-    isFavorite: true,
-    createdAt: new Date('2024-02-01'),
-    updatedAt: new Date('2024-02-01')
-  },
-  {
-    _id: '507f1f77bcf86cd799439015',
-    title: 'Data Scientist',
-    description: 'Machine learning engineer and data analytics expert',
-    company: 'DataTech',
-    position: 'Lead Data Scientist',
-    email: 'alex@datatech.com',
-    phone: '+1-555-0127',
-    website: 'https://alexdata.com',
-    address: 'Seattle, WA',
-    category: 'Technology',
-    tags: ['Python', 'Machine Learning', 'AI'],
-    image: 'https://images.unsplash.com/photo-1507591064344-4c6ce005b128?w=300&h=200&fit=crop',
-    userId: '507f1f77bcf86cd799439018',
-    likes: 67,
-    views: 450,
-    viewCount: 450,
-    isFavorite: false,
-    createdAt: new Date('2024-02-05'),
-    updatedAt: new Date('2024-02-05')
-  },
-  {
-    _id: '507f1f77bcf86cd799439016',
-    title: 'Photographer',
-    description: 'Professional photographer specializing in portraits and events',
-    company: 'PhotoStudio Pro',
-    position: 'Creative Director',
-    email: 'lisa@photostudio.com',
-    phone: '+1-555-0128',
-    website: 'https://lisaphotos.com',
-    address: 'Miami, FL',
-    category: 'Creative',
-    tags: ['Photography', 'Portraits', 'Events'],
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=200&fit=crop',
-    userId: '507f1f77bcf86cd799439019',
-    likes: 89,
-    views: 520,
-    createdAt: new Date('2024-02-10'),
-    updatedAt: new Date('2024-02-10')
-  }
-];
 
 // @desc    Get all cards
 // @route   GET /api/cards
@@ -138,36 +10,25 @@ const getCards = async (req, res) => {
   try {
     const { search, category, page = 1, limit = 10 } = req.query;
     
-    let filteredCards = [...mockCards];
+    const options = {
+      search,
+      category,
+      page: parseInt(page),
+      limit: parseInt(limit),
+      sortBy: 'recent'
+    };
     
-    // Filter by search
-    if (search) {
-      filteredCards = filteredCards.filter(card => 
-        card.title.toLowerCase().includes(search.toLowerCase()) ||
-        card.description.toLowerCase().includes(search.toLowerCase()) ||
-        card.company.toLowerCase().includes(search.toLowerCase())
-      );
-    }
+    const cards = await Card.findPublicCards(options);
     
-    // Filter by category
-    if (category) {
-      filteredCards = filteredCards.filter(card => 
-        card.category.toLowerCase() === category.toLowerCase()
-      );
-    }
-    
-    // Pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const paginatedCards = filteredCards.slice(startIndex, endIndex);
+    console.log(`✅ Récupération de ${cards.length} cartes depuis MongoDB`);
     
     res.json({
       success: true,
-      count: paginatedCards.length,
-      total: filteredCards.length,
+      count: cards.length,
+      total: cards.length,
       page: parseInt(page),
-      pages: Math.ceil(filteredCards.length / limit),
-      data: paginatedCards
+      pages: Math.ceil(cards.length / limit),
+      data: cards
     });
     
   } catch (error) {
@@ -179,12 +40,68 @@ const getCards = async (req, res) => {
   }
 };
 
+// @desc    Create new card
+// @route   POST /api/cards
+// @access  Private (Business/Admin)
+const createCard = async (req, res) => {
+  try {
+    const cardData = {
+      ...req.body,
+      user_id: req.user.id || req.user.userId
+    };
+    
+    const card = new Card(cardData);
+    await card.save();
+    
+    console.log('✅ Nouvelle carte créée dans MongoDB:', {
+      id: card._id,
+      title: card.title,
+      user: card.user_id
+    });
+    
+    res.status(201).json({
+      success: true,
+      message: 'Carte créée avec succès',
+      card
+    });
+  } catch (error) {
+    console.error('Erreur création carte:', error);
+    res.status(400).json({
+      success: false,
+      message: error.message || 'Erreur lors de la création de la carte'
+    });
+  }
+};
+
+// @desc    Get user's cards
+// @route   GET /api/cards/my-cards
+// @access  Private
+const getMyCards = async (req, res) => {
+  try {
+    const cards = await Card.findByUser(req.user.id || req.user.userId);
+    
+    console.log(`✅ Récupération de ${cards.length} cartes utilisateur depuis MongoDB`);
+    
+    res.json({
+      success: true,
+      count: cards.length,
+      data: cards
+    });
+  } catch (error) {
+    console.error('Get my cards error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la récupération des cartes'
+    });
+  }
+};
+
 // @desc    Get single card
 // @route   GET /api/cards/:id
 // @access  Public
 const getCard = async (req, res) => {
   try {
-    const card = mockCards.find(c => c._id === req.params.id);
+    const card = await Card.findById(req.params.id).populate('user_id', 'name email');
     
     if (!card) {
       return res.status(404).json({
@@ -194,7 +111,7 @@ const getCard = async (req, res) => {
     }
     
     // Increment views
-    card.views += 1;
+    await Card.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
     
     res.json({
       success: true,
@@ -210,118 +127,35 @@ const getCard = async (req, res) => {
   }
 };
 
-// @desc    Create new card
-// @route   POST /api/cards
-// @access  Private (Business users only)
-const createCard = async (req, res) => {
+// @desc    Search cards
+// @route   GET /api/cards/search
+// @access  Public
+const searchCards = async (req, res) => {
   try {
-    const {
-      title,
-      subtitle,
-      description,
-      company,
-      position,
-      email,
-      phone,
-      web,
-      website,
-      address,
-      category,
-      tags,
-      image
-    } = req.body;
+    const { q: searchTerm, category } = req.query;
     
-    // Check if user is business or admin
-    if (req.user.role !== 'business' && req.user.role !== 'admin') {
-      return res.status(403).json({
+    if (!searchTerm) {
+      return res.status(400).json({
         success: false,
-        message: 'Only business users can create cards'
+        message: 'Terme de recherche requis'
       });
     }
     
-    const newCard = {
-      _id: Date.now().toString(),
-      title,
-      subtitle: subtitle || '',
-      description,
-      company: company || subtitle || '',
-      position: position || title || '',
-      email,
-      phone,
-      website: website || web || '',
-      web: web || website || '',
-      address,
-      category,
-      tags: tags || [],
-      image: image || 'https://via.placeholder.com/300x200',
-      userId: req.user.id,
-      likes: 0,
-      views: 0,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+    const options = { category };
+    const cards = await Card.searchCards(searchTerm, options);
     
-    mockCards.push(newCard);
-    
-    res.status(201).json({
-      success: true,
-      message: 'Card created successfully',
-      data: newCard
-    });
-    
-  } catch (error) {
-    console.error('Create card error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-};
-
-// @desc    Update card
-// @route   PUT /api/cards/:id
-// @access  Private (Owner or Admin)
-const updateCard = async (req, res) => {
-  try {
-    const cardIndex = mockCards.findIndex(c => c._id === req.params.id);
-    
-    if (cardIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        message: 'Card not found'
-      });
-    }
-    
-    const card = mockCards[cardIndex];
-    
-    // Check ownership or admin
-    if (card.userId !== req.user.id && req.user.role !== 'admin') {
-      return res.status(403).json({
-        success: false,
-        message: 'Not authorized to update this card'
-      });
-    }
-    
-    // Update card
-    const updatedCard = {
-      ...card,
-      ...req.body,
-      updatedAt: new Date()
-    };
-    
-    mockCards[cardIndex] = updatedCard;
+    console.log(`✅ Recherche '${searchTerm}': ${cards.length} résultats depuis MongoDB`);
     
     res.json({
       success: true,
-      message: 'Card updated successfully',
-      data: updatedCard
+      count: cards.length,
+      data: cards
     });
-    
   } catch (error) {
-    console.error('Update card error:', error);
+    console.error('Search cards error:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Erreur serveur lors de la recherche'
     });
   }
 };
@@ -331,26 +165,26 @@ const updateCard = async (req, res) => {
 // @access  Private (Owner or Admin)
 const deleteCard = async (req, res) => {
   try {
-    const cardIndex = mockCards.findIndex(c => c._id === req.params.id);
+    const card = await Card.findById(req.params.id);
     
-    if (cardIndex === -1) {
+    if (!card) {
       return res.status(404).json({
         success: false,
         message: 'Card not found'
       });
     }
     
-    const card = mockCards[cardIndex];
-    
     // Check ownership or admin
-    if (card.userId !== req.user.id && req.user.role !== 'admin') {
+    if (card.user_id.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
         message: 'Not authorized to delete this card'
       });
     }
     
-    mockCards.splice(cardIndex, 1);
+    await Card.findByIdAndDelete(req.params.id);
+    
+    console.log('✅ Carte supprimée de MongoDB:', req.params.id);
     
     res.json({
       success: true,
@@ -366,12 +200,12 @@ const deleteCard = async (req, res) => {
   }
 };
 
-// @desc    Like/Unlike card
-// @route   PATCH /api/cards/:id/like
-// @access  Private
-const likeCard = async (req, res) => {
+// @desc    Update card
+// @route   PUT /api/cards/:id
+// @access  Private (Owner or Admin)
+const updateCard = async (req, res) => {
   try {
-    const card = mockCards.find(c => c._id === req.params.id);
+    const card = await Card.findById(req.params.id);
     
     if (!card) {
       return res.status(404).json({
@@ -380,62 +214,143 @@ const likeCard = async (req, res) => {
       });
     }
     
-    // Toggle like (simplified - in real app would track user likes)
-    card.likes += 1;
+    // Check ownership or admin
+    if (card.user_id.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to update this card'
+      });
+    }
+    
+    const updatedCard = await Card.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    
+    console.log('✅ Carte mise à jour dans MongoDB:', updatedCard._id);
     
     res.json({
       success: true,
-      message: 'Card liked successfully',
-      likes: card.likes
+      message: 'Card updated successfully',
+      data: updatedCard
+    });
+    
+  } catch (error) {
+    console.error('Update card error:', error);
+    res.status(400).json({
+      success: false,
+      message: error.message || 'Error updating card'
+    });
+  }
+};
+
+// @desc    Get search suggestions
+// @route   GET /api/cards/suggestions
+// @access  Public
+const getSearchSuggestions = async (req, res) => {
+  try {
+    const { q } = req.query;
+    
+    if (!q || q.length < 2) {
+      return res.json({
+        success: true,
+        data: []
+      });
+    }
+    
+    const suggestions = await Card.aggregate([
+      {
+        $match: {
+          $or: [
+            { title: { $regex: q, $options: 'i' } },
+            { description: { $regex: q, $options: 'i' } },
+            { category: { $regex: q, $options: 'i' } }
+          ]
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          titles: { $addToSet: '$title' },
+          categories: { $addToSet: '$category' }
+        }
+      }
+    ]);
+    
+    const result = suggestions[0] || { titles: [], categories: [] };
+    const allSuggestions = [...result.titles, ...result.categories]
+      .filter(item => item && item.toLowerCase().includes(q.toLowerCase()))
+      .slice(0, 10);
+    
+    res.json({
+      success: true,
+      data: allSuggestions
+    });
+    
+  } catch (error) {
+    console.error('Get suggestions error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// @desc    Like/Unlike card
+// @route   PATCH /api/cards/:id/like
+// @access  Private
+const likeCard = async (req, res) => {
+  try {
+    const card = await Card.findById(req.params.id);
+    
+    if (!card) {
+      return res.status(404).json({
+        success: false,
+        message: 'Card not found'
+      });
+    }
+    
+    const userId = req.user.id || req.user.userId;
+    const hasLiked = card.likes && card.likes.includes(userId);
+    
+    let updatedCard;
+    
+    if (hasLiked) {
+      // Unlike
+      updatedCard = await Card.findByIdAndUpdate(
+        req.params.id,
+        {
+          $pull: { likes: userId },
+          $inc: { likeCount: -1 }
+        },
+        { new: true }
+      );
+    } else {
+      // Like
+      updatedCard = await Card.findByIdAndUpdate(
+        req.params.id,
+        {
+          $addToSet: { likes: userId },
+          $inc: { likeCount: 1 }
+        },
+        { new: true }
+      );
+    }
+    
+    console.log(`✅ Carte ${hasLiked ? 'unlikée' : 'likée'}:`, req.params.id);
+    
+    res.json({
+      success: true,
+      message: hasLiked ? 'Card unliked' : 'Card liked',
+      data: {
+        liked: !hasLiked,
+        likeCount: updatedCard.likeCount || 0
+      }
     });
     
   } catch (error) {
     console.error('Like card error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-};
-
-// @desc    Get user's cards
-// @route   GET /api/cards/my-cards
-// @access  Private
-const getMyCards = async (req, res) => {
-  try {
-    const userCards = mockCards.filter(card => card.userId === req.user.id);
-    
-    res.json({
-      success: true,
-      count: userCards.length,
-      data: userCards
-    });
-    
-  } catch (error) {
-    console.error('Get my cards error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
-  }
-};
-
-// @desc    Get user favorites
-// @route   GET /api/cards/favorites
-// @access  Private
-const getFavorites = async (req, res) => {
-  try {
-    // Retourne les cartes marquées comme favorites
-    const userFavorites = mockCards.filter(card => card.isFavorite === true);
-    
-    res.json({
-      success: true,
-      count: userFavorites.length,
-      data: userFavorites
-    });
-    
-  } catch (error) {
-    console.error('Get favorites error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error'
@@ -448,8 +363,11 @@ const getFavorites = async (req, res) => {
 // @access  Private
 const toggleFavorite = async (req, res) => {
   try {
-    const card = mockCards.find(c => c._id === req.params.id);
+    const userId = req.user.id || req.user.userId;
+    const cardId = req.params.id;
     
+    // Vérifier si la carte existe
+    const card = await Card.findById(cardId);
     if (!card) {
       return res.status(404).json({
         success: false,
@@ -457,13 +375,36 @@ const toggleFavorite = async (req, res) => {
       });
     }
     
-    // Toggle favorite status
-    card.isFavorite = !card.isFavorite;
+    // Vérifier si déjà en favoris
+    const existingFavorite = await Favorite.findOne({
+      userId: userId,
+      cardId: cardId
+    });
+    
+    let isFavorite;
+    
+    if (existingFavorite) {
+      // Retirer des favoris
+      await Favorite.findByIdAndDelete(existingFavorite._id);
+      isFavorite = false;
+      console.log('✅ Carte retirée des favoris:', cardId);
+    } else {
+      // Ajouter aux favoris
+      const favorite = new Favorite({
+        userId: userId,
+        cardId: cardId
+      });
+      await favorite.save();
+      isFavorite = true;
+      console.log('✅ Carte ajoutée aux favoris:', cardId);
+    }
     
     res.json({
       success: true,
-      message: card.isFavorite ? 'Card added to favorites' : 'Card removed from favorites',
-      isFavorite: card.isFavorite
+      message: isFavorite ? 'Added to favorites' : 'Removed from favorites',
+      data: {
+        isFavorite: isFavorite
+      }
     });
     
   } catch (error) {
@@ -475,146 +416,53 @@ const toggleFavorite = async (req, res) => {
   }
 };
 
-// Recherche de cartes avec filtres
-const searchCards = async (req, res) => {
+// @desc    Update card business number (Admin only)
+// @route   PATCH /api/cards/:id/biznumber
+// @access  Admin only
+const updateBizNumber = async (req, res) => {
   try {
-    const { q, category, skills, location, page = 1, limit = 12 } = req.query;
+    const { bizNumber } = req.body;
     
-    // Simuler la recherche avec les données mockées
-    let filteredCards = [...mockCards];
+    const updatedCard = await Card.findByIdAndUpdate(
+      req.params.id,
+      { bizNumber },
+      { new: true, runValidators: true }
+    );
     
-    // Filtrer par requête de recherche
-    if (q && q.trim()) {
-      const searchTerm = q.toLowerCase();
-      filteredCards = filteredCards.filter(card => 
-        card.title.toLowerCase().includes(searchTerm) ||
-        card.description.toLowerCase().includes(searchTerm) ||
-        card.company.toLowerCase().includes(searchTerm) ||
-        card.position.toLowerCase().includes(searchTerm) ||
-        card.tags.some(tag => tag.toLowerCase().includes(searchTerm))
-      );
+    if (!updatedCard) {
+      return res.status(404).json({
+        success: false,
+        message: 'Card not found'
+      });
     }
     
-    // Filtrer par catégorie
-    if (category && category !== '') {
-      filteredCards = filteredCards.filter(card => 
-        card.category.toLowerCase() === category.toLowerCase()
-      );
-    }
-    
-    // Filtrer par compétences
-    if (skills) {
-      const skillsArray = Array.isArray(skills) ? skills : [skills];
-      filteredCards = filteredCards.filter(card =>
-        skillsArray.some(skill => 
-          card.tags.some(tag => tag.toLowerCase().includes(skill.toLowerCase()))
-        )
-      );
-    }
-    
-    // Filtrer par localisation
-    if (location && location.trim()) {
-      const locationTerm = location.toLowerCase();
-      filteredCards = filteredCards.filter(card =>
-        card.address.toLowerCase().includes(locationTerm)
-      );
-    }
-    
-    // Pagination
-    const startIndex = (page - 1) * limit;
-    const endIndex = startIndex + parseInt(limit);
-    const paginatedCards = filteredCards.slice(startIndex, endIndex);
-    
-    // Calculer les métadonnées de pagination
-    const totalPages = Math.ceil(filteredCards.length / limit);
+    console.log('✅ Numéro d\'entreprise mis à jour par admin:', req.params.id);
     
     res.json({
       success: true,
-      data: paginatedCards,
-      pagination: {
-        page: parseInt(page),
-        limit: parseInt(limit),
-        total: filteredCards.length,
-        totalPages,
-        hasNext: page < totalPages,
-        hasPrev: page > 1
-      }
+      message: 'Business number updated successfully',
+      data: updatedCard
     });
+    
   } catch (error) {
-    console.error('Erreur lors de la recherche:', error);
-    res.status(500).json({
+    console.error('Update biz number error:', error);
+    res.status(400).json({
       success: false,
-      message: 'Erreur serveur lors de la recherche'
+      message: error.message || 'Error updating business number'
     });
   }
 };
 
-// Obtenir des suggestions de recherche
-const getSuggestions = async (req, res) => {
-  try {
-    const { q } = req.query;
-    
-    if (!q || q.trim().length < 2) {
-      return res.json({
-        success: true,
-        data: []
-      });
-    }
-    
-    const searchTerm = q.toLowerCase();
-    const suggestions = new Set();
-    
-    // Collecter les suggestions depuis les données mockées
-    mockCards.forEach(card => {
-      // Suggestions basées sur les titres
-      if (card.title.toLowerCase().includes(searchTerm)) {
-        suggestions.add(card.title);
-      }
-      
-      // Suggestions basées sur les entreprises
-      if (card.company.toLowerCase().includes(searchTerm)) {
-        suggestions.add(card.company);
-      }
-      
-      // Suggestions basées sur les positions
-      if (card.position.toLowerCase().includes(searchTerm)) {
-        suggestions.add(card.position);
-      }
-      
-      // Suggestions basées sur les tags
-      card.tags.forEach(tag => {
-        if (tag.toLowerCase().includes(searchTerm)) {
-          suggestions.add(tag);
-        }
-      });
-    });
-    
-    // Limiter à 5 suggestions
-    const suggestionArray = Array.from(suggestions).slice(0, 5);
-    
-    res.json({
-      success: true,
-      data: suggestionArray
-    });
-  } catch (error) {
-    console.error('Erreur lors de la récupération des suggestions:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erreur serveur lors de la récupération des suggestions'
-    });
-  }
-};
-
-export default {
-  getCards,
-  getCard,
-  createCard,
-  updateCard,
+export { 
+  getCards, 
+  createCard, 
+  getMyCards, 
+  getCard, 
+  searchCards, 
   deleteCard,
-  getFavorites,
-  getMyCards,
+  updateCard,
+  getSearchSuggestions,
   likeCard,
   toggleFavorite,
-  searchCards,
-  getSearchSuggestions: getSuggestions
+  updateBizNumber
 };

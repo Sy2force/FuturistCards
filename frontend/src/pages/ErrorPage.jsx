@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
+import { useTranslation } from 'react-i18next';
 
 const ErrorPageSimple = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
@@ -42,11 +42,11 @@ const ErrorPageSimple = () => {
         {/* Suggestions */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
-            {t('popularPages')} :
+            {t('popularPages')}
           </h3>
           <div className="space-y-2 text-sm">
             <Link to="/about" className="block text-blue-500 hover:text-blue-600">
-              {t('aboutFuturistCards')}
+              {t('aboutCardPro')}
             </Link>
             <Link to="/login" className="block text-blue-500 hover:text-blue-600">
               {t('signIn')}

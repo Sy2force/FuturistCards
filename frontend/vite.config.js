@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'url'
 
 export default defineConfig({
-  base: '/Project-react/',
+  base: '/',
   plugins: [react()],
   resolve: {
     alias: {
@@ -17,15 +17,22 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3000,
+    port: 3010,
     strictPort: true,
     host: '0.0.0.0',
     open: false,
     cors: true,
     hmr: {
-      overlay: false
+      overlay: true
     },
-    // historyApiFallback: true  // This option doesn't exist in Vite server config
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5010',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path
+      }
+    }
   },
   preview: {
     port: 3001,
@@ -72,7 +79,6 @@ export default defineConfig({
   },
   define: {
     __APP_VERSION__: JSON.stringify('1.0.0'),
-    // 'process.env.NODE_ENV': JSON.stringify('development'),  // Vite handles this automatically
   },
   optimizeDeps: {
     include: [
@@ -85,4 +91,3 @@ export default defineConfig({
     ],
   },
 })
-

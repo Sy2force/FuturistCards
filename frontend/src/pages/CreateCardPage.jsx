@@ -1,7 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../context/LanguageContext';
+import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import api from '../services/api';
 import { 
@@ -12,13 +14,18 @@ import {
   MapPinIcon,
   PhotoIcon,
   PlusIcon,
-  XMarkIcon
+  XMarkIcon,
+  DocumentCheckIcon,
+  ArrowLeftIcon
 } from '@heroicons/react/24/outline';
 
 const CreateCardPage = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
+    company: '',
+    position: '',
     description: '',
     email: '',
     phone: '',
@@ -34,7 +41,6 @@ const CreateCardPage = () => {
 
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { t } = useLanguage();
 
   const categories = [
     { value: 'technology', label: t('technology') },
@@ -45,6 +51,7 @@ const CreateCardPage = () => {
     { value: 'finance', label: t('finance') },
     { value: 'marketing', label: t('marketing') },
     { value: 'consulting', label: t('consulting') },
+    { value: 'retail', label: t('retail') },
     { value: 'other', label: t('other') }
   ];
 
@@ -61,7 +68,7 @@ const CreateCardPage = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast.error(t('imageTooLarge') || 'Image trop volumineuse (max 5MB)');
+        toast.error(t('createCard.imageTooLarge'));
         return;
       }
       
@@ -94,38 +101,34 @@ const CreateCardPage = () => {
     setError('');
 
     try {
-      // Create card directly without API to avoid authentication issues
-      const newCard = {
-        _id: Date.now().toString(),
+      // Préparer les données de la carte selon le schéma backend
+      const cardData = {
         title: formData.title,
         subtitle: formData.subtitle || '',
         description: formData.description,
-        company: formData.company || formData.subtitle || '',
-        position: formData.position || formData.title || '',
-        email: formData.email,
-        phone: formData.phone,
-        website: formData.website || formData.web || '',
-        web: formData.web || formData.website || '',
-        address: formData.address,
         category: formData.category,
-        tags: formData.tags || [],
-        image: formData.image || 'https://via.placeholder.com/300x200',
-        userId: user?.id || '507f1f77bcf86cd799439015',
-        likes: 0,
-        views: 0,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        phone: formData.phone,
+        email: formData.email,
+        website: formData.website || '',
+        address: {
+          street: formData.address.split(',')[0]?.trim() || 'Rue inconnue',
+          houseNumber: '1',
+          city: formData.address.split(',')[1]?.trim() || 'Ville inconnue',
+          zip: '00000'
+        }
       };
 
-      // Save card to localStorage for simulation
-      const existingCards = JSON.parse(localStorage.getItem('userCards') || '[]');
-      existingCards.push(newCard);
-      localStorage.setItem('userCards', JSON.stringify(existingCards));
+      // Création via l'API MongoDB backend
+      const response = await api.createCard(cardData);
       
-      toast.success(t('cardCreatedSuccessfully') || 'Card created successfully!');
-      navigate('/my-cards');
+      if (response.success) {
+        toast.success(t('createCard.cardCreatedSuccess') || 'Carte créée avec succès !');
+        navigate('/my-cards');
+      } else {
+        throw new Error(response.message || 'Erreur lors de la création de la carte');
+      }
     } catch (error) {
-      const errorMessage = error.message || t('error') || 'An error occurred';
+      const errorMessage = error.response?.data?.message || error.message || t('createCard.errorOccurred');
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -138,16 +141,16 @@ const CreateCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            {t('restrictedAccess') || 'Accès restreint'}
+            {t('accessRestricted')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            {t('businessAccountRequired') || 'Vous devez avoir un compte professionnel pour créer des cartes.'}
+            {t('needBusinessAccount')}
           </p>
           <button 
             onClick={() => navigate('/register')}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
           >
-            {t('createBusinessAccount') || 'Créer un compte professionnel'}
+            {t('createBusinessAccount')}
           </button>
         </div>
       </div>
@@ -155,30 +158,70 @@ const CreateCardPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 px-4">
-      <div className="container mx-auto max-w-4xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6">
-            <PlusIcon className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-            {t('createNewCard') || 'Créer une nouvelle carte'}
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            {t('fillCardInformation') || 'Créez votre carte de visite professionnelle en quelques étapes simples'}
-          </p>
-        </div>
+    <>
+      <Helmet>
+        <title>{t('createNewCardTitle')} - CardPro</title>
+        <meta name="description" content={t('createCardDescription')} />
+      </Helmet>
+      
+      <motion.div 
+        className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.5 }}
+          >
+            <motion.div 
+              className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <PlusIcon className="w-8 h-8 text-white" />
+            </motion.div>
+            <motion.h1 
+              className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              {t('createNewCard')}
+            </motion.h1>
+            <motion.p 
+              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              {t('createCardSubtitle')}
+            </motion.p>
+          </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <motion.div 
+            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
           {/* Preview Card */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                 <PhotoIcon className="w-5 h-5 mr-2" />
-                Aperçu de votre carte
+                {t('cardPreview')}
               </h3>
-              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700">
+                <motion.div 
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.6, duration: 0.5 }}
+                >
                 <div className="text-center">
                   <div className="relative inline-block mb-4">
                     {imagePreview ? (
@@ -194,13 +237,13 @@ const CreateCardPage = () => {
                     )}
                   </div>
                   <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                    {formData.title || 'Votre nom'}
+                    {formData.title || t('yourName')}
                   </h4>
                   <p className="text-blue-600 dark:text-blue-400 font-medium mb-3">
-                    {formData.subtitle || 'Votre poste'}
+                    {formData.subtitle || t('yourPosition')}
                   </p>
                   <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                    {formData.description || 'Votre description professionnelle...'}
+                    {formData.description || t('yourDescription')}
                   </p>
                   <div className="space-y-2 text-sm">
                     {formData.email && (
@@ -217,19 +260,24 @@ const CreateCardPage = () => {
                     )}
                   </div>
                 </div>
+                </motion.div>
               </div>
             </div>
-          </div>
 
           {/* Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <motion.div 
+              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
+            >
               <div className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-6">
-                <h2 className="text-2xl font-bold text-white">Informations personnelles</h2>
-                <p className="text-blue-100 mt-1">Remplissez vos informations professionnelles</p>
+                <h2 className="text-2xl font-bold text-white">{t('personalInformation')}</h2>
+                <p className="text-blue-100 mt-1">{t('fillProfessionalInfo')}</p>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-8 space-y-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
                 {error && (
                   <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-4">
                     <p className="text-red-600 dark:text-red-400 text-sm font-medium">{error}</p>
@@ -239,7 +287,7 @@ const CreateCardPage = () => {
                 {/* Photo Upload */}
                 <div className="text-center">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                    Photo de profil
+                    {t('profilePhoto')}
                   </label>
                   <div className="relative inline-block">
                     <input
@@ -256,13 +304,15 @@ const CreateCardPage = () => {
                           alt="Preview"
                           className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800 shadow-lg"
                         />
-                        <button
+                        <motion.button
                           type="button"
                           onClick={removeImage}
                           className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
                         >
                           <XMarkIcon className="w-4 h-4" />
-                        </button>
+                        </motion.button>
                       </div>
                     ) : (
                       <button
@@ -273,14 +323,14 @@ const CreateCardPage = () => {
                         <div className="text-center">
                           <PhotoIcon className="w-8 h-8 text-gray-400 group-hover:text-blue-500 mx-auto mb-2" />
                           <p className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-500">
-                            Ajouter une photo
+                            {t('addPhoto')}
                           </p>
                         </div>
                       </button>
                     )}
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    JPG, PNG ou GIF (max 5MB)
+                    {t('imageFormats')}
                   </p>
                 </div>
 
@@ -289,15 +339,16 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <UserIcon className="w-4 h-4 inline mr-1" />
-                      {t('title') || 'Nom complet'} *
+                      {t('fullName')} *
                     </label>
                     <input
                       type="text"
                       name="title"
+                      data-testid="input-title"
                       value={formData.title}
                       onChange={handleChange}
                       required
-                      placeholder="Ex: Jean Dupont"
+                      placeholder={t('fullNamePlaceholder')}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
@@ -305,31 +356,51 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <UserIcon className="w-4 h-4 inline mr-1" />
-                      {t('subtitle') || 'Poste / Titre'} *
+                      {t('positionTitle')} *
                     </label>
                     <input
                       type="text"
                       name="subtitle"
+                      data-testid="input-position"
                       value={formData.subtitle}
                       onChange={handleChange}
                       required
-                      placeholder="Ex: Développeur Full-Stack"
+                      placeholder={t('positionPlaceholder')}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
                 </div>
 
+                {/* Company Field */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <UserIcon className="w-4 h-4 inline mr-1" />
+                    {t('company')} *
+                  </label>
+                  <input
+                    type="text"
+                    name="company"
+                    data-testid="input-company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    required
+                    placeholder={t('companyPlaceholder')}
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                  />
+                </div>
+
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {t('description') || 'Description professionnelle'}
+                    {t('description')}
                   </label>
                   <textarea
                     name="description"
+                    data-testid="input-description"
                     value={formData.description}
                     onChange={handleChange}
                     rows={4}
-                    placeholder="Décrivez votre expertise, vos compétences et votre expérience..."
+                    placeholder={t('descriptionPlaceholder')}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all resize-none"
                   />
                 </div>
@@ -339,15 +410,16 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <EnvelopeIcon className="w-4 h-4 inline mr-1" />
-                      {t('email') || 'Email'} *
+                      {t('email')} *
                     </label>
                     <input
                       type="email"
                       name="email"
+                      data-testid="input-email"
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      placeholder="jean.dupont@exemple.com"
+                      placeholder={t('emailPlaceholder')}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
@@ -355,15 +427,16 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <PhoneIcon className="w-4 h-4 inline mr-1" />
-                      {t('phone') || 'Téléphone'} *
+                      {t('phone')} *
                     </label>
                     <input
                       type="tel"
                       name="phone"
+                      data-testid="input-phone"
                       value={formData.phone}
                       onChange={handleChange}
                       required
-                      placeholder="+33 1 23 45 67 89"
+                      placeholder={t('phonePlaceholder')}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
@@ -374,21 +447,21 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <GlobeAltIcon className="w-4 h-4 inline mr-1" />
-                      {t('website') || 'Site web'}
+                      {t('website')}
                     </label>
                     <input
                       type="url"
                       name="website"
                       value={formData.website}
                       onChange={handleChange}
-                      placeholder="https://monsite.com"
+                      placeholder={t('websitePlaceholder')}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('category') || 'Catégorie'} *
+                      {t('category')} *
                     </label>
                     <select
                       name="category"
@@ -410,51 +483,63 @@ const CreateCardPage = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <MapPinIcon className="w-4 h-4 inline mr-1" />
-                    {t('address') || 'Adresse'}
+                    {t('address')}
                   </label>
                   <input
                     type="text"
                     name="address"
+                    data-testid="input-address"
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder="123 Rue de la Paix, 75001 Paris, France"
+                    placeholder={t('addressPlaceholder')}
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                   />
                 </div>
 
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200 dark:border-gray-700">
-                  <button
+                {/* Submit Button */}
+                <div className="flex justify-end space-x-4">
+                  <motion.button
                     type="button"
-                    onClick={() => navigate('/my-cards')}
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-xl font-medium transition-all duration-200 border border-gray-300 dark:border-gray-600"
+                    onClick={() => navigate('/cards')}
+                    className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    {t('cancel') || 'Annuler'}
-                  </button>
-                  <button
+                    <ArrowLeftIcon className="w-5 h-5 mr-2 inline" />
+                    {t('cancel')}
+                  </motion.button>
+                  <motion.button
                     type="submit"
+                    data-testid="submit-button"
                     disabled={loading}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white py-3 px-6 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl disabled:shadow-none flex items-center justify-center"
+                    className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                    whileHover={{ scale: loading ? 1 : 1.02 }}
+                    whileTap={{ scale: loading ? 1 : 0.98 }}
                   >
                     {loading ? (
                       <>
-                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                        {t('creating') || 'Création...'}
+                        <motion.div 
+                          className="rounded-full h-5 w-5 border-b-2 border-white mr-2"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                        ></motion.div>
+                        {t('creating')}...
                       </>
                     ) : (
                       <>
-                        <PlusIcon className="w-5 h-5 mr-2" />
-                        {t('createCard') || 'Créer ma carte'}
+                        <DocumentCheckIcon className="w-5 h-5 mr-2" />
+                        {t('createCard')}
                       </>
                     )}
-                  </button>
+                  </motion.button>
                 </div>
               </form>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </>
   );
 };
 

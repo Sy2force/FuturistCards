@@ -23,7 +23,6 @@ export const FavoritesProvider = ({ children }) => {
         try {
           setFavorites(JSON.parse(savedFavorites));
         } catch (error) {
-          console.error('Error loading favorites:', error);
           setFavorites([]);
         }
       }
@@ -80,7 +79,7 @@ export const FavoritesProvider = ({ children }) => {
   // Obtenir toutes les cartes favorites
   const getFavoriteCards = (allCards) => {
     if (!user || !allCards) return [];
-    return allCards.filter(card => favorites.includes(card.id));
+    return allCards.filter(card => favorites.includes(card.id || card._id));
   };
 
   const value = {

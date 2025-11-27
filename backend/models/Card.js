@@ -11,7 +11,7 @@ const cardSchema = new mongoose.Schema(
     },
     subtitle: {
       type: String,
-      required: [true, 'Card subtitle is required'],
+      required: false,
       trim: true,
       maxlength: [150, 'Subtitle cannot exceed 150 characters'],
     },

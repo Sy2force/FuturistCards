@@ -5,6 +5,13 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import logger, { requestLogger, errorLogger } from './middleware/logger.js';
+import { securityMiddleware } from './middleware/accountSecurity.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Load environment-specific configuration
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -20,8 +27,49 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/auth.js';
 import cardRoutes from './routes/cards.js';
 import favoriteRoutes from './routes/favorites.js';
-import userRoutes from './routes/users.js';
-import errorHandler from './middleware/errorHandler.js';
+// Error handler middleware inline (HackerU simplification)
+const errorHandler = (err, req, res, next) => {
+  let error = { ...err };
+  error.message = err.message;
+
+  // Log error using our logger system
+  logger.error(`Application Error: ${err.message}`, req, err);
+
+  // Mongoose bad ObjectId
+  if (err.name === 'CastError') {
+    const message = 'Resource not found';
+    error = { message, statusCode: 404 };
+  }
+
+  // Mongoose duplicate key
+  if (err.code === 11000) {
+    const message = 'Duplicate field value entered';
+    error = { message, statusCode: 400 };
+  }
+
+  // Mongoose validation error
+  if (err.name === 'ValidationError') {
+    const message = Object.values(err.errors).map((val) => val.message);
+    error = { message, statusCode: 400 };
+  }
+
+  // JWT errors
+  if (err.name === 'JsonWebTokenError') {
+    const message = 'Invalid token';
+    error = { message, statusCode: 401 };
+  }
+
+  if (err.name === 'TokenExpiredError') {
+    const message = 'Token expired';
+    error = { message, statusCode: 401 };
+  }
+
+  res.status(error.statusCode || 500).json({
+    success: false,
+    message: error.message || 'Server Error',
+    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+  });
+};
 
 const app = express();
 
@@ -62,13 +110,14 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3000', 'http://localhost:3001'],
+  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3010', 'http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 
 // Request logging
+app.use(requestLogger); // Notre système de logs personnalisé
 if (NODE_ENV === 'production') {
   app.use(morgan('combined'));
 } else {
@@ -85,7 +134,7 @@ if (NODE_ENV !== 'test') {
   app.use(simpleLimiter);
 }
 
-// Body parsing middleware with size limits
+// Body parsing middleware with size limits (MUST be before security middleware)
 app.use(express.json({ 
   limit: NODE_ENV === 'production' ? '10mb' : '50mb' 
 }));
@@ -94,13 +143,16 @@ app.use(express.urlencoded({
   limit: NODE_ENV === 'production' ? '10mb' : '50mb' 
 }));
 
-// Static files (removed uploads for HackerU compliance)
+// Security middleware for login attempts
+app.use(securityMiddleware);
+
+// Serve static files from frontend build
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
 
 // Routes API
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use('/api/favorites', favoriteRoutes);
-app.use('/api/users', userRoutes);
 
 // Health check endpoints
 app.get('/api/health', (req, res) => {
@@ -120,16 +172,13 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'FuturistCards API',
-    version: '1.0.0',
-    endpoints: ['/api/auth', '/api/users', '/api/cards', '/api/dashboard', '/api/favorites', '/api/admin']
-  });
+// Catch all handler: send back React's index.html file for SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
 });
 
 // Error handling middleware
+app.use(errorLogger);
 app.use(errorHandler);
 
 // 404 handler
@@ -137,10 +186,12 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5010;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`Server running on port ${PORT}`);
+  }
 });
 
 // Handle unhandled promise rejections

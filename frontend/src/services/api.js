@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Créer une instance axios
 const axiosInstance = axios.create({
@@ -29,7 +29,6 @@ axiosInstance.interceptors.response.use(
   (response) => response.data,
   (error) => {
     // Never automatically disconnect in development mode
-    console.log('API Error:', error.response?.data || error.message);
     return Promise.reject(error.response?.data || error);
   }
 );
@@ -40,6 +39,8 @@ const api = {
   register: (userData) => axiosInstance.post('/auth/register', userData),
   getProfile: () => axiosInstance.get('/auth/profile'),
   updateProfile: (data) => axiosInstance.put('/auth/profile', data),
+  changePassword: (data) => axiosInstance.patch('/auth/change-password', data),
+  logout: () => axiosInstance.post('/auth/logout'),
 
   // Cards
   getCards: (params) => axiosInstance.get('/cards', { params }),
@@ -48,19 +49,31 @@ const api = {
   updateCard: (id, cardData) => axiosInstance.put(`/cards/${id}`, cardData),
   deleteCard: (id) => axiosInstance.delete(`/cards/${id}`),
   getUserCards: () => axiosInstance.get('/cards/my-cards'),
-  searchCards: (query) => axiosInstance.get('/cards/search', { params: { q: query } }),
+  searchCards: (params) => axiosInstance.get('/cards/search', { params }),
+  getSearchSuggestions: (query) => axiosInstance.get('/cards/suggestions', { params: { q: query } }),
+  likeCard: (id) => axiosInstance.patch(`/cards/${id}/like`),
+  toggleFavorite: (id) => axiosInstance.post(`/cards/${id}/favorite`),
 
-  // Favorites
+  // Favorites  
   getFavorites: () => axiosInstance.get('/favorites'),
   addToFavorites: (cardId) => axiosInstance.post('/favorites', { cardId }),
   removeFromFavorites: (cardId) => axiosInstance.delete(`/favorites/${cardId}`),
 
-  // Users
-  getAllUsers: () => axiosInstance.get('/users'),
+  // Users (Admin + Self)
+  getAllUsers: (params) => axiosInstance.get('/users', { params }),
   getUserById: (id) => axiosInstance.get(`/users/${id}`),
   updateUser: (id, userData) => axiosInstance.put(`/users/${id}`, userData),
   changeUserRole: (id, role) => axiosInstance.patch(`/users/${id}/role`, { role }),
   deleteUser: (id) => axiosInstance.delete(`/users/${id}`),
+  getUserStats: () => axiosInstance.get('/users/stats'),
+
+  // Admin
+  getAdminStats: () => axiosInstance.get('/admin/stats'),
+  getSecurityData: () => axiosInstance.get('/admin/security'),
+  getSystemHealth: () => axiosInstance.get('/admin/health'),
+  getSystemLogs: (params) => axiosInstance.get('/admin/logs', { params }),
+  performCleanup: () => axiosInstance.post('/admin/cleanup'),
+  updateUserStatus: (id, isActive) => axiosInstance.put(`/admin/users/${id}/status`, { isActive }),
 
   // Health check
   healthCheck: () => axiosInstance.get('/health')
