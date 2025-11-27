@@ -44,7 +44,7 @@ Dans le Dashboard Render, ajoutez ces variables :
 ```bash
 NODE_ENV=production
 PORT=10000
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/cardpro
+MONGO_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/cardpro
 JWT_SECRET=votre_super_secret_jwt_key_production_2024
 JWT_EXPIRES_IN=30d
 CORS_ORIGIN=https://votre-frontend.com
@@ -53,7 +53,7 @@ CORS_ORIGIN=https://votre-frontend.com
 ### Étape 4: Base de données MongoDB Atlas
 1. Créez un cluster sur https://cloud.mongodb.com
 2. Obtenez votre connection string
-3. Ajoutez-la dans `MONGODB_URI` sur Render
+3. Ajoutez-la dans `MONGO_URI` sur Render
 
 ## 🌐 ENDPOINTS DISPONIBLES
 

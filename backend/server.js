@@ -156,9 +156,14 @@ app.use('/api/favorites', favoriteRoutes);
 
 // Health check endpoints
 app.get('/api/health', (req, res) => {
+  const mongoStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
   res.json({ 
     status: 'OK', 
     message: 'Server is running',
+    database: {
+      status: mongoStatus,
+      name: mongoose.connection.name || 'N/A'
+    },
     timestamp: new Date().toISOString()
   });
 });
