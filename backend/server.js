@@ -108,12 +108,44 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration
+// CORS configuration - Optimized for Vercel + local development
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3010', 
+  'http://localhost:3001',
+  'https://cardpro-2.vercel.app',
+  'https://futurist-cards.vercel.app',
+  'https://cardpro-frontend.vercel.app'
+];
+
+// Add dynamic CORS_ORIGIN from environment
+if (process.env.CORS_ORIGIN) {
+  allowedOrigins.push(...process.env.CORS_ORIGIN.split(','));
+}
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ['http://localhost:3010', 'http://localhost:3000', 'http://localhost:3001'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    // Check if origin is in allowedOrigins or matches pattern
+    if (allowedOrigins.includes(origin) || 
+        origin.endsWith('.vercel.app') ||
+        origin.endsWith('.onrender.com')) {
+      return callback(null, true);
+    }
+    
+    // Allow localhost on any port in development
+    if (NODE_ENV === 'development' && origin.includes('localhost')) {
+      return callback(null, true);
+    }
+    
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  optionsSuccessStatus: 200
 }));
 
 // Request logging
