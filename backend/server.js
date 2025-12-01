@@ -179,8 +179,7 @@ app.use(express.urlencoded({
 // Security middleware for login attempts
 app.use(securityMiddleware);
 
-// Serve static files from frontend build
-app.use(express.static(path.join(__dirname, 'dist')));
+// Static files removed - backend should only serve API endpoints
 
 // Routes API
 app.use('/api/auth', authRoutes);
@@ -248,10 +247,7 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Catch all handler: send back React's index.html file for SPA routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist/index.html'));
-});
+// API-only backend - no catch-all handler needed
 
 // Global error handler (must be last middleware)
 app.use(errorHandler);
