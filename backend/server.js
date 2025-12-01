@@ -113,7 +113,9 @@ app.use(helmet({
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3010', 
+  'http://localhost:3011',
   'http://localhost:3001',
+  'https://card-pro-pi.vercel.app',
   'https://cardpro-2.vercel.app',
   'https://futurist-cards.vercel.app',
   'https://cardpro-frontend.vercel.app'
