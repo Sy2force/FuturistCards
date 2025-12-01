@@ -7,51 +7,41 @@
 ==> Available at your primary URL https://cardpro-2.onrender.com
 ```
 
-## ❌ PROBLÈME PERSISTANT
+## SOLUTION IMMÉDIATE
+
+### 1. Vérifier Variables Render
+Aller sur: https://dashboard.render.com/web/srv-cti7qjbtq21c73c0lmjg
+
+**Environment Variables requises:**
 ```
-📍 URI: your_mongodb_atlas_connection_string
-❌ Message: Invalid scheme, expected connection string to start with "mongodb://" or "mongodb+srv://"
-```
-
-## 🎯 ACTION IMMÉDIATE - VARIABLES RENDER
-
-**VOUS DEVEZ MAINTENANT configurer les variables sur Render Dashboard:**
-
-### 1. Aller sur Render Dashboard
-**URL**: https://dashboard.render.com/web/srv-cti7qjbtq21c73c0lmjg
-
-### 2. Configurer Variables Environment
-**Onglet**: Environment → Add Environment Variable
-
-```bash
-MONGO_URI=mongodb+srv://S-User:bg1skvf3eZmQdLNh@cluster0.lhvxveo.mongodb.net/cardpro?appName=Cluster0
-JWT_SECRET=super_secret_key_cardpro_2025_production_256_chars_minimum
+MONGO_URI=mongodb+srv://S-User:Sy2force@cluster0.lhvxveo.mongodb.net/cardpro
+JWT_SECRET=your-super-secret-jwt-key-here-2024
 CORS_ORIGIN=https://cardpro-2.vercel.app
 NODE_ENV=production
+PORT=10000
 ```
 
-### 3. Redéployer
-**Settings** → **"Manual Deploy"** → **"Clear build cache & deploy"**
+### 2. Redéployer IMMÉDIATEMENT
+1. Onglet "Manual Deploy"
+2. Cocher "Clear build cache"
+3. Cliquer "Deploy latest commit"
+4. Attendre 3-5 minutes
 
-## 🧪 VALIDATION
-Après redéploiement (5 min):
+### 3. Vérification Post-Deploy
 ```bash
 curl https://cardpro-2.onrender.com/api/health
+# Doit retourner: {"success": true, "mongodb": true}
 ```
 
-**Réponse attendue**:
-```json
-{
-  "success": true,
-  "mongodb": true,
-  "status": "OK"
-}
-```
+## DOUBLE PROBLÈME
+1. **Render**: MongoDB déconnecté (URGENT)
+2. **Vercel**: DEPLOYMENT_NOT_FOUND (à configurer)
 
-## ⚠️ STATUT ACTUEL
-- ✅ Service déployé et accessible
-- ❌ Variables d'environnement manquantes
-- ❌ MongoDB en mode mock
-- ❌ Health endpoint retourne "mongoose is not defined"
+## ORDRE D'ACTIONS
+1. **D'ABORD**: Fixer Render (MongoDB)
+2. **ENSUITE**: Configurer Vercel (Root Directory = frontend)
 
-**Le service fonctionne mais sans base de données. Configurez les variables MAINTENANT.**
+## TEMPS ESTIMÉ
+- Fix Render: 5-7 minutes
+- Config Vercel: 5 minutes
+- Total: 10-12 minutes
