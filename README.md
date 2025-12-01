@@ -10,6 +10,78 @@
 
 FuturistCards est une plateforme moderne de création et partage de cartes de visite digitales. Elle permet aux utilisateurs de créer des profils professionnels personnalisés, de les partager facilement et de découvrir d'autres professionnels.
 
+## 🎯 **STATUT DÉPLOIEMENT**
+
+| **Service** | **URL** | **Statut** |
+|-------------|---------|------------|
+| 🌐 **Frontend** | https://cardpro-2.vercel.app | ✅ **LIVE** |
+| 🔧 **Backend** | https://cardpro-2.onrender.com | ✅ **LIVE** |
+| 🗃️ **Database** | MongoDB Atlas | ✅ **CONNECTED** |
+
+## ✅ **CHECK-LIST DÉPLOIEMENT**
+
+### **🔧 Backend (Render)**
+- [x] MongoDB Atlas connecté avec `MONGO_URI`
+- [x] Variables d'environnement configurées
+- [x] CORS optimisé pour Vercel domains
+- [x] Health check `/api/health` fonctionnel
+- [x] Rate limiting et sécurité activés
+- [x] Gestion d'erreurs globale implémentée
+
+### **🌐 Frontend (Vercel)**
+- [x] Build Vite optimisé
+- [x] SPA routing configuré (`vercel.json`)
+- [x] Variables d'environnement `VITE_API_URL` 
+- [x] Page 404 personnalisée
+- [x] Headers sécurisés configurés
+
+### **🧪 Tests & Validation**
+- [x] Script API complet (`test-api-complete.sh`)
+- [x] Tests Playwright E2E (`cards.spec.js`)
+- [x] Script validation déploiement (`deploy-check.sh`)
+- [x] Endpoints critiques testés
+
+## 📋 Table des matières
+
+- [🚀 FuturistCards - Production Ready](#-futuristcards---production-ready)
+  - [🎯 **STATUT DÉPLOIEMENT**](#-statut-déploiement)
+  - [✅ **CHECK-LIST DÉPLOIEMENT**](#-check-list-déploiement)
+    - [**🔧 Backend (Render)**](#-backend-render)
+    - [**🌐 Frontend (Vercel)**](#-frontend-vercel)
+    - [**🧪 Tests \& Validation**](#-tests--validation)
+  - [📋 Table des matières](#-table-des-matières)
+  - [✨ Fonctionnalités](#-fonctionnalités)
+  - [🛠️ Stack Technique](#️-stack-technique)
+  - [🏗️ Architecture](#️-architecture)
+  - [⚡ Démarrage Rapide](#-démarrage-rapide)
+    - [Prérequis](#prérequis)
+    - [Installation](#installation)
+    - [Configuration](#configuration)
+    - [Lancement](#lancement)
+  - [🌐 Déploiement Production](#-déploiement-production)
+    - [Backend sur Render](#backend-sur-render)
+    - [Frontend sur Vercel](#frontend-sur-vercel)
+    - [🚀 **COMMANDES DÉPLOIEMENT**](#-commandes-déploiement)
+  - [📚 Documentation API](#-documentation-api)
+    - [Authentification](#authentification)
+    - [Cartes](#cartes)
+    - [Favoris](#favoris)
+    - [Utilisateurs](#utilisateurs)
+    - [Administration](#administration)
+  - [🧪 Tests](#-tests)
+    - [Tests API](#tests-api)
+    - [Tests E2E](#tests-e2e)
+    - [🔍 **VALIDATION DÉPLOIEMENT**](#-validation-déploiement)
+  - [🔧 Variables d'Environnement](#-variables-denvironnement)
+    - [Backend](#backend)
+    - [Frontend](#frontend)
+  - [🚨 Dépannage](#-dépannage)
+    - [Problèmes courants](#problèmes-courants)
+    - [Logs et Monitoring](#logs-et-monitoring)
+  - [🤝 Contribution](#-contribution)
+  - [📄 Licence](#-licence)
+  - [🗺️ Roadmap](#️-roadmap)
+
 ## ✨ Fonctionnalités
 
 ### 🎯 Pour les Utilisateurs
@@ -77,6 +149,23 @@ mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/cardpro?retryWrites=t
 ```
 
 ### 2️⃣ **Déploiement Backend sur Render**
+
+#### 🚀 **COMMANDES DÉPLOIEMENT**
+
+```bash
+# 1. Push vers GitHub (déclenche auto-deploy Render)
+git add .
+git commit -m "Production deployment"
+git push origin main
+
+# 2. Vérifier déploiement
+./deploy-check.sh
+
+# 3. Tests post-déploiement
+./test-api-complete.sh https://cardpro-2.onrender.com/api
+```
+
+#### Configuration Render
 
 ```bash
 # 1. Connecter GitHub repo à Render

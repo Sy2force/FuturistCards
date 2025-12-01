@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../hooks/useAuth';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
+import api from '../services/api';
 import { 
   UsersIcon, 
   UserGroupIcon, 
@@ -38,7 +40,7 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await api.get('/admin/users');
+        const response = await api.getAllUsers();
         if (response.data.success) {
           setUsers(response.data.data);
           setFilteredUsers(response.data.data);

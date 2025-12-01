@@ -282,14 +282,6 @@ const resources = {
       
       // CardDetailsPage & CardPreview
       contactDetails: 'Contact',
-      information: 'Informations',
-      addToFavorites: 'Ajouter aux favoris',
-      share: 'Partager',
-      downloadVCard: 'Télécharger vCard',
-      similarCards: 'Cartes similaires',
-      person: 'Personne',
-      similarProfession: 'Profession similaire',
-      viewDetails: 'Voir les détails',
       aboutSection: 'À propos',
       emailLabel: 'Email',
       phoneLabel: 'Téléphone',
@@ -679,16 +671,8 @@ const resources = {
       noUsersFound: 'No users found matching your criteria.',
       
       // CardDetailsPage
-      information: 'Information',
       contactWebsite: 'Website',
       contactAddress: 'Address',
-      addToFavorites: 'Add to Favorites',
-      share: 'Share',
-      downloadVCard: 'Download vCard',
-      similarCards: 'Similar Cards',
-      person: 'Person',
-      similarProfession: 'Similar Profession',
-      viewDetails: 'View Details',
       
       // CreateCardPage
       createCard: {
@@ -1046,16 +1030,8 @@ const resources = {
       noUsersFound: 'לא נמצאו משתמשים התואמים לקריטריונים שלכם.',
       
       // CardDetailsPage
-      information: 'מידע',
       contactWebsite: 'אתר אינטרנט',
       contactAddress: 'כתובת',
-      addToFavorites: 'הוסף למועדפים',
-      share: 'שתף',
-      downloadVCard: 'הורד vCard',
-      similarCards: 'כרטיסים דומים',
-      person: 'אדם',
-      similarProfession: 'מקצוע דומה',
-      viewDetails: 'צפה בפרטים',
       
       // CreateCardPage
       createCard: {

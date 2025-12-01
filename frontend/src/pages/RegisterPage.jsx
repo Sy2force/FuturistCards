@@ -104,8 +104,8 @@ const RegisterPage = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        // Retirer confirmPassword et role avant d'envoyer au backend
-        const { confirmPassword, role, ...dataToSend } = formData;
+        // Retirer confirmPassword avant d'envoyer au backend (role est envoyé)
+        const { confirmPassword, ...dataToSend } = formData;
         const result = await register(dataToSend);
         if (result?.success) {
           // Si l'inscription réussit, rediriger vers la page de connexion

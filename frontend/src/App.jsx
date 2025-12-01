@@ -22,7 +22,7 @@ import CardDetailsPage from './pages/CardDetailsPage';
 import AdminPage from './pages/AdminPage';
 import AboutPage from './pages/AboutPage';
 import SearchPage from './pages/SearchPage';
-import ErrorPage from './pages/ErrorPage';
+import NotFound from './components/NotFound';
 
 
 function App() {
@@ -49,7 +49,7 @@ function App() {
                     <Route path="/create-card" element={<CreateCardPage />} />
                     <Route path="/edit-card/:id" element={<EditCardPage />} />
                     <Route path="/admin" element={<AdminPage />} />
-                    <Route path="*" element={<ErrorPage />} />
+                    <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
                 <Footer />

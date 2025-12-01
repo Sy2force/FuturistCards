@@ -7,8 +7,13 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import logger, { requestLogger, errorLogger } from './middleware/logger.js';
+import mongoose from 'mongoose';
+import logger, { requestLogger } from './middleware/logger.js';
 import { securityMiddleware } from './middleware/accountSecurity.js';
+import connectDB from './config/db.js';
+import authRoutes from './routes/auth.js';
+import cardRoutes from './routes/cards.js';
+import favoriteRoutes from './routes/favorites.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -23,10 +28,6 @@ dotenv.config({
 if (!process.env.PORT) {
   dotenv.config();
 }
-import connectDB from './config/db.js';
-import authRoutes from './routes/auth.js';
-import cardRoutes from './routes/cards.js';
-import favoriteRoutes from './routes/favorites.js';
 // Error handler middleware inline (HackerU simplification)
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };
@@ -179,7 +180,7 @@ app.use(express.urlencoded({
 app.use(securityMiddleware);
 
 // Serve static files from frontend build
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // Routes API
 app.use('/api/auth', authRoutes);
@@ -188,16 +189,54 @@ app.use('/api/favorites', favoriteRoutes);
 
 // Health check endpoints
 app.get('/api/health', (req, res) => {
-  const mongoStatus = mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected';
-  res.json({ 
-    status: 'OK', 
-    message: 'Server is running',
-    database: {
-      status: mongoStatus,
-      name: mongoose.connection.name || 'N/A'
-    },
-    timestamp: new Date().toISOString()
-  });
+  try {
+    const isMongoConnected = mongoose.connection.readyState === 1;
+    const mongoStatus = isMongoConnected ? 'Connected' : 'Disconnected';
+    
+    console.log(`🏥 Health check - MongoDB: ${mongoStatus} (readyState: ${mongoose.connection.readyState})`);
+    
+    if (isMongoConnected) {
+      console.log('✅ Mongo connecté - Health check OK');
+      res.status(200).json({
+        success: true,
+        mongodb: true,
+        status: 'OK',
+        message: 'Server is running',
+        database: {
+          status: mongoStatus,
+          name: mongoose.connection.name || 'cardpro',
+          host: mongoose.connection.host || 'N/A'
+        },
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+      });
+    } else {
+      console.log('❌ Mongo déconnecté - Health check FAIL');
+      res.status(503).json({
+        success: false,
+        mongodb: false,
+        status: 'ERROR',
+        message: 'Database connection failed',
+        error: 'Could not connect to MongoDB',
+        database: {
+          status: mongoStatus,
+          readyState: mongoose.connection.readyState
+        },
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString()
+      });
+    }
+  } catch (error) {
+    console.error('❌ Health check error:', error);
+    res.status(500).json({
+      success: false,
+      mongodb: false,
+      status: 'ERROR',
+      message: 'Health check failed',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
 });
 
 // Root health check for quick monitoring
@@ -211,11 +250,10 @@ app.get('/health', (req, res) => {
 
 // Catch all handler: send back React's index.html file for SPA routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+  res.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
-// Error handling middleware
-app.use(errorLogger);
+// Global error handler (must be last middleware)
 app.use(errorHandler);
 
 // 404 handler
@@ -223,12 +261,11 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`Server running on port ${PORT}`);
-  }
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`📍 Health endpoint: http://localhost:${PORT}/api/health`);
 });
 
 // Handle unhandled promise rejections
