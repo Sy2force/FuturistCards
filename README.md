@@ -4,6 +4,8 @@
 
 FuturistCards est une plateforme moderne de cartes de visite digitales développée avec React et Node.js. Elle permet aux utilisateurs de créer, gérer et partager leurs cartes de visite professionnelles de manière numérique.
 
+**Conforme aux exigences HackerU** - Authentification JWT, gestion des rôles (User/Business/Admin), CRUD complet, interface responsive.
+
 ## 🚀 Technologies
 
 ### Frontend
@@ -18,8 +20,8 @@ FuturistCards est une plateforme moderne de cartes de visite digitales développ
 - **JWT** + **bcryptjs** - Authentification sécurisée
 
 ### Déploiement
-- **Frontend**: Vercel
-- **Backend**: Render
+- **Frontend**: Vercel - https://cardpro-frontend.vercel.app
+- **Backend**: Render - https://cardpro-1.onrender.com
 - **Base de données**: MongoDB Atlas
 
 ## 📁 Structure

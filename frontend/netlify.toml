@@ -1,0 +1,17 @@
+[build]
+  base = "."
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[context.production.environment]
+  VITE_API_URL = "https://cardpro-1.onrender.com/api"
+  VITE_APP_NAME = "CardPro"
+  VITE_ENVIRONMENT = "production"
