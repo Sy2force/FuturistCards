@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Backend API pour CardPro - Plateforme de cartes de visite digitales",
   "main": "server.js",
-  "type": "module",
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js",
