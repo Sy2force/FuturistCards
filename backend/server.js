@@ -79,4 +79,9 @@ async function startServer() {
   });
 }
 
-startServer();
+// Pour Vercel, on exporte l'app au lieu de démarrer le serveur
+if (process.env.NODE_ENV !== 'production') {
+  startServer();
+}
+
+module.exports = app;
