@@ -34,5 +34,26 @@ api.interceptors.response.use(
   }
 );
 
-// Export the configured axios instance directly
-export default api;
+// API methods
+const apiMethods = {
+  // Auth methods
+  login: (credentials) => api.post('/auth/login', credentials),
+  register: (userData) => api.post('/auth/register', userData),
+  getProfile: () => api.get('/auth/profile'),
+  updateProfile: (profileData) => api.put('/auth/profile', profileData),
+  
+  // Cards methods
+  getCards: () => api.get('/cards'),
+  getCard: (id) => api.get(`/cards/${id}`),
+  createCard: (cardData) => api.post('/cards', cardData),
+  updateCard: (id, cardData) => api.put(`/cards/${id}`, cardData),
+  deleteCard: (id) => api.delete(`/cards/${id}`),
+  
+  // Favorites methods
+  getFavorites: () => api.get('/favorites'),
+  addFavorite: (cardId) => api.post('/favorites', { cardId }),
+  removeFavorite: (cardId) => api.delete(`/favorites/${cardId}`)
+};
+
+// Export both the axios instance and the methods
+export default { ...api, ...apiMethods };
