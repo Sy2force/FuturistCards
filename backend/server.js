@@ -5,9 +5,10 @@ import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import fs from 'fs';
 import logger, { requestLogger } from './middleware/logger.js';
 import { securityMiddleware } from './middleware/accountSecurity.js';
 import connectDB from './config/db.js';
@@ -15,19 +16,45 @@ import authRoutes from './routes/auth.js';
 import cardRoutes from './routes/cards.js';
 import favoriteRoutes from './routes/favorites.js';
 
+// Get __dirname in ES modules
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = dirname(__filename);
 
-// Load environment-specific configuration
-const NODE_ENV = process.env.NODE_ENV || 'development';
-dotenv.config({ 
-  path: `.env.${NODE_ENV}` 
-});
-
-// Fallback to .env if environment-specific file doesn't exist
-if (!process.env.PORT) {
-  dotenv.config();
+// Load environment configuration with explicit path
+const envPath = join(__dirname, '.env');
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+  console.log('✅ Variables .env chargées depuis:', envPath);
+} else {
+  console.log('⚠️ Fichier .env non trouvé, utilisation des variables d\'environnement du système');
 }
+
+// Environment variables with defaults
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const PORT = process.env.PORT || 10000;
+const JWT_SECRET = process.env.JWT_SECRET;
+const MONGO_URI = process.env.MONGO_URI;
+const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
+
+// Validation des variables critiques
+if (!JWT_SECRET) {
+  console.error('❌ ERREUR: JWT_SECRET n\'est pas défini dans les variables d\'environnement');
+  process.exit(1);
+}
+
+if (!MONGO_URI) {
+  console.error('❌ ERREUR: MONGO_URI n\'est pas défini dans les variables d\'environnement');
+  console.log('💡 Utilisation de MongoDB local par défaut');
+}
+
+// Affichage de la configuration au démarrage
+console.log('\n🔧 === Configuration du serveur ===');
+console.log(`📍 Environnement: ${NODE_ENV}`);
+console.log(`📍 Port: ${PORT}`);
+console.log(`📍 MongoDB URI: ${MONGO_URI ? MONGO_URI.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@') : 'Non défini'}`);
+console.log(`📍 CORS Origin: ${CORS_ORIGIN}`);
+console.log(`📍 JWT Secret: ${JWT_SECRET ? '✅ Défini' : '❌ Non défini'}`);
+console.log('===================================\n');
 // Error handler middleware inline (HackerU simplification)
 const errorHandler = (err, req, res, next) => {
   let error = { ...err };
@@ -109,47 +136,67 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
-// CORS configuration - Optimized for Vercel + local development
-const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3010', 
-  'http://localhost:3011',
-  'http://localhost:3001',
-  'https://card-pro-pi.vercel.app',
-  'https://cardpro-2.vercel.app',
-  'https://futurist-cards.vercel.app',
-  'https://cardpro-frontend.vercel.app'
-];
+// CORS configuration dynamique depuis .env
+const configureCORS = () => {
+  // Parse CORS origins from environment
+  const corsOrigins = CORS_ORIGIN === '*' ? '*' : CORS_ORIGIN.split(',').map(origin => origin.trim());
+  
+  // Default allowed origins for development
+  const defaultOrigins = [
+    'http://localhost:3000',
+    'http://localhost:3010',
+    'http://localhost:3011',
+    'http://localhost:5173' // Vite default
+  ];
+  
+  // Combine origins if not using wildcard
+  const allowedOrigins = corsOrigins === '*' ? '*' : [...defaultOrigins, ...corsOrigins];
+  
+  console.log('🔒 CORS configuré avec:', allowedOrigins === '*' ? 'Toutes les origines (*)' : allowedOrigins);
+  
+  if (allowedOrigins === '*') {
+    // Allow all origins (development/testing)
+    return cors({
+      origin: true,
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+      optionsSuccessStatus: 200
+    });
+  } else {
+    // Strict origin checking for production
+    return cors({
+      origin: (origin, callback) => {
+        // Allow requests with no origin (mobile apps, Postman, etc.)
+        if (!origin) return callback(null, true);
+        
+        // Check if origin is allowed
+        if (allowedOrigins.includes(origin)) {
+          return callback(null, true);
+        }
+        
+        // Allow any Vercel deployment in production
+        if (NODE_ENV === 'production' && origin.endsWith('.vercel.app')) {
+          return callback(null, true);
+        }
+        
+        // Allow localhost on any port in development
+        if (NODE_ENV === 'development' && (origin.includes('localhost') || origin.includes('127.0.0.1'))) {
+          return callback(null, true);
+        }
+        
+        console.log(`⚠️ CORS bloqué pour: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      },
+      credentials: true,
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+      optionsSuccessStatus: 200
+    });
+  }
+};
 
-// Add dynamic CORS_ORIGIN from environment
-if (process.env.CORS_ORIGIN) {
-  allowedOrigins.push(...process.env.CORS_ORIGIN.split(','));
-}
-
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, Postman, etc.)
-    if (!origin) return callback(null, true);
-    
-    // Check if origin is in allowedOrigins or matches pattern
-    if (allowedOrigins.includes(origin) || 
-        origin.endsWith('.vercel.app') ||
-        origin.endsWith('.onrender.com')) {
-      return callback(null, true);
-    }
-    
-    // Allow localhost on any port in development
-    if (NODE_ENV === 'development' && origin.includes('localhost')) {
-      return callback(null, true);
-    }
-    
-    callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-  optionsSuccessStatus: 200
-}));
+app.use(configureCORS());
 
 // Request logging
 app.use(requestLogger); // Notre système de logs personnalisé
@@ -188,53 +235,60 @@ app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
-// Health check endpoints
-app.get('/api/health', (req, res) => {
+// Health check endpoint amélioré
+app.get('/api/health', async (req, res) => {
   try {
     const isMongoConnected = mongoose.connection.readyState === 1;
     const mongoStatus = isMongoConnected ? 'Connected' : 'Disconnected';
     
-    console.log(`🏥 Health check - MongoDB: ${mongoStatus} (readyState: ${mongoose.connection.readyState})`);
-    
+    // Test de ping MongoDB pour vérifier la connexion réelle
+    let pingSuccess = false;
     if (isMongoConnected) {
-      console.log('✅ Mongo connecté - Health check OK');
-      res.status(200).json({
-        success: true,
-        mongodb: true,
-        status: 'OK',
-        message: 'Server is running',
-        database: {
-          status: mongoStatus,
-          name: mongoose.connection.name || 'cardpro',
-          host: mongoose.connection.host || 'N/A'
-        },
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString()
-      });
+      try {
+        await mongoose.connection.db.admin().ping();
+        pingSuccess = true;
+      } catch (pingError) {
+        console.error('❌ MongoDB ping failed:', pingError.message);
+      }
+    }
+    
+    const healthData = {
+      success: isMongoConnected && pingSuccess,
+      status: isMongoConnected && pingSuccess ? 'OK' : 'DEGRADED',
+      message: 'Server is running',
+      environment: NODE_ENV,
+      mongodb: {
+        connected: isMongoConnected,
+        ping: pingSuccess,
+        status: mongoStatus,
+        readyState: mongoose.connection.readyState,
+        name: mongoose.connection.name || 'cardpro',
+        host: mongoose.connection.host || 'N/A'
+      },
+      server: {
+        port: PORT,
+        uptime: Math.floor(process.uptime()),
+        memory: {
+          used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+          total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
+        }
+      },
+      timestamp: new Date().toISOString()
+    };
+    
+    if (isMongoConnected && pingSuccess) {
+      res.status(200).json(healthData);
     } else {
-      console.log('❌ Mongo déconnecté - Health check FAIL');
-      res.status(503).json({
-        success: false,
-        mongodb: false,
-        status: 'ERROR',
-        message: 'Database connection failed',
-        error: 'Could not connect to MongoDB',
-        database: {
-          status: mongoStatus,
-          readyState: mongoose.connection.readyState
-        },
-        uptime: process.uptime(),
-        timestamp: new Date().toISOString()
-      });
+      res.status(503).json(healthData);
     }
   } catch (error) {
     console.error('❌ Health check error:', error);
     res.status(500).json({
       success: false,
-      mongodb: false,
       status: 'ERROR',
       message: 'Health check failed',
       error: error.message,
+      environment: NODE_ENV,
       timestamp: new Date().toISOString()
     });
   }
@@ -259,15 +313,47 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
-const PORT = process.env.PORT || 3001;
+// Démarrage du serveur
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log('\n✨ === Serveur démarré avec succès ===');
+  console.log(`🚀 Port: ${PORT}`);
+  console.log(`🌍 URL: http://localhost:${PORT}`);
+  console.log(`🏥 Health: http://localhost:${PORT}/api/health`);
+  console.log(`📊 Endpoints disponibles:`);
+  console.log(`   - GET  /api/health`);
+  console.log(`   - POST /api/auth/register`);
+  console.log(`   - POST /api/auth/login`);
+  console.log(`   - GET  /api/cards`);
+  console.log(`   - GET  /api/favorites`);
+  console.log('=====================================\n');
+});
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📍 Health endpoint: http://localhost:${PORT}/api/health`);
+// Graceful shutdown
+process.on('SIGTERM', () => {
+  console.log('⚠️ SIGTERM signal reçu: fermeture du serveur HTTP...');
+  server.close(() => {
+    console.log('✅ Serveur HTTP fermé');
+    mongoose.connection.close(false, () => {
+      console.log('✅ Connexion MongoDB fermée');
+      process.exit(0);
+    });
+  });
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err, promise) => {
-  console.error('Unhandled rejection:', err);
-  process.exit(1);
+  console.error('❌ Unhandled promise rejection:', err);
+  // Ne pas faire exit(1) en production pour éviter de crash le serveur
+  if (NODE_ENV === 'development') {
+    process.exit(1);
+  }
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+  // Fermeture gracieuse
+  server.close(() => {
+    process.exit(1);
+  });
 });

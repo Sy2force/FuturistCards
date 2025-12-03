@@ -1,11 +1,13 @@
 services:
   - type: web
     name: cardpro-backend
-    env: node
+    runtime: node
     region: oregon
     plan: free
-    buildCommand: cd backend && npm install
+    branch: main
+    buildCommand: cd backend && npm ci --production=false
     startCommand: cd backend && npm start
+    healthCheckPath: /api/health
     envVars:
       - key: NODE_ENV
         value: production
@@ -18,7 +20,14 @@ services:
       - key: JWT_EXPIRES_IN
         value: 30d
       - key: CORS_ORIGIN
-        sync: false
+        value: https://cardpro-2.vercel.app,https://cardpro-frontend.vercel.app,https://futurist-cards.vercel.app
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+      - key: LOG_LEVEL
+        value: info
+      - key: ENABLE_REQUEST_LOGGING
+        value: true
     autoDeploy: true
     rootDir: ./
-    healthCheckPath: /api/health

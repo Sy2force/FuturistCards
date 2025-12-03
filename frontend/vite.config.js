@@ -18,21 +18,15 @@ export default defineConfig({
   },
   server: {
     port: 3010,
-    strictPort: true,
+    strictPort: false, // Allow fallback to next available port if 3010 is busy
     host: '0.0.0.0',
     open: false,
     cors: true,
     hmr: {
-      overlay: true
-    },
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5010',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path
-      }
+      overlay: true,
+      port: 3011 // Use different port for HMR to avoid conflicts
     }
+    // No proxy needed - we use full URLs via VITE_API_URL env variable
   },
   preview: {
     port: 3001,
