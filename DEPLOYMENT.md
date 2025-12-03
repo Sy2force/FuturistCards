@@ -6,7 +6,7 @@
 ```env
 NODE_ENV=production
 PORT=5001
-MONGO_URI=mongodb+srv://S-User:Sy2force@cluster0.lhvxveo.mongodb.net/cardpro
+MONGO_URI=mongodb+srv://S-User:Sy2force@cluster0.lhvxveo.mongodb.net/cardpro?retryWrites=true&w=majority
 JWT_SECRET=ton-secret-long-256-caracteres
 JWT_EXPIRES_IN=7d
 CORS_ORIGIN=*
