@@ -29,7 +29,7 @@ export default defineConfig({
     // No proxy needed - we use full URLs via VITE_API_URL env variable
   },
   preview: {
-    port: 3001,
+    port: 4173,
     host: true
   },
   build: {
