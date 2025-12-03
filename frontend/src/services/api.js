@@ -34,8 +34,14 @@ api.interceptors.response.use(
   }
 );
 
-// API methods
-const apiMethods = {
+// Create API object with methods
+const apiService = {
+  // Axios instance methods
+  get: (url, config) => api.get(url, config),
+  post: (url, data, config) => api.post(url, data, config),
+  put: (url, data, config) => api.put(url, data, config),
+  delete: (url, config) => api.delete(url, config),
+  
   // Auth methods
   login: (credentials) => api.post('/auth/login', credentials),
   register: (userData) => api.post('/auth/register', userData),
@@ -55,5 +61,4 @@ const apiMethods = {
   removeFavorite: (cardId) => api.delete(`/favorites/${cardId}`)
 };
 
-// Export both the axios instance and the methods
-export default { ...api, ...apiMethods };
+export default apiService;
