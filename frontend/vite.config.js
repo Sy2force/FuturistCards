@@ -35,15 +35,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false, 
-    minify: 'esbuild',
+    minify: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['framer-motion', 'react-hot-toast'],
-          utils: ['axios']
-        },
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name.split('.');
           const ext = info[info.length - 1];
