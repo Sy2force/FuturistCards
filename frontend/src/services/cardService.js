@@ -2,9 +2,9 @@ import api from './api';
 
 export const cardService = {
   // Obtenir toutes les cartes avec filtres
-  getCards: async (params = {}) => {
+  getCards: async () => {
     try {
-      const response = await api.get('/cards', { params });
+      const response = await api.getCards();
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error fetching cards');
@@ -14,7 +14,7 @@ export const cardService = {
   // Obtenir une carte par ID
   getCard: async (id) => {
     try {
-      const response = await api.get(`/cards/${id}`);
+      const response = await api.getCard(id);
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error fetching card');
@@ -24,7 +24,7 @@ export const cardService = {
   // Créer une nouvelle carte
   createCard: async (cardData) => {
     try {
-      const response = await api.post('/cards', cardData);
+      const response = await api.createCard(cardData);
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error creating card');
@@ -34,7 +34,7 @@ export const cardService = {
   // Mettre à jour une carte
   updateCard: async (id, cardData) => {
     try {
-      const response = await api.put(`/cards/${id}`, cardData);
+      const response = await api.updateCard(id, cardData);
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error updating card');
@@ -44,7 +44,7 @@ export const cardService = {
   // Supprimer une carte
   deleteCard: async (id) => {
     try {
-      const response = await api.delete(`/cards/${id}`);
+      const response = await api.deleteCard(id);
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error deleting card');
@@ -96,7 +96,7 @@ export const cardService = {
   // Obtenir les cartes favorites
   getFavorites: async () => {
     try {
-      const response = await api.get('/cards/favorites');
+      const response = await api.getFavorites();
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error fetching favorites');

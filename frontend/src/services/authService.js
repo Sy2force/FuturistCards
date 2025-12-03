@@ -4,7 +4,7 @@ export const authService = {
   // Connexion utilisateur
   login: async (credentials) => {
     try {
-      const response = await api.post('/auth/login', credentials);
+      const response = await api.login(credentials);
       
       if (response.success && response.token) {
         localStorage.setItem('token', response.token);
@@ -21,7 +21,7 @@ export const authService = {
   // Inscription utilisateur
   register: async (userData) => {
     try {
-      const response = await api.post('/auth/register', userData);
+      const response = await api.register(userData);
       
       if (response.success && response.token) {
         localStorage.setItem('token', response.token);
@@ -67,7 +67,7 @@ export const authService = {
   // Obtenir le profil utilisateur
   getProfile: async () => {
     try {
-      const response = await api.get('/auth/profile');
+      const response = await api.getProfile();
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error fetching profile');
@@ -77,7 +77,7 @@ export const authService = {
   // Mettre à jour le profil
   updateProfile: async (profileData) => {
     try {
-      const response = await api.put('/auth/profile', profileData);
+      const response = await api.updateProfile(profileData);
       
       if (response.success) {
         // Mettre à jour les données utilisateur en local
