@@ -1,5 +1,4 @@
-// Import du serveur principal
+// Point d'entrée pour Vercel Functions
 const app = require('../server');
 
-// Export pour Vercel
 module.exports = app;
