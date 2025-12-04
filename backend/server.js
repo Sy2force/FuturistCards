@@ -17,14 +17,48 @@ const { errorHandler } = require("./middleware/errorHandler-clean");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// CORS Configuration
-const allowedOrigins = process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['*'];
-app.use(cors({
-  origin: allowedOrigins,
+// CORS Configuration - Production Ready
+const allowedOrigins = [
+  'https://cardpro-frontend.vercel.app',
+  'https://card-pro-wzcf-i5jo4z49s-projet-607a8e5b.vercel.app',
+  'https://cardpro-frontend-31zfshlmq-projet-607a8e5b.vercel.app',
+  // Development origins
+  'http://localhost:3000',
+  'http://localhost:3010',
+  'http://localhost:5173'
+];
+
+// Dynamic CORS configuration with logging
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.includes(origin)) {
+      console.log(`✅ CORS: Origin autorisée - ${origin}`);
+      callback(null, true);
+    } else {
+      console.log(`❌ CORS: Origin refusée - ${origin}`);
+      console.log(`📋 Origins autorisées:`, allowedOrigins);
+      callback(new Error('Accès refusé par la politique CORS'), false);
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'X-Requested-With',
+    'Accept',
+    'Origin',
+    'Cache-Control',
+    'X-File-Name'
+  ],
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
+  maxAge: 86400 // 24 hours
+};
+
+app.use(cors(corsOptions));
 
 // Security middleware
 app.use(helmet({
@@ -51,8 +85,23 @@ const limiter = rateLimit({
 });
 app.use('/api/', limiter);
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+// Body parsing middleware
+app.use(express.json({ 
+  limit: '10mb',
+  type: ['application/json', 'text/plain']
+}));
+app.use(express.urlencoded({ 
+  extended: true, 
+  limit: '10mb',
+  parameterLimit: 50000
+}));
+
+// Request logging middleware
+app.use((req, res, next) => {
+  const timestamp = new Date().toISOString();
+  console.log(`${timestamp} ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'N/A'}`);
+  next();
+});
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -102,7 +151,9 @@ async function startServer() {
     console.log(`🚀 Serveur démarré sur le port ${PORT}`);
     console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
     console.log(`🌍 Environnement: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔐 CORS Origins: ${process.env.CORS_ORIGIN || '*'}`);
+    console.log(`🔐 CORS Origins configurées:`);
+    allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
+    console.log(`📡 Backend URL: https://cardpro-21dj.onrender.com`);
   });
 }
 
