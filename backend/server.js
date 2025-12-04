@@ -83,11 +83,19 @@ async function startServer() {
       console.log("✅ Base de données connectée");
     } catch (err) {
       console.error("❌ Erreur MongoDB:", err.message);
-      process.exit(1);
+      if (process.env.NODE_ENV === 'production') {
+        process.exit(1);
+      } else {
+        console.log("⚠️  Mode développement: Serveur démarré sans MongoDB");
+      }
     }
   } else {
     console.error("❌ MONGO_URI manquant");
-    process.exit(1);
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    } else {
+      console.log("⚠️  Mode développement: Serveur démarré sans MongoDB");
+    }
   }
 
   app.listen(PORT, () => {

@@ -1,11 +1,100 @@
+const mongoose = require('mongoose');
 const Card = require('../models/Card-clean');
 const User = require('../models/User-clean');
+
+// Données mock pour le développement
+const mockCards = [
+  {
+    _id: '1',
+    title: 'John Doe',
+    subtitle: 'Développeur Full Stack',
+    description: 'Passionné par les technologies web modernes',
+    company: 'TechCorp',
+    position: 'Senior Developer',
+    email: 'john@example.com',
+    phone: '+33 1 23 45 67 89',
+    website: 'https://johndoe.dev',
+    tags: ['React', 'Node.js', 'MongoDB'],
+    isPublic: true,
+    isActive: true,
+    user: { firstName: 'John', lastName: 'Doe', avatar: null }
+  },
+  {
+    _id: '2',
+    title: 'Sophie Martin',
+    subtitle: 'UI/UX Designer',
+    description: 'Créatrice d\'expériences utilisateur innovantes',
+    company: 'DesignStudio',
+    position: 'Lead Designer',
+    email: 'sophie@example.com',
+    phone: '+33 1 98 76 54 32',
+    website: 'https://sophiemartin.design',
+    tags: ['Figma', 'Adobe XD', 'Prototyping'],
+    isPublic: true,
+    isActive: true,
+    user: { firstName: 'Sophie', lastName: 'Martin', avatar: null }
+  },
+  {
+    _id: '3',
+    title: 'Pierre Dubois',
+    subtitle: 'Chef de Projet Digital',
+    description: 'Expert en transformation digitale',
+    company: 'Digital Agency',
+    position: 'Project Manager',
+    email: 'pierre@example.com',
+    phone: '+33 1 11 22 33 44',
+    website: 'https://pierredubois.pro',
+    tags: ['Agile', 'Scrum', 'Digital'],
+    isPublic: true,
+    isActive: true,
+    user: { firstName: 'Pierre', lastName: 'Dubois', avatar: null }
+  }
+];
 
 // @desc    Obtenir toutes les cartes publiques
 // @route   GET /api/cards
 // @access  Public
 const getAllCards = async (req, res) => {
   try {
+    // Vérifier si MongoDB est connecté
+    if (mongoose.connection.readyState !== 1) {
+      // Mode fallback avec données mock
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const search = req.query.search || '';
+      
+      let filteredCards = mockCards;
+      
+      // Recherche si un terme est fourni
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filteredCards = mockCards.filter(card => 
+          card.title.toLowerCase().includes(searchLower) ||
+          card.subtitle.toLowerCase().includes(searchLower) ||
+          card.description.toLowerCase().includes(searchLower) ||
+          card.company.toLowerCase().includes(searchLower) ||
+          card.position.toLowerCase().includes(searchLower) ||
+          card.tags.some(tag => tag.toLowerCase().includes(searchLower))
+        );
+      }
+      
+      const startIndex = (page - 1) * limit;
+      const endIndex = startIndex + limit;
+      const paginatedCards = filteredCards.slice(startIndex, endIndex);
+      
+      return res.json({
+        success: true,
+        data: paginatedCards,
+        pagination: {
+          page,
+          limit,
+          total: filteredCards.length,
+          pages: Math.ceil(filteredCards.length / limit)
+        },
+        mode: 'fallback'
+      });
+    }
+
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
