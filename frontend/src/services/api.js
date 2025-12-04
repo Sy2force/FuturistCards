@@ -2,6 +2,12 @@ import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:10000/api';
 
+// Debug pour Vercel
+console.log('🔍 Environment Variables Debug:');
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('Final API_URL:', API_URL);
+console.log('All env vars:', import.meta.env);
+
 // Créer une instance axios centralisée pour tous les appels API
 const api = axios.create({
   baseURL: API_URL,
