@@ -23,58 +23,19 @@
 ```
 
 ### **Ou manuellement:**
-1. **Aller sur:** https://dashboard.render.com
-2. **Service:** `cardpro-1`
-3. **Environment Variables:**
-
 ```env
-MONGO_URI=mongodb+srv://S-User:Sy2force2025secure!@cluster0.lhvxveo.mongodb.net/cardpro?retryWrites=true&w=majority
-JWT_SECRET=super-secret-cardpro-2025-hack3ru-validé-✅
-CORS_ORIGIN=https://cardpro-frontend.vercel.app
-NODE_ENV=production
-PORT=5001
-```
-
-4. **Manual Deploy:** Clear Cache + Deploy
-
----
-
-## 🎨 **ÉTAPE 2: VERCEL FRONTEND**
-
-### **Exécuter le script:**
-```bash
-./scripts/deploy-vercel.sh
-```
-
-### **Configuration Vercel:**
-- **Repository:** `Sy2force/CardPro`
-- **Root Directory:** `frontend`
-- **Framework:** `Vite`
-- **Build Command:** `npm run build`
-- **Output Directory:** `dist`
-
-### **Variables d'environnement:**
-```env
-VITE_API_URL=https://cardpro-1.onrender.com/api
-VITE_APP_NAME=CardPro
+VITE_API_URL=https://cardpro-21dj.onrender.com/api
+VITE_APP_NAME=FuturistCards
 VITE_ENVIRONMENT=production
 ```
 
----
+4. Redéployer depuis Deployments
 
-## 🧪 **ÉTAPE 3: TESTS FINAUX**
-
-### **Backend API:**
-```bash
-curl https://cardpro-1.onrender.com/api/health
-```
-**Attendu:** `"mongodb": "connected"`
-
-### **Frontend:**
-```bash
-curl https://cardpro-frontend-[hash].vercel.app
-```
-**Attendu:** Page React chargée
+## 🎯 RÉSULTAT FINAL
+- ✅ Backend : https://cardpro-21dj.onrender.com/api
+- ✅ Frontend : https://cardpro-frontend-31zfshlmq-projet-607a8e5b.vercel.app
+- ⏳ Configuration finale : Variables Vercel dashboard
+- 🎉 Application complète prête pour production
 
 ### **Intégration complète:**
 1. **Authentification:** Login/Register
