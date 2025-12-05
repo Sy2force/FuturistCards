@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
+import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
 import { validateEmail, validatePassword, isFormValid } from '../utils/validation';
 import { 
@@ -53,9 +54,13 @@ const LoginPage = () => {
     if (validateForm()) {
       try {
         await login(formData.email, formData.password);
-        navigate('/');
+        navigate('/dashboard');
       } catch (error) {
-        // Les erreurs sont gérées par AuthContext avec toast
+        // Gestion d'erreur spécifique pour Network Error
+        if (error.message?.includes('Network Error') || error.code === 'ERR_NETWORK') {
+          toast.error('Erreur de connexion au serveur. Vérifiez votre connexion internet.');
+        }
+        // Les autres erreurs sont gérées par AuthContext avec toast
       }
     }
   };

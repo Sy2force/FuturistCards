@@ -15,36 +15,62 @@
 mongodb+srv://S-User:Sy2force@cluster0.lhvxveo.mongodb.net/cardpro?retryWrites=true&w=majority
 ```
 
-#### Vérification (attendre 2-3 min):
+#### 🎯 PLAN ÉTAPE PAR ÉTAPE - SITE 100% FONCTIONNEL
+
+## ✅ ÉTAPE 1 : BACKEND RENDER (TERMINÉ)
+- **Status** : ✅ `{"success": true, "mongodb": "connected"}`
+- **URL** : https://cardpro-21dj.onrender.com/api
+- **CORS** : ✅ Configuré pour vos domaines Vercel
+- **MongoDB** : ✅ Connecté
+
+## 🔧 ÉTAPE 2 : RÉSOUDRE VERCEL (EN COURS)
+
+### Problème identifié
+Vercel SSO bloque l'accès à vos déploiements
+
+### Solution immédiate
+**Créer un nouveau déploiement avec un nom différent :**
+
 ```bash
-curl https://cardpro-1.onrender.com/api/health
-```
-**Résultat attendu:** `"mongodb": "connected"`
-
----
-
-### 🚀 ÉTAPE 2: DÉPLOYER FRONTEND VERCEL
-
-#### Configuration Vercel:
-1. **Aller sur:** https://vercel.com/dashboard
-2. **Cliquer:** New Project
-3. **Connecter:** GitHub repository `Sy2force/CardPro`
-
-#### Paramètres de déploiement:
-- **Root Directory:** `frontend`
-- **Framework Preset:** `Vite`
-- **Build Command:** `npm run build`
-- **Output Directory:** `dist`
-
-#### Variable d'environnement:
-```
-VITE_API_URL=https://cardpro-1.onrender.com/api
+cd frontend
+npx vercel --prod --name cardpro-app
 ```
 
-#### URL finale attendue:
+### Alternative rapide
+**Utiliser Netlify (plus simple) :**
+
+```bash
+cd frontend
+npm run build
+npx netlify deploy --prod --dir=dist
 ```
-https://cardpro-frontend-[hash].vercel.app
+
+## 📋 ÉTAPE 3 : VARIABLES D'ENVIRONNEMENT
+
+Une fois le nouveau frontend déployé, configurer :
+```env
+VITE_API_URL=https://cardpro-21dj.onrender.com/api
+VITE_APP_NAME=FuturistCards
+VITE_ENVIRONMENT=production
 ```
+
+## 🎯 ÉTAPE 4 : TEST FINAL
+
+Tester la connexion complète frontend ↔ backend
+
+## 🚀 COMMENCER MAINTENANT
+
+**Choix 1 - Nouveau Vercel :**
+```bash
+cd frontend && npx vercel --prod --name cardpro-app
+```
+
+**Choix 2 - Netlify (recommandé) :**
+```bash
+cd frontend && npm run build && npx netlify deploy --prod --dir=dist
+```
+
+Quelle option voulez-vous essayer en premier ?
 
 ---
 

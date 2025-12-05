@@ -22,9 +22,15 @@ const allowedOrigins = [
   'https://cardpro-frontend.vercel.app',
   'https://card-pro-wzcf-i5jo4z49s-projet-607a8e5b.vercel.app',
   'http://localhost:3000',
+  'http://localhost:3010',
   'http://localhost:5173',
   'http://127.0.0.1:3000',
-  'http://127.0.0.1:5173'
+  'http://127.0.0.1:3010',
+  'http://127.0.0.1:5173',
+  // Universal Vercel patterns for any new deployments
+  /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
+  /^https:\/\/[a-z0-9-]+-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
+  /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/
 ];
 
 // CORS configuration with security logging
@@ -33,8 +39,17 @@ const corsOptions = {
     // Allow requests with no origin (Postman, mobile apps)
     if (!origin) return callback(null, true);
     
-    // Check if origin is in allowed list
-    if (allowedOrigins.includes(origin)) {
+    // Check if origin is in allowed list or matches regex patterns
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return allowedOrigin === origin;
+      } else if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return false;
+    });
+    
+    if (isAllowed) {
       console.log(`✅ CORS: Origin autorisée - ${origin}`);
       callback(null, true);
     } else {
