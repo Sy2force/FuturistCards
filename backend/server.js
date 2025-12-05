@@ -19,46 +19,26 @@ const PORT = process.env.PORT || 5001;
 
 // CORS Configuration - Production Ready
 const allowedOrigins = [
-  // Production Vercel URLs
-  'https://cardpro-frontend-31zfshlmq-projet-607a8e5b.vercel.app',
   'https://cardpro-frontend.vercel.app',
   'https://card-pro-wzcf-i5jo4z49s-projet-607a8e5b.vercel.app',
-  // Vercel preview deployments pattern
-  /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
-  /^https:\/\/card-pro-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
-  // Universal Vercel patterns for any new deployments
-  /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
-  /^https:\/\/[a-z0-9-]+-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
-  // Development origins
   'http://localhost:3000',
-  'http://localhost:3010',
   'http://localhost:5173',
   'http://127.0.0.1:3000',
-  'http://127.0.0.1:3010',
   'http://127.0.0.1:5173'
 ];
 
-// Dynamic CORS configuration with logging
+// CORS configuration with security logging
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, postman, etc.)
+    // Allow requests with no origin (Postman, mobile apps)
     if (!origin) return callback(null, true);
     
-    // Check if origin matches any allowed origin (string or regex)
-    const isAllowed = allowedOrigins.some(allowedOrigin => {
-      if (typeof allowedOrigin === 'string') {
-        return allowedOrigin === origin;
-      } else if (allowedOrigin instanceof RegExp) {
-        return allowedOrigin.test(origin);
-      }
-      return false;
-    });
-
-    if (isAllowed) {
+    // Check if origin is in allowed list
+    if (allowedOrigins.includes(origin)) {
       console.log(`✅ CORS: Origin autorisée - ${origin}`);
       callback(null, true);
     } else {
-      console.log(`❌ CORS: Origin refusée - ${origin}`);
+      console.log(`❌ CORS: Tentative d'accès non autorisée depuis - ${origin}`);
       console.log(`📋 Origins autorisées:`, allowedOrigins);
       callback(new Error('Accès refusé par la politique CORS'), false);
     }
@@ -70,27 +50,15 @@ const corsOptions = {
     'Authorization', 
     'X-Requested-With',
     'Accept',
-    'Origin',
-    'Cache-Control',
-    'X-File-Name'
-  ],
-  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
-  maxAge: 86400 // 24 hours
+    'Origin'
+  ]
 };
 
 app.use(cors(corsOptions));
 
 // Security middleware
 app.use(helmet({
-  crossOriginEmbedderPolicy: false,
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-    },
-  },
+  crossOriginEmbedderPolicy: false
 }));
 
 app.use(compression());
@@ -98,7 +66,7 @@ app.use(compression());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.RATE_LIMIT || 100,
+  max: 100,
   message: {
     error: "Too many requests from this IP, please try again later."
   }
@@ -106,15 +74,8 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // Body parsing middleware
-app.use(express.json({ 
-  limit: '10mb',
-  type: ['application/json', 'text/plain']
-}));
-app.use(express.urlencoded({ 
-  extended: true, 
-  limit: '10mb',
-  parameterLimit: 50000
-}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -128,11 +89,7 @@ app.get("/api/health", (req, res) => {
   const mongoConnected = mongoose.connection.readyState === 1;
   res.json({ 
     success: true, 
-    message: "Server is healthy",
-    environment: process.env.NODE_ENV || 'development',
-    mongodb: mongoConnected ? "connected" : "disconnected",
-    timestamp: new Date().toISOString(),
-    version: "1.0.0"
+    mongodb: mongoConnected ? "connected" : "disconnected"
   });
 });
 
@@ -149,38 +106,28 @@ async function startServer() {
   if (process.env.MONGO_URI) {
     try {
       await mongoose.connect(process.env.MONGO_URI);
-      console.log("✅ Base de données connectée");
+      console.log("✅ MongoDB connecté");
     } catch (err) {
       console.error("❌ Erreur MongoDB:", err.message);
       if (process.env.NODE_ENV === 'production') {
         process.exit(1);
-      } else {
-        console.log("⚠️  Mode développement: Serveur démarré sans MongoDB");
       }
     }
   } else {
     console.error("❌ MONGO_URI manquant");
     if (process.env.NODE_ENV === 'production') {
       process.exit(1);
-    } else {
-      console.log("⚠️  Mode développement: Serveur démarré sans MongoDB");
     }
   }
 
   app.listen(PORT, () => {
     console.log(`🚀 Serveur démarré sur le port ${PORT}`);
-    console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
-    console.log(`🌍 Environnement: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔐 CORS Origins configurées:`);
+    console.log(`🔐 CORS Origins autorisées:`);
     allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
-    console.log(`📡 Backend URL: https://cardpro-21dj.onrender.com`);
   });
 }
 
-// Pour Vercel Functions, on exporte l'app
-// Pour Render/local, on démarre le serveur
 if (require.main === module) {
-  // Mode Render ou local - démarre le serveur
   startServer();
 }
 
