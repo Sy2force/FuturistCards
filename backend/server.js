@@ -19,13 +19,20 @@ const PORT = process.env.PORT || 5001;
 
 // CORS Configuration - Production Ready
 const allowedOrigins = [
+  // Production Vercel URLs
+  'https://cardpro-frontend-31zfshlmq-projet-607a8e5b.vercel.app',
   'https://cardpro-frontend.vercel.app',
   'https://card-pro-wzcf-i5jo4z49s-projet-607a8e5b.vercel.app',
-  'https://cardpro-frontend-31zfshlmq-projet-607a8e5b.vercel.app',
+  // Vercel preview deployments pattern
+  /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
+  /^https:\/\/card-pro-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   // Development origins
   'http://localhost:3000',
   'http://localhost:3010',
-  'http://localhost:5173'
+  'http://localhost:5173',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:3010',
+  'http://127.0.0.1:5173'
 ];
 
 // Dynamic CORS configuration with logging
@@ -34,7 +41,17 @@ const corsOptions = {
     // Allow requests with no origin (mobile apps, postman, etc.)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin)) {
+    // Check if origin matches any allowed origin (string or regex)
+    const isAllowed = allowedOrigins.some(allowedOrigin => {
+      if (typeof allowedOrigin === 'string') {
+        return allowedOrigin === origin;
+      } else if (allowedOrigin instanceof RegExp) {
+        return allowedOrigin.test(origin);
+      }
+      return false;
+    });
+
+    if (isAllowed) {
       console.log(`✅ CORS: Origin autorisée - ${origin}`);
       callback(null, true);
     } else {
