@@ -26,6 +26,9 @@ const allowedOrigins = [
   // Vercel preview deployments pattern
   /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   /^https:\/\/card-pro-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
+  // Universal Vercel patterns for any new deployments
+  /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
+  /^https:\/\/[a-z0-9-]+-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   // Development origins
   'http://localhost:3000',
   'http://localhost:3010',
