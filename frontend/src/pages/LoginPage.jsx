@@ -55,7 +55,15 @@ const LoginPage = () => {
       try {
         const result = await login(formData.email, formData.password);
         if (result?.success) {
-          navigate('/dashboard', { replace: true });
+          // Rediriger selon le rôle de l'utilisateur
+          const user = result.user;
+          if (user?.role === 'admin') {
+            navigate('/admin', { replace: true });
+          } else if (user?.role === 'business') {
+            navigate('/my-cards', { replace: true });
+          } else {
+            navigate('/cards', { replace: true });
+          }
         }
       } catch (error) {
         // Gestion d'erreur spécifique pour Network Error
