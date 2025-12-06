@@ -22,21 +22,25 @@ const allowedOrigins = [
   // Production Vercel URLs
   'https://cardpro-frontend.vercel.app',
   'https://card-pro-wzcf-i5jo4z49s-projet-607a8e5b.vercel.app',
+  'https://card-pro-git-main-projet-607a8e5b.vercel.app',
   
   // Local development ports
   'http://localhost:3000',
   'http://localhost:3010',
   'http://localhost:3012',
+  'http://localhost:3015',
   'http://localhost:5173',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:3010',
   'http://127.0.0.1:3012',
+  'http://127.0.0.1:3015',
   'http://127.0.0.1:5173',
   
   // Universal Vercel patterns for any new deployments
   /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
   /^https:\/\/[a-z0-9-]+-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
+  /^https:\/\/card-pro-.*\.vercel\.app$/,
   /^https:\/\/.*--cardpro-frontend-.*\.vercel\.app$/
 ];
 

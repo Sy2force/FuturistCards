@@ -17,22 +17,23 @@ const MyCardsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Retrieve user cards from API or localStorage
+  // Retrieve user cards from API
   useEffect(() => {
-    const fetchMyCards = async () => {
+    const fetchUserCards = async () => {
       if (!user) return;
       
       try {
         setLoading(true);
+        setError(null);
         
-        // Récupérer via l'API MongoDB backend
         const response = await api.getUserCards();
+        
         if (response.success) {
-          setCards(response.data);
+          setCards(response.data || []);
         } else {
-          throw new Error(response.message || 'Erreur lors du chargement des cartes');
+          setError(response.message || t('myCardsPage.errorLoadingCards'));
         }
-      } catch (err) {
+      } catch (error) {
         setError(t('myCardsPage.errorLoadingCards'));
         toast.error(t('myCardsPage.errorLoadingCards'));
       } finally {
@@ -40,7 +41,7 @@ const MyCardsPage = () => {
       }
     };
 
-    fetchMyCards();
+    fetchUserCards();
   }, [user, t]);
 
   // Delete a card

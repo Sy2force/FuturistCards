@@ -81,6 +81,7 @@ const apiService = {
   // Cards methods
   getCards: () => api.get('/cards'),
   getCard: (id) => api.get(`/cards/${id}`),
+  getUserCards: () => api.get('/cards/user'),
   createCard: (cardData) => api.post('/cards', cardData),
   updateCard: (id, cardData) => api.put(`/cards/${id}`, cardData),
   deleteCard: (id) => api.delete(`/cards/${id}`),

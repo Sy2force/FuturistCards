@@ -19,13 +19,16 @@ const router = express.Router();
 router.get('/', getAllCards);
 router.get('/search', searchCards);
 router.get('/popular', getPopularCards);
-router.get('/:id', optionalAuth, getCardById);
 
-// Routes protégées
+// Routes protégées - IMPORTANT: routes spécifiques AVANT routes avec paramètres
+router.get('/user', protect, getMyCards);
+router.get('/user/my-cards', protect, getMyCards);
 router.post('/', protect, validateCard, createCard);
 router.put('/:id', protect, validateCard, updateCard);
 router.delete('/:id', protect, deleteCard);
-router.get('/user/my-cards', protect, getMyCards);
 router.post('/:id/like', protect, toggleLike);
+
+// Route avec paramètre - DOIT être en dernier
+router.get('/:id', optionalAuth, getCardById);
 
 module.exports = router;

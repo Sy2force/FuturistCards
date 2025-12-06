@@ -394,9 +394,42 @@ const deleteCard = async (req, res) => {
 // @access  Private
 const getMyCards = async (req, res) => {
   try {
+    console.log('getMyCards called for user:', req.user?.id);
+    
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
+
+    // Vérifier si l'utilisateur existe
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({
+        success: false,
+        message: 'Utilisateur non authentifié'
+      });
+    }
+
+    // Mode développement - retourner des cartes mock pour l'utilisateur test
+    if (req.user.id === 'mock-user-id') {
+      console.log('Returning mock cards for test user');
+      const mockUserCards = mockCards.slice(0, 2).map(card => ({
+        ...card,
+        user: req.user.id,
+        userId: req.user.id
+      }));
+      
+      return res.status(200).json({
+        success: true,
+        data: {
+          cards: mockUserCards,
+          pagination: {
+            page,
+            limit,
+            total: mockUserCards.length,
+            pages: Math.ceil(mockUserCards.length / limit)
+          }
+        }
+      });
+    }
 
     const cards = await Card.find({ user: req.user.id })
       .populate('user', 'firstName lastName avatar')
@@ -406,10 +439,12 @@ const getMyCards = async (req, res) => {
 
     const total = await Card.countDocuments({ user: req.user.id });
 
+    console.log(`Found ${cards.length} cards for user ${req.user.id}`);
+
     res.status(200).json({
       success: true,
       data: {
-        cards: cards.map(card => card.getPublicData()),
+        cards: cards.map(card => card.getPublicData ? card.getPublicData() : card),
         pagination: {
           page,
           limit,

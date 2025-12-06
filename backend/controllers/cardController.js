@@ -1,7 +1,9 @@
 // Contrôleur des cartes - Version Mock + MongoDB
-import Card from '../models/Card.js';
-import User from '../models/User.js';
-import Favorite from '../models/Favorite.js';
+// import Card from '../models/Card.js';
+// import User from '../models/User.js';
+
+// Stockage temporaire des cartes en mémoire (remplace MongoDB pour le développement)
+let cardsStorage = [];
 
 // Mock data pour les cartes en mode développement
 const mockCards = [
@@ -152,6 +154,43 @@ const mockCards = [
   }
 ];
 
+// Initialiser les cartes mock au démarrage
+cardsStorage = [...mockCards];
+
+// @desc    Get user's cards
+// @route   GET /api/cards/user
+// @access  Private
+const getUserCards = async (req, res) => {
+  try {
+    console.log('getUserCards called');
+    console.log('req.user:', req.user);
+    console.log('cardsStorage length:', cardsStorage.length);
+    
+    // En mode mock, retourner les cartes de l'utilisateur connecté
+    const userCards = cardsStorage.filter(card => {
+      const matches = card.user_id === req.user?.id || 
+                     card.user_id === req.user?.userId ||
+                     card.user_id === req.user?._id;
+      console.log(`Card ${card._id} user_id: ${card.user_id}, matches: ${matches}`);
+      return matches;
+    });
+
+    console.log('Found user cards:', userCards.length);
+
+    res.json({
+      success: true,
+      data: userCards,
+      count: userCards.length
+    });
+  } catch (error) {
+    console.error('Get user cards error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la récupération des cartes utilisateur'
+    });
+  }
+};
+
 // @desc    Get all cards
 // @route   GET /api/cards
 // @access  Public
@@ -160,7 +199,7 @@ const getCards = async (req, res) => {
     const { search, category, page = 1, limit = 10 } = req.query;
     
     // Mode mock - utiliser les données de test
-    let filteredCards = [...mockCards];
+    let filteredCards = [...cardsStorage];
     
     // Filtrer par catégorie
     if (category) {
@@ -205,52 +244,74 @@ const getCards = async (req, res) => {
 
 // @desc    Create new card
 // @route   POST /api/cards
-// @access  Private (Business/Admin)
+// @access  Private (Business/Admin only)
 const createCard = async (req, res) => {
   try {
-    const cardData = {
-      ...req.body,
-      user_id: req.user.id || req.user.userId
+    const {
+      title,
+      subtitle,
+      description,
+      phone,
+      email,
+      website,
+      address,
+      category,
+      image
+    } = req.body;
+
+    // Validation des champs requis
+    if (!title || !description || !phone || !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Titre, description, téléphone et email sont requis'
+      });
+    }
+
+    // Créer une nouvelle carte en mode mock
+    const newCard = {
+      _id: Date.now().toString(),
+      id: Date.now().toString(),
+      title,
+      subtitle: subtitle || '',
+      description,
+      phone,
+      email,
+      web: website || '',
+      image: image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
+      address: typeof address === 'object' ? address : {
+        state: address?.split(',')[1]?.trim() || 'Paris',
+        country: 'France',
+        city: address?.split(',')[1]?.trim() || 'Paris',
+        street: address?.split(',')[0]?.trim() || 'Rue inconnue',
+        houseNumber: '1',
+        zip: '75000'
+      },
+      category: category || 'technology',
+      isPublic: true,
+      isBusiness: true,
+      bizNumber: `B${Date.now()}`,
+      user_id: req.user?.id || req.user?.userId || 'mock-user',
+      likes: [],
+      likeCount: 0,
+      views: 0,
+      createdAt: new Date(),
+      updatedAt: new Date()
     };
-    
-    const card = new Card(cardData);
-    await card.save();
-    
-    // Nouvelle carte créée dans MongoDB
-    
+
+    // Ajouter la carte au stockage en mémoire
+    cardsStorage.push(newCard);
+
     res.status(201).json({
       success: true,
       message: 'Carte créée avec succès',
-      card
+      data: newCard
     });
+
   } catch (error) {
-    console.error('Erreur création carte:', error);
+    console.error('Create card error:', error);
     res.status(400).json({
       success: false,
       message: error.message || 'Erreur lors de la création de la carte'
-    });
-  }
-};
-
-// @desc    Get user's cards
-// @route   GET /api/cards/my-cards
-// @access  Private
-const getMyCards = async (req, res) => {
-  try {
-    const cards = await Card.findByUser(req.user.id || req.user.userId);
-    
-    // Récupération des cartes utilisateur depuis MongoDB
-    
-    res.json({
-      success: true,
-      count: cards.length,
-      data: cards
-    });
-  } catch (error) {
-    console.error('Get my cards error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erreur serveur lors de la récupération des cartes'
     });
   }
 };
@@ -626,8 +687,12 @@ const updateBizNumber = async (req, res) => {
   }
 };
 
+// Legacy function for backward compatibility
+const getMyCards = getUserCards;
+
 export { 
   getCards, 
+  getUserCards,
   createCard, 
   getMyCards, 
   getCard, 

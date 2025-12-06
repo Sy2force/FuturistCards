@@ -37,10 +37,22 @@ const CreateCardPage = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [validationErrors, setValidationErrors] = useState({});
   const fileInputRef = useRef(null);
 
   const navigate = useNavigate();
   const { user } = useAuth();
+
+  // Auto-fill user data if available
+  React.useEffect(() => {
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        email: user.email || prev.email,
+        title: user.name || prev.title,
+      }));
+    }
+  }, [user]);
 
   const categories = [
     { value: 'technology', label: t('technology') },
@@ -55,6 +67,40 @@ const CreateCardPage = () => {
     { value: 'other', label: t('other') }
   ];
 
+  // Real-time validation
+  const validateField = (name, value) => {
+    const errors = { ...validationErrors };
+    
+    switch (name) {
+      case 'email':
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          errors.email = t('invalidEmail');
+        } else {
+          delete errors.email;
+        }
+        break;
+      case 'phone':
+        if (value && !/^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/\s/g, ''))) {
+          errors.phone = t('invalidPhone');
+        } else {
+          delete errors.phone;
+        }
+        break;
+      case 'website':
+        if (value && !/^https?:\/\/.+\..+/.test(value)) {
+          errors.website = t('invalidWebsite');
+        } else {
+          delete errors.website;
+        }
+        break;
+      default:
+        break;
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -62,6 +108,9 @@ const CreateCardPage = () => {
       [name]: value
     }));
     setError('');
+    
+    // Real-time validation
+    validateField(name, value);
   };
 
   const handleImageChange = (e) => {
@@ -457,8 +506,15 @@ const CreateCardPage = () => {
                       onChange={handleChange}
                       required
                       placeholder={t('emailPlaceholder')}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                      className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
+                        validationErrors.email 
+                          ? 'border-red-500 dark:border-red-400' 
+                          : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     />
+                    {validationErrors.email && (
+                      <p className="text-red-500 text-xs mt-1">{validationErrors.email}</p>
+                    )}
                   </div>
 
                   <div className="relative">

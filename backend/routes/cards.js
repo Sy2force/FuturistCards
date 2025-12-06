@@ -2,6 +2,7 @@ import express from 'express';
 import { protect, authMiddleware, authorize, requireBusiness, requireAdmin } from '../middleware/authMiddleware.js';
 import { 
   getCards, 
+  getUserCards,
   createCard, 
   getMyCards, 
   getCard, 
@@ -32,14 +33,20 @@ router.get('/search', searchCards);
 // @access  Public
 router.get('/suggestions', getSearchSuggestions);
 
-// @route   GET /api/cards/my-cards
+// @route   GET /api/cards/user
 // @desc    Get user's cards
+// @access  Private
+router.get('/user', authMiddleware, getUserCards);
+
+// @route   GET /api/cards/my-cards
+// @desc    Get user's cards (legacy)
 // @access  Private
 router.get('/my-cards', authMiddleware, getMyCards);
 
 // @route   GET /api/cards/:id
 // @desc    Get single card
 // @access  Public
+// Note: This must be AFTER specific routes like /user and /my-cards
 router.get('/:id', getCard);
 
 // @route   POST /api/cards
