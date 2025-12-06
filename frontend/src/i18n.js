@@ -836,7 +836,7 @@ const resources = {
       userAccount: 'משתמש',
       businessAccount: 'עסקי',
       
-      // Cards
+      // Cards - Enhanced
       businessCard: 'כרטיס ביקור',
       company: 'חברה',
       position: 'תפקיד',
@@ -845,9 +845,36 @@ const resources = {
       address: 'כתובת',
       description: 'תיאור',
       createNewCard: 'צור כרטיס חדש',
+      createProfessionalCard: 'צור את הכרטיס המקצועי שלי',
       cardCreated: 'הכרטיס נוצר בהצלחה',
       cardUpdated: 'הכרטיס עודכן בהצלחה',
       cardDeleted: 'הכרטיס נמחק בהצלחה',
+      // Form Enhanced
+      fillProfessionalInfoDetailed: 'מלאו את הפרטים שלכם כדי ליצור כרטיס ביקור מקצועי שמרשים',
+      unlimitedCreation: 'יצירה ללא הגבלה',
+      instantPublication: 'פרסום מיידי',
+      professionalDetails: 'פרטים מקצועיים',
+      companyPlaceholderDetailed: 'לדוגמה: גוגל, מיקרוסופט, הסטארט-אפ שלי...',
+      positionPlaceholderDetailed: 'לדוגמה: מנכ"ל, מפתח בכיר, מעצב UX...',
+      fullNamePlaceholder: 'השם המלא שלכם',
+      positionPlaceholder: 'התואר המקצועי שלכם',
+      emailPlaceholder: 'האימייל.שלכם@חברה.com',
+      phonePlaceholder: '+972 50 123 4567',
+      websitePlaceholder: 'https://www.האתר-שלכם.com',
+      descriptionPlaceholder: 'תארו בקצרה את המומחיות והכישורים שלכם...',
+      addressPlaceholder: 'הכתובת המלאה של החברה שלכם',
+      profilePhoto: 'תמונת פרופיל',
+      addPhoto: 'הוסף תמונה',
+      imageFormats: 'JPG, PNG, GIF (מקסימום 5MB)',
+      cardPreview: 'תצוגה מקדימה של הכרטיס',
+      yourName: 'השם שלכם',
+      yourPosition: 'התפקיד שלכם',
+      yourDescription: 'התיאור המקצועי שלכם...',
+      personalInformation: 'מידע אישי',
+      fullName: 'שם מלא',
+      positionTitle: 'תואר/תפקיד',
+      creating: 'יוצר',
+      createCardButton: 'צור כרטיס',
       
       // Profile
       updateProfile: 'עדכן פרופיל',
@@ -927,23 +954,24 @@ const resources = {
       businessAccountDescription: 'יצירה וניהול כרטיסים',
       registering: 'נרשם...',
       
-      // HomePage
-      homePageTitle: 'CardPro - פלטפורמת כרטיסי ביקור מודרניים',
-      homePageDescription: 'צרו, נהלו ושתפו כרטיסי ביקור דיגיטליים מודרניים עם טכנולוגיית React',
-      homePageSubtitle: 'צרו את כרטיסי הביקור של העתיד',
-      startToday: 'התחילו היום',
-      elegantInterface: 'ממשק אלגנטי ומותאם',
-      reactTechnology: 'טכנולוגיית React',
-      modernStack: 'מחסנית מודרנית מיטובת',
-      secureAuth: 'אימות JWT מאובטח',
-      getStarted: 'התחלה',
-      modernDesign: 'עיצוב מודרני',
+      // HomePage - Optimisé Premium
+      homePageTitle: 'CardPro - חוללו מהפכה ברשת המקצועית שלכם',
+      homePageDescription: 'הפלטפורמה של הדור הבא ליצירת כרטיסי ביקור דיגיטליים יוצאי דופן שמרשימים את הקשרים שלכם',
+      homePageSubtitle: 'שנו את הרשת המקצועית שלכם עם כרטיסים שמשאירים רושם',
+      startToday: '🚀 חוללו מהפכה בהשפעה שלכם',
+      elegantInterface: 'עיצוב פרימיום גלסמורפי שמרהיב את הלקוחות הפוטנציאליים ומחזק את התדמית המקצועית שלכם',
+      reactTechnology: '⚡ חדשנות טכנולוגית',
+      modernStack: 'מופעל על ידי React 18, הארכיטקטורה המתקדמת ביותר לביצועים יוצאי דופן וחוויית משתמש חלקה',
+      secureAuth: 'אבטחה ברמה בנקאית עם הצפנת JWT צבאית והגנה על נתונים אישיים מוסמכת',
+      getStarted: '✨ צרו את הכרטיס הפרימיום הראשון שלי',
+      modernDesign: '🎨 גלו את חוויית CardPro',
+      security: '🛡️ אבטחה ארגונית',
       
-      // AboutPage
-      aboutPageTitle: 'אודות - CardPro',
-      aboutPageDescription: 'למדו על CardPro - הפלטפורמה המודרנית ליצירה וניהול כרטיסי ביקור מקצועיים',
-      aboutCardPro: 'אודות CardPro',
-      aboutSubtitle: 'פלטפורמה מודרנית ליצירה ושיתוף כרטיסי הביקור המקצועיים שלכם',
+      // AboutPage - Premium
+      aboutPageTitle: 'CardPro - עתיד הרשת המקצועית',
+      aboutPageDescription: 'גלו איך CardPro משנה את הרשת המקצועית עם כרטיסים דיגיטליים פרימיום שממקסמים את ההשפעה המקצועית שלכם',
+      aboutCardPro: 'מצוינות CardPro',
+      aboutSubtitle: 'הפתרון הפרימיום שמניע את הרשת המקצועית שלכם לגבהים חדשים של יעילות',
       ourMission: 'המשימה שלנו',
       missionDescription: 'אנחנו מחוללים מהפכה באופן שבו אנשי מקצוע יוצרים ומשתפים את כרטיסי הביקור שלהם. הפלטפורמה המודרנית והאינטואיטיבית שלנו מאפשרת לכל אחד ליצור נוכחות מקצועית יוצאת דופן.',
       modernDesignDesc: 'ממשק אלגנטי ומותאם שמתאים לכל המכשירים',
@@ -1027,7 +1055,12 @@ const resources = {
       confirmDeleteUser: 'האם אתם בטוחים שברצונכם למחוק את המשתמש הזה?',
       noUsersFound: 'לא נמצאו משתמשים התואמים לקריטריונים שלכם.',
       
-      // CardDetailsPage
+      // CardDetailsPage & CardPreview
+      contactDetails: 'פרטי קשר',
+      aboutSection: 'אודות',
+      emailLabel: 'אימייל',
+      phoneLabel: 'טלפון',
+      addressLabel: 'כתובת',
       contactWebsite: 'אתר אינטרנט',
       contactAddress: 'כתובת',
       
