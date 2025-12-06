@@ -19,7 +19,9 @@ const CardsPageSimple = () => {
         const response = await api.getCards();
         
         if (response.success) {
-          setCards(response.data);
+          // Handle nested data structure from API
+          const cardsData = response.data?.cards || response.data || [];
+          setCards(cardsData);
         } else {
           throw new Error(response.message || 'Erreur lors du chargement des cartes');
         }
