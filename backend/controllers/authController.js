@@ -23,7 +23,7 @@ const register = async (req, res) => {
       lastName,
       email: email.toLowerCase(),
       phone: phone || '',
-      isBusiness: isBusiness || false,
+      isBusiness: role === 'business' || isBusiness || false,
       isAdmin: role === 'admin' || false,
       role: role || 'user'
     };
@@ -87,6 +87,8 @@ const login = async (req, res) => {
     }
 
     // Mock mode - simulate login
+    // Pour le login, on utilise l'email pour déterminer le rôle (mode demo)
+    // En production, ces données viendraient de la base de données
     const mockUser = {
       _id: Date.now().toString(),
       firstName: 'Demo',
