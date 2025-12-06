@@ -30,7 +30,10 @@ export const AuthProvider = ({ children }) => {
       }
       return null;
     } catch (error) {
-      // Token validation failed
+      // Token validation failed - log only in development
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('Token validation failed:', error.message);
+      }
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       return null;
@@ -41,16 +44,30 @@ export const AuthProvider = ({ children }) => {
     const initAuth = async () => {
       // Récupérer le token au démarrage
       const savedToken = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
       
-      if (savedToken) {
-        setToken(savedToken);
-        // Valider le token avec l'API MongoDB
-        const validatedUser = await validateToken(savedToken);
-        if (validatedUser) {
-          setUser(validatedUser);
-          localStorage.setItem('user', JSON.stringify(validatedUser));
-        } else {
-          // Token invalide, nettoyer le localStorage
+      if (savedToken && savedUser) {
+        try {
+          setToken(savedToken);
+          // Try to use saved user first for immediate UI update
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+          
+          // Then validate token in background (don't auto-logout on failure)
+          try {
+            const validatedUser = await validateToken(savedToken);
+            if (validatedUser) {
+              setUser(validatedUser);
+              localStorage.setItem('user', JSON.stringify(validatedUser));
+            }
+          } catch (validationError) {
+            // Keep user logged in even if validation fails (offline mode)
+            if (import.meta.env.DEV) {
+              console.warn('Token validation failed, keeping user logged in:', validationError.message);
+            }
+          }
+        } catch (parseError) {
+          // Only clear if user data is corrupted
           localStorage.removeItem('token');
           localStorage.removeItem('user');
         }
@@ -75,7 +92,7 @@ export const AuthProvider = ({ children }) => {
       const response = await api.login({ email, password });
       
       if (response.success) {
-        const { user: userData, token } = response;
+        const { user: userData, token } = response.data || response;
         
         // Stocker les données réelles du backend
         localStorage.setItem('user', JSON.stringify(userData));
@@ -85,14 +102,29 @@ export const AuthProvider = ({ children }) => {
         setToken(token);
         
         toast.success('Connexion réussie !');
+        return { success: true, user: userData };
       } else {
         throw new Error(response.message || 'Erreur de connexion');
       }
       
     } catch (error) {
-      const errorMessage = error.message || error.response?.data?.message || 'Erreur de connexion';
+      // Enhanced error handling with network detection
+      let errorMessage = 'Erreur de connexion';
+      
+      if (error.code === 'NETWORK_ERROR' || error.message?.includes('Network Error')) {
+        errorMessage = 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Email ou mot de passe incorrect';
+      } else if (error.response?.status === 429) {
+        errorMessage = 'Trop de tentatives de connexion. Veuillez réessayer plus tard.';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast.error(errorMessage);
-      throw error;
+      throw new Error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -106,12 +138,26 @@ export const AuthProvider = ({ children }) => {
       
       if (response.success) {
         toast.success('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
-        return { success: true, user: response.user };
+        return { success: true, user: response.data?.user || response.user };
       } else {
         throw new Error(response.message || 'Erreur lors de la création du compte');
       }
     } catch (error) {
-      const errorMessage = error.message || error.response?.data?.message || 'Erreur lors de la création du compte';
+      // Enhanced error handling for registration
+      let errorMessage = 'Erreur lors de la création du compte';
+      
+      if (error.code === 'NETWORK_ERROR' || error.message?.includes('Network Error')) {
+        errorMessage = 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.';
+      } else if (error.response?.status === 409) {
+        errorMessage = 'Un compte avec cet email existe déjà';
+      } else if (error.response?.status === 400) {
+        errorMessage = error.response.data?.message || 'Données invalides';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast.error(errorMessage);
       throw new Error(errorMessage);
     } finally {
@@ -154,7 +200,23 @@ export const AuthProvider = ({ children }) => {
         throw new Error(response.message || 'Erreur lors de la mise à jour du profil');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la mise à jour du profil';
+      // Enhanced error handling for profile update
+      let errorMessage = 'Erreur lors de la mise à jour du profil';
+      
+      if (error.code === 'NETWORK_ERROR' || error.message?.includes('Network Error')) {
+        errorMessage = 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.';
+      } else if (error.response?.status === 401) {
+        errorMessage = 'Session expirée. Veuillez vous reconnecter.';
+        // Auto logout on 401
+        logout();
+      } else if (error.response?.status === 400) {
+        errorMessage = error.response.data?.message || 'Données invalides';
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       toast.error(errorMessage);
       throw new Error(errorMessage);
     } finally {

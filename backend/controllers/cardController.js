@@ -183,7 +183,7 @@ const getCards = async (req, res) => {
     const endIndex = startIndex + parseInt(limit);
     const paginatedCards = filteredCards.slice(startIndex, endIndex);
     
-    console.log(`✅ Récupération de ${paginatedCards.length} cartes (mode mock)`);
+    // Récupération des cartes en mode mock
     
     res.json({
       success: true,
@@ -216,11 +216,7 @@ const createCard = async (req, res) => {
     const card = new Card(cardData);
     await card.save();
     
-    console.log('✅ Nouvelle carte créée dans MongoDB:', {
-      id: card._id,
-      title: card.title,
-      user: card.user_id
-    });
+    // Nouvelle carte créée dans MongoDB
     
     res.status(201).json({
       success: true,
@@ -243,7 +239,7 @@ const getMyCards = async (req, res) => {
   try {
     const cards = await Card.findByUser(req.user.id || req.user.userId);
     
-    console.log(`✅ Récupération de ${cards.length} cartes utilisateur depuis MongoDB`);
+    // Récupération des cartes utilisateur depuis MongoDB
     
     res.json({
       success: true,
@@ -277,7 +273,7 @@ const getCard = async (req, res) => {
     // Simuler l'incrémentation des vues
     card.views += 1;
     
-    console.log(`✅ Récupération carte ${card._id} (mode mock)`);
+    // Récupération carte en mode mock
     
     res.json({
       success: true,
@@ -321,7 +317,7 @@ const searchCards = async (req, res) => {
       );
     }
     
-    console.log(`✅ Recherche '${searchTerm}': ${results.length} résultats (mode mock)`);
+    // Recherche effectuée en mode mock
     
     res.json({
       success: true,
@@ -361,7 +357,7 @@ const deleteCard = async (req, res) => {
     
     await Card.findByIdAndDelete(req.params.id);
     
-    console.log('✅ Carte supprimée de MongoDB:', req.params.id);
+    // Carte supprimée de MongoDB
     
     res.json({
       success: true,
@@ -405,7 +401,7 @@ const updateCard = async (req, res) => {
       { new: true, runValidators: true }
     );
     
-    console.log('✅ Carte mise à jour dans MongoDB:', updatedCard._id);
+    // Carte mise à jour dans MongoDB
     
     res.json({
       success: true,
@@ -515,7 +511,7 @@ const likeCard = async (req, res) => {
       );
     }
     
-    console.log(`✅ Carte ${hasLiked ? 'unlikée' : 'likée'}:`, req.params.id);
+    // Carte likée/unlikée
     
     res.json({
       success: true,
@@ -564,7 +560,7 @@ const toggleFavorite = async (req, res) => {
       // Retirer des favoris
       await Favorite.findByIdAndDelete(existingFavorite._id);
       isFavorite = false;
-      console.log('✅ Carte retirée des favoris:', cardId);
+      // Carte retirée des favoris
     } else {
       // Ajouter aux favoris
       const favorite = new Favorite({
@@ -573,7 +569,7 @@ const toggleFavorite = async (req, res) => {
       });
       await favorite.save();
       isFavorite = true;
-      console.log('✅ Carte ajoutée aux favoris:', cardId);
+      // Carte ajoutée aux favoris
     }
     
     res.json({
@@ -613,7 +609,7 @@ const updateBizNumber = async (req, res) => {
       });
     }
     
-    console.log('✅ Numéro d\'entreprise mis à jour par admin:', req.params.id);
+    // Numéro d'entreprise mis à jour par admin
     
     res.json({
       success: true,

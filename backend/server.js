@@ -19,18 +19,25 @@ const PORT = process.env.PORT || 5001;
 
 // CORS Configuration - Production Ready
 const allowedOrigins = [
+  // Production Vercel URLs
   'https://cardpro-frontend.vercel.app',
   'https://card-pro-wzcf-i5jo4z49s-projet-607a8e5b.vercel.app',
+  
+  // Local development ports
   'http://localhost:3000',
   'http://localhost:3010',
+  'http://localhost:3012',
   'http://localhost:5173',
   'http://127.0.0.1:3000',
   'http://127.0.0.1:3010',
+  'http://127.0.0.1:3012',
   'http://127.0.0.1:5173',
+  
   // Universal Vercel patterns for any new deployments
   /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
   /^https:\/\/[a-z0-9-]+-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
-  /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/
+  /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
+  /^https:\/\/.*--cardpro-frontend-.*\.vercel\.app$/
 ];
 
 // CORS configuration with security logging
@@ -50,11 +57,8 @@ const corsOptions = {
     });
     
     if (isAllowed) {
-      console.log(`✅ CORS: Origin autorisée - ${origin}`);
       callback(null, true);
     } else {
-      console.log(`❌ CORS: Tentative d'accès non autorisée depuis - ${origin}`);
-      console.log(`📋 Origins autorisées:`, allowedOrigins);
       callback(new Error('Accès refusé par la politique CORS'), false);
     }
   },
@@ -92,12 +96,14 @@ app.use('/api/', limiter);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware
-app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`${timestamp} ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'N/A'}`);
-  next();
-});
+// Request logging middleware (production only)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    console.log(`${timestamp} ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'N/A'}`);
+    next();
+  });
+}
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {
@@ -137,8 +143,10 @@ async function startServer() {
 
   app.listen(PORT, () => {
     console.log(`🚀 Serveur démarré sur le port ${PORT}`);
-    console.log(`🔐 CORS Origins autorisées:`);
-    allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`🔐 CORS Origins autorisées:`);
+      allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
+    }
   });
 }
 

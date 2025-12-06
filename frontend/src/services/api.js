@@ -1,19 +1,13 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:10000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
-// Debug pour Vercel (development only)
-if (import.meta.env.DEV) {
-  console.log('🔍 Environment Variables Debug:');
-  console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
-  console.log('Final API_URL:', API_URL);
-  console.log('All env vars:', import.meta.env);
-}
 
 // Créer une instance axios centralisée pour tous les appels API
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,
+  timeout: 10000, // 10 second timeout
   headers: {
     'Content-Type': 'application/json'
   }
@@ -33,11 +27,39 @@ api.interceptors.request.use(
   }
 );
 
-// Error handling interceptor
+// Enhanced error handling interceptor with retry logic
 api.interceptors.response.use(
   (response) => response.data,
-  (error) => {
-    // Never automatically disconnect in development mode
+  async (error) => {
+    const originalRequest = error.config;
+    
+    // Retry logic for network errors
+    if (error.code === 'NETWORK_ERROR' && !originalRequest._retry) {
+      originalRequest._retry = true;
+      originalRequest._retryCount = (originalRequest._retryCount || 0) + 1;
+      
+      if (originalRequest._retryCount <= 2) {
+        // Wait before retry (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, 1000 * originalRequest._retryCount));
+        return api(originalRequest);
+      }
+    }
+    
+    // Handle 401 errors - only logout if it's not a login/register request
+    if (error.response?.status === 401 && 
+        !originalRequest.url?.includes('/auth/login') && 
+        !originalRequest.url?.includes('/auth/register')) {
+      // Only clear auth if token exists (avoid infinite loops)
+      if (localStorage.getItem('token')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // Redirect to login only if not already there
+        if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
+          window.location.href = '/login';
+        }
+      }
+    }
+    
     return Promise.reject(error.response?.data || error);
   }
 );

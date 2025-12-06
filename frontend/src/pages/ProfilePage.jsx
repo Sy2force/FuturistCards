@@ -118,8 +118,6 @@ const ProfilePage = () => {
       setIsEditing(false);
     } catch (error) {
       // Error is handled by the API service and toast notifications
-      // eslint-disable-next-line no-unused-vars
-      const _ = error;
     } finally {
       setIsLoading(false);
     }

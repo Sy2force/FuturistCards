@@ -28,13 +28,7 @@ const register = async (req, res) => {
       role: role || 'user'
     };
 
-    console.log('✅ Nouvel utilisateur créé (mode mock):', {
-      id: mockUser._id,
-      email: mockUser.email,
-      role: mockUser.role,
-      firstName: mockUser.firstName,
-      lastName: mockUser.lastName
-    });
+    // Nouvel utilisateur créé (mode mock)
 
     // Generate token
     const token = generateToken({
@@ -103,10 +97,7 @@ const login = async (req, res) => {
       isAdmin: email.includes('admin')
     };
 
-    console.log('✅ Connexion réussie (mode mock):', {
-      email: mockUser.email,
-      role: mockUser.role
-    });
+    // Connexion réussie (mode mock)
 
     // Generate token
     const token = generateToken({

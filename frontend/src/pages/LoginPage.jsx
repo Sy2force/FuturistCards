@@ -53,8 +53,10 @@ const LoginPage = () => {
     e.preventDefault();
     if (validateForm()) {
       try {
-        await login(formData.email, formData.password);
-        navigate('/dashboard');
+        const result = await login(formData.email, formData.password);
+        if (result?.success) {
+          navigate('/dashboard', { replace: true });
+        }
       } catch (error) {
         // Gestion d'erreur spécifique pour Network Error
         if (error.message?.includes('Network Error') || error.code === 'ERR_NETWORK') {
@@ -68,9 +70,10 @@ const LoginPage = () => {
   // Fonction pour remplir rapidement avec le compte demo
   const fillDemoAccount = () => {
     setFormData({
-      email: 'user@test.com',
-      password: 'User123!'
+      email: 'test@example.com',
+      password: 'Test123!'
     });
+    setTouchedFields({ email: true, password: true });
   };
 
   const requiredFields = ['email', 'password'];
@@ -183,13 +186,13 @@ const LoginPage = () => {
             <div className="flex justify-between items-center">
               <span className="text-gray-600 dark:text-gray-400">{t('email')} :</span>
               <span className="text-blue-600 font-mono text-xs bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
-                user@test.com
+                test@example.com
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600 dark:text-gray-400">{t('password')} :</span>
               <span className="text-green-600 font-mono text-xs bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded">
-                User123!
+                Test123!
               </span>
             </div>
             <button
