@@ -18,7 +18,7 @@ import { UserPlusIcon, SparklesIcon } from '@heroicons/react/24/outline';
 const RegisterPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { register, loading } = useAuth();
+  const { register, login, loading } = useAuth();
   
   // State pour les valeurs et erreurs du formulaire
   const [formData, setFormData] = useState({
@@ -108,8 +108,24 @@ const RegisterPage = () => {
         const { confirmPassword, ...dataToSend } = formData;
         const result = await register(dataToSend);
         if (result?.success) {
-          // Si l'inscription réussit, rediriger vers la page de connexion
-          navigate('/login');
+          // Connexion automatique après inscription réussie
+          try {
+            const loginResult = await login(formData.email, formData.password);
+            if (loginResult?.success) {
+              // Rediriger selon le rôle de l'utilisateur
+              const user = loginResult.user;
+              if (user?.role === 'admin') {
+                navigate('/admin', { replace: true });
+              } else if (user?.role === 'business') {
+                navigate('/my-cards', { replace: true });
+              } else {
+                navigate('/cards', { replace: true });
+              }
+            }
+          } catch (loginError) {
+            // Si la connexion automatique échoue, rediriger vers login
+            navigate('/login');
+          }
         }
       } catch (error) {
         // Les erreurs sont gérées par AuthContext avec toast
