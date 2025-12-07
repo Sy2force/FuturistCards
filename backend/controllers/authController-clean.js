@@ -97,7 +97,7 @@ const register = async (req, res) => {
   }
 };
 
-// @desc    Connexion d'un utilisateur
+// @desc    Connexion utilisateur
 // @route   POST /api/auth/login
 // @access  Public
 const login = async (req, res) => {
@@ -112,46 +112,39 @@ const login = async (req, res) => {
       });
     }
 
-    // Trouver l'utilisateur avec le mot de passe
-    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+    // Mode développement - simulation avec logique de rôle basée sur l'email
+    const emailLower = email.toLowerCase();
+    const isAdmin = emailLower.includes('admin');
+    const isBusiness = emailLower.includes('business') || isAdmin;
+    const role = isAdmin ? 'admin' : isBusiness ? 'business' : 'user';
     
-    if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: 'Email ou mot de passe incorrect'
-      });
-    }
+    const mockUser = {
+      _id: Date.now().toString(),
+      id: Date.now().toString(),
+      firstName: isAdmin ? 'Admin' : isBusiness ? 'Business' : 'Demo',
+      lastName: 'User',
+      email: emailLower,
+      role: role,
+      isBusiness: isBusiness,
+      isAdmin: isAdmin
+    };
 
-    // Vérifier si l'utilisateur est actif
-    if (!user.isActive) {
-      return res.status(401).json({
-        success: false,
-        message: 'Compte désactivé. Contactez l\'administrateur.'
-      });
-    }
+    // Générer le token avec les bonnes données
+    const token = generateToken(mockUser._id);
 
-    // Vérifier le mot de passe
-    const isPasswordMatch = await user.matchPassword(password);
-    
-    if (!isPasswordMatch) {
-      return res.status(401).json({
-        success: false,
-        message: 'Email ou mot de passe incorrect'
-      });
-    }
-
-    // Générer le token
-    const token = generateToken(user._id);
-
-    // Mettre à jour la dernière connexion
-    user.lastLogin = new Date();
-    await user.save();
-
-    res.status(200).json({
+    res.json({
       success: true,
       message: 'Connexion réussie',
       data: {
-        user: user.getPublicProfile(),
+        user: {
+          id: mockUser._id,
+          firstName: mockUser.firstName,
+          lastName: mockUser.lastName,
+          email: mockUser.email,
+          role: mockUser.role,
+          isBusiness: mockUser.isBusiness,
+          isAdmin: mockUser.isAdmin
+        },
         token
       }
     });

@@ -92,7 +92,13 @@ export const AuthProvider = ({ children }) => {
       const response = await api.login({ email, password });
       
       if (response.success) {
-        const { user: userData, token } = response.data || response;
+        // Le backend retourne les données dans response.data
+        const userData = response.data?.user || response.user;
+        const token = response.data?.token || response.token;
+        
+        if (!userData || !token) {
+          throw new Error('Données de connexion incomplètes');
+        }
         
         // Stocker les données réelles du backend
         localStorage.setItem('user', JSON.stringify(userData));

@@ -89,14 +89,19 @@ const login = async (req, res) => {
     // Mock mode - simulate login
     // Pour le login, on utilise l'email pour déterminer le rôle (mode demo)
     // En production, ces données viendraient de la base de données
+    const emailLower = email.toLowerCase();
+    const isAdmin = emailLower.includes('admin');
+    const isBusiness = emailLower.includes('business') || isAdmin;
+    const role = isAdmin ? 'admin' : isBusiness ? 'business' : 'user';
+    
     const mockUser = {
       _id: Date.now().toString(),
-      firstName: 'Demo',
+      firstName: isAdmin ? 'Admin' : isBusiness ? 'Business' : 'Demo',
       lastName: 'User',
-      email: email.toLowerCase(),
-      role: email.includes('admin') ? 'admin' : email.includes('business') ? 'business' : 'user',
-      isBusiness: email.includes('business') || email.includes('admin'),
-      isAdmin: email.includes('admin')
+      email: emailLower,
+      role: role,
+      isBusiness: isBusiness,
+      isAdmin: isAdmin
     };
 
     // Connexion réussie (mode mock)
