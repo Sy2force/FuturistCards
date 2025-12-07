@@ -18,7 +18,7 @@ export default defineConfig({
   },
   server: {
     port: 3010,
-    strictPort: false, // Allow fallback to next available port if 3010 is busy
+    strictPort: true, // Force port 3010 only, fail if busy
     host: '0.0.0.0',
     open: false,
     cors: true,

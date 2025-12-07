@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { validateEmail, validateRequired, validateLength } from '../utils/validation';
 import { 
   UserIcon, 
@@ -36,12 +36,27 @@ const ProfilePage = () => {
   });
   const [errors, setErrors] = useState({});
 
-  // Role badge component
+  // Role badge component with enhanced styling
   const RoleBadge = ({ role }) => {
     const roleConfig = {
-      user: { icon: UserIcon, color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200', label: t('user') },
-      business: { icon: UsersIcon, color: 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-200', label: t('business') },
-      admin: { icon: ShieldCheckIcon, color: 'bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-200', label: t('administrator') }
+      user: { 
+        icon: UserIcon, 
+        color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 border border-green-200 dark:border-green-700', 
+        label: 'Utilisateur Personnel',
+        bgGradient: 'from-green-400 to-green-600'
+      },
+      business: { 
+        icon: UsersIcon, 
+        color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border border-blue-200 dark:border-blue-700', 
+        label: 'Compte Professionnel',
+        bgGradient: 'from-blue-400 to-blue-600'
+      },
+      admin: { 
+        icon: ShieldCheckIcon, 
+        color: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 border border-purple-200 dark:border-purple-700', 
+        label: 'Administrateur',
+        bgGradient: 'from-purple-400 to-purple-600'
+      }
     };
 
     const config = roleConfig[role];
@@ -50,15 +65,16 @@ const ProfilePage = () => {
     const IconComponent = config.icon;
 
     return (
-      <motion.span 
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${config.color}`}
-        data-testid="role-badge"
+      <motion.div 
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="inline-flex items-center"
       >
-        <IconComponent className="w-4 h-4 mr-2" />
-        {config.label}
-      </motion.span>
+        <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold ${config.color} shadow-sm`}>
+          <IconComponent className="w-4 h-4 mr-2" />
+          {config.label}
+        </span>
+      </motion.div>
     );
   };
 
@@ -172,7 +188,14 @@ const ProfilePage = () => {
             animate={{ y: 0, opacity: 1 }}
             className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden"
           >
-            <div className="bg-gradient-to-r from-primary-500 via-primary-600 to-primary-700 h-32"></div>
+            {/* Dynamic header based on user role */}
+            <div className={`h-32 ${
+              user?.role === 'business' 
+                ? 'bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700' 
+                : user?.role === 'admin'
+                ? 'bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700'
+                : 'bg-gradient-to-r from-green-500 via-green-600 to-green-700'
+            }`}></div>
             
             <div className="relative px-6 pb-6">
               {/* Profile Avatar */}
@@ -181,7 +204,13 @@ const ProfilePage = () => {
                   className="relative inline-block"
                   whileHover={{ scale: 1.05 }}
                 >
-                  <div className="w-32 h-32 rounded-full border-4 border-white dark:border-gray-800 bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center">
+                  <div className={`w-32 h-32 rounded-full border-4 border-white dark:border-gray-800 flex items-center justify-center ${
+                    user?.role === 'business' 
+                      ? 'bg-gradient-to-br from-blue-400 to-blue-600' 
+                      : user?.role === 'admin'
+                      ? 'bg-gradient-to-br from-purple-400 to-purple-600'
+                      : 'bg-gradient-to-br from-green-400 to-green-600'
+                  }`}>
                     <UserSolidIcon className="w-16 h-16 text-white" />
                   </div>
                   
@@ -222,7 +251,13 @@ const ProfilePage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => isEditing ? handleCancel() : setIsEditing(true)}
-                  className="flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-all duration-200 shadow-md"
+                  className={`flex items-center px-4 py-2 text-white rounded-lg transition-all duration-200 shadow-md ${
+                    user?.role === 'business' 
+                      ? 'bg-blue-500 hover:bg-blue-600' 
+                      : user?.role === 'admin'
+                      ? 'bg-purple-500 hover:bg-purple-600'
+                      : 'bg-green-500 hover:bg-green-600'
+                  }`}
                   aria-label={isEditing ? 'Cancel editing' : 'Edit profile'}
                 >
                   {isEditing ? (
@@ -432,7 +467,13 @@ const ProfilePage = () => {
                       type="submit"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
-                      className="flex items-center px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+                      className={`flex items-center px-6 py-3 text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md ${
+                        user?.role === 'business' 
+                          ? 'bg-blue-500 hover:bg-blue-600' 
+                          : user?.role === 'admin'
+                          ? 'bg-purple-500 hover:bg-purple-600'
+                          : 'bg-green-500 hover:bg-green-600'
+                      }`}
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -458,8 +499,11 @@ const ProfilePage = () => {
                 >
                   <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                      <EnvelopeIcon className="w-5 h-5 mr-2 text-primary-500" />
-                      Personal Information
+                      <EnvelopeIcon className={`w-5 h-5 mr-2 ${
+                        user?.role === 'business' ? 'text-blue-500' : 
+                        user?.role === 'admin' ? 'text-purple-500' : 'text-green-500'
+                      }`} />
+                      {user?.role === 'business' ? 'Informations Professionnelles' : 'Informations Personnelles'}
                     </h3>
                     <div className="space-y-4">
                       <div className="flex items-center space-x-3">
@@ -497,11 +541,12 @@ const ProfilePage = () => {
                     </div>
                   </motion.div>
                   
-                  <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                      <BuildingOfficeIcon className="w-5 h-5 mr-2 text-primary-500" />
-                      Professional Information
-                    </h3>
+                  {user?.role === 'business' && (
+                    <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                        <BuildingOfficeIcon className="w-5 h-5 mr-2 text-blue-500" />
+                        Détails de l'Entreprise
+                      </h3>
                     <div className="space-y-4">
                       {user?.company && (
                         <div className="flex items-center space-x-3">
@@ -522,7 +567,8 @@ const ProfilePage = () => {
                         </div>
                       )}
                     </div>
-                  </motion.div>
+                    </motion.div>
+                  )}
                   
                   {user?.bio && (
                     <motion.div 

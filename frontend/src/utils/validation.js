@@ -5,8 +5,8 @@ export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // Regex téléphone israélien (050-0000000)
 export const israeliPhoneRegex = /^0[5-9][0-9]-[0-9]{7}$/;
 
-// Regex mot de passe simplifié: min 8 caractères, 1 majuscule, 1 minuscule, 1 chiffre
-export const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+// Regex mot de passe simplifié: min 6 caractères, au moins 1 lettre et 1 chiffre
+export const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
 
 // Fonctions de validation native JavaScript HackerU
 export const validateEmail = (email) => {
@@ -24,7 +24,7 @@ export const validatePassword = (password) => {
     return { isValid: false, error: 'Le mot de passe est obligatoire' };
   }
   if (!passwordRegex.test(password)) {
-    return { isValid: false, error: 'Le mot de passe doit contenir au moins 8 caractères, 1 majuscule, 1 minuscule et 1 chiffre' };
+    return { isValid: false, error: 'Le mot de passe doit contenir au moins 6 caractères, 1 lettre et 1 chiffre' };
   }
   return { isValid: true, error: null };
 };

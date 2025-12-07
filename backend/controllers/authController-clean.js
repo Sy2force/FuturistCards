@@ -14,7 +14,7 @@ const generateToken = (id) => {
 // @access  Public
 const register = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, phone, company, position } = req.body;
+    const { firstName, lastName, email, password, phone, company, position, role } = req.body;
 
     // Validation des champs requis
     if (!firstName || !lastName || !email || !password) {
@@ -41,6 +41,20 @@ const register = async (req, res) => {
       });
     }
 
+    // Déterminer le rôle et les propriétés business
+    let userRole = 'user';
+    let isBusiness = false;
+    let isAdmin = false;
+
+    if (role === 'business') {
+      userRole = 'business';
+      isBusiness = true;
+    } else if (role === 'admin') {
+      userRole = 'admin';
+      isAdmin = true;
+      isBusiness = true;
+    }
+
     // Créer l'utilisateur
     const user = await User.create({
       firstName,
@@ -50,7 +64,9 @@ const register = async (req, res) => {
       phone,
       company,
       position,
-      isBusiness: !!(company || position)
+      role: userRole,
+      isBusiness,
+      isAdmin
     });
 
     // Générer le token

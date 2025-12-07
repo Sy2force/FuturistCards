@@ -41,8 +41,8 @@ const validateRegistration = [
   body('password')
     .isLength({ min: 6 })
     .withMessage('Le mot de passe doit contenir au moins 6 caractères')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Le mot de passe doit contenir au moins une minuscule, une majuscule et un chiffre'),
+    .matches(/^(?=.*[a-zA-Z])(?=.*\d)/)
+    .withMessage('Le mot de passe doit contenir au moins 1 lettre et 1 chiffre'),
   
   body('phone')
     .optional()
@@ -60,6 +60,11 @@ const validateRegistration = [
     .trim()
     .isLength({ max: 100 })
     .withMessage('Le poste ne peut pas dépasser 100 caractères'),
+  
+  body('role')
+    .optional()
+    .isIn(['user', 'business', 'admin'])
+    .withMessage('Le rôle doit être user, business ou admin'),
   
   handleValidationErrors
 ];
