@@ -186,7 +186,7 @@ const CreateCardPage = () => {
   };
 
 
-  if (!user || (!user.isBusiness && user.role !== 'admin')) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
         <div className="text-center">
@@ -194,13 +194,19 @@ const CreateCardPage = () => {
             {t('accessRestricted')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            {t('needBusinessAccount')}
+            {t('needAccount')}
           </p>
           <button 
-            onClick={() => navigate('/register')}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
+            onClick={() => navigate('/login')}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg mr-4"
           >
-            {t('createBusinessAccount')}
+            {t('login')}
+          </button>
+          <button 
+            onClick={() => navigate('/register')}
+            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg"
+          >
+            {t('register')}
           </button>
         </div>
       </div>

@@ -5,12 +5,12 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
-import { PlusIcon, ClipboardDocumentListIcon, BriefcaseIcon, UserIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, ClipboardDocumentListIcon, BriefcaseIcon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Card from '../components/Card';
 import api from '../services/api';
 
 const MyCardsPage = () => {
-  const { user, isBusiness } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [cards, setCards] = useState([]);
@@ -70,21 +70,42 @@ const MyCardsPage = () => {
     }
   };
 
-  // Quick card creation for business users
+  // Quick card creation for all users
   const handleQuickCardSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validation des champs requis
+    if (!quickCardData.title || !quickCardData.email) {
+      toast.error('Le nom et l\'email sont requis');
+      return;
+    }
+    
     try {
       const cardData = {
-        ...quickCardData,
-        description: `Carte professionnelle de ${quickCardData.title}`,
+        title: quickCardData.title,
+        subtitle: quickCardData.subtitle || quickCardData.position || '',
+        description: quickCardData.subtitle ? 
+          `${quickCardData.subtitle} ${quickCardData.company ? 'chez ' + quickCardData.company : ''}`.trim() :
+          `Carte professionnelle de ${quickCardData.title}`,
+        email: quickCardData.email,
+        phone: quickCardData.phone || '',
+        website: '',
+        company: quickCardData.company || '',
+        position: quickCardData.position || quickCardData.subtitle || '',
+        address: '',
         isPublic: true
       };
       
-      const response = await api.post('/cards', cardData);
+      // console.log('Création carte rapide avec données:', cardData);
+      const response = await api.createCard(cardData);
       
       if (response.success) {
         toast.success('Carte créée avec succès !');
-        setCards([response.data.card, ...cards]);
+        // Recharger les cartes
+        const updatedCards = await api.getUserCards();
+        if (updatedCards.success) {
+          setCards(updatedCards.data || []);
+        }
         setShowQuickForm(false);
         setQuickCardData({
           title: '',
@@ -94,9 +115,13 @@ const MyCardsPage = () => {
           company: '',
           position: ''
         });
+      } else {
+        throw new Error(response.message || 'Erreur lors de la création');
       }
     } catch (error) {
-      toast.error('Erreur lors de la création de la carte');
+      // console.error('Erreur création carte rapide:', error);
+      const errorMessage = error.response?.data?.message || error.message || 'Erreur lors de la création de la carte';
+      toast.error(errorMessage);
     }
   };
 
@@ -159,146 +184,164 @@ const MyCardsPage = () => {
           className="mb-6"
         >
           {/* Interface différente selon le type d'utilisateur */}
-          {isBusiness ? (
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl mb-6">
-              <div className="flex items-center mb-4">
-                <BriefcaseIcon className="w-6 h-6 text-blue-500 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Espace Professionnel
-                </h2>
-              </div>
-              
-              <div className="flex flex-wrap gap-3">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowQuickForm(!showQuickForm)}
-                  className="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium shadow-lg transition-all"
-                >
-                  <PlusIcon className="w-4 h-4 mr-2" />
-                  Création Rapide
-                </motion.button>
-                
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Link 
-                    to="/create-card"
-                    className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white px-4 py-2 rounded-lg font-medium shadow-lg transition-all"
-                  >
-                    <PlusIcon className="w-4 h-4 mr-2" />
-                    Création Avancée
-                  </Link>
-                </motion.div>
-              </div>
-              
-              {/* Formulaire de création rapide */}
-              {showQuickForm && (
-                <motion.form
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  exit={{ opacity: 0, height: 0 }}
-                  onSubmit={handleQuickCardSubmit}
-                  className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
-                >
-                  <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
-                    Création Rapide de Carte
+          <motion.div 
+            className="mb-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 border border-blue-200 dark:border-blue-700"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className={`p-2 rounded-lg ${user?.isBusiness ? 'bg-blue-100 dark:bg-blue-900' : 'bg-green-100 dark:bg-green-900'}`}>
+                  {user?.isBusiness ? (
+                    <BriefcaseIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  ) : (
+                    <UserIcon className="w-6 h-6 text-green-600 dark:text-green-400" />
+                  )}
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    {t('myCardsPage.quickCardCreation')}
                   </h3>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      placeholder="Nom complet"
-                      value={quickCardData.title}
-                      onChange={(e) => handleQuickFormChange('title', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      required
-                    />
-                    
-                    <input
-                      type="text"
-                      placeholder="Titre/Poste"
-                      value={quickCardData.subtitle}
-                      onChange={(e) => handleQuickFormChange('subtitle', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    
-                    <input
-                      type="email"
-                      placeholder="Email"
-                      value={quickCardData.email}
-                      onChange={(e) => handleQuickFormChange('email', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    
-                    <input
-                      type="tel"
-                      placeholder="Téléphone"
-                      value={quickCardData.phone}
-                      onChange={(e) => handleQuickFormChange('phone', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    
-                    <input
-                      type="text"
-                      placeholder="Entreprise"
-                      value={quickCardData.company}
-                      onChange={(e) => handleQuickFormChange('company', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                    
-                    <input
-                      type="text"
-                      placeholder="Poste"
-                      value={quickCardData.position}
-                      onChange={(e) => handleQuickFormChange('position', e.target.value)}
-                      className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  
-                  <div className="flex gap-3 mt-4">
-                    <button
-                      type="submit"
-                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                    >
-                      Créer la carte
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowQuickForm(false)}
-                      className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </motion.form>
-              )}
-            </div>
-          ) : (
-            /* Interface pour utilisateurs normaux */
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl mb-6">
-              <div className="flex items-center mb-4">
-                <UserIcon className="w-6 h-6 text-green-500 mr-2" />
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Espace Personnel
-                </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {user?.isBusiness ? t('myCardsPage.quickCardDescription') : t('myCardsPage.quickCardDescriptionUser')}
+                  </p>
+                </div>
               </div>
-              
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+              <button
+                onClick={() => setShowQuickForm(!showQuickForm)}
+                className={`p-2 hover:bg-opacity-10 rounded-lg transition-colors ${
+                  user?.isBusiness 
+                    ? 'text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900' 
+                    : 'text-green-600 dark:text-green-400 hover:bg-green-50 dark:hover:bg-green-900'
+                }`}
               >
-                <Link 
-                  to="/create-card"
-                  className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all"
-                >
-                  <PlusIcon className="w-5 h-5 mr-2" />
-                  {t('myCardsPage.createNewCard')}
-                </Link>
-              </motion.div>
+                {showQuickForm ? (
+                  <XMarkIcon className="w-5 h-5" />
+                ) : (
+                  <PlusIcon className="w-5 h-5" />
+                )}
+              </button>
             </div>
-          )}
+            {showQuickForm && (
+              <motion.form
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                onSubmit={handleQuickCardSubmit}
+                className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
+              >
+                <h3 className="text-lg font-medium mb-4 text-gray-900 dark:text-white">
+                  Création Rapide de Carte
+                </h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Nom complet *"
+                    value={quickCardData.title}
+                    onChange={(e) => handleQuickFormChange('title', e.target.value)}
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    required
+                  />
+                  
+                  <input
+                    type="email"
+                    placeholder="Email *"
+                    value={quickCardData.email}
+                    onChange={(e) => handleQuickFormChange('email', e.target.value)}
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                    required
+                  />
+                  
+                  <input
+                    type="text"
+                    placeholder="Titre/Poste"
+                    value={quickCardData.subtitle}
+                    onChange={(e) => handleQuickFormChange('subtitle', e.target.value)}
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  />
+                  
+                  <input
+                    type="tel"
+                    placeholder="Téléphone"
+                    value={quickCardData.phone}
+                    onChange={(e) => handleQuickFormChange('phone', e.target.value)}
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  />
+                  
+                  <input
+                    type="text"
+                    placeholder="Entreprise"
+                    value={quickCardData.company}
+                    onChange={(e) => handleQuickFormChange('company', e.target.value)}
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  />
+                  
+                  <input
+                    type="text"
+                    placeholder="Poste spécifique"
+                    value={quickCardData.position}
+                    onChange={(e) => handleQuickFormChange('position', e.target.value)}
+                    className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+                  />
+                </div>
+                
+                <div className="flex gap-3 mt-6">
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`px-6 py-2 rounded-lg font-medium transition-colors text-white ${
+                      user?.isBusiness 
+                        ? 'bg-blue-500 hover:bg-blue-600' 
+                        : 'bg-green-500 hover:bg-green-600'
+                    }`}
+                  >
+                    <PlusIcon className="w-4 h-4 mr-2 inline" />
+                    Créer la carte
+                  </motion.button>
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowQuickForm(false)}
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  >
+                    <XMarkIcon className="w-4 h-4 mr-2 inline" />
+                    Annuler
+                  </motion.button>
+                </div>
+              </motion.form>
+            )}
+          </motion.div>
+          
+          {/* Interface pour création avancée */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl mb-6">
+            <div className="flex items-center mb-4">
+              {user?.isBusiness ? (
+                <BriefcaseIcon className="w-6 h-6 text-blue-500 mr-2" />
+              ) : (
+                <UserIcon className="w-6 h-6 text-green-500 mr-2" />
+              )}
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                {user?.isBusiness ? 'Espace Professionnel' : 'Espace Personnel'}
+              </h2>
+            </div>
+            
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link 
+                to="/create-card"
+                className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all"
+              >
+                <PlusIcon className="w-5 h-5 mr-2" />
+                {t('myCardsPage.createNewCard')}
+              </Link>
+            </motion.div>
+          </div>
         </motion.div>
 
         {loading ? (

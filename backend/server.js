@@ -41,7 +41,10 @@ const allowedOrigins = [
   /^https:\/\/[a-z0-9-]+-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   /^https:\/\/card-pro-.*\.vercel\.app$/,
-  /^https:\/\/.*--cardpro-frontend-.*\.vercel\.app$/
+  /^https:\/\/.*--cardpro-frontend-.*\.vercel\.app$/,
+  
+  // Current Vercel deployment URL
+  'https://card-pro-wzcf.vercel.app'
 ];
 
 // CORS configuration with security logging
