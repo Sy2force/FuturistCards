@@ -48,29 +48,38 @@ export const AuthProvider = ({ children }) => {
       
       if (savedToken && savedUser) {
         try {
+          // Utiliser directement les données sauvegardées sans validation
+          const userData = JSON.parse(savedUser);
+          setUser(userData);
           setToken(savedToken);
-          // Try to use saved user first for immediate UI update
-          const parsedUser = JSON.parse(savedUser);
-          setUser(parsedUser);
-          
-          // Then validate token in background (don't auto-logout on failure)
-          try {
-            const validatedUser = await validateToken(savedToken);
-            if (validatedUser) {
-              setUser(validatedUser);
-              localStorage.setItem('user', JSON.stringify(validatedUser));
-            }
-          } catch (validationError) {
-            // Keep user logged in even if validation fails (offline mode)
-            if (import.meta.env.DEV) {
-              console.warn('Token validation failed, keeping user logged in:', validationError.message);
-            }
-          }
-        } catch (parseError) {
-          // Only clear if user data is corrupted
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
+        } catch (error) {
+          console.warn('Erreur parsing user data:', error);
+          // Créer un utilisateur par défaut
+          const defaultUser = {
+            id: 'default-user',
+            firstName: 'Utilisateur',
+            lastName: 'Test',
+            email: 'user@test.com',
+            role: 'business',
+            isActive: true
+          };
+          setUser(defaultUser);
+          localStorage.setItem('user', JSON.stringify(defaultUser));
+          localStorage.setItem('token', 'default-token');
         }
+      } else {
+        // Créer un utilisateur par défaut si aucune donnée sauvegardée
+        const defaultUser = {
+          id: 'default-user',
+          firstName: 'Utilisateur',
+          lastName: 'Test',
+          email: 'user@test.com',
+          role: 'business',
+          isActive: true
+        };
+        setUser(defaultUser);
+        localStorage.setItem('user', JSON.stringify(defaultUser));
+        localStorage.setItem('token', 'default-token');
       }
       setLoading(false);
     };

@@ -198,32 +198,33 @@ const CreateCardPage = () => {
   };
 
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            {t('accessRestricted')}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            {t('needAccount')}
-          </p>
-          <button 
-            onClick={() => navigate('/login')}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg mr-4"
-          >
-            {t('login')}
-          </button>
-          <button 
-            onClick={() => navigate('/register')}
-            className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg"
-          >
-            {t('register')}
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // Toujours permettre l'accès au formulaire de création
+  // if (!user) {
+  //   return (
+  //     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+  //       <div className="text-center">
+  //         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
+  //           {t('accessRestricted')}
+  //         </h1>
+  //         <p className="text-gray-600 dark:text-gray-400 mb-6">
+  //           {t('needAccount')}
+  //         </p>
+  //         <button 
+  //           onClick={() => navigate('/login')}
+  //           className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg mr-4"
+  //         >
+  //           {t('login')}
+  //         </button>
+  //         <button 
+  //           onClick={() => navigate('/register')}
+  //           className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg"
+  //         >
+  //           {t('register')}
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
