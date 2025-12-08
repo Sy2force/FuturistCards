@@ -149,35 +149,47 @@ const CreateCardPage = () => {
     setLoading(true);
     setError('');
 
+    // Validation des champs requis
+    if (!formData.title || !formData.email) {
+      toast.error('Le nom complet et l\'email sont obligatoires');
+      setLoading(false);
+      return;
+    }
+
     try {
       // Préparer les données de la carte selon le schéma backend
       const cardData = {
         title: formData.title,
-        subtitle: formData.subtitle || '',
-        description: formData.description,
-        category: formData.category,
-        phone: formData.phone,
+        subtitle: formData.subtitle || formData.position || '',
+        description: formData.description || `Carte professionnelle de ${formData.title}${formData.company ? ' chez ' + formData.company : ''}`,
         email: formData.email,
+        phone: formData.phone || '',
         website: formData.website || '',
-        address: {
-          street: formData.address.split(',')[0]?.trim() || 'Rue inconnue',
-          houseNumber: '1',
-          city: formData.address.split(',')[1]?.trim() || 'Ville inconnue',
-          zip: '00000'
-        }
+        company: formData.company || '',
+        position: formData.position || formData.subtitle || '',
+        address: formData.address || '',
+        isPublic: true
       };
 
-      // Création via l'API MongoDB backend
+      console.log('Création carte avec données:', cardData);
       const response = await api.createCard(cardData);
       
       if (response.success) {
-        toast.success(t('createCard.cardCreatedSuccess') || 'Carte créée avec succès !');
+        toast.success('🎉 Votre carte a été créée avec succès !');
         navigate('/my-cards');
       } else {
-        throw new Error(response.message || 'Erreur lors de la création de la carte');
+        throw new Error(response.message || 'Erreur lors de la création');
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || t('createCard.errorOccurred');
+      console.error('Erreur création carte:', error);
+      let errorMessage = 'Une erreur est survenue lors de la création de votre carte';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -331,16 +343,16 @@ const CreateCardPage = () => {
               <div className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 px-8 py-6 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-700/90" />
                 <div className="relative z-10">
-                  <h2 className="text-3xl font-bold text-white mb-2">✨ {t('createProfessionalCard')}</h2>
-                  <p className="text-blue-100 text-lg">{t('fillProfessionalInfoDetailed')}</p>
+                  <h2 className="text-3xl font-bold text-white mb-2">✨ Créer ma carte professionnelle</h2>
+                  <p className="text-blue-100 text-lg">Remplissez vos informations pour créer une carte professionnelle moderne et élégante</p>
                   <div className="flex items-center mt-3 text-sm text-blue-200">
                     <span className="inline-flex items-center mr-4">
                       <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                      {t('unlimitedCreation')}
+                      Création illimitée
                     </span>
                     <span className="inline-flex items-center">
                       <span className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></span>
-                      {t('instantPublication')}
+                      Publication instantanée
                     </span>
                   </div>
                 </div>
@@ -408,7 +420,7 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <UserIcon className="w-4 h-4 inline mr-1" />
-                      {t('fullName')} *
+                      Nom complet *
                     </label>
                     <input
                       type="text"
@@ -417,7 +429,7 @@ const CreateCardPage = () => {
                       value={formData.title}
                       onChange={handleChange}
                       required
-                      placeholder={t('fullNamePlaceholder')}
+                      placeholder="Ex: Jean Dupont"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
@@ -425,7 +437,7 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <UserIcon className="w-4 h-4 inline mr-1" />
-                      {t('positionTitle')} *
+                      Titre/Poste *
                     </label>
                     <input
                       type="text"
@@ -434,7 +446,7 @@ const CreateCardPage = () => {
                       value={formData.subtitle}
                       onChange={handleChange}
                       required
-                      placeholder={t('positionPlaceholder')}
+                      placeholder="Ex: Développeur Full Stack"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
