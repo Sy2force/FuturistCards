@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { 
   RocketLaunchIcon, 
@@ -15,7 +14,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 function HomePage() {
-  const { t } = useTranslation();
   
   return (
     <>

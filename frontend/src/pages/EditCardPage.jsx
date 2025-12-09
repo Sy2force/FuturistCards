@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../hooks/useAuth';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
 import { UserIcon, EnvelopeIcon, PhoneIcon, GlobeAltIcon, MapPinIcon, PhotoIcon, DocumentCheckIcon, ArrowLeftIcon, XMarkIcon, PencilIcon } from '@heroicons/react/24/outline';
 
 const EditCardPage = () => {
@@ -12,7 +11,6 @@ const EditCardPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const fileInputRef = useRef(null);
-  const { t } = useTranslation();
   
   const [formData, setFormData] = useState({
     title: '',

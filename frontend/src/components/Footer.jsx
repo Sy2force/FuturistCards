@@ -1,9 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
-  const { t } = useTranslation();
   
   return (
     <footer className="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
@@ -27,17 +25,17 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400">
-                  {t('home')}
+                  {'Accueil'}
                 </Link>
               </li>
               <li>
                 <Link to="/cards" className="text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400">
-                  {t('cards')}
+                  {'Cartes'}
                 </Link>
               </li>
               <li>
                 <Link to="/about" className="text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400">
-                  {t('about')}
+                  {'À propos'}
                 </Link>
               </li>
             </ul>
@@ -50,10 +48,10 @@ const Footer = () => {
             </h3>
             <div className="space-y-2">
               <p className="text-gray-600 dark:text-gray-400">
-                {t('email')}: contact@futuristcards.com
+                {'Email'}: contact@futuristcards.com
               </p>
               <p className="text-gray-600 dark:text-gray-400">
-                {t('phone')}: +33 1 23 45 67 89
+                {'Téléphone'}: +33 1 23 45 67 89
               </p>
               <div className="flex items-center space-x-4 mt-4">
                 <a 

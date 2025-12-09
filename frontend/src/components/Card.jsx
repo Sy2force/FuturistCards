@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { 
   HeartIcon, 
   PencilIcon, 
@@ -23,7 +22,6 @@ const Card = ({
   showActions = false 
 }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
-  const { t } = useTranslation();
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   
   return (
@@ -57,7 +55,7 @@ const Card = ({
                 <UserIcon className="w-10 h-10 text-white" />
               </div>
               <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{card.title}</p>
-              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? t(card.category) || card.category : t('category')}</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? t(card.category) || card.category : 'Catégorie'}</p>
             </div>
           </div>
         </div>
@@ -80,10 +78,10 @@ const Card = ({
           </h3>
           <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm mb-2">
             <BuildingOfficeIcon className="w-4 h-4 mr-1" />
-            <span className="mr-2">{card.subtitle || t('position')}</span>
+            <span className="mr-2">{card.subtitle || 'Poste'}</span>
             <span className="text-gray-400">•</span>
             <UserIcon className="w-4 h-4 ml-2 mr-1" />
-            <span>{card.category ? t(card.category) || card.category : t('category')}</span>
+            <span>{card.category ? t(card.category) || card.category : 'Catégorie'}</span>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed">
             {card.description}
@@ -107,7 +105,7 @@ const Card = ({
           {card.website && (
             <div className="flex items-center">
               <GlobeAltIcon className="w-3 h-3 mr-1" />
-              <span className="truncate max-w-[60px]">{t('website')}</span>
+              <span className="truncate max-w-[60px]">{'Site web'}</span>
             </div>
           )}
         </div>
@@ -125,7 +123,7 @@ const Card = ({
             ) : (
               <HeartIcon className="w-5 h-5" />
             )}
-            <span className="text-sm font-medium">{t('favorites')}</span>
+            <span className="text-sm font-medium">{'Favoris'}</span>
           </motion.button>
           
           {showActions && (onEdit || onDelete) && (
@@ -137,7 +135,7 @@ const Card = ({
                   onClick={() => onEdit(card._id || card.id)}
                   data-testid="edit-card-btn"
                   className="p-2 text-primary-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 shadow-sm"
-                  aria-label={t('editCard')}
+                  aria-label={'Modifier la carte'}
                 >
                   <PencilIcon className="w-4 h-4" />
                 </motion.button>

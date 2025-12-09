@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { validateEmail, validateRequired, validateLength } from '../utils/validation';
 import { 
@@ -20,7 +19,6 @@ import {
 import { UserIcon as UserSolidIcon } from '@heroicons/react/24/solid';
 
 const ProfilePage = () => {
-  const { t } = useTranslation();
   const { user, updateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -173,7 +171,7 @@ const ProfilePage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('profile')} - CardPro</title>
+        <title>{'Profil'} - CardPro</title>
         <meta name="description" content={t('profileDescription')} />
       </Helmet>
       
@@ -261,7 +259,7 @@ const ProfilePage = () => {
                   aria-label={isEditing ? 'Cancel editing' : 'Edit profile'}
                 >
                   {isEditing ? (
-                    <><XMarkIcon className="w-4 h-4 mr-2" /> {t('cancel')}</>
+                    <><XMarkIcon className="w-4 h-4 mr-2" /> {'Annuler'}</>
                   ) : (
                     <><PencilIcon className="w-4 h-4 mr-2" /> {t('editProfile')}</>
                   )}
@@ -333,7 +331,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <EnvelopeIcon className="w-4 h-4 mr-2" />
-                        {t('email')}
+                        {'Email'}
                       </label>
                       <input
                         name="email"
@@ -341,7 +339,7 @@ const ProfilePage = () => {
                         onChange={handleChange}
                         type="email"
                         className={`w-full px-4 py-3 border ${errors.email ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all`}
-                        placeholder={t('enterEmail')}
+                        placeholder={'Entrez votre email'}
                         aria-invalid={errors.email ? 'true' : 'false'}
                       />
                       {errors.email && (
@@ -359,7 +357,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <PhoneIcon className="w-4 h-4 mr-2" />
-                        {t('phone')}
+                        {'Téléphone'}
                       </label>
                       <input
                         name="phone"
@@ -385,7 +383,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <BuildingOfficeIcon className="w-4 h-4 mr-2" />
-                        {t('company')}
+                        {'Entreprise'}
                       </label>
                       <input
                         name="company"
@@ -393,7 +391,7 @@ const ProfilePage = () => {
                         onChange={handleChange}
                         type="text"
                         className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
-                        placeholder={t('enterCompany')}
+                        placeholder={'Entrez votre entreprise'}
                       />
                     </motion.div>
 
@@ -401,7 +399,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 mr-2" />
-                        {t('position')}
+                        {'Poste'}
                       </label>
                       <input
                         name="position"
@@ -409,7 +407,7 @@ const ProfilePage = () => {
                         onChange={handleChange}
                         type="text"
                         className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
-                        placeholder={t('enterPosition')}
+                        placeholder={'Entrez votre poste'}
                       />
                     </motion.div>
 
@@ -417,7 +415,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="md:col-span-2">
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <GlobeAltIcon className="w-4 h-4 mr-2" />
-                        {t('website')}
+                        {'Site web'}
                       </label>
                       <input
                         name="website"
@@ -461,7 +459,7 @@ const ProfilePage = () => {
                       disabled={isLoading}
                     >
                       <XMarkIcon className="w-4 h-4 mr-2" />
-                      {t('cancel')}
+                      {'Annuler'}
                     </motion.button>
                     <motion.button
                       type="submit"

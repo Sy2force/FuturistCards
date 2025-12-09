@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { useAuth } from '../hooks/useAuth';
 import { validateEmail, validatePassword, isFormValid } from '../utils/validation';
@@ -14,7 +13,6 @@ import {
 import { ArrowRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 const LoginPage = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const { login, loading } = useAuth();
   
@@ -105,7 +103,7 @@ const LoginPage = () => {
           <div className="flex items-center justify-center mb-4">
             <SparklesIcon className="h-8 w-8 text-blue-500 mr-2" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
-              {t('login')}
+              {'Connexion'}
             </h1>
           </div>
           <p className="text-gray-600 dark:text-gray-300 text-lg">
@@ -124,7 +122,7 @@ const LoginPage = () => {
             {/* Email avec validation HackerU */}
             <EmailInput 
               name="email"
-              label={t('email')}
+              label={'Email'}
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               onBlur={() => {}}
@@ -137,14 +135,14 @@ const LoginPage = () => {
             {/* Mot de passe avec validation HackerU */}
             <PasswordInput
               name="password"
-              label={t('password')}
+              label={'Mot de passe'}
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
               onBlur={() => {}}
               error={errors.password}
               touched={touchedFields.password}
               required
-              placeholder={t('password')}
+              placeholder={'Mot de passe'}
             />
 
             {/* Bouton de connexion avec feedback visuel */}
@@ -192,13 +190,13 @@ const LoginPage = () => {
           </h3>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">{t('email')} :</span>
+              <span className="text-gray-600 dark:text-gray-400">{'Email'} :</span>
               <span className="text-blue-600 font-mono text-xs bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
                 test@example.com
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">{t('password')} :</span>
+              <span className="text-gray-600 dark:text-gray-400">{'Mot de passe'} :</span>
               <span className="text-green-600 font-mono text-xs bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded">
                 Test123!
               </span>

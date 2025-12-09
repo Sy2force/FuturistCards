@@ -134,7 +134,7 @@ async function startServer() {
   if (process.env.MONGO_URI) {
     try {
       await mongoose.connect(process.env.MONGO_URI);
-      console.log("✅ MongoDB connecté");
+      // MongoDB connecté
     } catch (err) {
       console.error("❌ Erreur MongoDB:", err.message);
       if (process.env.NODE_ENV === 'production') {
@@ -149,11 +149,7 @@ async function startServer() {
   }
 
   app.listen(PORT, () => {
-    console.log(`🚀 Serveur démarré sur le port ${PORT}`);
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`🔐 CORS Origins autorisées:`);
-      allowedOrigins.forEach(origin => console.log(`   - ${origin}`));
-    }
+    // Serveur démarré sur le port ${PORT}
   });
 }
 

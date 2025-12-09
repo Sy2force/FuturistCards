@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
 import Card from '../components/Card';
 import api from '../services/api';
 import { toast } from 'react-hot-toast';
 
 const CardsPageSimple = () => {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);

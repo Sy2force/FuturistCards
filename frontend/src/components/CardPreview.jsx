@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { 
   XMarkIcon,
   EnvelopeIcon,
@@ -16,7 +15,6 @@ import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useFavorites } from '../context/FavoritesContext';
 
 const CardPreview = ({ card, isOpen, onClose }) => {
-  const { t } = useTranslation();
   const { toggleFavorite, isFavorite } = useFavorites();
 
   if (!card) return null;
@@ -86,7 +84,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                     <div className="flex items-center justify-center mt-2">
                       <BuildingOfficeIcon className="w-4 h-4 mr-1" />
                       <span className="text-sm">
-                        {card.category ? t(card.category) || card.category : t('category')}
+                        {card.category ? t(card.category) || card.category : 'Catégorie'}
                       </span>
                     </div>
                   </div>
@@ -146,7 +144,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                       <div className="flex items-center space-x-3">
                         <GlobeAltIcon className="w-5 h-5 text-purple-500 flex-shrink-0" />
                         <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{t('website')}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{'Site web'}</p>
                           <a 
                             href={card.website}
                             target="_blank"
@@ -163,7 +161,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                       <div className="flex items-center space-x-3">
                         <MapPinIcon className="w-5 h-5 text-red-500 flex-shrink-0" />
                         <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{t('address')}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{'Adresse'}</p>
                           <p className="text-gray-700 dark:text-gray-300 text-sm">{card.address}</p>
                         </div>
                       </div>
@@ -188,7 +186,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                     ) : (
                       <HeartIcon className="w-5 h-5" />
                     )}
-                    <span className="text-sm">{t('favorites')}</span>
+                    <span className="text-sm">{'Favoris'}</span>
                   </motion.button>
 
                   <motion.button

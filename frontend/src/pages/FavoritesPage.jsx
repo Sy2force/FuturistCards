@@ -7,10 +7,8 @@ import { useFavorites } from '../context/FavoritesContext';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, EyeIcon } from '@heroicons/react/24/solid';
 import Card from '../components/Card';
-import { useTranslation } from 'react-i18next';
 
 const FavoritesPage = () => {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const { getFavoriteCards, favorites: favoriteIds } = useFavorites();
@@ -148,7 +146,7 @@ const FavoritesPage = () => {
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-              <span className="ml-3 text-gray-600 dark:text-gray-400">{t('loading')}</span>
+              <span className="ml-3 text-gray-600 dark:text-gray-400">{'Chargement...'}</span>
             </motion.div>
           ) : favorites.length === 0 ? (
             <motion.div 

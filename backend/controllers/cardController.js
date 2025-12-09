@@ -260,10 +260,10 @@ const createCard = async (req, res) => {
     } = req.body;
 
     // Validation des champs requis
-    if (!title || !description || !phone || !email) {
+    if (!title || !email) {
       return res.status(400).json({
         success: false,
-        message: 'Titre, description, téléphone et email sont requis'
+        message: 'Le nom complet et l\'email sont obligatoires'
       });
     }
 
@@ -273,10 +273,10 @@ const createCard = async (req, res) => {
       id: Date.now().toString(),
       title,
       subtitle: subtitle || '',
-      description,
-      phone,
+      description: description || `Carte professionnelle de ${title}`,
+      phone: phone || '',
       email,
-      web: website || '',
+      website: website || '',
       image: image || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
       address: typeof address === 'object' ? address : {
         state: address?.split(',')[1]?.trim() || 'Paris',

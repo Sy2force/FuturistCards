@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import api from '../services/api';
 import toast from 'react-hot-toast';
 
 const CardDetailsPageSimple = () => {
-  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const [card, setCard] = useState(null);
@@ -92,7 +90,7 @@ const CardDetailsPageSimple = () => {
             {/* Description */}
             <div className="mb-8">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                {t('about')}
+                {'À propos'}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                 {card.description}
@@ -109,7 +107,7 @@ const CardDetailsPageSimple = () => {
                 <div className="flex items-center space-x-3">
                   <div className="text-blue-500">📧</div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('email')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{'Email'}</p>
                     <a 
                       href={`mailto:${card.email}`}
                       className="text-blue-500 hover:text-blue-600"
@@ -122,7 +120,7 @@ const CardDetailsPageSimple = () => {
                 <div className="flex items-center space-x-3">
                   <div className="text-green-500">📞</div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('phone')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{'Téléphone'}</p>
                     <a 
                       href={`tel:${card.phone}`}
                       className="text-green-500 hover:text-green-600"
@@ -136,7 +134,7 @@ const CardDetailsPageSimple = () => {
                   <div className="flex items-center space-x-3">
                     <div className="text-purple-500">🌐</div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('website')}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{'Site web'}</p>
                       <a 
                         href={card.website}
                         target="_blank"
@@ -159,7 +157,7 @@ const CardDetailsPageSimple = () => {
                   <div className="flex items-center space-x-3">
                     <div className="text-red-500">📍</div>
                     <div>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">{t('address')}</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{'Adresse'}</p>
                       <p className="text-gray-700 dark:text-gray-300">{card.address}</p>
                     </div>
                   </div>
@@ -168,7 +166,7 @@ const CardDetailsPageSimple = () => {
                 <div className="flex items-center space-x-3">
                   <div className="text-orange-500">🏷️</div>
                   <div>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{t('category')}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{'Catégorie'}</p>
                     <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full">
                       {t(`createCard.${card.category}`) || card.category}
                     </span>
@@ -180,7 +178,7 @@ const CardDetailsPageSimple = () => {
             {/* Actions */}
             <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200 dark:border-gray-600">
               <button className="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                {t('addToFavorites')}
+                {'Ajouter aux favoris'}
               </button>
               <button className="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                 {t('share')}

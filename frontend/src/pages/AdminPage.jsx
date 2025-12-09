@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { t } from '../utils/translations';
 import { useAuth } from '../hooks/useAuth';
-import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import api from '../services/api';
 import { 
@@ -26,7 +26,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 const AdminPage = () => {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
@@ -42,11 +41,11 @@ const AdminPage = () => {
       try {
         const response = await api.getAllUsers();
         if (response.data.success) {
+          toast.success('Rôle utilisateur mis à jour');
           setUsers(response.data.data);
           setFilteredUsers(response.data.data);
         }
       } catch (error) {
-        console.error('Error fetching users:', error);
         toast.error('Erreur lors du chargement des utilisateurs');
       } finally {
         setIsLoading(false);
@@ -85,7 +84,7 @@ const AdminPage = () => {
       business: { 
         icon: UsersIcon, 
         color: 'bg-success-100 text-success-800 dark:bg-success-900 dark:text-success-200', 
-        label: t('business') 
+        label: 'Business' 
       },
       admin: { 
         icon: ShieldCheckIcon, 
@@ -169,7 +168,7 @@ const AdminPage = () => {
           className="text-center"
         >
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">{t('loadingUsers')}</p>
+          <p className="text-gray-600 dark:text-gray-400">Chargement des utilisateurs...</p>
         </motion.div>
       </div>
     );
@@ -178,8 +177,8 @@ const AdminPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('adminPanel')} - CardPro</title>
-        <meta name="description" content={t('adminPanelDescription')} />
+        <title>Panneau d'administration - CardPro</title>
+        <meta name="description" content="Gérer les utilisateurs, les rôles et les paramètres" />
       </Helmet>
 
       <motion.div 
@@ -198,10 +197,10 @@ const AdminPage = () => {
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                   <ShieldCheckIcon className="w-8 h-8 text-primary-500 mr-3" />
-                  {t('adminPanel')}
+                  Panneau d'administration
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-2">
-                  {t('manageUsersRolesSettings')}
+                  Gérer les utilisateurs, les rôles et les paramètres
                 </p>
               </div>
               <motion.button
@@ -210,7 +209,7 @@ const AdminPage = () => {
                 className="flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg shadow-md transition-all"
               >
                 <PlusIcon className="w-4 h-4 mr-2" />
-                {t('addUser')}
+                Ajouter un utilisateur
               </motion.button>
             </div>
 
@@ -218,7 +217,7 @@ const AdminPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               {[
                 { 
-                  label: t('totalUsers'), 
+                  label: 'Total des utilisateurs', 
                   value: users.length, 
                   icon: UsersIcon, 
                   color: 'text-blue-500',
@@ -261,6 +260,7 @@ const AdminPage = () => {
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
                         {stat.label}
                       </p>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Utilisateurs totaux</h3>
                       <p className="text-2xl font-bold text-gray-900 dark:text-white">
                         {stat.value}
                       </p>
@@ -300,7 +300,7 @@ const AdminPage = () => {
                 >
                   <option value="all">{t('allRoles')}</option>
                   <option value="user">{t('users')}</option>
-                  <option value="business">{t('business')}</option>
+                  <option value="business">{'Business'}</option>
                   <option value="admin">{t('admins')}</option>
                 </select>
                 
@@ -432,7 +432,7 @@ const AdminPage = () => {
             {filteredUsers.length === 0 && (
               <div className="text-center py-12">
                 <UsersIcon className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-500 dark:text-gray-400">{t('noUsersFound')}</p>
+                <p className="text-gray-600 dark:text-gray-400">Aucun utilisateur trouvé</p>
               </div>
             )}
           </motion.div>

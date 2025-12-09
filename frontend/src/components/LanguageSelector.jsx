@@ -1,10 +1,8 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { GlobeAltIcon } from '@heroicons/react/24/outline';
 
 const LanguageSelector = () => {
-  const { i18n } = useTranslation();
 
   const languages = [
     { code: 'fr', name: 'Français', flag: '🇫🇷' },

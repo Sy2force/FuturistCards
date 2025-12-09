@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { 
@@ -20,7 +19,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 const CreateCardPage = () => {
-  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
@@ -55,16 +53,16 @@ const CreateCardPage = () => {
   }, [user]);
 
   const categories = [
-    { value: 'technology', label: t('technology') },
-    { value: 'business', label: t('business') },
-    { value: 'creative', label: t('creative') },
-    { value: 'healthcare', label: t('healthcare') },
-    { value: 'education', label: t('education') },
-    { value: 'finance', label: t('finance') },
-    { value: 'marketing', label: t('marketing') },
-    { value: 'consulting', label: t('consulting') },
-    { value: 'retail', label: t('retail') },
-    { value: 'other', label: t('other') }
+    { value: 'technology', label: 'Technologie' },
+    { value: 'business', label: 'Business' },
+    { value: 'creative', label: 'Créatif' },
+    { value: 'healthcare', label: 'Santé' },
+    { value: 'education', label: 'Éducation' },
+    { value: 'finance', label: 'Finance' },
+    { value: 'marketing', label: 'Marketing' },
+    { value: 'consulting', label: 'Conseil' },
+    { value: 'retail', label: 'Commerce' },
+    { value: 'other', label: 'Autre' }
   ];
 
   // Real-time validation
@@ -74,21 +72,21 @@ const CreateCardPage = () => {
     switch (name) {
       case 'email':
         if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-          errors.email = t('invalidEmail');
+          errors.email = 'Email invalide';
         } else {
           delete errors.email;
         }
         break;
       case 'phone':
         if (value && !/^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/\s/g, ''))) {
-          errors.phone = t('invalidPhone');
+          errors.phone = 'Numéro de téléphone invalide';
         } else {
           delete errors.phone;
         }
         break;
       case 'website':
         if (value && !/^https?:\/\/.+\..+/.test(value)) {
-          errors.website = t('invalidWebsite');
+          errors.website = 'URL de site web invalide';
         } else {
           delete errors.website;
         }
@@ -117,7 +115,7 @@ const CreateCardPage = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast.error(t('createCard.imageTooLarge'));
+        toast.error('Image trop volumineuse (max 5MB)');
         return;
       }
       
@@ -149,12 +147,43 @@ const CreateCardPage = () => {
     setLoading(true);
     setError('');
 
-    // Validation des champs requis
-    if (!formData.title || !formData.email) {
-      toast.error('Le nom complet et l\'email sont obligatoires');
+    // Validation complète des champs requis et optionnels
+    const errors = {};
+    
+    // Champs obligatoires
+    if (!formData.title?.trim()) {
+      errors.title = 'Le nom complet est obligatoire';
+    }
+    if (!formData.email?.trim()) {
+      errors.email = 'L\'email est obligatoire';
+    }
+    
+    // Validation format email
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = 'Format d\'email invalide';
+    }
+    
+    // Validation téléphone si fourni
+    if (formData.phone && !/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/\s/g, ''))) {
+      errors.phone = 'Format de téléphone invalide';
+    }
+    
+    // Validation site web si fourni
+    if (formData.website && !/^https?:\/\/.+\..+/.test(formData.website)) {
+      errors.website = 'Format d\'URL invalide (doit commencer par http:// ou https://)';
+    }
+    
+    // Si erreurs, les afficher et arrêter
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      const firstError = Object.values(errors)[0];
+      toast.error(firstError);
       setLoading(false);
       return;
     }
+    
+    // Réinitialiser les erreurs si tout est valide
+    setValidationErrors({});
 
     try {
       // Préparer les données de la carte selon le schéma backend
@@ -171,7 +200,6 @@ const CreateCardPage = () => {
         isPublic: true
       };
 
-      console.log('Création carte avec données:', cardData);
       const response = await api.createCard(cardData);
       
       if (response.success) {
@@ -181,7 +209,6 @@ const CreateCardPage = () => {
         throw new Error(response.message || 'Erreur lors de la création');
       }
     } catch (error) {
-      console.error('Erreur création carte:', error);
       let errorMessage = 'Une erreur est survenue lors de la création de votre carte';
       
       if (error.response?.data?.message) {
@@ -213,13 +240,13 @@ const CreateCardPage = () => {
   //           onClick={() => navigate('/login')}
   //           className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg mr-4"
   //         >
-  //           {t('login')}
+  //           {'Connexion'}
   //         </button>
   //         <button 
   //           onClick={() => navigate('/register')}
   //           className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg"
   //         >
-  //           {t('register')}
+  //           {'Inscription'}
   //         </button>
   //       </div>
   //     </div>
@@ -229,8 +256,8 @@ const CreateCardPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('createNewCardTitle')} - CardPro</title>
-        <meta name="description" content={t('createCardDescription')} />
+        <title>Créer une nouvelle carte - CardPro</title>
+        <meta name="description" content="Créez votre carte de visite professionnelle personnalisée" />
       </Helmet>
       
       <motion.div 
@@ -260,7 +287,7 @@ const CreateCardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
-              {t('createNewCard')}
+              Créer une nouvelle carte
             </motion.h1>
             <motion.p 
               className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
@@ -268,7 +295,7 @@ const CreateCardPage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              {t('createCardSubtitle')}
+              Créez votre carte de visite professionnelle en quelques minutes
             </motion.p>
           </motion.div>
 
@@ -283,7 +310,7 @@ const CreateCardPage = () => {
             <div className="sticky top-8">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
                 <PhotoIcon className="w-5 h-5 mr-2" />
-                {t('cardPreview')}
+                Aperçu de la carte
               </h3>
                 <motion.div 
                   className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700"
@@ -306,13 +333,13 @@ const CreateCardPage = () => {
                     )}
                   </div>
                   <h4 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-1">
-                    {formData.title || t('yourName')}
+                    {formData.title || 'Votre nom'}
                   </h4>
                   <p className="text-blue-600 dark:text-blue-400 font-medium mb-3">
-                    {formData.subtitle || t('yourPosition')}
+                    {formData.subtitle || 'Votre poste'}
                   </p>
                   <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                    {formData.description || t('yourDescription')}
+                    {formData.description || 'Votre description professionnelle'}
                   </p>
                   <div className="space-y-2 text-sm">
                     {formData.email && (
@@ -369,7 +396,7 @@ const CreateCardPage = () => {
                 {/* Photo Upload */}
                 <div className="text-center">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                    {t('profilePhoto')}
+                    Photo de profil
                   </label>
                   <div className="relative inline-block">
                     <input
@@ -405,14 +432,14 @@ const CreateCardPage = () => {
                         <div className="text-center">
                           <PhotoIcon className="w-8 h-8 text-gray-400 group-hover:text-blue-500 mx-auto mb-2" />
                           <p className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-500">
-                            {t('addPhoto')}
+                            Ajouter une photo
                           </p>
                         </div>
                       </button>
                     )}
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    {t('imageFormats')}
+                    Formats acceptés: JPG, PNG, GIF (max 5MB)
                   </p>
                 </div>
 
@@ -431,14 +458,21 @@ const CreateCardPage = () => {
                       onChange={handleChange}
                       required
                       placeholder="Ex: Jean Dupont"
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                      className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
+                        validationErrors.title 
+                          ? 'border-red-500 dark:border-red-400' 
+                          : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     />
+                    {validationErrors.title && (
+                      <p className="text-red-500 text-xs mt-1">{validationErrors.title}</p>
+                    )}
                   </div>
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <UserIcon className="w-4 h-4 inline mr-1" />
-                      Titre/Poste *
+                      Titre/Poste
                     </label>
                     <input
                       type="text"
@@ -446,7 +480,6 @@ const CreateCardPage = () => {
                       data-testid="input-position"
                       value={formData.subtitle}
                       onChange={handleChange}
-                      required
                       placeholder="Ex: Développeur Full Stack"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
@@ -459,12 +492,12 @@ const CreateCardPage = () => {
                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
                       <UserIcon className="w-4 h-4 text-white" />
                     </div>
-                    {t('professionalDetails')}
+                    Détails professionnels
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        🏢 {t('company')} *
+                        🏢 {'Entreprise'}
                       </label>
                       <input
                         type="text"
@@ -472,14 +505,13 @@ const CreateCardPage = () => {
                         data-testid="input-company"
                         value={formData.company}
                         onChange={handleChange}
-                        required
-                        placeholder={t('companyPlaceholderDetailed')}
+                        placeholder="Ex: TechCorp, Google, Freelance..."
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        💼 {t('position')} *
+                        💼 {'Poste'}
                       </label>
                       <input
                         type="text"
@@ -487,8 +519,7 @@ const CreateCardPage = () => {
                         data-testid="input-position-detail"
                         value={formData.position}
                         onChange={handleChange}
-                        required
-                        placeholder={t('positionPlaceholderDetailed')}
+                        placeholder="Ex: Développeur Senior, Chef de projet..."
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                       />
                     </div>
@@ -498,7 +529,7 @@ const CreateCardPage = () => {
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {t('description')}
+                    {'Description'}
                   </label>
                   <textarea
                     name="description"
@@ -506,7 +537,7 @@ const CreateCardPage = () => {
                     value={formData.description}
                     onChange={handleChange}
                     rows={4}
-                    placeholder={t('descriptionPlaceholder')}
+                    placeholder="Décrivez votre expertise et vos compétences..."
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all resize-none"
                   />
                 </div>
@@ -516,7 +547,7 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <EnvelopeIcon className="w-4 h-4 inline mr-1" />
-                      {t('email')} *
+                      {'Email'} *
                     </label>
                     <input
                       type="email"
@@ -525,7 +556,7 @@ const CreateCardPage = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      placeholder={t('emailPlaceholder')}
+                      placeholder="votre.email@exemple.com"
                       className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
                         validationErrors.email 
                           ? 'border-red-500 dark:border-red-400' 
@@ -540,7 +571,7 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <PhoneIcon className="w-4 h-4 inline mr-1" />
-                      {t('phone')} *
+                      {'Téléphone'}
                     </label>
                     <input
                       type="tel"
@@ -548,10 +579,16 @@ const CreateCardPage = () => {
                       data-testid="input-phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      required
-                      placeholder={t('phonePlaceholder')}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                      placeholder="+33 1 23 45 67 89"
+                      className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
+                        validationErrors.phone 
+                          ? 'border-red-500 dark:border-red-400' 
+                          : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     />
+                    {validationErrors.phone && (
+                      <p className="text-red-500 text-xs mt-1">{validationErrors.phone}</p>
+                    )}
                   </div>
                 </div>
 
@@ -560,27 +597,33 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <GlobeAltIcon className="w-4 h-4 inline mr-1" />
-                      {t('website')}
+                      {'Site web'}
                     </label>
                     <input
                       type="url"
                       name="website"
                       value={formData.website}
                       onChange={handleChange}
-                      placeholder={t('websitePlaceholder')}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
+                      placeholder="https://votre-site.com"
+                      className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
+                        validationErrors.website 
+                          ? 'border-red-500 dark:border-red-400' 
+                          : 'border-gray-300 dark:border-gray-600'
+                      }`}
                     />
+                    {validationErrors.website && (
+                      <p className="text-red-500 text-xs mt-1">{validationErrors.website}</p>
+                    )}
                   </div>
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('category')} *
+                      {'Catégorie'}
                     </label>
                     <select
                       name="category"
                       value={formData.category}
                       onChange={handleChange}
-                      required
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     >
                       {categories.map(category => (
@@ -596,7 +639,7 @@ const CreateCardPage = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <MapPinIcon className="w-4 h-4 inline mr-1" />
-                    {t('address')}
+                    {'Adresse'}
                   </label>
                   <input
                     type="text"
@@ -604,7 +647,7 @@ const CreateCardPage = () => {
                     data-testid="input-address"
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder={t('addressPlaceholder')}
+                    placeholder="123 Rue de la Paix, 75001 Paris"
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                   />
                 </div>
@@ -619,7 +662,7 @@ const CreateCardPage = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <ArrowLeftIcon className="w-5 h-5 mr-2 inline" />
-                    {t('cancel')}
+                    {'Annuler'}
                   </motion.button>
                   <motion.button
                     type="submit"
@@ -636,12 +679,12 @@ const CreateCardPage = () => {
                           animate={{ rotate: 360 }}
                           transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         ></motion.div>
-                        {t('creating')}...
+                        Création en cours...
                       </>
                     ) : (
                       <>
                         <DocumentCheckIcon className="w-5 h-5 mr-2" />
-                        {t('createCard')}
+                        {'Créer une carte'}
                       </>
                     )}
                   </motion.button>

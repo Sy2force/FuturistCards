@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import LanguageSelector from './LanguageSelector';
 import { useAuth } from '../hooks/useAuth';
 import SearchBar from './SearchBar';
@@ -23,7 +22,6 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -58,32 +56,32 @@ const Navbar = () => {
   // Navigation items based on user role
   const getNavigationItems = () => {
     const baseItems = [
-      { to: '/cards', label: t('cards'), icon: Squares2X2Icon, public: true, testId: 'nav-cards' }
+      { to: '/cards', label: 'Cartes', icon: Squares2X2Icon, public: true, testId: 'nav-cards' }
     ];
 
     if (!user) {
       return [
         ...baseItems,
-        { to: '/about', label: t('about'), icon: UserIcon, public: true, testId: 'nav-about' }
+        { to: '/about', label: 'À propos', icon: UserIcon, public: true, testId: 'nav-about' }
       ];
     }
 
     const userItems = [
       ...baseItems,
       { to: '/my-cards', label: t('myCardsNav'), icon: Squares2X2Icon, testId: 'nav-my-cards' },
-      { to: '/favorites', label: t('favorites'), icon: HeartIcon, testId: 'nav-favorites' },
-      { to: '/profile', label: t('profile'), icon: CogIcon, testId: 'nav-profile' }
+      { to: '/favorites', label: 'Favoris', icon: HeartIcon, testId: 'nav-favorites' },
+      { to: '/profile', label: 'Profil', icon: CogIcon, testId: 'nav-profile' }
     ];
 
     if (user.role === 'business' || user.role === 'admin') {
-      userItems.splice(1, 0, { to: '/create-card', label: t('create'), icon: PlusIcon, testId: 'nav-create-card' });
+      userItems.splice(1, 0, { to: '/create-card', label: 'Créer', icon: PlusIcon, testId: 'nav-create-card' });
     }
 
     if (user.role === 'admin') {
       userItems.splice(-1, 0, { to: '/admin', label: 'Admin Panel', icon: UserGroupIcon, testId: 'nav-admin' });
     }
 
-    userItems.push({ to: '/about', label: t('about'), icon: UserIcon, public: true, testId: 'nav-about' });
+    userItems.push({ to: '/about', label: 'À propos', icon: UserIcon, public: true, testId: 'nav-about' });
 
     return userItems;
   };
@@ -139,19 +137,19 @@ const Navbar = () => {
                   data-testid="nav-logout"
                   className="relative text-gray-700 dark:text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-lg transition-all duration-200 font-medium text-sm"
                 >
-                  {t('logout')}
+                  {'Déconnexion'}
                 </motion.button>
               </div>
             ) : (
               <div className="flex items-center space-x-2 ml-2 pl-2 border-l border-gray-200 dark:border-gray-700">
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link to="/login" data-testid="nav-login" className="relative text-gray-700 dark:text-gray-300 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 px-3 py-2 rounded-lg transition-all duration-200 font-medium text-sm">
-                    {t('login')}
+                    {'Connexion'}
                   </Link>
                 </motion.div>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link to="/register" data-testid="nav-register" className="relative bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 hover:shadow-lg transition-all duration-200 font-medium text-sm">
-                    {t('register')}
+                    {'Inscription'}
                   </Link>
                 </motion.div>
               </div>
@@ -240,7 +238,7 @@ const Navbar = () => {
                   className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 font-medium"
                 >
                   <UserIcon className="w-5 h-5 mr-3" />
-                  {t('logout')}
+                  {'Déconnexion'}
                 </motion.button>
               ) : (
                 <div className="space-y-2 pt-2 border-t border-gray-200 dark:border-gray-700">
@@ -251,7 +249,7 @@ const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <UserIcon className="w-5 h-5 mr-3" />
-                      {t('login')}
+                      {'Connexion'}
                     </Link>
                   </motion.div>
                   <motion.div whileTap={{ scale: 0.95 }}>
@@ -261,7 +259,7 @@ const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <UsersIcon className="w-5 h-5 mr-3" />
-                      {t('register')}
+                      {'Inscription'}
                     </Link>
                   </motion.div>
                 </div>

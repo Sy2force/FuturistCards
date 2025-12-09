@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../hooks/useAuth';
 import { validateEmail, validatePassword, validateRequired, validateLength, isFormValid } from '../utils/validation';
@@ -16,7 +15,6 @@ import {
 import { UserPlusIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 const RegisterPage = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const { register, login, loading } = useAuth();
   
@@ -139,7 +137,7 @@ const RegisterPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('register')}</title>
+        <title>{'Inscription'}</title>
         <meta name="description" content={t('joinCardPro')} />
       </Helmet>
 
@@ -160,7 +158,7 @@ const RegisterPage = () => {
             <div className="flex items-center justify-center mb-4">
               <UserPlusIcon className="h-8 w-8 text-blue-500 mr-2" />
               <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
-                {t('register')}
+                {'Inscription'}
               </h1>
             </div>
             <p className="text-gray-600 dark:text-gray-300 text-lg">
@@ -206,7 +204,7 @@ const RegisterPage = () => {
               {/* Email avec validation HackerU */}
               <EmailInput 
                 name="email"
-                label={t('email')}
+                label={'Email'}
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 onBlur={() => {}}
@@ -235,28 +233,28 @@ const RegisterPage = () => {
               {/* Mot de passe avec validation HackerU */}
               <PasswordInput
                 name="password"
-                label={t('password')}
+                label={'Mot de passe'}
                 value={formData.password}
                 onChange={(e) => handleInputChange('password', e.target.value)}
                 onBlur={() => {}}
                 error={errors.password}
                 touched={touchedFields.password}
                 required
-                placeholder={t('password')}
+                placeholder={'Mot de passe'}
                 showStrength
               />
 
               {/* Confirmation mot de passe avec validation HackerU */}
               <PasswordInput
                 name="confirmPassword"
-                label={t('confirmPassword')}
+                label={'Confirmer le mot de passe'}
                 value={formData.confirmPassword}
                 onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                 onBlur={() => {}}
                 error={errors.confirmPassword}
                 touched={touchedFields.confirmPassword}
                 required
-                placeholder={t('confirmPassword')}
+                placeholder={'Confirmer le mot de passe'}
                 showStrength={false}
               />
 
@@ -267,7 +265,7 @@ const RegisterPage = () => {
               >
                 <div className="flex items-center justify-center">
                   {!loading && <UserPlusIcon className="w-5 h-5 mr-2" />}
-                  {loading ? t('registering') : t('register')}
+                  {loading ? t('registering') : 'Inscription'}
                 </div>
               </SubmitButton>
             </FormContainer>
@@ -285,7 +283,7 @@ const RegisterPage = () => {
                   to="/login" 
                   className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
                 >
-                  {t('login')}
+                  {'Connexion'}
                 </Link>
               </p>
             </motion.div>

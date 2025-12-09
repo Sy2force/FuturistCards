@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
 import { Helmet } from 'react-helmet-async';
 import { 
   SparklesIcon, 
@@ -15,7 +14,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 const AboutPage = () => {
-  const { t } = useTranslation();
   
   return (
     <>
@@ -218,7 +216,7 @@ const AboutPage = () => {
                 className="flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-primary-500 transition-colors"
               >
                 <EnvelopeIcon className="w-5 h-5 text-primary-500" />
-                <span>{t('email')} : contact@cardpro.com</span>
+                <span>{'Email'} : contact@cardpro.com</span>
               </motion.div>
               <motion.div 
                 initial={{ x: -20, opacity: 0 }}
@@ -227,7 +225,7 @@ const AboutPage = () => {
                 className="flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-primary-500 transition-colors"
               >
                 <GlobeAltIcon className="w-5 h-5 text-primary-500" />
-                <span>{t('website')} : www.cardpro.com</span>
+                <span>{'Site web'} : www.cardpro.com</span>
               </motion.div>
             </div>
           </motion.div>

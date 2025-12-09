@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import Card from '../components/Card';
 import SearchBar from '../components/SearchBar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { cardService } from '../services/cardService';
 
 const SearchPage = () => {
-  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -58,7 +56,7 @@ const SearchPage = () => {
           <SearchBar 
             onSearch={handleSearch}
             initialValue={initialQuery}
-            placeholder={t('searchPlaceholder')}
+            placeholder={'Rechercher des cartes...'}
           />
         </div>
 
@@ -102,7 +100,7 @@ const SearchPage = () => {
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">🔍</div>
                   <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                    {t('noResults')}
+                    {'Aucun résultat'}
                   </h3>
                   <p className="text-gray-500 mb-6">
                     {t('searchTips')}
@@ -133,7 +131,7 @@ const SearchPage = () => {
               <div className="max-w-lg mx-auto">
                 <p className="text-sm text-gray-400 mb-3">{t('popularSearches')}:</p>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {[t('technology'), t('marketing'), t('design'), t('consultant'), t('restaurant')].map((tag) => (
+                  {['Technologie', 'Marketing', t('design'), t('consultant'), t('restaurant')].map((tag) => (
                     <button
                       key={tag}
                       onClick={() => handleSearch(tag)}
