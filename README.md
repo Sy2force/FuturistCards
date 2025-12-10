@@ -1,317 +1,189 @@
-# 🎯 FuturistCards - Plateforme de Cartes de Visite Digitales
+# FuturistCards
 
-**Projet final HackerU - Développement Full-Stack**
+Une app web pour créer et gérer des cartes de visite numériques. J'ai fait ça parce que je trouvais les cartes papier un peu dépassées.
 
-## 📋 Description du Projet
+## Ce que ça fait
 
-FuturistCards est une **plateforme moderne de cartes de visite digitales** permettant aux professionnels de créer, gérer et partager leurs cartes de visite de manière numérique. L'application offre une expérience utilisateur complète avec authentification sécurisée, gestion des rôles et interface responsive.
+Basiquement, tu peux :
+- Créer ton compte (normal, business ou admin)
+- Faire ta carte de visite en ligne
+- Voir les cartes des autres
+- Ajouter tes préférées en favoris
+- Modifier tes infos quand tu veux
 
-**✅ Status:** Application 100% fonctionnelle et déployée  
-**🎓 Conforme HackerU:** JWT Auth, Rôles (User/Business/Admin), CRUD complet, MongoDB, React + Node.js  
-**📊 Score Global:** 9/10 - Prêt pour production
-
----
-
-## 🌐 Démonstration Live
-
-- **Frontend Vercel:** <https://cardpro-frontend.vercel.app>
-- **Backend Render:** <https://cardpro-21dj.onrender.com/api>
-- **GitHub Repository:** <https://github.com/Sy2force/CardPro>
-- **Documentation:** Ce README complet
+C'est responsive, ça marche sur mobile et desktop.
 
 ---
 
-## 🎮 Comptes de Test HackerU
+## Demo en ligne
 
-### 👤 **Utilisateur Standard**
+- Site : <https://cardpro-frontend.vercel.app>
+- API : <https://cardpro-21dj.onrender.com/api>
+- Code : <https://github.com/Sy2force/CardPro>
 
-```text
-Email: user@demo.com
-Mot de passe: Demo1234!
-Rôle: user
-Accès: Consulter les cartes, ajouter aux favoris
+---
+
+## Comptes de test
+
 ```
+Utilisateur normal:
+user@demo.com / Demo1234!
 
-### 💼 **Compte Business**
+Compte business:
+business@demo.com / Demo1234!
 
-```text
-Email: business@demo.com
-Mot de passe: Demo1234!
-Rôle: business
-Accès: Créer/éditer ses cartes + fonctions user
-```
-
-### ⚡ **Administrateur**
-
-```text
-Email: admin@demo.com
-Mot de passe: Demo1234!
-Rôle: admin
-Accès: Gestion complète utilisateurs + toutes fonctions
+Admin:
+admin@demo.com / Demo1234!
 ```
 
 ---
 
-## 🚀 Stack Technique
+## Tech utilisée
 
-### 🎨 **Frontend**
+**Frontend:**
+- React pour l'interface
+- TailwindCSS pour le style
+- Vite pour le build (plus rapide que webpack)
+- Framer Motion pour les animations
 
-| Technologie | Version | Utilisation |
-|-------------|---------|-------------|
-| React | 18.3.1 | Framework UI principal |
-| Vite | 7.2.7 | Build tool ultra-rapide |
-| TailwindCSS | 3.4.16 | Styling moderne |
-| Framer Motion | 11.15.0 | Animations fluides |
-| React Router | 6.29.0 | Navigation SPA |
-| Axios | 1.7.9 | HTTP client |
-| React Hot Toast | 2.4.1 | Notifications |
-| Heroicons | 2.2.0 | Icônes SVG |
+**Backend:**
+- Node.js + Express pour l'API
+- MongoDB pour les données
+- JWT pour l'auth
+- bcrypt pour sécuriser les mots de passe
 
-### 🖥️ **Backend**
-
-| Technologie | Version | Utilisation |
-|-------------|---------|-------------|
-| Node.js | 20+ | Runtime JavaScript |
-| Express.js | 4.21.2 | Framework web |
-| MongoDB | 7.0+ | Base de données NoSQL |
-| Mongoose | 8.8.4 | ODM MongoDB |
-| JWT | 9.0.2 | Authentification |
-| bcryptjs | 2.4.3 | Hachage passwords |
-| Helmet | 8.0.0 | Sécurité HTTP |
-| CORS | 2.8.5 | Cross-Origin |
-
-### ☁️ **Déploiement**
-
-| Service | URL | Fonction |
-|---------|-----|----------|
-| **Vercel** | <https://cardpro-frontend.vercel.app> | Frontend React |
-| **Render** | <https://cardpro-21dj.onrender.com> | Backend API |
-| **MongoDB Atlas** | Cloud Database | Base de données |
-| **GitHub** | <https://github.com/Sy2force/CardPro> | Code source |
+**Hébergement:**
+- Frontend sur Vercel
+- Backend sur Render
+- Base de données sur MongoDB Atlas
 
 ---
 
-## 📁 Structure
+## Structure du projet
 
-```text
+```
 FuturistCards/
-├── 📱 frontend/                    # React + Vite App
-│   ├── 📁 src/
-│   │   ├── 📁 pages/              # Pages principales
-│   │   │   ├── HomePage.jsx       # Page accueil
-│   │   │   ├── LoginPage.jsx      # Connexion
-│   │   │   ├── RegisterPage.jsx   # Inscription  
-│   │   │   ├── CardsPage.jsx      # Liste cartes
-│   │   │   ├── MyCardsPage.jsx    # Mes cartes
-│   │   │   ├── CreateCardPage.jsx # Création
-│   │   │   ├── EditCardPage.jsx   # Édition
-│   │   │   ├── AdminPage.jsx      # Panel admin
-│   │   │   └── FavoritesPage.jsx  # Favoris
-│   │   ├── 📁 components/         # Composants UI
-│   │   │   ├── Navbar.jsx         # Navigation
-│   │   │   ├── Card.jsx           # Carte visite
-│   │   │   ├── ProtectedRoute.jsx # Route protégée
-│   │   │   └── FormComponents.jsx # Formulaires
-│   │   ├── 📁 context/            # React Context
-│   │   │   └── AuthContext.jsx    # Auth global
-│   │   ├── 📁 services/           # API Services
-│   │   │   ├── api.js             # Axios config
-│   │   │   ├── authService.js     # Auth API
-│   │   │   └── cardService.js     # Cards API
-│   │   └── 📁 hooks/              # Custom Hooks
-│   │       └── useApi.js          # Hook API
-│   ├── 📄 package.json            # Dépendances
-│   ├── 📄 vite.config.js          # Config Vite
-│   └── 📄 vercel.json             # Config Vercel
+├── frontend/          # React app
+│   ├── src/
+│   │   ├── pages/     # Les différentes pages
+│   │   ├── components/# Composants réutilisables
+│   │   ├── context/   # Auth context
+│   │   └── services/  # Appels API
+│   └── package.json
 │
-├── 🖥️ backend/                     # Node.js + Express API
-│   ├── 📁 controllers/            # Logique métier
-│   │   ├── authController.js      # Auth logic
-│   │   ├── cardController.js      # Cards CRUD
-│   │   └── favoriteController.js  # Favoris logic
-│   ├── 📁 models/                 # Modèles MongoDB
-│   │   ├── User.js               # Modèle utilisateur
-│   │   ├── Card.js               # Modèle carte
-│   │   └── Favorite.js           # Modèle favoris
-│   ├── 📁 routes/                 # Routes API
-│   │   ├── authRoutes.js         # /auth/*
-│   │   ├── cardRoutes.js         # /cards/*
-│   │   └── favoriteRoutes.js     # /favorites/*
-│   ├── 📁 middleware/             # Middleware
-│   │   ├── authMiddleware.js     # JWT verification
-│   │   ├── validation.js         # Data validation
-│   │   └── errorHandler.js       # Error handling
-│   ├── 📁 config/                 # Configuration
-│   │   └── database.js           # MongoDB config
-│   ├── 📄 server.js              # Point d'entrée
-│   ├── 📄 package.json           # Dépendances
-│   └── 📄 vercel.json            # Config Vercel
+├── backend/           # API Node.js
+│   ├── controllers/   # Logique business
+│   ├── models/        # Schémas MongoDB
+│   ├── routes/        # Routes API
+│   ├── middleware/    # Auth, validation etc
+│   ├── server.js      # Point d'entrée
+│   └── package.json
 │
-├── 📁 scripts/                    # Scripts déploiement
-├── 📄 README.md                   # Documentation
-└── 📄 render.yaml                 # Config Render
+└── README.md
 ```
 
 ---
 
-## 🛠️ Installation Locale (Développement)
+## Installation
 
-### **Prérequis**
+T'as besoin de :
+- Node.js (version récente)
+- Un compte MongoDB Atlas (gratuit)
+- Git
 
-```text
-Node.js 18+
-MongoDB (local ou Atlas)
-Git
-npm ou yarn
-```
-
-### **1. Cloner le Projet**
+### 1. Récupérer le code
 
 ```bash
 git clone https://github.com/Sy2force/CardPro.git
 cd CardPro
 ```
 
-### **2. Backend Setup**
+### 2. Setup backend
 
 ```bash
 cd backend
 npm install
-cp .env.example .env
-# Configurer MongoDB URI
+# Créer un fichier .env avec :
+MONGO_URI=mongodb+srv://tonuser:tonpass@cluster.mongodb.net/cardpro
+JWT_SECRET=un-secret-bien-long-ici
+PORT=5001
+
 npm start
-# 🚀 Backend: http://localhost:5001
+# L'API sera sur http://localhost:5001
 ```
 
-### **3. Frontend Setup**
+### 3. Setup frontend
 
 ```bash
-cd frontend  
+cd frontend
 npm install
-cp .env.example .env
-# Configurer API URL
-npm run dev
-# 🚀 Frontend: http://localhost:3010
-```
-
-### **4. Variables Environnement**
-
-**Backend `.env`:**
-
-```env
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/cardpro
-JWT_SECRET=your-super-secure-jwt-secret-key-min-32-chars
-PORT=5001
-NODE_ENV=development
-CORS_ORIGIN=http://localhost:3010
-```
-
-**Frontend `.env`:**
-
-```env
+# Créer un .env avec :
 VITE_API_URL=http://localhost:5001/api
-VITE_APP_NAME=FuturistCards  
-VITE_ENVIRONMENT=development
+
+npm run dev
+# Le site sera sur http://localhost:3010
 ```
 
 ---
 
-## 🚀 Lancement de l'Application
+### Pour faire tourner l'app
 
 ```bash
-# Terminal 1 - Backend
-cd backend && npm run dev
+# Terminal 1
+cd backend && npm start
 
-# Terminal 2 - Frontend  
+# Terminal 2
 cd frontend && npm run dev
 ```
 
-Application disponible: <http://localhost:3010>
+Et voilà, tu peux aller sur http://localhost:3010
 
 ---
 
-## 📱 Fonctionnalités Principales
+## Fonctionnalités
 
-### 🔐 **Authentification JWT Sécurisée**
-- ✅ Inscription/Connexion avec validation
-- ✅ Gestion des rôles: `user` / `business` / `admin`
-- ✅ Protection des routes par middleware
-- ✅ Tokens JWT avec expiration
-- ✅ Hachage bcrypt des mots de passe
+**Auth :**
+- Inscription/connexion classique
+- 3 types de comptes (user, business, admin)
+- JWT pour garder la session
 
-### 👤 **Gestion Multi-Rôles**
-- **User:** Consultation cartes + favoris
-- **Business:** Création/édition cartes + user
-- **Admin:** Panel complet + gestion utilisateurs
-- ✅ Permissions granulaires
-- ✅ Redirections automatiques selon rôle
+**Cartes de visite :**
+- Les comptes business peuvent créer des cartes
+- Tout le monde peut voir les cartes publiques
+- Système de favoris
+- Recherche par nom/email
 
-### 💼 **Cartes de Visite Digitales**
-- ✅ Création cartes personnalisées (Business+)
-- ✅ Upload images/logos professionnels
-- ✅ Édition temps réel avec preview
-- ✅ Informations: nom, email, téléphone, site web
-- ✅ Recherche et filtres avancés
-- ✅ Partage via liens uniques
-
-### ⭐ **Système de Favoris**
-- ✅ Sauvegarde cartes préférées
-- ✅ Organisation personnelle
-- ✅ Accès rapide aux contacts
-- ✅ Gestion favoris par utilisateur
-
-### 🎨 **Interface Moderne**
-- ✅ Design responsive (mobile-first)
-- ✅ Animations Framer Motion
-- ✅ TailwindCSS styling
-- ✅ Navigation SPA fluide
-- ✅ Notifications toast élégantes
+**Interface :**
+- Responsive (marche sur mobile)
+- Animations sympa avec Framer Motion
+- Design clean avec Tailwind
+- Notifications toast pour les actions
 
 ---
 
-## 🚀 Guide Déploiement Production
+## Déploiement
 
-### **🔹 Frontend Vercel**
-```bash
-# 1. Fork/Clone le repo GitHub
-# 2. Vercel Dashboard → New Project
-# 3. Configuration:
-Framework: Vite
-Root Directory: frontend
-Build Command: npm run build
-Output Directory: dist
+**Frontend (Vercel) :**
+1. Connect ton repo GitHub
+2. Root directory: `frontend`
+3. Framework: Vite
+4. Ajouter la variable : `VITE_API_URL=https://ton-backend.render.com/api`
 
-# 4. Variables d'environnement:
-VITE_API_URL=https://cardpro-21dj.onrender.com/api
-VITE_APP_NAME=FuturistCards
-VITE_ENVIRONMENT=production
-```
+**Backend (Render) :**
+1. New Web Service depuis GitHub
+2. Root directory: `backend`
+3. Build: `npm install`
+4. Start: `npm start`
+5. Variables d'env :
+   - `MONGO_URI=mongodb+srv://...`
+   - `JWT_SECRET=ton-secret-production`
+   - `CORS_ORIGIN=https://ton-frontend.vercel.app`
 
-### **🔹 Backend Render**
-
-```bash
-# 1. Render Dashboard → New Web Service
-# 2. Configuration:
-Build Command: npm install
-Start Command: npm start
-Root Directory: backend
-
-# 3. Variables d'environnement:
-MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/cardpro
-JWT_SECRET=your-production-secret-key
-NODE_ENV=production
-PORT=10000
-CORS_ORIGIN=https://votre-frontend.vercel.app
-```
-
-### **🔹 MongoDB Atlas**
-
-```bash
-# 1. Créer cluster gratuit M0
-# 2. Database Access → Créer utilisateur
-# 3. Network Access → Autoriser toutes IPs (0.0.0.0/0)
-# 4. Copier connection string
-```
+**MongoDB Atlas :**
+1. Créer un cluster gratuit
+2. Créer un user DB
+3. Whitelist toutes les IPs (0.0.0.0/0)
+4. Récupérer l'URL de connexion
 
 ---
 

@@ -1,7 +1,7 @@
 import api from './api';
 
 export const authService = {
-  // Connexion utilisateur
+  // se connecter
   login: async (credentials) => {
     try {
       const response = await api.login(credentials);
@@ -11,14 +11,14 @@ export const authService = {
         localStorage.setItem('user', JSON.stringify(response.user));
         return response;
       } else {
-        throw new Error(response.message || 'Login failed');
+        throw new Error(response.message || 'Connexion échouée');
       }
     } catch (error) {
-      throw new Error(error.message || 'Network error during login');
+      throw new Error(error.message || 'Erreur réseau');
     }
   },
 
-  // Inscription utilisateur
+  // créer un compte
   register: async (userData) => {
     try {
       const response = await api.register(userData);
@@ -28,21 +28,21 @@ export const authService = {
         localStorage.setItem('user', JSON.stringify(response.user));
         return response;
       } else {
-        throw new Error(response.message || 'Registration failed');
+        throw new Error(response.message || 'Inscription échouée');
       }
     } catch (error) {
-      throw new Error(error.message || 'Network error during registration');
+      throw new Error(error.message || 'Erreur réseau');
     }
   },
 
-  // Déconnexion
+  // se déconnecter
   logout: () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     window.location.href = '/';
   },
 
-  // Obtenir l'utilisateur actuel
+  // récupérer l'utilisateur actuel
   getCurrentUser: () => {
     try {
       const user = localStorage.getItem('user');
@@ -52,53 +52,53 @@ export const authService = {
     }
   },
 
-  // Obtenir le token
+  // récupérer le token
   getToken: () => {
     return localStorage.getItem('token');
   },
 
-  // Vérifier si l'utilisateur est connecté
+  // vérifier si connecté
   isAuthenticated: () => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
     return !!(token && user);
   },
 
-  // Obtenir le profil utilisateur
+  // récupérer le profil
   getProfile: async () => {
     try {
       const response = await api.getProfile();
       return response;
     } catch (error) {
-      throw new Error(error.message || 'Error fetching profile');
+      throw new Error(error.message || 'Erreur profil');
     }
   },
 
-  // Mettre à jour le profil
+  // mettre à jour le profil
   updateProfile: async (profileData) => {
     try {
       const response = await api.updateProfile(profileData);
       
       if (response.success) {
-        // Mettre à jour les données utilisateur en local
+        // maj les données en local
         const updatedUser = { ...authService.getCurrentUser(), ...response.user };
         localStorage.setItem('user', JSON.stringify(updatedUser));
         return response;
       } else {
-        throw new Error(response.message || 'Profile update failed');
+        throw new Error(response.message || 'Erreur mise à jour');
       }
     } catch (error) {
-      throw new Error(error.message || 'Error updating profile');
+      throw new Error(error.message || 'Erreur profil');
     }
   },
 
-  // Changer le mot de passe
+  // changer le mot de passe
   changePassword: async (passwordData) => {
     try {
       const response = await api.post('/auth/change-password', passwordData);
       return response;
     } catch (error) {
-      throw new Error(error.message || 'Error changing password');
+      throw new Error(error.message || 'Erreur mot de passe');
     }
   }
 };

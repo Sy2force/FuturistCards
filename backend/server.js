@@ -6,25 +6,24 @@ const helmet = require("helmet");
 const compression = require("compression");
 const rateLimit = require("express-rate-limit");
 
-// Import routes
+// mes routes
 const authRoutes = require("./routes/authRoutes");
 const cardRoutes = require("./routes/cardRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
 
-// Import middleware
 const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// CORS Configuration - Production Ready
+// URLs autorisées pour CORS
 const allowedOrigins = [
-  // Production Vercel URLs
+  // prod
   'https://cardpro-frontend.vercel.app',
   'https://card-pro-wzcf-i5jo4z49s-projet-607a8e5b.vercel.app',
   'https://card-pro-git-main-projet-607a8e5b.vercel.app',
   
-  // Local development ports
+  // local dev
   'http://localhost:3000',
   'http://localhost:3010',
   'http://localhost:3012',
@@ -36,24 +35,22 @@ const allowedOrigins = [
   'http://127.0.0.1:3015',
   'http://127.0.0.1:5173',
   
-  // Universal Vercel patterns for any new deployments
+  // patterns pour les nouveaux deployments Vercel
   /^https:\/\/[a-z0-9-]+\.vercel\.app$/,
   /^https:\/\/[a-z0-9-]+-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   /^https:\/\/cardpro-frontend-[a-z0-9]+-projet-607a8e5b\.vercel\.app$/,
   /^https:\/\/card-pro-.*\.vercel\.app$/,
   /^https:\/\/.*--cardpro-frontend-.*\.vercel\.app$/,
   
-  // Current Vercel deployment URL
   'https://card-pro-wzcf.vercel.app'
 ];
 
-// CORS configuration with security logging
 const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (Postman, mobile apps)
+    // pas d'origin = ok (Postman etc)
     if (!origin) return callback(null, true);
     
-    // Check if origin is in allowed list or matches regex patterns
+    // vérifier si l'origin est autorisée
     const isAllowed = allowedOrigins.some(allowedOrigin => {
       if (typeof allowedOrigin === 'string') {
         return allowedOrigin === origin;
@@ -66,7 +63,7 @@ const corsOptions = {
     if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Accès refusé par la politique CORS'), false);
+      callback(new Error('Accès refusé par CORS'), false);
     }
   },
   credentials: true,
@@ -82,28 +79,28 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Security middleware
+// sécurité
 app.use(helmet({
   crossOriginEmbedderPolicy: false
 }));
 
 app.use(compression());
 
-// Rate limiting
+// limite les requêtes (anti-spam)
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000, // 15 min
   max: 100,
   message: {
-    error: "Too many requests from this IP, please try again later."
+    error: "Trop de requêtes, ralentis un peu!"
   }
 });
 app.use('/api/', limiter);
 
-// Body parsing middleware
+// pour parser le JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Request logging middleware (production only)
+// log des requêtes (dev seulement)
 if (process.env.NODE_ENV !== 'production') {
   app.use((req, res, next) => {
     const timestamp = new Date().toISOString();
@@ -112,7 +109,7 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-// Health check endpoint
+// endpoint pour vérifier si tout va bien
 app.get("/api/health", (req, res) => {
   const mongoConnected = mongoose.connection.readyState === 1;
   res.json({ 
@@ -121,20 +118,20 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// API Routes
+// mes routes API
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use('/api/favorites', favoriteRoutes);
 
-// Error handling middleware
+// gestion des erreurs
 app.use(errorHandler);
 
 async function startServer() {
-  // Connect to MongoDB
+  // connexion MongoDB
   if (process.env.MONGO_URI) {
     try {
       await mongoose.connect(process.env.MONGO_URI);
-      // MongoDB connecté
+      console.log("✅ MongoDB connecté");
     } catch (err) {
       console.error("❌ Erreur MongoDB:", err.message);
       if (process.env.NODE_ENV === 'production') {
@@ -149,7 +146,7 @@ async function startServer() {
   }
 
   app.listen(PORT, () => {
-    // Serveur démarré sur le port ${PORT}
+    console.log(`🚀 Serveur sur le port ${PORT}`);
   });
 }
 

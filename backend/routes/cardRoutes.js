@@ -9,18 +9,18 @@ const {
   toggleLike,
   searchCards,
   getPopularCards
-} = require('../controllers/cardController-clean');
-const { protect, optionalAuth } = require('../middleware/authMiddleware-clean');
-const { validateCard } = require('../middleware/validation-clean');
+} = require('../controllers/cardController');
+const { protect, optionalAuth } = require('../middleware/authMiddleware');
+const { validateCard } = require('../middleware/validation');
 
 const router = express.Router();
 
-// Routes publiques
+// routes ouvertes
 router.get('/', getAllCards);
 router.get('/search', searchCards);
 router.get('/popular', getPopularCards);
 
-// Routes protégées - IMPORTANT: routes spécifiques AVANT routes avec paramètres
+// routes connectées - attention: routes spécifiques avant celles avec :id
 router.get('/user', protect, getMyCards);
 router.get('/user/my-cards', protect, getMyCards);
 router.post('/', protect, validateCard, createCard);
@@ -28,7 +28,7 @@ router.put('/:id', protect, validateCard, updateCard);
 router.delete('/:id', protect, deleteCard);
 router.post('/:id/like', protect, toggleLike);
 
-// Route avec paramètre - DOIT être en dernier
+// cette route doit être en dernier (sinon elle catch tout)
 router.get('/:id', optionalAuth, getCardById);
 
 module.exports = router;

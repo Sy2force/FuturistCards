@@ -6,17 +6,17 @@ const {
   updateProfile,
   changePassword,
   logout
-} = require('../controllers/authController-clean');
-const { protect } = require('../middleware/authMiddleware-clean');
-const { validateRegistration, validateLogin } = require('../middleware/validation-clean');
+} = require('../controllers/authController');
+const { protect } = require('../middleware/authMiddleware');
+const { validateRegistration, validateLogin } = require('../middleware/validation');
 
 const router = express.Router();
 
-// Routes publiques
+// routes ouvertes à tous
 router.post('/register', validateRegistration, register);
 router.post('/login', validateLogin, login);
 
-// Routes protégées
+// routes qui nécessitent d'être connecté
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
 router.put('/change-password', protect, changePassword);
