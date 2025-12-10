@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import LanguageSelector from './LanguageSelector';
-import { useAuth } from '../hooks/useAuth';
-import SearchBar from './SearchBar';
-import DarkModeToggle from './DarkModeToggle';
+import { useAuth } from '../context/AuthContext';
 import { 
   Bars3Icon,
   XMarkIcon,
@@ -24,7 +21,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    logou;
+    logout();
     navigate('/');
   };
 
@@ -101,9 +98,6 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-1">
-            <div className="w-64 mr-2">
-              <SearchBar />
-            </div>
             
             {/* Dynamic Navigation Items */}
             {getNavigationItems().map((item) => {
@@ -154,17 +148,10 @@ const Navbar = () => {
                 </motion.div>
               </div>
             )}
-            
-            <div className="ml-2 flex items-center space-x-2">
-              <LanguageSelector />
-              <DarkModeToggle />
-            </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <LanguageSelector />
-            <DarkModeToggle />
+          <div className="md:hidden flex items-center">
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               data-testid="mobile-menu-button"
@@ -192,7 +179,6 @@ const Navbar = () => {
             className="md:hidden"
           >
             <div className="px-2 pt-2 pb-3 space-y-2">
-              <SearchBar />
               
               {/* User info with role badge for mobile */}
               {user && (
@@ -232,7 +218,7 @@ const Navbar = () => {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    handleLogou;
+                    handleLogout();
                     setIsMenuOpen(false);
                   }}
                   className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 font-medium"

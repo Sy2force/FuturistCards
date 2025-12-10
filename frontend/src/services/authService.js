@@ -95,7 +95,7 @@ export const authService = {
   // Changer le mot de passe
   changePassword: async (passwordData) => {
     try {
-      const response = await api.pos'/auth/change-password', passwordData;
+      const response = await api.post('/auth/change-password', passwordData);
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error changing password');

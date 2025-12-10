@@ -7,12 +7,12 @@ const compression = require("compression");
 const rateLimit = require("express-rate-limit");
 
 // Import routes
-const authRoutes = require("./routes/authRoutes-clean");
-const cardRoutes = require("./routes/cardRoutes-clean");
-const favoriteRoutes = require("./routes/favoriteRoutes-clean");
+const authRoutes = require("./routes/authRoutes");
+const cardRoutes = require("./routes/cardRoutes");
+const favoriteRoutes = require("./routes/favoriteRoutes");
 
 // Import middleware
-const { errorHandler } = require("./middleware/errorHandler-clean");
+const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 5001;

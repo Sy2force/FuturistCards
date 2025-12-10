@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import axiosInstance from '../services/api';
-import { useAuth } from './useAuth';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Hook personnalisé pour les appels API avec gestion d'état
@@ -26,7 +26,7 @@ export const useApi = () => {
       
       // Déconnexion automatique si token expiré
       if (err.response?.status === 401) {
-        logou;
+        logout();
       }
       
       setError(errorMessage);
@@ -108,7 +108,7 @@ export const useApiPagination = (initialPage = 1, initialLimit = 12) => {
       ...additionalParams
     };
 
-    const result = await api.geurl, { params };
+    const result = await api.get(url, { params });
     
     if (result && result.pagination) {
       setTotalPages(result.pagination.totalPages || 1);
@@ -137,7 +137,7 @@ export const useApiPagination = (initialPage = 1, initialLimit = 12) => {
   }, [totalPages]);
 
   const changeLimit = useCallback((newLimit) => {
-    setLiminewLimit;
+    setLimit(newLimit);
     setPage(1); // Reset to first page
   }, []);
 
@@ -172,19 +172,19 @@ export const useCrud = (resourceEndpoint) => {
   const api = useApi();
 
   const getAll = useCallback(async (params = {}) => {
-    return api.geresourceEndpoint, { params };
+    return api.get(resourceEndpoint, { params });
   }, [api, resourceEndpoint]);
 
   const getById = useCallback(async (id) => {
-    return api.ge`${resourceEndpoint}/${id}`;
+    return api.get(`${resourceEndpoint}/${id}`);
   }, [api, resourceEndpoint]);
 
   const create = useCallback(async (data) => {
-    return api.posresourceEndpoint, data;
+    return api.post(resourceEndpoint, data);
   }, [api, resourceEndpoint]);
 
   const update = useCallback(async (id, data) => {
-    return api.pu`${resourceEndpoint}/${id}`, data;
+    return api.put(`${resourceEndpoint}/${id}`, data);
   }, [api, resourceEndpoint]);
 
   const remove = useCallback(async (id) => {

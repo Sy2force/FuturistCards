@@ -1,142 +1,99 @@
-// Utilitaires de validation HackerU - Validation native JavaScript
-// Regex email standard
-export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+// Validation utilities for forms
 
-// Regex téléphone israélien (050-0000000)
-export const israeliPhoneRegex = /^0[5-9][0-9]-[0-9]{7}$/;
-
-// Regex mot de passe simplifié: min 6 caractères, au moins 1 lettre et 1 chiffre
-export const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d).{6,}$/;
-
-// Fonctions de validation native JavaScript HackerU
 export const validateEmail = (email) => {
-  if (!email || email.trim() === '') {
-    return { isValid: false, error: 'L\'email est obligatoire' };
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  
+  if (!email) {
+    return { isValid: false, error: 'L\'email est requis' };
   }
-  if (!emailRegex.tesemail) {
+  
+  if (!emailRegex.test(email)) {
     return { isValid: false, error: 'Format d\'email invalide' };
   }
-  return { isValid: true, error: null };
+  
+  return { isValid: true };
 };
 
 export const validatePassword = (password) => {
-  if (!password || password.trim() === '') {
-    return { isValid: false, error: 'Le mot de passe est obligatoire' };
+  if (!password) {
+    return { isValid: false, error: 'Le mot de passe est requis' };
   }
-  if (!passwordRegex.tespassword) {
-    return { isValid: false, error: 'Le mot de passe doit contenir au moins 6 caractères, 1 lettre et 1 chiffre' };
+  
+  if (password.length < 6) {
+    return { isValid: false, error: 'Le mot de passe doit contenir au moins 6 caractères' };
   }
-  return { isValid: true, error: null };
+  
+  return { isValid: true };
+};
+
+export const validateName = (name) => {
+  if (!name) {
+    return { isValid: false, error: 'Le nom est requis' };
+  }
+  
+  if (name.length < 2) {
+    return { isValid: false, error: 'Le nom doit contenir au moins 2 caractères' };
+  }
+  
+  return { isValid: true };
+};
+
+export const validateRequired = (value, fieldName = 'Ce champ') => {
+  if (!value || value.trim() === '') {
+    return { isValid: false, error: `${fieldName} est requis` };
+  }
+  return { isValid: true };
+};
+
+export const validateLength = (value, minLength, fieldName = 'Ce champ') => {
+  if (!value || value.length < minLength) {
+    return { isValid: false, error: `${fieldName} doit contenir au moins ${minLength} caractères` };
+  }
+  return { isValid: true };
 };
 
 export const validatePhone = (phone) => {
-  if (phone && !israeliPhoneRegex.tesphone) {
-    return { isValid: false, error: 'Format téléphone israélien requis (050-0000000)' };
+  if (!phone) {
+    return { isValid: true }; // Optional field
   }
-  return { isValid: true, error: null };
+  
+  const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+  if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
+    return { isValid: false, error: 'Format de téléphone invalide' };
+  }
+  
+  return { isValid: true };
 };
 
-export const validateRequired = (value, fieldName) => {
-  if (!value || value.trim() === '') {
-    return { isValid: false, error: `${fieldName} est obligatoire` };
-  }
-  return { isValid: true, error: null };
+export const isFormValid = (formData, requiredFields = []) => {
+  return requiredFields.every(field => formData[field] && formData[field].trim() !== '');
 };
 
-export const validateLength = (value, min, max, fieldName) => {
-  if (value && value.length < min) {
-    return { isValid: false, error: `${fieldName} doit contenir au moins ${min} caractères` };
+// CSS classes for form fields
+export const getFieldClasses = (error, touched) => {
+  const baseClasses = 'w-full px-4 py-2 rounded-lg border transition-colors duration-200 focus:outline-none focus:ring-2';
+  
+  if (error && touched) {
+    return `${baseClasses} border-red-500 focus:border-red-500 focus:ring-red-500`;
   }
-  if (value && value.length > max) {
-    return { isValid: false, error: `${fieldName} ne peut pas dépasser ${max} caractères` };
-  }
-  return { isValid: true, error: null };
+  
+  return `${baseClasses} border-gray-300 focus:border-blue-500 focus:ring-blue-500`;
 };
 
-export const validateUrl = (url) => {
-  if (url && url.trim() !== '') {
-    try {
-      new URL(url);
-      return { isValid: true, error: null };
-    } catch {
-      return { isValid: false, error: 'Format d\'URL invalide' };
-    }
-  }
-  return { isValid: true, error: null };
+export const getErrorClasses = () => {
+  return 'text-red-500 text-sm mt-1';
 };
 
-export const validateConfirmPassword = (password, confirmPassword) => {
-  if (!confirmPassword || confirmPassword.trim() === '') {
-    return { isValid: false, error: 'Veuillez confirmer votre mot de passe' };
-  }
-  if (password === confirmPassword) {
-    return { isValid: true, error: null };
-  }
-  return { isValid: false, error: 'Les mots de passe ne correspondent pas' };
+export const getSuccessClasses = () => {
+  return 'text-green-500 text-sm mt-1';
 };
 
-// Vérifier si le formulaire est valide
-export const isFormValid = (errors, values, requiredFields) => {
-  // Vérifier qu'il n'y a pas d'erreurs
-  const hasErrors = Object.values(errors).some(error => error && error.length > 0);
+export const getSubmitButtonClasses = (disabled = false) => {
+  const baseClasses = 'w-full py-3 px-4 rounded-lg font-medium transition-colors duration-200';
   
-  // Vérifier que tous les champs obligatoires sont remplis
-  const hasAllRequiredFields = requiredFields.every(field => 
-    values[field] && values[field].toString().trim().length > 0
-  );
-  
-  return !hasErrors && hasAllRequiredFields;
-};
-
-// Classes CSS pour le feedback visuel HackerU
-export const getFieldClasses = (isValid, hasError, isDirty) => {
-  const baseClasses = `
-    w-full px-4 py-3 rounded-lg border transition-all duration-300 
-    focus:outline-none focus:ring-2 bg-white dark:bg-gray-800
-    text-gray-900 dark:text-white
-  `;
-  
-  if (!isDirty) {
-    return `${baseClasses} border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500`;
+  if (disabled) {
+    return `${baseClasses} bg-gray-400 text-gray-200 cursor-not-allowed`;
   }
   
-  if (hasError) {
-    return `${baseClasses} border-red-400 focus:ring-red-500 focus:border-red-500 bg-red-50 dark:bg-red-900/20`;
-  }
-  
-  if (isValid) {
-    return `${baseClasses} border-green-400 focus:ring-green-500 focus:border-green-500 bg-green-50 dark:bg-green-900/20`;
-  }
-  
-  return `${baseClasses} border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500`;
-};
-
-// Classes pour les messages d'erreur
-export const getErrorClasses = () => `
-  text-sm mt-1 text-red-600 dark:text-red-400 
-  font-medium
-`;
-
-// Classes pour les messages de succès
-export const getSuccessClasses = () => `
-  text-sm mt-1 text-green-600 dark:text-green-400 
-  font-medium
-`;
-
-// Classes pour les boutons submit
-export const getSubmitButtonClasses = (isValid, isLoading) => {
-  const baseClasses = `
-    w-full py-3 px-6 rounded-lg font-semibold text-white
-    transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2
-  `;
-  
-  if (isLoading) {
-    return `${baseClasses} bg-gray-400 cursor-not-allowed`;
-  }
-  
-  if (!isValid) {
-    return `${baseClasses} bg-gray-400 cursor-not-allowed opacity-60`;
-  }
-  
-  return `${baseClasses} bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 active:scale-95`;
+  return `${baseClasses} bg-blue-600 hover:bg-blue-700 text-white`;
 };
