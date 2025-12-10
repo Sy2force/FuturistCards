@@ -41,7 +41,7 @@ const CreateCardPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // Auto-fill user data if available
+  // remplir automatiquement avec les infos du user
   React.useEffect(() => {
     if (user) {
       setFormData(prev => ({
@@ -65,28 +65,28 @@ const CreateCardPage = () => {
     { value: 'other', label: 'Autre' }
   ];
 
-  // Real-time validation
+  // validation en temps réel
   const validateField = (name, value) => {
     const errors = { ...validationErrors };
     
     switch (name) {
       case 'email':
-        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.tesvalue) {
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
           errors.email = 'Email invalide';
         } else {
           delete errors.email;
         }
         break;
       case 'phone':
-        if (value && !/^[\+]?[1-9][\d]{0,15}$/.tesvalue.replace(/\s/g, '')) {
-          errors.phone = 'Numéro de téléphone invalide';
+        if (value && !/^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/\s/g, ''))) {
+          errors.phone = 'Numéro invalide';
         } else {
           delete errors.phone;
         }
         break;
       case 'website':
-        if (value && !/^https?:\/\/.+\..+/.tesvalue) {
-          errors.website = 'URL de site web invalide';
+        if (value && !/^https?:\/\/.+\..+/.test(value)) {
+          errors.website = 'URL invalide';
         } else {
           delete errors.website;
         }
