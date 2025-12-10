@@ -12,13 +12,13 @@ const CardDetailsPageSimple = () => {
   useEffect(() => {
     const fetchCard = async () => {
       try {
-        const response = await api.get(`/cards/${id}`);
+        const response = await api.ge`/cards/${id}`;
         if (response.data.success) {
           setCard(response.data.data);
         }
       } catch (error) {
         // Error handling for card fetch
-        toast.error(t('errorOccurred'));
+        toast.error('errorOccurred');
         navigate('/cards');
       } finally {
         setLoading(false);
@@ -28,7 +28,7 @@ const CardDetailsPageSimple = () => {
     if (id) {
       fetchCard();
     }
-  }, [id, navigate, t]);
+  }, [id, navigate]);
 
   if (loading) {
     return (
@@ -42,8 +42,8 @@ const CardDetailsPageSimple = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{t('cardNotFound')}</h2>
-          <Link to="/cards" className="text-blue-500 hover:text-blue-600">{t('backToCards')}</Link>
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4">{'cardNotFound'}</h2>
+          <Link to="/cards" className="text-blue-500 hover:text-blue-600">{'backToCards'}</Link>
         </div>
       </div>
     );
@@ -58,7 +58,7 @@ const CardDetailsPageSimple = () => {
             to="/cards" 
             className="inline-flex items-center text-blue-500 hover:text-blue-600 font-medium"
           >
-            ← {t('backToCards')}
+            ← {'backToCards'}
           </Link>
         </div>
 
@@ -101,7 +101,7 @@ const CardDetailsPageSimple = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  {t('contact')}
+                  {'contact'}
                 </h3>
                 
                 <div className="flex items-center space-x-3">
@@ -150,7 +150,7 @@ const CardDetailsPageSimple = () => {
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                  {t('information')}
+                  {'information'}
                 </h3>
                 
                 {card.address && (
@@ -168,7 +168,7 @@ const CardDetailsPageSimple = () => {
                   <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">{'Catégorie'}</p>
                     <span className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-sm rounded-full">
-                      {t(`createCard.${card.category}`) || card.category}
+                      {`createCard.${card.category}` || card.category}
                     </span>
                   </div>
                 </div>
@@ -181,10 +181,10 @@ const CardDetailsPageSimple = () => {
                 {'Ajouter aux favoris'}
               </button>
               <button className="flex-1 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                {t('share')}
+                {'share'}
               </button>
               <button className="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                {t('downloadVCard')}
+                {'downloadVCard'}
               </button>
             </div>
           </div>
@@ -193,22 +193,22 @@ const CardDetailsPageSimple = () => {
         {/* Cartes similaires */}
         <div className="mt-12">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">
-            {t('similarCards')}
+            {'similarCards'}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[1, 2, 3].map(i => (
               <div key={i} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
                 <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-2">
-                  {t('person')} {i}
+                  {'person'} {i}
                 </h3>
                 <p className="text-blue-600 dark:text-blue-400 text-sm mb-4">
-                  {t('similarProfession')}
+                  {'similarProfession'}
                 </p>
                 <Link 
                   to={`/cards/${i}`}
                   className="text-blue-500 hover:text-blue-600 text-sm font-medium"
                 >
-                  {t('viewDetails')} →
+                  {'viewDetails'} →
                 </Link>
               </div>
             ))}

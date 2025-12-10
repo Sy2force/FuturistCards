@@ -70,7 +70,7 @@ const MyCardsPage = () => {
 
   // Quick card creation for all users
   const handleQuickCardSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefaul;
     
     // Validation des champs requis
     if (!quickCardData.title || !quickCardData.email) {
@@ -383,7 +383,7 @@ const MyCardsPage = () => {
                 className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all"
               >
                 <PlusIcon className="w-5 h-5 mr-2" />
-{t('myCardsPage.createNewCard')}
+{'myCardsPage.createNewCard'}
               </Link>
             </motion.div>
           </motion.div>

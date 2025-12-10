@@ -44,10 +44,10 @@ const SearchPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            🔍 {t('searchCards')}
+            🔍 Rechercher des cartes
           </h1>
           <p className="text-gray-600 max-w-2xl mx-auto">
-            {t('searchDescription')}
+            Trouvez des cartes professionnelles par nom, entreprise ou secteur d'activité
           </p>
         </div>
 
@@ -56,7 +56,7 @@ const SearchPage = () => {
           <SearchBar 
             onSearch={handleSearch}
             initialValue={initialQuery}
-            placeholder={'Rechercher des cartes...'}
+            placeholder="Rechercher des cartes..."
           />
         </div>
 
@@ -73,15 +73,15 @@ const SearchPage = () => {
               {/* Results Header */}
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold text-gray-800">
-                  {t('searchResults')}
+                  Résultats de recherche
                   {searchParams.get('q') && (
                     <span className="text-blue-600 ml-2">
-                      {t('searchFor')} "{searchParams.get('q')}"
+                      pour "{searchParams.get('q')}"
                     </span>
                   )}
                 </h2>
                 <span className="text-gray-500">
-                  {cards.length} {t('cardsFound', { count: cards.length })}
+                  {cards.length} {cards.length === 1 ? 'carte trouvée' : 'cartes trouvées'}
                 </span>
               </div>
 
@@ -100,16 +100,16 @@ const SearchPage = () => {
                 <div className="text-center py-16">
                   <div className="text-6xl mb-4">🔍</div>
                   <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                    {'Aucun résultat'}
+                    Aucun résultat
                   </h3>
                   <p className="text-gray-500 mb-6">
-                    {t('searchTips')}
+                    Essayez de modifier votre recherche ou utilisez des mots-clés différents.
                   </p>
                   <div className="space-y-2 text-sm text-gray-400">
-                    <p>💡 {t('searchAdvice')}:</p>
-                    <p>• {t('useSimpleKeywords')}</p>
-                    <p>• {t('tryCompanyName')}</p>
-                    <p>• {t('searchBySector')}</p>
+                    <p>💡 Conseils de recherche :</p>
+                    <p>• Utilisez des mots-clés simples</p>
+                    <p>• Essayez le nom de l'entreprise</p>
+                    <p>• Recherchez par secteur d'activité</p>
                   </div>
                 </div>
               )}
@@ -121,17 +121,17 @@ const SearchPage = () => {
             <div className="text-center py-16">
               <div className="text-6xl mb-4">🎯</div>
               <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-                {t('readyToDiscover')}
+                Prêt à découvrir ?
               </h3>
               <p className="text-gray-500 mb-8 max-w-md mx-auto">
-                {t('searchInstructions')}
+                Utilisez la barre de recherche ci-dessus pour trouver des cartes professionnelles par nom, entreprise ou secteur d'activité.
               </p>
               
               {/* Popular Searches */}
               <div className="max-w-lg mx-auto">
-                <p className="text-sm text-gray-400 mb-3">{t('popularSearches')}:</p>
+                <p className="text-sm text-gray-400 mb-3">Recherches populaires :</p>
                 <div className="flex flex-wrap gap-2 justify-center">
-                  {['Technologie', 'Marketing', t('design'), t('consultant'), t('restaurant')].map((tag) => (
+                  {['Technologie', 'Marketing', 'design', 'consultant', 'restaurant'].map((tag) => (
                     <button
                       key={tag}
                       onClick={() => handleSearch(tag)}

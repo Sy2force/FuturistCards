@@ -90,21 +90,21 @@ const ProfilePage = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    const firstNameValidation = validateRequired(formData.firstName, t('firstNameField'));
+    const firstNameValidation = validateRequired(formData.firstName, 'firstNameField');
     if (!firstNameValidation.isValid) {
       newErrors.firstName = firstNameValidation.error;
     } else {
-      const lengthValidation = validateLength(formData.firstName, 2, 50, t('firstNameField'));
+      const lengthValidation = validateLength(formData.firstName, 2, 50, 'firstNameField');
       if (!lengthValidation.isValid) {
         newErrors.firstName = lengthValidation.error;
       }
     }
 
-    const lastNameValidation = validateRequired(formData.lastName, t('lastNameField'));
+    const lastNameValidation = validateRequired(formData.lastName, 'lastNameField');
     if (!lastNameValidation.isValid) {
       newErrors.lastName = lastNameValidation.error;
     } else {
-      const lengthValidation = validateLength(formData.lastName, 2, 50, t('lastNameField'));
+      const lengthValidation = validateLength(formData.lastName, 2, 50, 'lastNameField');
       if (!lengthValidation.isValid) {
         newErrors.lastName = lengthValidation.error;
       }
@@ -120,7 +120,7 @@ const ProfilePage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefaul;
     
     if (!validateForm()) {
       return;
@@ -158,10 +158,10 @@ const ProfilePage = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {t('accessDenied')}
+            {'accessDenied'}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {t('mustBeLoggedIn')}
+            {'mustBeLoggedIn'}
           </p>
         </div>
       </div>
@@ -172,7 +172,7 @@ const ProfilePage = () => {
     <>
       <Helmet>
         <title>{'Profil'} - CardPro</title>
-        <meta name="description" content={t('profileDescription')} />
+        <meta name="description" content={'profileDescription'} />
       </Helmet>
       
       <motion.div 
@@ -261,7 +261,7 @@ const ProfilePage = () => {
                   {isEditing ? (
                     <><XMarkIcon className="w-4 h-4 mr-2" /> {'Annuler'}</>
                   ) : (
-                    <><PencilIcon className="w-4 h-4 mr-2" /> {t('editProfile')}</>
+                    <><PencilIcon className="w-4 h-4 mr-2" /> {'editProfile'}</>
                   )}
                 </motion.button>
               </div>
@@ -279,7 +279,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 mr-2" />
-                        {t('firstName')}
+                        {'firstName'}
                       </label>
                       <input
                         name="firstName"
@@ -287,7 +287,7 @@ const ProfilePage = () => {
                         onChange={handleChange}
                         type="text"
                         className={`w-full px-4 py-3 border ${errors.firstName ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all`}
-                        placeholder={t('enterFirstName')}
+                        placeholder={'enterFirstName'}
                         aria-invalid={errors.firstName ? 'true' : 'false'}
                       />
                       {errors.firstName && (
@@ -305,7 +305,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 mr-2" />
-                        {t('lastName')}
+                        {'lastName'}
                       </label>
                       <input
                         name="lastName"
@@ -313,7 +313,7 @@ const ProfilePage = () => {
                         onChange={handleChange}
                         type="text"
                         className={`w-full px-4 py-3 border ${errors.lastName ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all`}
-                        placeholder={t('enterLastName')}
+                        placeholder={'enterLastName'}
                         aria-invalid={errors.lastName ? 'true' : 'false'}
                       />
                       {errors.lastName && (
@@ -430,7 +430,7 @@ const ProfilePage = () => {
                     {/* Bio */}
                     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {t('aboutYou')}
+                        {'aboutYou'}
                       </label>
                       <textarea
                         name="bio"
@@ -438,7 +438,7 @@ const ProfilePage = () => {
                         onChange={handleChange}
                         rows={4}
                         className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all resize-none"
-                        placeholder={t('tellAboutYourself')}
+                        placeholder={'tellAboutYourself'}
                       />
                     </motion.div>
                   </div>
@@ -477,12 +477,12 @@ const ProfilePage = () => {
                       {isLoading ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          {t('saving')}
+                          {'saving'}
                         </>
                       ) : (
                         <>
                           <DocumentCheckIcon className="w-4 h-4 mr-2" />
-                          {t('saveChanges')}
+                          {'saveChanges'}
                         </>
                       )}
                     </motion.button>

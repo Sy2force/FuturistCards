@@ -13,10 +13,10 @@ const ErrorPageSimple = () => {
             404
           </h1>
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
-            {t('pageNotFound')}
+            {'pageNotFound'}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {t('pageNotFoundDescription')}
+            {'pageNotFoundDescription'}
           </p>
         </div>
 
@@ -26,31 +26,31 @@ const ErrorPageSimple = () => {
             to="/" 
             className="block bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            {t('backToHome')}
+            {'backToHome'}
           </Link>
           
           <Link 
             to="/cards" 
             className="block bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            {t('viewCards')}
+            {'viewCards'}
           </Link>
         </div>
 
         {/* Suggestions */}
         <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg">
           <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-3">
-            {t('popularPages')}
+            {'popularPages'}
           </h3>
           <div className="space-y-2 text-sm">
             <Link to="/about" className="block text-blue-500 hover:text-blue-600">
-              {t('aboutCardPro')}
+              {'aboutCardPro'}
             </Link>
             <Link to="/login" className="block text-blue-500 hover:text-blue-600">
-              {t('signIn')}
+              {'signIn'}
             </Link>
             <Link to="/register" className="block text-blue-500 hover:text-blue-600">
-              {t('createAccount')}
+              {'createAccount'}
             </Link>
           </div>
         </div>

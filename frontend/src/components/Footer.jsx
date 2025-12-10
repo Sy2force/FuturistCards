@@ -13,14 +13,14 @@ const Footer = () => {
               CardPro
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
-              {t('modernPlatformDescription')}
+              {'modernPlatformDescription'}
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {t('quickLinks')}
+              {'quickLinks'}
             </h3>
             <ul className="space-y-2">
               <li>
@@ -44,7 +44,7 @@ const Footer = () => {
           {/* Contact */}
           <div>
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-              {t('contact')}
+              {'contact'}
             </h3>
             <div className="space-y-2">
               <p className="text-gray-600 dark:text-gray-400">
@@ -71,7 +71,7 @@ const Footer = () => {
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <p className="text-gray-600 dark:text-gray-400">
-            © 2024 CardPro. {t('allRightsReserved')}.
+            © 2024 CardPro. {'allRightsReserved'}.
           </p>
         </div>
       </div>

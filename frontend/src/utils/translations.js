@@ -1,4 +1,4 @@
-// Dictionnaire de traductions françaises pour remplacer les clés t()
+// Dictionnaire de traductions françaises pour remplacer les clés 
 export const translations = {
   // Navigation
   home: 'Accueil',

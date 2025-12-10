@@ -13,7 +13,7 @@ export const validateEmail = (email) => {
   if (!email || email.trim() === '') {
     return { isValid: false, error: 'L\'email est obligatoire' };
   }
-  if (!emailRegex.test(email)) {
+  if (!emailRegex.tesemail) {
     return { isValid: false, error: 'Format d\'email invalide' };
   }
   return { isValid: true, error: null };
@@ -23,14 +23,14 @@ export const validatePassword = (password) => {
   if (!password || password.trim() === '') {
     return { isValid: false, error: 'Le mot de passe est obligatoire' };
   }
-  if (!passwordRegex.test(password)) {
+  if (!passwordRegex.tespassword) {
     return { isValid: false, error: 'Le mot de passe doit contenir au moins 6 caractères, 1 lettre et 1 chiffre' };
   }
   return { isValid: true, error: null };
 };
 
 export const validatePhone = (phone) => {
-  if (phone && !israeliPhoneRegex.test(phone)) {
+  if (phone && !israeliPhoneRegex.tesphone) {
     return { isValid: false, error: 'Format téléphone israélien requis (050-0000000)' };
   }
   return { isValid: true, error: null };

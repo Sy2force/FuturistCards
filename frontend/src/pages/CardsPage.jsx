@@ -39,7 +39,7 @@ const CardsPageSimple = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">{t('loadingCards')}</p>
+          <p className="text-gray-600 dark:text-gray-400">{'loadingCards'}</p>
         </div>
       </div>
     );
@@ -51,17 +51,17 @@ const CardsPageSimple = () => {
         {/* En-tête */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-            {t('allCards')}
+            {'allCards'}
           </h1>
           <p className="text-xl max-w-2xl mx-auto text-gray-600 dark:text-gray-400">
-            {t('discoverCards')}
+            {'discoverCards'}
           </p>
         </div>
 
         {/* Statistiques */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-8 shadow-lg">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {cards.length} {t('cardsAvailable')}
+            {cards.length} {'cardsAvailable'}
           </p>
         </div>
 
@@ -81,17 +81,17 @@ const CardsPageSimple = () => {
           <div className="mt-16 text-center">
             <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-2xl mx-auto shadow-lg">
               <h3 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-                {t('joinCardPro')}
+                {'joinCardPro'}
               </h3>
               <p className="mb-6 text-gray-600 dark:text-gray-400">
-                {t('createAccountAccess')}
+                {'createAccountAccess'}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link to="/register" className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors">
-                  {t('signUp')}
+                  {'signUp'}
                 </Link>
                 <Link to="/login" className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg transition-colors">
-                  {t('signIn')}
+                  {'signIn'}
                 </Link>
               </div>
             </div>

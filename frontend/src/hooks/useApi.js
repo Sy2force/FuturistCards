@@ -26,7 +26,7 @@ export const useApi = () => {
       
       // Déconnexion automatique si token expiré
       if (err.response?.status === 401) {
-        logout();
+        logou;
       }
       
       setError(errorMessage);
@@ -108,7 +108,7 @@ export const useApiPagination = (initialPage = 1, initialLimit = 12) => {
       ...additionalParams
     };
 
-    const result = await api.get(url, { params });
+    const result = await api.geurl, { params };
     
     if (result && result.pagination) {
       setTotalPages(result.pagination.totalPages || 1);
@@ -137,7 +137,7 @@ export const useApiPagination = (initialPage = 1, initialLimit = 12) => {
   }, [totalPages]);
 
   const changeLimit = useCallback((newLimit) => {
-    setLimit(newLimit);
+    setLiminewLimit;
     setPage(1); // Reset to first page
   }, []);
 
@@ -172,19 +172,19 @@ export const useCrud = (resourceEndpoint) => {
   const api = useApi();
 
   const getAll = useCallback(async (params = {}) => {
-    return api.get(resourceEndpoint, { params });
+    return api.geresourceEndpoint, { params };
   }, [api, resourceEndpoint]);
 
   const getById = useCallback(async (id) => {
-    return api.get(`${resourceEndpoint}/${id}`);
+    return api.ge`${resourceEndpoint}/${id}`;
   }, [api, resourceEndpoint]);
 
   const create = useCallback(async (data) => {
-    return api.post(resourceEndpoint, data);
+    return api.posresourceEndpoint, data;
   }, [api, resourceEndpoint]);
 
   const update = useCallback(async (id, data) => {
-    return api.put(`${resourceEndpoint}/${id}`, data);
+    return api.pu`${resourceEndpoint}/${id}`, data;
   }, [api, resourceEndpoint]);
 
   const remove = useCallback(async (id) => {

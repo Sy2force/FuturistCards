@@ -55,7 +55,7 @@ const Card = ({
                 <UserIcon className="w-10 h-10 text-white" />
               </div>
               <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{card.title}</p>
-              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? t(card.category) || card.category : 'Catégorie'}</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? card.category || card.category : 'Catégorie'}</p>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@ const Card = ({
             <span className="mr-2">{card.subtitle || 'Poste'}</span>
             <span className="text-gray-400">•</span>
             <UserIcon className="w-4 h-4 ml-2 mr-1" />
-            <span>{card.category ? t(card.category) || card.category : 'Catégorie'}</span>
+            <span>{card.category ? card.category || card.category : 'Catégorie'}</span>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed">
             {card.description}
@@ -132,7 +132,7 @@ const Card = ({
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => onEdit(card._id || card.id)}
+                  onClick={() => onEdicard._id || card.id}
                   data-testid="edit-card-btn"
                   className="p-2 text-primary-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 shadow-sm"
                   aria-label={'Modifier la carte'}
@@ -147,7 +147,7 @@ const Card = ({
                   onClick={() => onDelete(card._id || card.id)}
                   data-testid="delete-card-btn"
                   className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 shadow-sm"
-                  aria-label={t('deleteCard')}
+                  aria-label={'deleteCard'}
                 >
                   <TrashIcon className="w-4 h-4" />
                 </motion.button>

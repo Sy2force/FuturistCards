@@ -18,8 +18,8 @@ const AboutPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('aboutPageTitle')}</title>
-        <meta name="description" content={t('aboutPageDescription')} />
+        <title>{'aboutPageTitle'}</title>
+        <meta name="description" content={'aboutPageDescription'} />
       </Helmet>
       
       <motion.div 
@@ -41,7 +41,7 @@ const AboutPage = () => {
             className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent mb-6 flex items-center justify-center"
           >
             <SparklesIcon className="w-12 h-12 text-primary-500 mr-4" />
-            {t('aboutCardPro')}
+            {'aboutCardPro'}
           </motion.h1>
           <motion.p 
             initial={{ y: 20, opacity: 0 }}
@@ -49,7 +49,7 @@ const AboutPage = () => {
             transition={{ delay: 0.4 }}
             className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
           >
-            {t('aboutSubtitle')}
+            {'aboutSubtitle'}
           </motion.p>
         </motion.div>
 
@@ -65,10 +65,10 @@ const AboutPage = () => {
           >
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <UserGroupIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {t('ourMission')}
+              {'ourMission'}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {t('missionDescription')}
+              {'missionDescription'}
             </p>
           </motion.div>
 
@@ -82,7 +82,7 @@ const AboutPage = () => {
           >
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
               <SparklesIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {t('features')}
+              {'features'}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <motion.div 
@@ -96,9 +96,9 @@ const AboutPage = () => {
                   <SparklesIcon className="w-6 h-6 text-primary-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{t('modernDesign')}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{'modernDesign'}</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {t('modernDesignDesc')}
+                    {'modernDesignDesc'}
                   </p>
                 </div>
               </motion.div>
@@ -114,9 +114,9 @@ const AboutPage = () => {
                   <ShieldCheckIcon className="w-6 h-6 text-success-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{t('secure')}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{'secure'}</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {t('secureDesc')}
+                    {'secureDesc'}
                   </p>
                 </div>
               </motion.div>
@@ -132,9 +132,9 @@ const AboutPage = () => {
                   <BoltIcon className="w-6 h-6 text-accent-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{t('performant')}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{'performant'}</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {t('performantDesc')}
+                    {'performantDesc'}
                   </p>
                 </div>
               </motion.div>
@@ -150,9 +150,9 @@ const AboutPage = () => {
                   <DevicePhoneMobileIcon className="w-6 h-6 text-error-500" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{t('mobileFirst')}</h3>
+                  <h3 className="font-semibold text-gray-900 dark:text-white">{'mobileFirst'}</h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {t('mobileFirstDesc')}
+                    {'mobileFirstDesc'}
                   </p>
                 </div>
               </motion.div>
@@ -169,7 +169,7 @@ const AboutPage = () => {
           >
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
               <BoltIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {t('technologiesUsed')}
+              {'technologiesUsed'}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
@@ -203,10 +203,10 @@ const AboutPage = () => {
           >
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
               <EnvelopeIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {t('contact')}
+              {'contact'}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {t('contactDescription')}
+              {'contactDescription'}
             </p>
             <div className="space-y-4">
               <motion.div 
@@ -245,7 +245,7 @@ const AboutPage = () => {
               className="text-2xl font-bold mb-4 flex items-center justify-center"
             >
               <SparklesIcon className="w-6 h-6 mr-3" />
-              {t('readyToStart')}
+              {'readyToStart'}
             </motion.h2>
             <motion.p 
               initial={{ y: 20, opacity: 0 }}
@@ -253,7 +253,7 @@ const AboutPage = () => {
               transition={{ delay: 2.4 }}
               className="mb-6 opacity-90"
             >
-              {t('joinProfessionals')}
+              {'joinProfessionals'}
             </motion.p>
             <motion.div 
               initial={{ y: 20, opacity: 0 }}
@@ -269,7 +269,7 @@ const AboutPage = () => {
                   to="/register" 
                   className="inline-flex items-center bg-white text-primary-600 px-6 py-3 rounded-lg font-medium hover:bg-neutral-100 transition-all shadow-lg"
                 >
-                  {t('createAccount')}
+                  {'createAccount'}
                   <ArrowRightIcon className="w-4 h-4 ml-2" />
                 </Link>
               </motion.div>
@@ -281,7 +281,7 @@ const AboutPage = () => {
                   to="/cards" 
                   className="inline-flex items-center bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-primary-600 transition-all"
                 >
-                  {t('exploreCards')}
+                  {'exploreCards'}
                   <ArrowRightIcon className="w-4 h-4 ml-2" />
                 </Link>
               </motion.div>

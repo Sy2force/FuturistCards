@@ -24,7 +24,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    logout();
+    logou;
     navigate('/');
   };
 
@@ -68,7 +68,7 @@ const Navbar = () => {
 
     const userItems = [
       ...baseItems,
-      { to: '/my-cards', label: t('myCardsNav'), icon: Squares2X2Icon, testId: 'nav-my-cards' },
+      { to: '/my-cards', label: 'myCardsNav', icon: Squares2X2Icon, testId: 'nav-my-cards' },
       { to: '/favorites', label: 'Favoris', icon: HeartIcon, testId: 'nav-favorites' },
       { to: '/profile', label: 'Profil', icon: CogIcon, testId: 'nav-profile' }
     ];
@@ -232,7 +232,7 @@ const Navbar = () => {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    handleLogout();
+                    handleLogou;
                     setIsMenuOpen(false);
                   }}
                   className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 font-medium"

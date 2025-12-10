@@ -76,7 +76,7 @@ export const cardService = {
   // Liker/unliker une carte
   likeCard: async (id) => {
     try {
-      const response = await api.post(`/cards/${id}/like`);
+      const response = await api.pos`/cards/${id}/like`;
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error liking card');
@@ -86,7 +86,7 @@ export const cardService = {
   // Ajouter/retirer des favoris
   toggleFavorite: async (id) => {
     try {
-      const response = await api.post(`/cards/${id}/favorite`);
+      const response = await api.pos`/cards/${id}/favorite`;
       return response;
     } catch (error) {
       throw new Error(error.message || 'Error toggling favorite');

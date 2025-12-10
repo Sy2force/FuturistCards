@@ -48,7 +48,7 @@ const LoginPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefaul;
     if (validateForm()) {
       try {
         const result = await login(formData.email, formData.password);
@@ -103,11 +103,11 @@ const LoginPage = () => {
           <div className="flex items-center justify-center mb-4">
             <SparklesIcon className="h-8 w-8 text-blue-500 mr-2" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
-              {'Connexion'}
+              Connexion
             </h1>
           </div>
           <p className="text-gray-600 dark:text-gray-300 text-lg">
-            {t('accessYourAccount')}
+            Accédez à votre compte
           </p>
         </motion.div>
 
@@ -122,7 +122,7 @@ const LoginPage = () => {
             {/* Email avec validation HackerU */}
             <EmailInput 
               name="email"
-              label={'Email'}
+              label="Email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               onBlur={() => {}}
@@ -135,14 +135,14 @@ const LoginPage = () => {
             {/* Mot de passe avec validation HackerU */}
             <PasswordInput
               name="password"
-              label={'Mot de passe'}
+              label="Mot de passe"
               value={formData.password}
               onChange={(e) => handleInputChange('password', e.target.value)}
               onBlur={() => {}}
               error={errors.password}
               touched={touchedFields.password}
               required
-              placeholder={'Mot de passe'}
+              placeholder="Mot de passe"
             />
 
             {/* Bouton de connexion avec feedback visuel */}
@@ -152,7 +152,7 @@ const LoginPage = () => {
             >
               <div className="flex items-center justify-center">
                 {!loading && <ArrowRightIcon className="w-5 h-5 mr-2" />}
-                {t('signIn')}
+                Se connecter
               </div>
             </SubmitButton>
           </FormContainer>
@@ -165,13 +165,13 @@ const LoginPage = () => {
             transition={{ delay: 0.8, duration: 0.3 }}
           >
             <p className="text-gray-600 dark:text-gray-400">
-              {t('noAccountYet')}{' '}
+              Pas encore de compte ?{' '}
               <Link 
                 to="/register" 
                 data-testid="login-register-link"
                 className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
               >
-                {t('createAccount')}
+                Créer un compte
               </Link>
             </p>
           </motion.div>
@@ -186,17 +186,17 @@ const LoginPage = () => {
         >
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center flex items-center justify-center">
             <SparklesIcon className="w-5 h-5 mr-2 text-green-500" />
-            {t('demoAccount')}
+            Compte de démonstration
           </h3>
           <div className="space-y-3 text-sm">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">{'Email'} :</span>
+              <span className="text-gray-600 dark:text-gray-400">Email :</span>
               <span className="text-blue-600 font-mono text-xs bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
                 test@example.com
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">{'Mot de passe'} :</span>
+              <span className="text-gray-600 dark:text-gray-400">Mot de passe :</span>
               <span className="text-green-600 font-mono text-xs bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded">
                 Test123!
               </span>
@@ -207,7 +207,7 @@ const LoginPage = () => {
               data-testid="fill-demo-button"
               className="w-full mt-3 py-2 px-4 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-green-600 transition-all duration-300 transform hover:scale-105"
             >
-              {t('autoFill')}
+              Remplir automatiquement
             </button>
           </div>
         </motion.div>

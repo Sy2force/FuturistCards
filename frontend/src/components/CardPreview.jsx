@@ -29,10 +29,10 @@ const CardPreview = ({ card, isOpen, onClose }) => {
         });
       } catch (error) {
         // Fallback pour navigateurs qui ne supportent pas Web Share API
-        navigator.clipboard.writeText(window.location.href);
+        navigator.clipboard.writeTexwindow.location.href;
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeTexwindow.location.href;
     }
   };
 
@@ -84,7 +84,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                     <div className="flex items-center justify-center mt-2">
                       <BuildingOfficeIcon className="w-4 h-4 mr-1" />
                       <span className="text-sm">
-                        {card.category ? t(card.category) || card.category : 'Catégorie'}
+                        {card.category ? card.category || card.category : 'Catégorie'}
                       </span>
                     </div>
                   </div>
@@ -96,7 +96,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                 {/* Description */}
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
-                    {t('aboutSection')}
+                    {'aboutSection'}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 leading-relaxed text-sm">
                     {card.description}
@@ -106,7 +106,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                 {/* Informations de contact */}
                 <div className="space-y-4 mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                    {t('contactDetails')}
+                    {'contactDetails'}
                   </h3>
                   
                   <div className="grid gap-3">
@@ -114,7 +114,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                       <div className="flex items-center space-x-3">
                         <EnvelopeIcon className="w-5 h-5 text-blue-500 flex-shrink-0" />
                         <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{t('emailLabel')}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{'emailLabel'}</p>
                           <a 
                             href={`mailto:${card.email}`}
                             className="text-blue-500 hover:text-blue-600 text-sm"
@@ -129,7 +129,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                       <div className="flex items-center space-x-3">
                         <PhoneIcon className="w-5 h-5 text-green-500 flex-shrink-0" />
                         <div>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">{t('phoneLabel')}</p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">{'phoneLabel'}</p>
                           <a 
                             href={`tel:${card.phone}`}
                             className="text-green-500 hover:text-green-600 text-sm"
@@ -196,7 +196,7 @@ const CardPreview = ({ card, isOpen, onClose }) => {
                     className="flex-1 flex items-center justify-center space-x-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors"
                   >
                     <ShareIcon className="w-5 h-5" />
-                    <span className="text-sm">{t('share')}</span>
+                    <span className="text-sm">{'share'}</span>
                   </motion.button>
                 </div>
               </div>

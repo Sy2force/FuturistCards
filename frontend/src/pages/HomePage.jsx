@@ -18,8 +18,8 @@ function HomePage() {
   return (
     <>
       <Helmet>
-        <title>{t('homePageTitle')}</title>
-        <meta name="description" content={t('homePageDescription')} />
+        <title>{'homePageTitle'}</title>
+        <meta name="description" content={'homePageDescription'} />
       </Helmet>
       
       <motion.div 
@@ -93,7 +93,7 @@ function HomePage() {
           transition={{ delay: 0.4 }}
           className="text-xl md:text-2xl mb-8 text-gray-300"
         >
-          {t('homePageSubtitle')}
+          {'homePageSubtitle'}
         </motion.p>
 
         <motion.div 
@@ -117,8 +117,8 @@ function HomePage() {
               </div>
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full animate-pulse" />
             </motion.div>
-            <h2 className="text-2xl font-bold mb-4 text-white">{t('startToday')}</h2>
-            <p className="text-gray-300 text-sm leading-relaxed">{t('elegantInterface')}</p>
+            <h2 className="text-2xl font-bold mb-4 text-white">{'startToday'}</h2>
+            <p className="text-gray-300 text-sm leading-relaxed">{'elegantInterface'}</p>
             <motion.div 
               className="mt-4 flex justify-center"
               whileHover={{ scale: 1.1 }}
@@ -142,8 +142,8 @@ function HomePage() {
               </div>
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-blue-400 rounded-full animate-bounce" />
             </motion.div>
-            <h3 className="text-2xl font-bold mb-4 text-white">{t('reactTechnology')}</h3>
-            <p className="text-gray-300 text-sm leading-relaxed">{t('modernStack')}</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">{'reactTechnology'}</h3>
+            <p className="text-gray-300 text-sm leading-relaxed">{'modernStack'}</p>
             <motion.div 
               className="mt-4 flex justify-center"
               whileHover={{ rotate: 360 }}
@@ -168,8 +168,8 @@ function HomePage() {
               </div>
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-400 rounded-full animate-pulse" />
             </motion.div>
-            <h3 className="text-2xl font-bold mb-4 text-white">{t('security')}</h3>
-            <p className="text-gray-300 text-sm leading-relaxed">{t('secureAuth')}</p>
+            <h3 className="text-2xl font-bold mb-4 text-white">{'security'}</h3>
+            <p className="text-gray-300 text-sm leading-relaxed">{'secureAuth'}</p>
             <motion.div 
               className="mt-4 flex justify-center"
               animate={{ rotate: [0, 10, -10, 0] }}
@@ -196,7 +196,7 @@ function HomePage() {
               className="inline-flex items-center bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-2xl hover:shadow-blue-500/30 border border-white/20"
             >
               <SparklesIcon className="w-6 h-6 mr-3" />
-              {t('getStarted')}
+              {'getStarted'}
             </Link>
             <motion.div
               animate={{ rotate: 360 }}
@@ -214,7 +214,7 @@ function HomePage() {
               className="inline-flex items-center bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-8 py-4 rounded-2xl font-bold text-lg transition-all shadow-2xl hover:shadow-gray-500/20 border border-white/20"
             >
               <InformationCircleIcon className="w-6 h-6 mr-3" />
-              {t('modernDesign')}
+              {'modernDesign'}
             </Link>
           </motion.div>
         </motion.div>

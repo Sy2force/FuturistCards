@@ -99,7 +99,7 @@ const RegisterPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefaul;
     if (validateForm()) {
       try {
         // Retirer confirmPassword avant d'envoyer au backend (role est envoyé)
@@ -138,7 +138,7 @@ const RegisterPage = () => {
     <>
       <Helmet>
         <title>{'Inscription'}</title>
-        <meta name="description" content={t('joinCardPro')} />
+        <meta name="description" content={'joinCardPro'} />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-green-50 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
@@ -162,7 +162,7 @@ const RegisterPage = () => {
               </h1>
             </div>
             <p className="text-gray-600 dark:text-gray-300 text-lg">
-              {t('joinCardPro')}
+              {'joinCardPro'}
             </p>
           </motion.div>
 
@@ -178,27 +178,27 @@ const RegisterPage = () => {
               {/* Prénom avec validation HackerU */}
               <TextInput 
                 name="firstName"
-                label={t('firstName')}
+                label={'firstName'}
                 value={formData.firstName}
                 onChange={(e) => handleInputChange('firstName', e.target.value)}
                 onBlur={() => {}}
                 error={errors.firstName}
                 touched={touchedFields.firstName}
                 required
-                placeholder={t('firstName')}
+                placeholder={'firstName'}
               />
 
               {/* Nom avec validation HackerU */}
               <TextInput 
                 name="lastName"
-                label={t('lastName')}
+                label={'lastName'}
                 value={formData.lastName}
                 onChange={(e) => handleInputChange('lastName', e.target.value)}
                 onBlur={() => {}}
                 error={errors.lastName}
                 touched={touchedFields.lastName}
                 required
-                placeholder={t('lastName')}
+                placeholder={'lastName'}
               />
 
               {/* Email avec validation HackerU */}
@@ -217,7 +217,7 @@ const RegisterPage = () => {
               {/* Rôle avec validation HackerU */}
               <SelectInput
                 name="role"
-                label={t('accountType')}
+                label={'accountType'}
                 value={formData.role}
                 onChange={(e) => handleInputChange('role', e.target.value)}
                 onBlur={() => {}}
@@ -225,8 +225,8 @@ const RegisterPage = () => {
                 touched={touchedFields.role}
                 required
                 options={[
-                  { value: 'user', label: t('userAccount') },
-                  { value: 'business', label: t('businessAccount') }
+                  { value: 'user', label: 'userAccount' },
+                  { value: 'business', label: 'businessAccount' }
                 ]}
               />
 
@@ -265,7 +265,7 @@ const RegisterPage = () => {
               >
                 <div className="flex items-center justify-center">
                   {!loading && <UserPlusIcon className="w-5 h-5 mr-2" />}
-                  {loading ? t('registering') : 'Inscription'}
+                  {loading ? 'registering' : 'Inscription'}
                 </div>
               </SubmitButton>
             </FormContainer>
@@ -278,7 +278,7 @@ const RegisterPage = () => {
               transition={{ delay: 0.8, duration: 0.3 }}
             >
               <p className="text-gray-600 dark:text-gray-400">
-                {t('alreadyHaveAccount')}{' '}
+                {'alreadyHaveAccount'}{' '}
                 <Link 
                   to="/login" 
                   className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
@@ -298,24 +298,24 @@ const RegisterPage = () => {
           >
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center flex items-center justify-center">
               <SparklesIcon className="w-5 h-5 mr-2 text-green-500" />
-              {t('accountTypes')}
+              {'accountTypes'}
             </h3>
             <div className="space-y-3 text-sm">
               <div className="flex items-start">
                 <div className="w-3 h-3 bg-blue-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{t('userAccount')} :</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{'userAccount'} :</span>
                   <span className="text-gray-600 dark:text-gray-400 ml-1">
-                    {t('userAccountDescription')}
+                    {'userAccountDescription'}
                   </span>
                 </div>
               </div>
               <div className="flex items-start">
                 <div className="w-3 h-3 bg-green-500 rounded-full mt-1.5 mr-3 flex-shrink-0"></div>
                 <div>
-                  <span className="font-medium text-gray-900 dark:text-gray-100">{t('businessAccount')} :</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{'businessAccount'} :</span>
                   <span className="text-gray-600 dark:text-gray-400 ml-1">
-                    {t('businessAccountDescription')}
+                    {'businessAccountDescription'}
                   </span>
                 </div>
               </div>

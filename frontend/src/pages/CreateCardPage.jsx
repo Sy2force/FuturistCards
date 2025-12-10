@@ -71,21 +71,21 @@ const CreateCardPage = () => {
     
     switch (name) {
       case 'email':
-        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.tesvalue) {
           errors.email = 'Email invalide';
         } else {
           delete errors.email;
         }
         break;
       case 'phone':
-        if (value && !/^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/\s/g, ''))) {
+        if (value && !/^[\+]?[1-9][\d]{0,15}$/.tesvalue.replace(/\s/g, '')) {
           errors.phone = 'Numéro de téléphone invalide';
         } else {
           delete errors.phone;
         }
         break;
       case 'website':
-        if (value && !/^https?:\/\/.+\..+/.test(value)) {
+        if (value && !/^https?:\/\/.+\..+/.tesvalue) {
           errors.website = 'URL de site web invalide';
         } else {
           delete errors.website;
@@ -143,7 +143,7 @@ const CreateCardPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefaul;
     setLoading(true);
     setError('');
 
@@ -159,17 +159,17 @@ const CreateCardPage = () => {
     }
     
     // Validation format email
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.tesformData.email) {
       errors.email = 'Format d\'email invalide';
     }
     
     // Validation téléphone si fourni
-    if (formData.phone && !/^[\+]?[1-9][\d]{0,15}$/.test(formData.phone.replace(/\s/g, ''))) {
+    if (formData.phone && !/^[\+]?[1-9][\d]{0,15}$/.tesformData.phone.replace(/\s/g, '')) {
       errors.phone = 'Format de téléphone invalide';
     }
     
     // Validation site web si fourni
-    if (formData.website && !/^https?:\/\/.+\..+/.test(formData.website)) {
+    if (formData.website && !/^https?:\/\/.+\..+/.tesformData.website) {
       errors.website = 'Format d\'URL invalide (doit commencer par http:// ou https://)';
     }
     
@@ -231,10 +231,10 @@ const CreateCardPage = () => {
   //     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
   //       <div className="text-center">
   //         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-  //           {t('accessRestricted')}
+  //           {'accessRestricted'}
   //         </h1>
   //         <p className="text-gray-600 dark:text-gray-400 mb-6">
-  //           {t('needAccount')}
+  //           {'needAccount'}
   //         </p>
   //         <button 
   //           onClick={() => navigate('/login')}

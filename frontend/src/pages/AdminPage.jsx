@@ -79,7 +79,7 @@ const AdminPage = () => {
       user: { 
         icon: UserIcon, 
         color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200', 
-        label: t('user') 
+        label: 'user' 
       },
       business: { 
         icon: UsersIcon, 
@@ -89,7 +89,7 @@ const AdminPage = () => {
       admin: { 
         icon: ShieldCheckIcon, 
         color: 'bg-error-100 text-error-800 dark:bg-error-900 dark:text-error-200', 
-        label: t('administrator') 
+        label: 'administrator' 
       }
     };
 
@@ -116,7 +116,7 @@ const AdminPage = () => {
           : 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
       }`}>
         <div className={`w-2 h-2 rounded-full mr-1.5 ${isActive ? 'bg-green-400' : 'bg-gray-400'}`} />
-        {isActive ? t('active') : t('inactive')}
+        {isActive ? 'active' : 'inactive'}
       </span>
     );
   };
@@ -127,7 +127,7 @@ const AdminPage = () => {
   };
 
   const handleDeleteUser = (userId) => {
-    if (window.confirm(t('confirmDeleteUser'))) {
+    if (window.confirm('confirmDeleteUser')) {
       setUsers(prev => prev.filter(u => u.id !== userId));
     }
   };
@@ -149,10 +149,10 @@ const AdminPage = () => {
         >
           <ShieldCheckIcon className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {t('accessDenied')}
+            {'accessDenied'}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {t('adminPrivilegesRequired')}
+            {'adminPrivilegesRequired'}
           </p>
         </motion.div>
       </div>
@@ -224,21 +224,21 @@ const AdminPage = () => {
                   bg: 'bg-blue-50 dark:bg-blue-900/20'
                 },
                 { 
-                  label: t('businessUsers'), 
+                  label: 'businessUsers', 
                   value: users.filter(u => u.role === 'business').length, 
                   icon: BuildingOfficeIcon, 
                   color: 'text-green-500',
                   bg: 'bg-green-50 dark:bg-green-900/20'
                 },
                 { 
-                  label: t('regularUsers'), 
+                  label: 'regularUsers', 
                   value: users.filter(u => u.role === 'user').length, 
                   icon: UserIcon, 
                   color: 'text-indigo-500',
                   bg: 'bg-indigo-50 dark:bg-indigo-900/20'
                 },
                 { 
-                  label: t('admins'), 
+                  label: 'admins', 
                   value: users.filter(u => u.role === 'admin').length, 
                   icon: ShieldCheckIcon, 
                   color: 'text-red-500',
@@ -284,7 +284,7 @@ const AdminPage = () => {
                   <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <input
                     type="text"
-                    placeholder={t('searchUsersPlaceholder')}
+                    placeholder={'searchUsersPlaceholder'}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
@@ -298,10 +298,10 @@ const AdminPage = () => {
                   onChange={(e) => setFilterRole(e.target.value)}
                   className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                 >
-                  <option value="all">{t('allRoles')}</option>
-                  <option value="user">{t('users')}</option>
+                  <option value="all">{'allRoles'}</option>
+                  <option value="user">{'users'}</option>
                   <option value="business">{'Business'}</option>
-                  <option value="admin">{t('admins')}</option>
+                  <option value="admin">{'admins'}</option>
                 </select>
                 
                 <motion.button
@@ -310,7 +310,7 @@ const AdminPage = () => {
                   className="flex items-center px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
                 >
                   <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
-                  {t('export')}
+                  {'export'}
                 </motion.button>
               </div>
             </div>
@@ -328,22 +328,22 @@ const AdminPage = () => {
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {t('user')}
+                      {'user'}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {t('contact')}
+                      {'contact'}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {t('role')}
+                      {'role'}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {t('status')}
+                      {'status'}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {t('lastLogin')}
+                      {'lastLogin'}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {t('actions')}
+                      {'actions'}
                     </th>
                   </tr>
                 </thead>

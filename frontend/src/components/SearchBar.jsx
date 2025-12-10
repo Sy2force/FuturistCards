@@ -8,9 +8,9 @@ const SearchBar = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefaul;
     if (query.trim()) {
-      navigate(`/cards?search=${encodeURIComponent(query)}`);
+      navigate(`/cards?search=${encodeURIComponenquery}`);
       setQuery('');
     }
   };

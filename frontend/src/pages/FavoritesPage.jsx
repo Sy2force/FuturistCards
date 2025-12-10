@@ -42,7 +42,7 @@ const FavoritesPage = () => {
     return (
       <>
         <Helmet>
-          <title>{t('loginRequired')} - CardPro</title>
+          <title>{'loginRequired'} - CardPro</title>
         </Helmet>
         <motion.div 
           className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4"
@@ -63,23 +63,23 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-12 h-12 text-white" />
             </motion.div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              {t('loginRequired')}
+              {'loginRequired'}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              {t('mustBeLoggedInToViewFavorites')}
+              {'mustBeLoggedInToViewFavorites'}
             </p>
             <motion.div className="space-y-4">
               <Link 
                 to="/login"
                 className="block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                {t('signIn')}
+                {'signIn'}
               </Link>
               <Link 
                 to="/register"
                 className="block bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                {t('signUp')}
+                {'signUp'}
               </Link>
             </motion.div>
           </motion.div>
@@ -91,8 +91,8 @@ const FavoritesPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('myFavorites')} - CardPro</title>
-        <meta name="description" content={t('manageFavoriteCardsDescription')} />
+        <title>{'myFavorites'} - CardPro</title>
+        <meta name="description" content={'manageFavoriteCardsDescription'} />
       </Helmet>
 
       <motion.div 
@@ -113,10 +113,10 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-4">
-              {t('myFavorites')}
+              {'myFavorites'}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {t('manageFavoritesDescription')}
+              {'manageFavoritesDescription'}
             </p>
           </motion.div>
 
@@ -134,7 +134,7 @@ const FavoritesPage = () => {
               whileTap={{ scale: 0.98 }}
             >
               <ArrowLeftIcon className="w-5 h-5 mr-2" />
-              {t('backToCards')}
+              {'backToCards'}
             </motion.button>
           </motion.div>
 
@@ -163,10 +163,10 @@ const FavoritesPage = () => {
                 💖
               </motion.div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                {t('noFavorites')}
+                {'noFavorites'}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-                {t('startExploringCards')}
+                {'startExploringCards'}
               </p>
               <motion.div className="space-y-4">
                 <Link 
@@ -174,7 +174,7 @@ const FavoritesPage = () => {
                   className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
                 >
                   <EyeIcon className="w-5 h-5 inline mr-2" />
-                  {t('exploreCards')}
+                  {'exploreCards'}
                 </Link>
               </motion.div>
             </motion.div>
@@ -186,7 +186,7 @@ const FavoritesPage = () => {
             >
               <div className="mb-6">
                 <p className="text-gray-600 dark:text-gray-400">
-                  <span className="font-medium text-blue-600 dark:text-blue-400">{favorites.length}</span> {favorites.length === 1 ? t('favoriteCard') : t('favoriteCards')}
+                  <span className="font-medium text-blue-600 dark:text-blue-400">{favorites.length}</span> {favorites.length === 1 ? 'favoriteCard' : 'favoriteCards'}
                 </p>
               </div>
               
