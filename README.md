@@ -84,10 +84,10 @@ Accès: Gestion complète utilisateurs + toutes fonctions
 
 | Service | URL | Fonction |
 |---------|-----|----------|
-| **Vercel** | https://cardpro-frontend.vercel.app | Frontend React |
-| **Render** | https://cardpro-21dj.onrender.com | Backend API |
+| **Vercel** | <https://cardpro-frontend.vercel.app> | Frontend React |
+| **Render** | <https://cardpro-21dj.onrender.com> | Backend API |
 | **MongoDB Atlas** | Cloud Database | Base de données |
-| **GitHub** | https://github.com/Sy2force/CardPro | Code source |
+| **GitHub** | <https://github.com/Sy2force/CardPro> | Code source |
 
 ---
 
@@ -157,6 +157,7 @@ FuturistCards/
 ## 🛠️ Installation Locale (Développement)
 
 ### **Prérequis**
+
 ```text
 Node.js 18+
 MongoDB (local ou Atlas)
@@ -165,12 +166,14 @@ npm ou yarn
 ```
 
 ### **1. Cloner le Projet**
+
 ```bash
 git clone https://github.com/Sy2force/CardPro.git
 cd CardPro
 ```
 
 ### **2. Backend Setup**
+
 ```bash
 cd backend
 npm install
@@ -181,6 +184,7 @@ npm start
 ```
 
 ### **3. Frontend Setup**
+
 ```bash
 cd frontend  
 npm install
@@ -193,6 +197,7 @@ npm run dev
 ### **4. Variables Environnement**
 
 **Backend `.env`:**
+
 ```env
 MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/cardpro
 JWT_SECRET=your-super-secure-jwt-secret-key-min-32-chars
@@ -202,6 +207,7 @@ CORS_ORIGIN=http://localhost:3010
 ```
 
 **Frontend `.env`:**
+
 ```env
 VITE_API_URL=http://localhost:5001/api
 VITE_APP_NAME=FuturistCards  
@@ -210,7 +216,8 @@ VITE_ENVIRONMENT=development
 
 ---
 
-3. **Lancement**
+## 🚀 Lancement de l'Application
+
 ```bash
 # Terminal 1 - Backend
 cd backend && npm run dev
@@ -219,7 +226,7 @@ cd backend && npm run dev
 cd frontend && npm run dev
 ```
 
-Application disponible: http://localhost:3010
+Application disponible: <http://localhost:3010>
 
 ---
 
@@ -281,6 +288,7 @@ VITE_ENVIRONMENT=production
 ```
 
 ### **🔹 Backend Render**
+
 ```bash
 # 1. Render Dashboard → New Web Service
 # 2. Configuration:
@@ -297,6 +305,7 @@ CORS_ORIGIN=https://votre-frontend.vercel.app
 ```
 
 ### **🔹 MongoDB Atlas**
+
 ```bash
 # 1. Créer cluster gratuit M0
 # 2. Database Access → Créer utilisateur
@@ -308,15 +317,18 @@ CORS_ORIGIN=https://votre-frontend.vercel.app
 
 ## 🔧 Scripts de Développement
 
-### **Frontend**
+### **✅ Frontend**
+
 ```bash
 npm run dev      # Serveur développement (port 3010)
 npm run build    # Build production
 npm run preview  # Preview du build
+npm test         # Tests composants
 npm run lint     # Vérification ESLint
 ```
 
 ### **Backend**
+
 ```bash
 npm start        # Démarrage serveur (port 5001)
 npm run dev      # Mode développement (nodemon)
@@ -352,6 +364,7 @@ npm test         # Tests unitaires
 - 📚 **Documentation** complète
 
 ### **🧪 Tests Fonctionnels**
+
 ```bash
 # 1. Inscription nouveau compte business
 # 2. Connexion et redirection selon rôle  
@@ -423,6 +436,7 @@ npm test         # Tests unitaires
 5. **Start Command:** `npm start`
 
 **Variables d'environnement Render:**
+
 ```env
 NODE_ENV=production
 PORT=5001
@@ -439,6 +453,7 @@ CORS_ORIGIN=https://*.vercel.app,https://votre-domaine.com
 5. **Output Directory:** `dist`
 
 **Variables d'environnement Vercel:**
+
 ```env
 VITE_API_URL=https://cardpro-21dj.onrender.com/api
 VITE_APP_NAME=FuturistCards
@@ -480,6 +495,7 @@ VITE_ENVIRONMENT=production
 ### Scripts Disponibles
 
 **Backend:**
+
 ```bash
 npm start          # Production
 npm run dev        # Développement avec nodemon
@@ -487,6 +503,7 @@ npm test           # Tests unitaires
 ```
 
 **Frontend:**
+
 ```bash
 npm run dev        # Serveur de développement
 npm run build      # Build production
@@ -506,6 +523,7 @@ npm test           # Tests composants
 ### Problèmes Courants
 
 **Port déjà utilisé:**
+
 ```bash
 lsof -ti:5001 | xargs kill -9  # Backend
 lsof -ti:3010 | xargs kill -9  # Frontend
@@ -517,6 +535,7 @@ lsof -ti:3010 | xargs kill -9  # Frontend
 - Tester la connexion: `GET /api/health`
 
 **Build Frontend:**
+
 ```bash
 cd frontend
 rm -rf node_modules package-lock.json
@@ -679,7 +698,8 @@ FuturistCards/
 **Si page blanche après déploiement:**
 
 ### 1. Settings → General
-```
+
+```text
 Root Directory: frontend
 Framework Preset: Vite
 Build Command: npm run build
@@ -688,6 +708,7 @@ Install Command: npm install
 ```
 
 ### 2. Settings → Environment Variables
+
 ```env
 VITE_API_URL=https://cardpro-21dj.onrender.com/api
 VITE_APP_NAME=FuturistCards
