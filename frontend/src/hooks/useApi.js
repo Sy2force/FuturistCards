@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import axiosInstance from '../services/api';
-import { useAuth } from './useAuth';
+import { useAuth } from '../context/AuthContext';
 
 /**
  * Hook personnalisé pour les appels API avec gestion d'état

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import LanguageSelector from './LanguageSelector';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import SearchBar from './SearchBar';
 import DarkModeToggle from './DarkModeToggle';
 import { 
@@ -24,7 +24,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    logou;
+    logout();
     navigate('/');
   };
 
@@ -232,7 +232,7 @@ const Navbar = () => {
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => {
-                    handleLogou;
+                    handleLogout();
                     setIsMenuOpen(false);
                   }}
                   className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 font-medium"
