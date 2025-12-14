@@ -1,5 +1,5 @@
-// Composants de formulaire HackerU avec feedback visuel rouge/vert
-import React, { useState } from 'react';
+// Composants de formulaire avec feedback visuel
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   EyeIcon, 
@@ -19,7 +19,7 @@ import {
   getSubmitButtonClasses 
 } from '../utils/validation';
 
-// Composant Input avec validation et feedback visuel HackerU
+// Input avec validation
 export const FormInput = ({ 
   type = 'text',
   name,
@@ -54,11 +54,11 @@ export const FormInput = ({
       {/* Label avec indicateur obligatoire */}
       <label 
         htmlFor={name}
-        className="block text-sm font-semibold text-hackeru-gray-700 dark:text-hackeru-gray-300"
+        className="block text-sm font-semibold text-gray-700 dark:text-gray-300"
       >
         {label}
         {required && (
-          <span className="text-hackeru-error-500 ml-1" aria-label="Champ obligatoire">*</span>
+          <span className="text-red-500 ml-1" aria-label="Champ obligatoire">*</span>
         )}
       </label>
       
@@ -70,12 +70,12 @@ export const FormInput = ({
             <Icon 
               className={`h-5 w-5 transition-colors ${
                 hasError 
-                  ? 'text-hackeru-error-400' 
+                  ? 'text-red-400' 
                   : isValid 
-                    ? 'text-hackeru-success-400'
+                    ? 'text-green-400'
                     : isFocused 
-                      ? 'text-hackeru-primary-500'
-                      : 'text-hackeru-gray-400'
+                      ? 'text-blue-500'
+                      : 'text-gray-400'
               }`} 
             />
           </div>
@@ -112,9 +112,9 @@ export const FormInput = ({
             aria-label={showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
           >
             {showPassword ? (
-              <EyeSlashIcon className="h-5 w-5 text-hackeru-gray-400 hover:text-hackeru-gray-600" />
+              <EyeSlashIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
             ) : (
-              <EyeIcon className="h-5 w-5 text-hackeru-gray-400 hover:text-hackeru-gray-600" />
+              <EyeIcon className="h-5 w-5 text-gray-400 hover:text-gray-600" />
             )}
           </button>
         )}
@@ -123,9 +123,9 @@ export const FormInput = ({
         {!isPassword && isDirty && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
             {hasError ? (
-              <ExclamationCircleIcon className="h-5 w-5 text-hackeru-error-400" />
+              <ExclamationCircleIcon className="h-5 w-5 text-red-400" />
             ) : isValid ? (
-              <CheckCircleIcon className="h-5 w-5 text-hackeru-success-400" />
+              <CheckCircleIcon className="h-5 w-5 text-green-400" />
             ) : null}
           </div>
         )}
@@ -157,7 +157,7 @@ export const FormInput = ({
   );
 };
 
-// Bouton de soumission HackerU avec états disabled/loading
+// Bouton de soumission avec états
 export const SubmitButton = ({ 
   children, 
   isValid, 
@@ -211,7 +211,7 @@ export const FormContainer = ({ children, onSubmit, className = '' }) => {
   );
 };
 
-// Composants spécialisés pour les champs HackerU
+// Composants spécialisés
 export const EmailInput = (props) => (
   <FormInput
     type="email"
@@ -318,18 +318,18 @@ export const SelectInput = ({
 export const ValidationHelp = ({ criteria, title = "Critères requis :" }) => {
   return (
     <motion.div
-      className="mt-3 p-3 bg-hackeru-gray-50 dark:bg-hackeru-gray-800 rounded-lg border border-hackeru-gray-200 dark:border-hackeru-gray-700"
+      className="mt-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
       initial={{ opacity: 0, height: 0 }}
       animate={{ opacity: 1, height: 'auto' }}
       transition={{ duration: 0.3 }}
     >
-      <p className="text-sm font-medium text-hackeru-gray-700 dark:text-hackeru-gray-300 mb-2">
+      <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
         {title}
       </p>
-      <ul className="text-xs text-hackeru-gray-600 dark:text-hackeru-gray-400 space-y-1">
+      <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1">
         {criteria.map((criterion, index) => (
           <li key={index} className="flex items-center">
-            <span className="w-1 h-1 bg-hackeru-primary-500 rounded-full mr-2" />
+            <span className="w-1 h-1 bg-blue-500 rounded-full mr-2" />
             {criterion}
           </li>
         ))}

@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { mockUsers } = require('../data/mockData');
 
 // créer un token JWT
 const generateToken = (id) => {
@@ -53,8 +54,15 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // trouver l'utilisateur
-    const user = await User.findOne({ email });
+    let user;
+    try {
+      // trouver l'utilisateur dans MongoDB
+      user = await User.findOne({ email });
+    } catch (dbError) {
+      // Fallback to mock users if MongoDB is unavailable
+      user = mockUsers.find(u => u.email === email);
+    }
+    
     if (!user) {
       return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
     }

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { 
   Bars3Icon,
   XMarkIcon,
@@ -65,7 +65,7 @@ const Navbar = () => {
 
     const userItems = [
       ...baseItems,
-      { to: '/my-cards', label: 'myCardsNav', icon: Squares2X2Icon, testId: 'nav-my-cards' },
+      { to: '/my-cards', label: 'Mes Cartes', icon: Squares2X2Icon, testId: 'nav-my-cards' },
       { to: '/favorites', label: 'Favoris', icon: HeartIcon, testId: 'nav-favorites' },
       { to: '/profile', label: 'Profil', icon: CogIcon, testId: 'nav-profile' }
     ];
@@ -91,7 +91,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center" data-testid="nav-home">
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-                CardPro
+                FuturistCards
               </span>
             </Link>
           </div>

@@ -1,28 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { t } from '../utils/translations';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
-import api from '../services/api';
+import { api } from '../../services/api';
 import { 
   UsersIcon, 
-  UserGroupIcon, 
   ShieldCheckIcon,
   BuildingOfficeIcon,
   UserIcon,
   TrashIcon,
   PencilIcon,
-  EyeIcon,
   PlusIcon,
   MagnifyingGlassIcon,
-  FunnelIcon,
   ArrowDownTrayIcon,
   EnvelopeIcon,
-  PhoneIcon,
-  CheckBadgeIcon,
-  XMarkIcon,
-  DocumentCheckIcon
+  PhoneIcon
 } from '@heroicons/react/24/outline';
 
 const AdminPage = () => {
@@ -31,8 +24,6 @@ const AdminPage = () => {
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Load users from API
@@ -46,7 +37,7 @@ const AdminPage = () => {
           setFilteredUsers(response.data.data);
         }
       } catch (error) {
-        toast.error('Erreur lors du chargement des utilisateurs');
+        toast.error('Erreur lImpossible de charger les utilisateurs');
       } finally {
         setIsLoading(false);
       }
@@ -121,22 +112,22 @@ const AdminPage = () => {
     );
   };
 
-  const handleEditUser = (user) => {
-    setSelectedUser(user);
-    setShowEditModal(true);
-  };
+  // const handleEditUser = (user) => {
+  //   setSelectedUser(user);
+  //   setShowEditModal(true);
+  // };
 
   const handleDeleteUser = (userId) => {
-    if (window.confirm('confirmDeleteUser')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
       setUsers(prev => prev.filter(u => u.id !== userId));
     }
   };
 
-  const handleSaveUser = (updatedUser) => {
-    setUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
-    setShowEditModal(false);
-    setSelectedUser(null);
-  };
+  // const handleSaveUser = (updatedUser) => {
+  //   setUsers(prev => prev.map(u => u.id === updatedUser.id ? updatedUser : u));
+  //   setShowEditModal(false);
+  //   setSelectedUser(null);
+  // };
 
   // Redirect if not admin
   if (!user || user.role !== 'admin') {
@@ -149,10 +140,10 @@ const AdminPage = () => {
         >
           <ShieldCheckIcon className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {'accessDenied'}
+            Accès refusé
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {'adminPrivilegesRequired'}
+            Privilèges administrateur requis pour accéder à cette page.
           </p>
         </motion.div>
       </div>
@@ -167,7 +158,7 @@ const AdminPage = () => {
           animate={{ opacity: 1 }}
           className="text-center"
         >
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Chargement des utilisateurs...</p>
         </motion.div>
       </div>
@@ -177,7 +168,7 @@ const AdminPage = () => {
   return (
     <>
       <Helmet>
-        <title>Panneau d'administration - CardPro</title>
+        <title>Panneau d&apos;administration - CardPro</title>
         <meta name="description" content="Gérer les utilisateurs, les rôles et les paramètres" />
       </Helmet>
 
@@ -196,8 +187,8 @@ const AdminPage = () => {
             <div className="flex items-center justify-between mb-6">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
-                  <ShieldCheckIcon className="w-8 h-8 text-primary-500 mr-3" />
-                  Panneau d'administration
+                  <ShieldCheckIcon className="w-8 h-8 text-blue-500 mr-3" />
+                  Panneau d&apos;administration
                 </h1>
                 <p className="text-gray-600 dark:text-gray-400 mt-2">
                   Gérer les utilisateurs, les rôles et les paramètres
@@ -206,7 +197,7 @@ const AdminPage = () => {
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg shadow-md transition-all"
+                className="flex items-center px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg shadow-md transition-all"
               >
                 <PlusIcon className="w-4 h-4 mr-2" />
                 Ajouter un utilisateur
@@ -284,7 +275,7 @@ const AdminPage = () => {
                   <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <input
                     type="text"
-                    placeholder={'searchUsersPlaceholder'}
+                    placeholder="Rechercher par nom, email..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
@@ -298,10 +289,10 @@ const AdminPage = () => {
                   onChange={(e) => setFilterRole(e.target.value)}
                   className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
                 >
-                  <option value="all">{'allRoles'}</option>
-                  <option value="user">{'users'}</option>
-                  <option value="business">{'Business'}</option>
-                  <option value="admin">{'admins'}</option>
+                  <option value="all">Tous les rôles</option>
+                  <option value="user">Utilisateurs</option>
+                  <option value="business">Professionnels</option>
+                  <option value="admin">Administrateurs</option>
                 </select>
                 
                 <motion.button
@@ -310,7 +301,7 @@ const AdminPage = () => {
                   className="flex items-center px-4 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
                 >
                   <ArrowDownTrayIcon className="w-4 h-4 mr-2" />
-                  {'export'}
+                  Exporter
                 </motion.button>
               </div>
             </div>
@@ -328,22 +319,22 @@ const AdminPage = () => {
                 <thead className="bg-gray-50 dark:bg-gray-900">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {'user'}
+                      Utilisateur
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {'contact'}
+                      Contact
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {'role'}
+                      Rôle
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {'status'}
+                      Statut
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {'lastLogin'}
+                      Dernière connexion
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      {'actions'}
+                      Actions
                     </th>
                   </tr>
                 </thead>
@@ -404,8 +395,8 @@ const AdminPage = () => {
                           <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
-                            onClick={() => handleEditUser(userData)}
-                            className="p-2 text-primary-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all"
+                            onClick={() => {/* Edit user functionality */}}
+                            className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all"
                             aria-label="Edit user"
                           >
                             <PencilIcon className="w-4 h-4" />

@@ -19,8 +19,32 @@ export const validatePassword = (password) => {
     return { isValid: false, error: 'Le mot de passe est requis' };
   }
   
-  if (password.length < 6) {
-    return { isValid: false, error: 'Le mot de passe doit contenir au moins 6 caractères' };
+  // Conformité PDF HackerU: ≥8 chars, 1 maj, 1 min, ≥4 chiffres, 1 symbole !@%$#^&*-_*
+  const minLength = 8;
+  const uppercaseRegex = /[A-Z]/;
+  const lowercaseRegex = /[a-z]/;
+  const numberRegex = /\d/g;
+  const specialCharRegex = /[!@%$#^&*\-_*]/;
+  
+  if (password.length < minLength) {
+    return { isValid: false, error: `Le mot de passe doit contenir au moins ${minLength} caractères` };
+  }
+  
+  if (!uppercaseRegex.test(password)) {
+    return { isValid: false, error: 'Le mot de passe doit contenir au moins 1 majuscule' };
+  }
+  
+  if (!lowercaseRegex.test(password)) {
+    return { isValid: false, error: 'Le mot de passe doit contenir au moins 1 minuscule' };
+  }
+  
+  const numberMatches = password.match(numberRegex);
+  if (!numberMatches || numberMatches.length < 4) {
+    return { isValid: false, error: 'Le mot de passe doit contenir au moins 4 chiffres' };
+  }
+  
+  if (!specialCharRegex.test(password)) {
+    return { isValid: false, error: 'Le mot de passe doit contenir au moins 1 symbole (!@%$#^&*-_*)' };
   }
   
   return { isValid: true };
@@ -57,15 +81,70 @@ export const validatePhone = (phone) => {
     return { isValid: true }; // Optional field
   }
   
-  const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
-  if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
-    return { isValid: false, error: 'Format de téléphone invalide' };
+  const phoneRegex = /^[+]?[\d\s\-()]{8,20}$/;
+  if (!phoneRegex.test(phone)) {
+    return { isValid: false, error: 'Format de téléphone invalide (8-20 caractères, chiffres, espaces, +, -, () autorisés)' };
   }
   
   return { isValid: true };
 };
 
-export const isFormValid = (formData, requiredFields = []) => {
+export const validateWebsite = (url) => {
+  if (!url) {
+    return { isValid: true }; // Optional field
+  }
+  
+  try {
+    const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
+    if (!urlPattern.test(url)) {
+      return { isValid: false, error: 'Format d\'URL invalide' };
+    }
+    return { isValid: true };
+  } catch (error) {
+    return { isValid: false, error: 'Format d\'URL invalide' };
+  }
+};
+
+export const validateCardTitle = (title) => {
+  if (!title || title.trim() === '') {
+    return { isValid: false, error: 'Le nom/titre est requis' };
+  }
+  
+  if (title.length < 2) {
+    return { isValid: false, error: 'Le nom doit contenir au moins 2 caractères' };
+  }
+  
+  if (title.length > 100) {
+    return { isValid: false, error: 'Le nom ne peut pas dépasser 100 caractères' };
+  }
+  
+  return { isValid: true };
+};
+
+export const validateDescription = (description) => {
+  if (!description) {
+    return { isValid: true }; // Optional field
+  }
+  
+  if (description.length > 500) {
+    return { isValid: false, error: 'La description ne peut pas dépasser 500 caractères' };
+  }
+  
+  return { isValid: true };
+};
+
+export const isFormValid = (errors, formData, requiredFields = []) => {
+  // Check if there are any errors
+  if (Object.keys(errors).length > 0) {
+    return false;
+  }
+  
+  // Ensure requiredFields is an array
+  if (!Array.isArray(requiredFields)) {
+    return false;
+  }
+  
+  // Check if all required fields are filled
   return requiredFields.every(field => formData[field] && formData[field].trim() !== '');
 };
 

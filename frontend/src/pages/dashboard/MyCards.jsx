@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-hot-toast';
 import { PlusIcon, ClipboardDocumentListIcon, BriefcaseIcon, UserIcon, XMarkIcon } from '@heroicons/react/24/outline';
-import Card from '../components/Card';
-import api from '../services/api';
+import Card from '../../components/cards/Card';
+import { api } from '../../services/api';
 
 const MyCardsPage = () => {
   const { user } = useAuth();
@@ -70,7 +70,7 @@ const MyCardsPage = () => {
 
   // Quick card creation for all users
   const handleQuickCardSubmit = async (e) => {
-    e.preventDefaul;
+    e.preventDefault();
     
     // Validation des champs requis
     if (!quickCardData.title || !quickCardData.email) {
@@ -165,7 +165,7 @@ const MyCardsPage = () => {
           animate={{ y: 0, opacity: 1 }}
           className="text-center mb-8"
         >
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent mb-4" data-testid="my-cards-heading">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent mb-4" data-testid="my-cards-heading">
             Mes Cartes
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
@@ -331,7 +331,7 @@ const MyCardsPage = () => {
             >
               <Link 
                 to="/create-card"
-                className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all"
+                className="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all"
               >
                 <PlusIcon className="w-5 h-5 mr-2" />
                 Créer une nouvelle carte
@@ -346,7 +346,7 @@ const MyCardsPage = () => {
             animate={{ opacity: 1 }}
             className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl text-center glass-light dark:glass-dark"
           >
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
             <p className="text-gray-600 dark:text-gray-400">Chargement...</p>
           </motion.div>
         ) : error ? (
@@ -380,10 +380,10 @@ const MyCardsPage = () => {
             >
               <Link 
                 to="/create-card"
-                className="inline-flex items-center bg-primary-500 hover:bg-primary-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all"
+                className="inline-flex items-center bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg transition-all"
               >
                 <PlusIcon className="w-5 h-5 mr-2" />
-{'myCardsPage.createNewCard'}
+                Créer une nouvelle carte
               </Link>
             </motion.div>
           </motion.div>

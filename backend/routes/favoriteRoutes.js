@@ -5,8 +5,8 @@ const {
   removeFromFavorites,
   checkFavorite,
   getFavoritesCount
-} = require('../controllers/favoriteController-clean');
-const { protect } = require('../middleware/authMiddleware-clean');
+} = require('../controllers/favoriteController');
+const { protect } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 

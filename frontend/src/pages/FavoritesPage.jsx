@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -6,7 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useFavorites } from '../context/FavoritesContext';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, EyeIcon } from '@heroicons/react/24/solid';
-import Card from '../components/Card';
+import Card from '../components/cards/Card';
 
 const FavoritesPage = () => {
   const { user } = useAuth();
@@ -42,7 +42,7 @@ const FavoritesPage = () => {
     return (
       <>
         <Helmet>
-          <title>{'loginRequired'} - CardPro</title>
+          <title>Connexion requise - FuturistCards</title>
         </Helmet>
         <motion.div 
           className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4"
@@ -63,23 +63,23 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-12 h-12 text-white" />
             </motion.div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              {'loginRequired'}
+              Connexion requise
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              {'mustBeLoggedInToViewFavorites'}
+              Vous devez être connecté pour voir vos favoris.
             </p>
             <motion.div className="space-y-4">
               <Link 
                 to="/login"
                 className="block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                {'signIn'}
+                Se connecter
               </Link>
               <Link 
                 to="/register"
                 className="block bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600 px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                {'signUp'}
+                S&apos;inscrire
               </Link>
             </motion.div>
           </motion.div>
@@ -91,8 +91,8 @@ const FavoritesPage = () => {
   return (
     <>
       <Helmet>
-        <title>{'myFavorites'} - CardPro</title>
-        <meta name="description" content={'manageFavoriteCardsDescription'} />
+        <title>Mes Favoris - FuturistCards</title>
+        <meta name="description" content="Gérez vos cartes de visite favorites sur FuturistCards." />
       </Helmet>
 
       <motion.div 
@@ -113,10 +113,10 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-4">
-              {'myFavorites'}
+              Mes Favoris
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {'manageFavoritesDescription'}
+              Retrouvez et gérez toutes vos cartes de visite préférées en un seul endroit.
             </p>
           </motion.div>
 
@@ -134,7 +134,7 @@ const FavoritesPage = () => {
               whileTap={{ scale: 0.98 }}
             >
               <ArrowLeftIcon className="w-5 h-5 mr-2" />
-              {'backToCards'}
+              Retour aux cartes
             </motion.button>
           </motion.div>
 
@@ -146,7 +146,7 @@ const FavoritesPage = () => {
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-              <span className="ml-3 text-gray-600 dark:text-gray-400">{'Chargement...'}</span>
+              <span className="ml-3 text-gray-600 dark:text-gray-400">Chargement de vos favoris...</span>
             </motion.div>
           ) : favorites.length === 0 ? (
             <motion.div 
@@ -163,10 +163,10 @@ const FavoritesPage = () => {
                 💖
               </motion.div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                {'noFavorites'}
+                Aucun favori
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-                {'startExploringCards'}
+                Commencez à explorer les cartes et ajoutez vos préférées à vos favoris.
               </p>
               <motion.div className="space-y-4">
                 <Link 
@@ -174,7 +174,7 @@ const FavoritesPage = () => {
                   className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
                 >
                   <EyeIcon className="w-5 h-5 inline mr-2" />
-                  {'exploreCards'}
+                  Explorer les cartes
                 </Link>
               </motion.div>
             </motion.div>

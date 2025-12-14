@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import api from '../services/api';
+import apiService from '../services/api';
 
 const AuthContext = createContext();
 
@@ -24,16 +24,13 @@ export const AuthProvider = ({ children }) => {
     
     try {
       // Vérifier le token avec l'API
-      const response = await api.getProfile();
+      const response = await apiService.getProfile();
       if (response.success && response.user) {
         return response.user;
       }
       return null;
     } catch (error) {
-      // Token validation failed - log only in development
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Token validation failed:', error.message);
-      }
+      // Token validation failed - clear invalid data
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       return null;
@@ -42,44 +39,30 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const initAuth = async () => {
-      // Récupérer le token au démarrage
       const savedToken = localStorage.getItem('token');
-      const savedUser = localStorage.getItem('user');
       
-      if (savedToken && savedUser) {
+      if (savedToken) {
         try {
-          // Utiliser directement les données sauvegardées sans validation
-          const userData = JSON.parse(savedUser);
-          setUser(userData);
-          setToken(savedToken);
+          // Valider le token avec l'API
+          const userData = await validateToken(savedToken);
+          if (userData) {
+            setUser(userData);
+            setToken(savedToken);
+            localStorage.setItem('user', JSON.stringify(userData));
+          } else {
+            // Token invalide - nettoyer
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
+            setToken(null);
+          }
         } catch (error) {
-          console.warn('Erreur parsing user data:', error);
-          // Créer un utilisateur par défaut
-          const defaultUser = {
-            id: 'default-user',
-            firstName: 'Utilisateur',
-            lastName: 'Test',
-            email: 'user@test.com',
-            role: 'business',
-            isActive: true
-          };
-          setUser(defaultUser);
-          localStorage.setItem('user', JSON.stringify(defaultUser));
-          localStorage.setItem('token', 'default-token');
+          // Erreur de validation - nettoyer
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          setUser(null);
+          setToken(null);
         }
-      } else {
-        // Créer un utilisateur par défaut si aucune donnée sauvegardée
-        const defaultUser = {
-          id: 'default-user',
-          firstName: 'Utilisateur',
-          lastName: 'Test',
-          email: 'user@test.com',
-          role: 'business',
-          isActive: true
-        };
-        setUser(defaultUser);
-        localStorage.setItem('user', JSON.stringify(defaultUser));
-        localStorage.setItem('token', 'default-token');
       }
       setLoading(false);
     };
@@ -98,7 +81,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       // Appel API MongoDB réel
-      const response = await api.login({ email, password });
+      const response = await apiService.login({ email, password });
       
       if (response.success) {
         // Le backend retourne les données dans response.data
@@ -149,7 +132,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       // Appel API MongoDB réel pour l'inscription
-      const response = await api.register(userData);
+      const response = await apiService.register(userData);
       
       if (response.success) {
         toast.success('Compte créé avec succès ! Vous pouvez maintenant vous connecter.');
@@ -180,6 +163,37 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Connexion démo rapide
+  const loginDemo = async (userType = 'business') => {
+    setLoading(true);
+    try {
+      const demoCredentials = {
+        business: {
+          email: 'testpro@example.com',
+          password: 'TestPass123!'
+        },
+        user: {
+          email: 'testnormal@example.com', 
+          password: 'TestPass123!'
+        }
+      };
+
+      const credentials = demoCredentials[userType];
+      if (!credentials) {
+        throw new Error('Type d\'utilisateur démo invalide');
+      }
+
+      const result = await login(credentials.email, credentials.password);
+      toast.success(`Connecté en mode démo ${userType === 'business' ? 'Pro' : 'Utilisateur'} !`);
+      return result;
+    } catch (error) {
+      toast.error('Erreur de connexion démo: ' + error.message);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -202,7 +216,7 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       // Mise à jour réelle via l'API backend MongoDB
-      const response = await api.updateProfile(profileData);
+      const response = await apiService.updateProfile(profileData);
       
       if (response.success) {
         const updatedUser = { ...user, ...response.user };
@@ -243,6 +257,7 @@ export const AuthProvider = ({ children }) => {
     user,
     loading,
     login,
+    loginDemo,
     register,
     logout,
     updateProfile,

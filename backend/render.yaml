@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: futuristcards-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3010
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://futuristcards.vercel.app
+    healthCheckPath: /api/health
+    numInstances: 1
+    region: oregon
+    rootDir: ./
+    scaling:
+      minInstances: 1
+      maxInstances: 1

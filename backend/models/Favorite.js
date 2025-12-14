@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const favoriteSchema = new mongoose.Schema(
   {
@@ -38,7 +38,7 @@ favoriteSchema.statics.toggleFavorite = async function (userId, cardId) {
       return { action: 'added', favorite: newFavorite };
     }
   } catch (error) {
-    console.error('Toggle favorite error:', error);
+    // Toggle favorite error - handle gracefully
     throw new Error('Error toggling favorite: ' + error.message);
   }
 };
@@ -66,4 +66,4 @@ favoriteSchema.statics.getFavoriteCount = function (cardId) {
   return this.countDocuments({ card: cardId });
 };
 
-export default mongoose.model('Favorite', favoriteSchema);
+module.exports = mongoose.model('Favorite', favoriteSchema);

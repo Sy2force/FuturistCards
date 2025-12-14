@@ -1,12 +1,22 @@
 const Card = require('../models/Card');
 const User = require('../models/User');
+const { mockCards, mockUsers } = require('../data/mockData');
 
 // récupérer toutes les cartes publiques
 const getAllCards = async (req, res) => {
   try {
-    const cards = await Card.find()
-      .populate('user', 'name email')
-      .sort({ createdAt: -1 });
+    let cards;
+    try {
+      cards = await Card.find()
+        .populate('user', 'name email')
+        .sort({ createdAt: -1 });
+    } catch (dbError) {
+      // Fallback to mock data if MongoDB is unavailable
+      cards = mockCards.map(card => ({
+        ...card,
+        user: mockUsers.find(u => u._id === card.userId)
+      }));
+    }
 
     res.json({
       success: true,

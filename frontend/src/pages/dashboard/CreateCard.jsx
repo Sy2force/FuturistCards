@@ -1,10 +1,17 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../context/AuthContext';
-import api from '../services/api';
+import { useAuth } from '../../context/AuthContext';
+import apiService from '../../services/api';
+import { 
+  validateCardTitle, 
+  validateEmail, 
+  validatePhone, 
+  validateWebsite, 
+  validateDescription 
+} from '../../utils/validation';
 import { 
   UserIcon, 
   EnvelopeIcon, 
@@ -42,7 +49,7 @@ const CreateCardPage = () => {
   const { user } = useAuth();
 
   // remplir automatiquement avec les infos du user
-  React.useEffect(() => {
+  useEffect(() => {
     if (user) {
       setFormData(prev => ({
         ...prev,
@@ -65,38 +72,39 @@ const CreateCardPage = () => {
     { value: 'other', label: 'Autre' }
   ];
 
-  // validation en temps réel
+  // validation en temps réel complète
   const validateField = (name, value) => {
     const errors = { ...validationErrors };
+    let validation;
     
     switch (name) {
+      case 'title':
+        validation = validateCardTitle(value);
+        break;
       case 'email':
-        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-          errors.email = 'Email invalide';
-        } else {
-          delete errors.email;
-        }
+        validation = validateEmail(value);
         break;
       case 'phone':
-        if (value && !/^[\+]?[1-9][\d]{0,15}$/.test(value.replace(/\s/g, ''))) {
-          errors.phone = 'Numéro invalide';
-        } else {
-          delete errors.phone;
-        }
+        validation = validatePhone(value);
         break;
       case 'website':
-        if (value && !/^https?:\/\/.+\..+/.test(value)) {
-          errors.website = 'URL invalide';
-        } else {
-          delete errors.website;
-        }
+        validation = validateWebsite(value);
+        break;
+      case 'description':
+        validation = validateDescription(value);
         break;
       default:
-        break;
+        validation = { isValid: true };
+    }
+    
+    if (!validation.isValid) {
+      errors[name] = validation.error;
+    } else {
+      delete errors[name];
     }
     
     setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
+    return validation.isValid;
   };
 
   const handleChange = (e) => {
@@ -143,34 +151,16 @@ const CreateCardPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefaul;
+    e.preventDefault();
     setLoading(true);
     setError('');
 
-    // Validation complète des champs requis et optionnels
+    // Validation simplifiée: seuls nom et prénom obligatoires
     const errors = {};
     
-    // Champs obligatoires
+    // Seul champ obligatoire: nom complet
     if (!formData.title?.trim()) {
-      errors.title = 'Le nom complet est obligatoire';
-    }
-    if (!formData.email?.trim()) {
-      errors.email = 'L\'email est obligatoire';
-    }
-    
-    // Validation format email
-    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.tesformData.email) {
-      errors.email = 'Format d\'email invalide';
-    }
-    
-    // Validation téléphone si fourni
-    if (formData.phone && !/^[\+]?[1-9][\d]{0,15}$/.tesformData.phone.replace(/\s/g, '')) {
-      errors.phone = 'Format de téléphone invalide';
-    }
-    
-    // Validation site web si fourni
-    if (formData.website && !/^https?:\/\/.+\..+/.tesformData.website) {
-      errors.website = 'Format d\'URL invalide (doit commencer par http:// ou https://)';
+      errors.title = 'Le nom est obligatoire';
     }
     
     // Si erreurs, les afficher et arrêter
@@ -200,7 +190,7 @@ const CreateCardPage = () => {
         isPublic: true
       };
 
-      const response = await api.createCard(cardData);
+      const response = await apiService.createCard(cardData);
       
       if (response.success) {
         toast.success('🎉 Votre carte a été créée avec succès !');
@@ -231,22 +221,22 @@ const CreateCardPage = () => {
   //     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
   //       <div className="text-center">
   //         <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-  //           {'accessRestricted'}
+  //           Accès restreint
   //         </h1>
   //         <p className="text-gray-600 dark:text-gray-400 mb-6">
-  //           {'needAccount'}
+  //           Vous devez avoir un compte professionnel pour créer des cartes.
   //         </p>
   //         <button 
   //           onClick={() => navigate('/login')}
   //           className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg mr-4"
   //         >
-  //           {'Connexion'}
+  //           Connexion
   //         </button>
   //         <button 
   //           onClick={() => navigate('/register')}
   //           className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg"
   //         >
-  //           {'Inscription'}
+  //           Inscription
   //         </button>
   //       </div>
   //     </div>
@@ -497,7 +487,7 @@ const CreateCardPage = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        🏢 {'Entreprise'}
+                        🏢 Entreprise
                       </label>
                       <input
                         type="text"
@@ -511,7 +501,7 @@ const CreateCardPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        💼 {'Poste'}
+                        💼 Poste
                       </label>
                       <input
                         type="text"
@@ -529,7 +519,7 @@ const CreateCardPage = () => {
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {'Description'}
+                    Description
                   </label>
                   <textarea
                     name="description"
@@ -547,7 +537,7 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <EnvelopeIcon className="w-4 h-4 inline mr-1" />
-                      {'Email'} *
+                      Email
                     </label>
                     <input
                       type="email"
@@ -555,8 +545,7 @@ const CreateCardPage = () => {
                       data-testid="input-email"
                       value={formData.email}
                       onChange={handleChange}
-                      required
-                      placeholder="votre.email@exemple.com"
+                      placeholder="n'importe.quel@email.com"
                       className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
                         validationErrors.email 
                           ? 'border-red-500 dark:border-red-400' 
@@ -571,7 +560,7 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <PhoneIcon className="w-4 h-4 inline mr-1" />
-                      {'Téléphone'}
+                      Téléphone
                     </label>
                     <input
                       type="tel"
@@ -597,7 +586,7 @@ const CreateCardPage = () => {
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <GlobeAltIcon className="w-4 h-4 inline mr-1" />
-                      {'Site web'}
+                      Site web
                     </label>
                     <input
                       type="url"
@@ -618,7 +607,7 @@ const CreateCardPage = () => {
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {'Catégorie'}
+                      Catégorie
                     </label>
                     <select
                       name="category"
@@ -639,7 +628,7 @@ const CreateCardPage = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <MapPinIcon className="w-4 h-4 inline mr-1" />
-                    {'Adresse'}
+                    Adresse
                   </label>
                   <input
                     type="text"
@@ -662,7 +651,7 @@ const CreateCardPage = () => {
                     whileTap={{ scale: 0.98 }}
                   >
                     <ArrowLeftIcon className="w-5 h-5 mr-2 inline" />
-                    {'Annuler'}
+                    Annuler
                   </motion.button>
                   <motion.button
                     type="submit"
@@ -684,7 +673,7 @@ const CreateCardPage = () => {
                     ) : (
                       <>
                         <DocumentCheckIcon className="w-5 h-5 mr-2" />
-                        {'Créer une carte'}
+                        Créer une carte
                       </>
                     )}
                   </motion.button>

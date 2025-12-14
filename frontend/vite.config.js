@@ -1,7 +1,9 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'url'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   base: '/',
   plugins: [react()],
@@ -17,16 +19,11 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3010,
-    strictPort: true, // Force port 3010 only, fail if busy
+    port: 3010, // Frontend sur 3010, backend sur 5001
+    strictPort: true,
     host: '0.0.0.0',
     open: false,
     cors: true,
-    hmr: {
-      overlay: true,
-      port: 3011 // Use different port for HMR to avoid conflicts
-    }
-    // No proxy needed - we use full URLs via VITE_API_URL env variable
   },
   preview: {
     port: 4173,
@@ -72,4 +69,18 @@ export default defineConfig({
       'react-hot-toast'
     ],
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./src/setupTests.js'],
+    css: true,
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json', 'html'],
+      exclude: [
+        'node_modules/',
+        'src/setupTests.js',
+      ]
+    }
+  }
 })

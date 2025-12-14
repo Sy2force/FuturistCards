@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   HeartIcon, 
@@ -12,7 +12,7 @@ import {
   GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
-import { useFavorites } from '../context/FavoritesContext';
+import { useFavorites } from '../../context/FavoritesContext';
 import CardPreview from './CardPreview';
 
 const Card = ({ 
@@ -25,12 +25,17 @@ const Card = ({
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   
   return (
-    <motion.div 
+    <motion.article
+      layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      whileHover={{ y: -5, transition: { duration: 0.2 } }}
-      data-testid="card-item"
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-700"
+      exit={{ opacity: 0, y: -20 }}
+      whileHover={{ y: -5, scale: 1.02 }}
+      transition={{ duration: 0.2 }}
+      className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300"
+      role="article"
+      aria-labelledby={`card-title-${card._id}`}
+      aria-describedby={`card-description-${card._id}`}
     >
       <div className="relative overflow-hidden">
         <div className="relative w-full h-48 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900">
@@ -65,7 +70,7 @@ const Card = ({
               whileHover={{ scale: 1.1 }}
               className="bg-white/90 dark:bg-gray-800/90 p-2 rounded-full shadow-lg"
             >
-              <EyeIcon className="w-5 h-5 text-primary-600 dark:text-primary-400" />
+              <EyeIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
             </motion.div>
           </div>
         </div>
@@ -132,9 +137,9 @@ const Card = ({
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
-                  onClick={() => onEdicard._id || card.id}
+                  onClick={() => onEdit(card._id || card.id)}
                   data-testid="edit-card-btn"
-                  className="p-2 text-primary-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all duration-200 shadow-sm"
+                  className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200 shadow-sm"
                   aria-label={'Modifier la carte'}
                 >
                   <PencilIcon className="w-4 h-4" />
@@ -163,7 +168,7 @@ const Card = ({
         isOpen={isPreviewOpen}
         onClose={() => setIsPreviewOpen(false)}
       />
-    </motion.div>
+    </motion.article>
   );
 };
 

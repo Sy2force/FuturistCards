@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useAuth } from '../context/AuthContext';
-import { validateEmail, validateRequired, validateLength } from '../utils/validation';
+import { useAuth } from '../../context/AuthContext';
+import { validateEmail, validateRequired, validateLength } from '../../utils/validation';
 import { 
   UserIcon, 
   UsersIcon, 
@@ -120,7 +120,7 @@ const ProfilePage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefaul;
+    e.preventDefault();
     
     if (!validateForm()) {
       return;
@@ -158,10 +158,10 @@ const ProfilePage = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {'accessDenied'}
+            Accès refusé
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {'mustBeLoggedIn'}
+            Vous devez être connecté pour accéder à cette page.
           </p>
         </div>
       </div>
@@ -171,8 +171,8 @@ const ProfilePage = () => {
   return (
     <>
       <Helmet>
-        <title>{'Profil'} - CardPro</title>
-        <meta name="description" content={'profileDescription'} />
+        <title>Profil - FuturistCards</title>
+        <meta name="description" content="Gérez votre profil et vos informations personnelles sur FuturistCards." />
       </Helmet>
       
       <motion.div 
@@ -216,7 +216,7 @@ const ProfilePage = () => {
                     <motion.label 
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
-                      className="absolute bottom-0 right-0 bg-primary-500 hover:bg-primary-600 text-white p-2 rounded-full cursor-pointer shadow-lg"
+                      className="absolute bottom-0 right-0 bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full cursor-pointer shadow-lg"
                     >
                       <CameraIcon className="w-5 h-5" />
                       <input
@@ -259,9 +259,9 @@ const ProfilePage = () => {
                   aria-label={isEditing ? 'Cancel editing' : 'Edit profile'}
                 >
                   {isEditing ? (
-                    <><XMarkIcon className="w-4 h-4 mr-2" /> {'Annuler'}</>
+                    <><XMarkIcon className="w-4 h-4 mr-2" /> Annuler</>
                   ) : (
-                    <><PencilIcon className="w-4 h-4 mr-2" /> {'editProfile'}</>
+                    <><PencilIcon className="w-4 h-4 mr-2" /> Modifier le profil</>
                   )}
                 </motion.button>
               </div>
@@ -279,15 +279,15 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 mr-2" />
-                        {'firstName'}
+                        Prénom
                       </label>
                       <input
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
                         type="text"
-                        className={`w-full px-4 py-3 border ${errors.firstName ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all`}
-                        placeholder={'enterFirstName'}
+                        className={`w-full px-4 py-3 border ${errors.firstName ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all`}
+                        placeholder="Entrez votre prénom"
                         aria-invalid={errors.firstName ? 'true' : 'false'}
                       />
                       {errors.firstName && (
@@ -305,15 +305,15 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 mr-2" />
-                        {'lastName'}
+                        Nom
                       </label>
                       <input
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
                         type="text"
-                        className={`w-full px-4 py-3 border ${errors.lastName ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all`}
-                        placeholder={'enterLastName'}
+                        className={`w-full px-4 py-3 border ${errors.lastName ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all`}
+                        placeholder="Entrez votre nom"
                         aria-invalid={errors.lastName ? 'true' : 'false'}
                       />
                       {errors.lastName && (
@@ -331,15 +331,15 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <EnvelopeIcon className="w-4 h-4 mr-2" />
-                        {'Email'}
+                        Email
                       </label>
                       <input
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
                         type="email"
-                        className={`w-full px-4 py-3 border ${errors.email ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all`}
-                        placeholder={'Entrez votre email'}
+                        className={`w-full px-4 py-3 border ${errors.email ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all`}
+                        placeholder="Entrez votre email"
                         aria-invalid={errors.email ? 'true' : 'false'}
                       />
                       {errors.email && (
@@ -357,14 +357,14 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <PhoneIcon className="w-4 h-4 mr-2" />
-                        {'Téléphone'}
+                        Téléphone
                       </label>
                       <input
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
                         type="tel"
-                        className={`w-full px-4 py-3 border ${errors.phone ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all`}
+                        className={`w-full px-4 py-3 border ${errors.phone ? 'border-error-500' : 'border-neutral-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all`}
                         placeholder="050-1234567"
                         aria-invalid={errors.phone ? 'true' : 'false'}
                       />
@@ -383,15 +383,15 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <BuildingOfficeIcon className="w-4 h-4 mr-2" />
-                        {'Entreprise'}
+                        Entreprise
                       </label>
                       <input
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
                         type="text"
-                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
-                        placeholder={'Entrez votre entreprise'}
+                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all"
+                        placeholder="Entrez votre entreprise"
                       />
                     </motion.div>
 
@@ -399,15 +399,15 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 mr-2" />
-                        {'Poste'}
+                        Poste
                       </label>
                       <input
                         name="position"
                         value={formData.position}
                         onChange={handleChange}
                         type="text"
-                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
-                        placeholder={'Entrez votre poste'}
+                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all"
+                        placeholder="Entrez votre poste"
                       />
                     </motion.div>
 
@@ -415,14 +415,14 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: -20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="md:col-span-2">
                       <label className="flex items-center text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <GlobeAltIcon className="w-4 h-4 mr-2" />
-                        {'Site web'}
+                        Site web
                       </label>
                       <input
                         name="website"
                         value={formData.website}
                         onChange={handleChange}
                         type="url"
-                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all"
+                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all"
                         placeholder="https://your-website.com"
                       />
                     </motion.div>
@@ -430,15 +430,15 @@ const ProfilePage = () => {
                     {/* Bio */}
                     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.4 }} className="md:col-span-2">
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {'aboutYou'}
+                        À propos de vous
                       </label>
                       <textarea
                         name="bio"
                         value={formData.bio}
                         onChange={handleChange}
                         rows={4}
-                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all resize-none"
-                        placeholder={'tellAboutYourself'}
+                        className="w-full px-4 py-3 border border-neutral-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 transition-all resize-none"
+                        placeholder="Parlez-nous de vous..."
                       />
                     </motion.div>
                   </div>
@@ -459,7 +459,7 @@ const ProfilePage = () => {
                       disabled={isLoading}
                     >
                       <XMarkIcon className="w-4 h-4 mr-2" />
-                      {'Annuler'}
+                      Annuler
                     </motion.button>
                     <motion.button
                       type="submit"
@@ -529,7 +529,7 @@ const ProfilePage = () => {
                               href={user.website} 
                               target="_blank" 
                               rel="noopener noreferrer"
-                              className="text-primary-500 hover:text-primary-600 font-medium transition-colors"
+                              className="text-blue-500 hover:text-blue-600 font-medium transition-colors"
                             >
                               {user.website}
                             </a>
@@ -543,7 +543,7 @@ const ProfilePage = () => {
                     <motion.div initial={{ x: 20, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
                       <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                         <BuildingOfficeIcon className="w-5 h-5 mr-2 text-blue-500" />
-                        Détails de l'Entreprise
+                        Détails de l&apos;Entreprise
                       </h3>
                     <div className="space-y-4">
                       {user?.company && (

@@ -1,8 +1,7 @@
-import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const ProtectedRoute = ({ children, requiredRole = null, requireAuth = true }) => {
+const ProtectedRoute = ({ children, requiredRole = null, allowedRoles = [], requireAuth = true }) => {
   const { user, loading } = useAuth();
   const location = useLocation();
 
@@ -23,10 +22,21 @@ const ProtectedRoute = ({ children, requiredRole = null, requireAuth = true }) =
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Vérifier le rôle requis
-  if (requiredRole && user && user.role !== requiredRole) {
-    // Rediriger vers une page d'accès refusé ou la page d'accueil
-    return <Navigate to="/" replace />;
+  // Vérifier les rôles autorisés
+  if (user && (requiredRole || allowedRoles.length > 0)) {
+    const hasRequiredRole = requiredRole ? user.role === requiredRole : true;
+    const hasAllowedRole = allowedRoles.length > 0 ? allowedRoles.includes(user.role) : true;
+    
+    if (!hasRequiredRole || !hasAllowedRole) {
+      // Redirection intelligente selon le rôle
+      if (user.role === 'admin') {
+        return <Navigate to="/admin" replace />;
+      } else if (user.role === 'business') {
+        return <Navigate to="/my-cards" replace />;
+      } else {
+        return <Navigate to="/cards" replace />;
+      }
+    }
   }
 
   // Afficher le composant si toutes les conditions sont remplies

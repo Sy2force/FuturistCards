@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -110,7 +110,7 @@ const EditCardPage = () => {
   };
   
   const handleSubmit = async (e) => {
-    e.preventDefaul;
+    e.preventDefault();
     setLoading(true);
     setError('');
     
@@ -191,7 +191,7 @@ const EditCardPage = () => {
             Carte non trouvée
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            La carte que vous essayez de modifier n'existe pas ou vous n'avez pas les permissions nécessaires.
+            La carte que vous essayez de modifier n&apos;existe pas ou vous n&apos;avez pas les permissions nécessaires.
           </p>
           <button 
             onClick={() => navigate('/my-cards')}
@@ -343,7 +343,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 inline mr-1" />
-                        {'editCard.fullName'} *
+                        Nom complet *
                       </label>
                       <input
                         type="text"
@@ -357,7 +357,7 @@ const EditCardPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {'editCard.position'} *
+                        Poste *
                       </label>
                       <input
                         type="text"
@@ -373,7 +373,7 @@ const EditCardPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {'editCard.description'}
+                      Description
                     </label>
                     <textarea
                       name="description"
@@ -388,7 +388,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <EnvelopeIcon className="w-4 h-4 inline mr-1" />
-                        {'editCard.email'} *
+                        Email *
                       </label>
                       <input
                         type="email"
@@ -402,11 +402,11 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <PhoneIcon className="w-4 h-4 inline mr-1" />
-                        {'editCard.phone'} *
+                        Téléphone *
                       </label>
                       <input
                         type="tel"
-                        placeholder={'editCard.phonePlaceholder'}
+                        placeholder="050-1234567"
                         value={formData.phone}
                         onChange={handleChange}
                         required
@@ -419,11 +419,11 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <GlobeAltIcon className="w-4 h-4 inline mr-1" />
-                        {'editCard.website'}
+                        Site web
                       </label>
                       <input
                         type="url"
-                        placeholder={'editCard.websitePlaceholder'}
+                        placeholder="https://votre-site.com"
                         value={formData.website}
                         onChange={handleChange}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
@@ -431,7 +431,7 @@ const EditCardPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {'editCard.category'} *
+                        Catégorie *
                       </label>
                       <select
                         name="category"
@@ -452,11 +452,11 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <MapPinIcon className="w-4 h-4 inline mr-1" />
-                      {'editCard.address'}
+                      Adresse
                     </label>
                     <input
                       type="text"
-                      placeholder={'editCard.addressPlaceholder'}
+                      placeholder="Votre adresse complète"
                       value={formData.address}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
@@ -472,7 +472,7 @@ const EditCardPage = () => {
                       whileHover={{ scale: 1.02 }}
                     >
                       <ArrowLeftIcon className="w-5 h-5 mr-2 inline" />
-                      {'editCard.cancel'}
+                      Annuler
                     </motion.button>
                     <motion.button
                       type="submit"
@@ -488,12 +488,12 @@ const EditCardPage = () => {
                             animate={{ rotate: 360 }}
                             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                           />
-                          {'editCard.updating'}
+                          Mise à jour...
                         </>
                       ) : (
                         <>
                           <DocumentCheckIcon className="w-5 h-5 mr-2" />
-                          {'editCard.save'}
+                          Sauvegarder
                         </>
                       )}
                     </motion.button>

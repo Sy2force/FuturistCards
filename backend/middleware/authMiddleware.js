@@ -10,8 +10,8 @@ const protect = async (req, res, next) => {
       // récupérer le token
       token = req.headers.authorization.split(' ')[1];
 
-      // pour les tests avec test-token
-      if (token === 'test-token') {
+      // Seulement en mode développement
+      if (process.env.NODE_ENV === 'development' && token === 'test-token') {
         req.user = { id: 'test-user-id', role: 'business' };
         return next();
       }
@@ -28,14 +28,10 @@ const protect = async (req, res, next) => {
 
       next();
     } catch (error) {
-      // fallback avec un user mock pour les tests
-      req.user = { 
-        id: 'mock-user-id', 
-        name: 'Mock User',
-        email: 'mock@test.com',
-        role: 'business' 
-      };
-      next();
+      return res.status(401).json({ 
+        message: 'Token invalide ou expiré',
+        error: process.env.NODE_ENV === 'development' ? error.message : 'Invalid token'
+      });
     }
   } else {
     res.status(401).json({ message: 'Pas de token, accès refusé' });
@@ -50,7 +46,7 @@ const optionalAuth = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
       
-      if (token === 'test-token') {
+      if (process.env.NODE_ENV === 'development' && token === 'test-token') {
         req.user = { id: 'test-user-id', role: 'business' };
         return next();
       }

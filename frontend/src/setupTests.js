@@ -1,0 +1,99 @@
+import '@testing-library/jest-dom';
+import { beforeAll, afterAll, vi } from 'vitest';
+
+// Mock IntersectionObserver
+Object.defineProperty(globalThis, 'IntersectionObserver', {
+  writable: true,
+  value: class IntersectionObserver {
+    constructor() {}
+    disconnect() {}
+    observe() {}
+    unobserve() {}
+  },
+});
+
+// Mock fetch for API calls
+Object.defineProperty(globalThis, 'fetch', {
+  writable: true,
+  value: vi.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({}),
+    })
+  ),
+});
+
+// Mock ResizeObserver
+Object.defineProperty(globalThis, 'ResizeObserver', {
+  writable: true,
+  value: class ResizeObserver {
+    constructor() {}
+    disconnect() {}
+    observe() {}
+    unobserve() {}
+  },
+});
+
+// Mock matchMedia
+Object.defineProperty(window, 'matchMedia', {
+  writable: true,
+  value: vi.fn().mockImplementation(query => ({
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
+  })),
+});
+
+// Mock scrollTo
+Object.defineProperty(window, 'scrollTo', {
+  writable: true,
+  value: vi.fn(),
+});
+
+// Mock localStorage
+const localStorageMock = {
+  getItem: vi.fn(() => null),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+
+Object.defineProperty(window, 'localStorage', {
+  writable: true,
+  value: localStorageMock,
+});
+
+// Mock sessionStorage
+const sessionStorageMock = {
+  getItem: vi.fn(() => null),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
+};
+
+Object.defineProperty(window, 'sessionStorage', {
+  writable: true,
+  value: sessionStorageMock,
+});
+
+// Suppress console warnings during tests
+const originalWarn = console.warn;
+beforeAll(() => {
+  console.warn = (...args) => {
+    if (
+      typeof args[0] === 'string' &&
+      args[0].includes('ReactDOM.render is no longer supported')
+    ) {
+      return;
+    }
+    originalWarn(...args);
+  };
+});
+
+afterAll(() => {
+  console.warn = originalWarn;
+});

@@ -10,7 +10,14 @@ const rateLimit = require("express-rate-limit");
 const authRoutes = require("./routes/authRoutes");
 const cardRoutes = require("./routes/cardRoutes");
 const favoriteRoutes = require("./routes/favoriteRoutes");
+const userRoutes = require("./routes/userRoutes");
 
+const { 
+  generalLimiter, 
+  authLimiter, 
+  registerLimiter, 
+  cardLimiter 
+} = require('./middleware/rateLimiter');
 const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
@@ -79,32 +86,26 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// sécurité
-app.use(helmet({
-  crossOriginEmbedderPolicy: false
-}));
+// Enhanced security headers
+const securityHeaders = require('./middleware/securityHeaders');
+app.use(securityHeaders);
 
 app.use(compression());
 
-// limite les requêtes (anti-spam)
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 min
-  max: 100,
-  message: {
-    error: "Trop de requêtes, ralentis un peu!"
-  }
-});
-app.use('/api/', limiter);
+// Apply rate limiting
+app.use('/api', generalLimiter);
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/register', registerLimiter);
+app.use('/api/cards', cardLimiter);
 
 // pour parser le JSON
-app.use(express.json());
+app.use(express.json({ strict: false }));
 app.use(express.urlencoded({ extended: true }));
 
 // log des requêtes (dev seulement)
 if (process.env.NODE_ENV !== 'production') {
   app.use((req, res, next) => {
-    const timestamp = new Date().toISOString();
-    console.log(`${timestamp} ${req.method} ${req.path} - Origin: ${req.get('Origin') || 'N/A'}`);
+    // Request logging for development
     next();
   });
 }
@@ -122,31 +123,50 @@ app.get("/api/health", (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
 app.use('/api/favorites', favoriteRoutes);
+app.use('/api/users', userRoutes);
 
 // gestion des erreurs
 app.use(errorHandler);
 
 async function startServer() {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('🚀 Démarrage du serveur CardPro...');
+    console.log('🔧 PORT:', PORT);
+    console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
+    console.log('🔧 MONGO_URI:', process.env.MONGO_URI ? 'Configuré' : 'Non configuré');
+  }
+
   // connexion MongoDB
   if (process.env.MONGO_URI) {
     try {
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('📡 Connexion à MongoDB...');
+      }
       await mongoose.connect(process.env.MONGO_URI);
-      console.log("✅ MongoDB connecté");
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('✅ MongoDB connecté avec succès');
+      }
     } catch (err) {
-      console.error("❌ Erreur MongoDB:", err.message);
+      console.error('❌ Erreur MongoDB:', err.message);
       if (process.env.NODE_ENV === 'production') {
         process.exit(1);
       }
     }
   } else {
-    console.error("❌ MONGO_URI manquant");
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('⚠️  MONGO_URI non configuré - mode développement');
+    }
     if (process.env.NODE_ENV === 'production') {
       process.exit(1);
     }
   }
 
   app.listen(PORT, () => {
-    console.log(`🚀 Serveur sur le port ${PORT}`);
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`🎯 Serveur CardPro démarré sur http://localhost:${PORT}`);
+      console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
+      console.log('✨ Serveur prêt à recevoir les requêtes');
+    }
   });
 }
 

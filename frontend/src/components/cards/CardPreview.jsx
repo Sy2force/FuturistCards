@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   XMarkIcon,
@@ -12,7 +11,7 @@ import {
   ShareIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
-import { useFavorites } from '../context/FavoritesContext';
+import { useFavorites } from '../../context/FavoritesContext';
 
 const CardPreview = ({ card, isOpen, onClose }) => {
   const { toggleFavorite, isFavorite } = useFavorites();
