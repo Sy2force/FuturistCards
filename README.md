@@ -7,7 +7,8 @@ Une application web moderne **100% fonctionnelle et production-ready** pour cré
 **Version**: 1.0 Production Ready  
 **Statut Global**: **EXCELLENT (A+)**  
 **Score Sécurité**: **89% (EXCELLENT)**  
-**Date de finalisation**: Décembre 2025  
+**Date de finalisation**: Décembre 2024  
+**Repository**: [https://github.com/Sy2force/CARDcv.git](https://github.com/Sy2force/CARDcv.git)  
 
 ## 🌐 Démonstration Live
 
@@ -18,6 +19,26 @@ Une application web moderne **100% fonctionnelle et production-ready** pour cré
 | **📊 API Health** | [http://localhost:5001/api/health](http://localhost:5001/api/health) | ✅ Monitoring |
 | **🌍 Frontend Prod** | [https://cardpro-frontend.vercel.app](https://cardpro-frontend.vercel.app) | ✅ Production |
 | **🔧 Backend Prod** | [https://cardpro-21dj.onrender.com/api](https://cardpro-21dj.onrender.com/api) | ✅ Production |
+
+## 📋 Table des Matières
+
+- [🏆 Statut Projet](#-statut-projet--100-terminé-)
+- [🌐 Démonstration Live](#-démonstration-live)
+- [✨ Fonctionnalités Complètes](#-fonctionnalités-complètes)
+- [🛠️ Stack Technique Complète](#️-stack-technique-complète)
+- [🚀 Installation & Développement](#-installation--développement)
+- [🏗️ Architecture](#️-architecture)
+- [🚀 Déploiement](#-déploiement)
+- [🧪 Tests Complets](#-tests-complets)
+- [🔒 Sécurité Production](#-sécurité-production)
+- [📊 Performances Optimales](#-performances-optimales)
+- [🚨 Résolution de Problèmes](#-résolution-de-problèmes)
+- [📚 Documentation API](#-documentation-api)
+- [🎯 Performance](#-performance)
+- [🎯 Recommandations Futures](#-recommandations-futures)
+- [📄 Licence](#-licence)
+- [🙏 Remerciements](#-remerciements)
+- [🏁 Conclusion](#-conclusion)
 
 ## 🎯 Objectif du Projet
 
@@ -671,4 +692,4 @@ GET /api/cards
 **💻 Développé par [Shaï Acoca](https://github.com/Sy2force)**
 **🤖 Finalisé avec [Cascade AI](https://codeium.com)**
 
-**🚀 Prêt pour la production - Décembre 2025 ✅**
+**🚀 Prêt pour la production - Décembre 2024 ✅**
