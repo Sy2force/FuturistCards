@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
+import ThemeToggle from './ThemeToggle';
 import { 
   Bars3Icon,
   XMarkIcon,
@@ -119,6 +120,9 @@ const Navbar = () => {
                 </motion.div>
               );
             })}
+            
+            {/* Theme Toggle */}
+            <ThemeToggle />
             
             {/* User section with role badge */}
             {user ? (

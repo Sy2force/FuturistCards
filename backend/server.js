@@ -142,12 +142,27 @@ async function startServer() {
       if (process.env.NODE_ENV !== 'production') {
         console.log('📡 Connexion à MongoDB...');
       }
-      await mongoose.connect(process.env.MONGO_URI);
+      
+      // Options de connexion optimisées
+      const mongoOptions = {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        serverSelectionTimeoutMS: 5000, // Timeout après 5s
+        socketTimeoutMS: 45000, // Socket timeout
+        family: 4 // IPv4 uniquement
+      };
+      
+      await mongoose.connect(process.env.MONGO_URI, mongoOptions);
+      
       if (process.env.NODE_ENV !== 'production') {
         console.log('✅ MongoDB connecté avec succès');
+        console.log('🔗 Database:', mongoose.connection.name);
       }
     } catch (err) {
       console.error('❌ Erreur MongoDB:', err.message);
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('⚠️  Passage en mode fallback avec mock data');
+      }
       if (process.env.NODE_ENV === 'production') {
         process.exit(1);
       }

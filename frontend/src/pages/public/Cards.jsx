@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import SearchBar from '../../components/common/SearchBar';
 import { api } from '../../services/api';
 import { toast } from 'react-hot-toast';
 import Card from '../../components/cards/Card';
@@ -9,7 +10,9 @@ import Card from '../../components/cards/Card';
 const Cards = () => {
   const { user } = useAuth();
   const [cards, setCards] = useState([]);
+  const [filteredCards, setFilteredCards] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -21,6 +24,7 @@ const Cards = () => {
           // Handle nested data structure from API
           const cardsData = response.data?.cards || response.data || [];
           setCards(cardsData);
+          setFilteredCards(cardsData);
         } else {
           throw new Error(response.message || 'Erreur lors du chargement des cartes');
         }
@@ -34,6 +38,21 @@ const Cards = () => {
     
     fetchCards();
   }, []);
+
+  // Handle search
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    if (!term) {
+      setFilteredCards(cards);
+    } else {
+      const filtered = cards.filter(card => 
+        card.title?.toLowerCase().includes(term.toLowerCase()) ||
+        card.description?.toLowerCase().includes(term.toLowerCase()) ||
+        card.business?.toLowerCase().includes(term.toLowerCase())
+      );
+      setFilteredCards(filtered);
+    }
+  };
 
   if (loading) {
     return <LoadingSpinner />;
@@ -52,16 +71,28 @@ const Cards = () => {
           </p>
         </div>
 
+        {/* Barre de recherche */}
+        <div className="mb-8">
+          <SearchBar 
+            onSearch={handleSearch}
+            placeholder="Rechercher par nom, description ou entreprise..."
+            className="max-w-2xl mx-auto"
+          />
+        </div>
+
         {/* Statistiques */}
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 mb-8 shadow-lg">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            {cards.length} cartes disponibles
+            {searchTerm ? 
+              `${filteredCards.length} cartes trouvées sur ${cards.length} au total` :
+              `${cards.length} cartes disponibles`
+            }
           </p>
         </div>
 
         {/* Grille des cartes */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="cards-grid">
-          {cards.map(card => (
+          {filteredCards.map(card => (
             <Card 
               key={card._id} 
               card={card} 

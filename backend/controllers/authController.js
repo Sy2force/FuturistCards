@@ -1,7 +1,8 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { mockUsers } = require('../data/mockData');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const { validationResult } = require('express-validator');
+const mongoose = require('mongoose');
 
 // créer un token JWT
 const generateToken = (id) => {
