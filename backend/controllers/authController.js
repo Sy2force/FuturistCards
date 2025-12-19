@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
+const { mockUsers } = require('../data/mockData');
 
 // créer un token JWT
 const generateToken = (id) => {

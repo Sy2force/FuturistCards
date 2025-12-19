@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { mockUsers } = require('../data/mockData');
 
 // middleware pour protéger les routes
 const protect = async (req, res, next) => {
@@ -20,11 +21,24 @@ const protect = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       // récupérer l'utilisateur
-      req.user = await User.findById(decoded.id).select('-password');
+      let user;
+      try {
+        user = await User.findById(decoded.id).select('-password');
+      } catch (dbError) {
+        // Utilisation des données de test si MongoDB indisponible
+        user = mockUsers.find(u => u._id === decoded.id);
+        if (user) {
+          // Supprimer le password des données mock
+          const { password, ...userWithoutPassword } = user;
+          user = userWithoutPassword;
+        }
+      }
 
-      if (!req.user) {
+      if (!user) {
         return res.status(401).json({ message: 'Token invalide' });
       }
+
+      req.user = user;
 
       next();
     } catch (error) {
@@ -52,7 +66,20 @@ const optionalAuth = async (req, res, next) => {
       }
 
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = await User.findById(decoded.id).select('-password');
+      
+      let user;
+      try {
+        user = await User.findById(decoded.id).select('-password');
+      } catch (dbError) {
+        // Utilisation des données de test si MongoDB indisponible
+        user = mockUsers.find(u => u._id === decoded.id);
+        if (user) {
+          const { password, ...userWithoutPassword } = user;
+          user = userWithoutPassword;
+        }
+      }
+      
+      req.user = user;
     } catch (error) {
       // pas grave si le token est invalide pour optionalAuth
     }

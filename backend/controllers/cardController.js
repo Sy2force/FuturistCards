@@ -11,7 +11,7 @@ const getAllCards = async (req, res) => {
         .populate('user', 'name email')
         .sort({ createdAt: -1 });
     } catch (dbError) {
-      // Fallback to mock data if MongoDB is unavailable
+      // Utilisation des données de test en cas d'erreur de base de données
       cards = mockCards.map(card => ({
         ...card,
         user: mockUsers.find(u => u._id === card.userId)
@@ -171,9 +171,18 @@ const getMyCards = async (req, res) => {
       });
     }
 
-    const cards = await Card.find({ user: req.user.id })
-      .populate('user', 'name email')
-      .sort({ createdAt: -1 });
+    let cards;
+    try {
+      cards = await Card.find({ user: req.user.id })
+        .populate('user', 'name email')
+        .sort({ createdAt: -1 });
+    } catch (dbError) {
+      // Utilisation des données de test si MongoDB indisponible
+      cards = mockCards.filter(card => card.userId === req.user.id || card.userId === req.user._id).map(card => ({
+        ...card,
+        user: mockUsers.find(u => u._id === card.userId)
+      }));
+    }
 
     res.json({
       success: true,

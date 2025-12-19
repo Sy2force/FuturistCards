@@ -8,7 +8,6 @@ const seedUsers = async () => {
   try {
     // Connexion à MongoDB
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connected for seeding...');
 
     // Supprimer les utilisateurs existants (seulement les comptes test)
     await User.deleteMany({
@@ -52,7 +51,7 @@ const seedUsers = async () => {
     ];
 
     const createdUsers = await User.insertMany(testUsers);
-    console.log('✅ Utilisateurs de test créés:', createdUsers.length);
+    // Utilisateurs de test créés avec succès
 
     // Créer quelques cartes de démonstration pour l'utilisateur business
     const businessUser = createdUsers.find(u => u.role === 'business');
@@ -84,12 +83,12 @@ const seedUsers = async () => {
     ];
 
     const createdCards = await Card.insertMany(demoCards);
-    console.log('✅ Cartes de démonstration créées:', createdCards.length);
-
-    console.log('\n🎯 COMPTES DE TEST DISPONIBLES:');
-    console.log('1. Business: testpro@example.com / TestPass123!');
-    console.log('2. Utilisateur: testnormal@example.com / TestPass123!');
-    console.log('3. Admin: admin@example.com / TestPass123!');
+    // Cartes de démonstration créées avec succès
+    
+    // Comptes de test disponibles:
+    // 1. Business: testpro@example.com / TestPass123!
+    // 2. Utilisateur: testnormal@example.com / TestPass123!
+    // 3. Admin: admin@example.com / TestPass123!
     
     process.exit(0);
   } catch (error) {

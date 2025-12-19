@@ -6,16 +6,12 @@ const Card = require('../models/Card');
 
 const seedData = async () => {
   try {
-    console.log('🌱 Démarrage du seed de la base de données...');
-    
     // Connexion à MongoDB
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('✅ Connexion MongoDB établie');
 
     // Supprimer les données existantes
     await User.deleteMany({});
     await Card.deleteMany({});
-    console.log('🗑️ Données existantes supprimées');
 
     // Créer des utilisateurs de test
     const hashedPassword = await bcrypt.hash('TestPass123!', 12);
@@ -47,7 +43,7 @@ const seedData = async () => {
       }
     ]);
 
-    console.log('👥 Utilisateurs créés:', users.length);
+    // Utilisateurs créés avec succès
 
     // Créer des cartes de démonstration
     const businessUser = users.find(u => u.email === 'testpro@example.com');
@@ -116,16 +112,11 @@ const seedData = async () => {
       }
     ]);
 
-    console.log('💳 Cartes créées:', cards.length);
-    console.log('✨ Seed terminé avec succès!');
-    
-    console.log('\n📊 Résumé:');
-    console.log(`- ${users.length} utilisateurs créés`);
-    console.log(`- ${cards.length} cartes créées`);
-    console.log('\n🔐 Comptes de test:');
-    console.log('- User: testnormal@example.com / TestPass123!');
-    console.log('- Business: testpro@example.com / TestPass123!');
-    console.log('- Admin: admin@example.com / TestPass123!');
+    // Seed terminé avec succès
+    // Comptes de test disponibles:
+    // - User: testnormal@example.com / TestPass123!
+    // - Business: testpro@example.com / TestPass123!
+    // - Admin: admin@example.com / TestPass123!
     
     process.exit(0);
   } catch (error) {

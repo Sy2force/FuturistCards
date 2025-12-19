@@ -129,59 +129,32 @@ app.use('/api/users', userRoutes);
 app.use(errorHandler);
 
 async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('🚀 Démarrage du serveur CardPro...');
-    console.log('🔧 PORT:', PORT);
-    console.log('🔧 NODE_ENV:', process.env.NODE_ENV);
-    console.log('🔧 MONGO_URI:', process.env.MONGO_URI ? 'Configuré' : 'Non configuré');
-  }
-
-  // connexion MongoDB
+  // Connexion MongoDB avec gestion d'erreur robuste
   if (process.env.MONGO_URI) {
     try {
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('📡 Connexion à MongoDB...');
-      }
-      
-      // Options de connexion optimisées
       const mongoOptions = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        serverSelectionTimeoutMS: 5000, // Timeout après 5s
-        socketTimeoutMS: 45000, // Socket timeout
-        family: 4 // IPv4 uniquement
+        serverSelectionTimeoutMS: 5000,
+        socketTimeoutMS: 45000,
+        family: 4,
+        retryWrites: true,
+        w: 'majority'
       };
-      
+
       await mongoose.connect(process.env.MONGO_URI, mongoOptions);
-      
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('✅ MongoDB connecté avec succès');
-        console.log('🔗 Database:', mongoose.connection.name);
-      }
     } catch (err) {
-      console.error('❌ Erreur MongoDB:', err.message);
-      if (process.env.NODE_ENV !== 'production') {
-        console.log('⚠️  Passage en mode fallback avec mock data');
-      }
+      console.error('Erreur MongoDB:', err.message);
       if (process.env.NODE_ENV === 'production') {
         process.exit(1);
       }
     }
   } else {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('⚠️  MONGO_URI non configuré - mode développement');
-    }
     if (process.env.NODE_ENV === 'production') {
       process.exit(1);
     }
   }
 
   app.listen(PORT, () => {
-    if (process.env.NODE_ENV !== 'production') {
-      console.log(`🎯 Serveur CardPro démarré sur http://localhost:${PORT}`);
-      console.log(`🔗 Health check: http://localhost:${PORT}/api/health`);
-      console.log('✨ Serveur prêt à recevoir les requêtes');
-    }
+    // Serveur démarré avec succès
   });
 }
 

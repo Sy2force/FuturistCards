@@ -15,6 +15,7 @@ FuturistCards a été conçue avec l'accessibilité comme priorité fondamentale
 ## 🧩 Composants d'Accessibilité
 
 ### AccessibleInput
+
 Composant d'entrée avec support ARIA complet.
 
 ```jsx
@@ -32,12 +33,14 @@ import AccessibleInput from '../components/forms/AccessibleInput';
 ```
 
 **Fonctionnalités :**
+
 - Labels associés automatiquement
 - Descriptions et erreurs liées par ARIA
 - États visuels pour erreurs/succès
 - Support complet du clavier
 
 ### AriaLive
+
 Composant pour annonces dynamiques aux lecteurs d'écran.
 
 ```jsx
@@ -50,10 +53,12 @@ import AriaLive from '../components/a11y/AriaLive';
 ```
 
 **Types de priorité :**
+
 - `polite` : Annonces non urgentes
 - `assertive` : Annonces importantes
 
 ### FocusManager
+
 Gestion avancée du focus pour modales et dialogues.
 
 ```jsx
@@ -65,11 +70,13 @@ import FocusManager from '../components/a11y/FocusManager';
 ```
 
 **Options :**
+
 - `trapFocus` : Piège le focus dans le conteneur
 - `autoFocus` : Focus automatique au montage
 - `restoreFocus` : Restaure le focus précédent
 
 ### AccessibleModal
+
 Modale conforme aux standards d'accessibilité.
 
 ```jsx
@@ -86,12 +93,14 @@ import AccessibleModal from '../components/a11y/AccessibleModal';
 ```
 
 **Fonctionnalités :**
+
 - Focus piégé automatiquement
 - Fermeture par Échap ou clic overlay
 - Rôles ARIA appropriés
 - Gestion du focus de retour
 
 ### AccessibleTabs
+
 Système d'onglets navigable au clavier.
 
 ```jsx
@@ -106,11 +115,13 @@ const tabs = [
 ```
 
 **Navigation clavier :**
+
 - `←→` : Navigation entre onglets
 - `Home/End` : Premier/dernier onglet
 - `Space/Enter` : Activation
 
 ### SkipLink
+
 Lien de navigation rapide au contenu principal.
 
 ```jsx
@@ -122,22 +133,26 @@ import SkipLink from '../components/a11y/SkipLink';
 ## 🎨 Styles d'Accessibilité
 
 ### Indicateurs de Focus
+
 - Outline 3px bleu (`#3B82F6`)
 - Offset de 2px pour la visibilité
 - Support `focus-visible` pour les navigateurs modernes
 
 ### Contrastes de Couleurs
+
 - Texte normal : ratio 4.5:1 minimum
 - Texte large : ratio 3:1 minimum
 - États d'erreur : rouge `#DC2626`
 - États de succès : vert `#16A34A`
 
 ### Mode Sombre
+
 - Adaptation automatique des contrastes
 - Focus bleu clair (`#60A5FA`)
 - Maintien des ratios de contraste
 
 ### Mouvement Réduit
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: 0.01ms !important; }
@@ -145,6 +160,7 @@ import SkipLink from '../components/a11y/SkipLink';
 ```
 
 ### Contraste Élevé
+
 ```css
 @media (prefers-contrast: high) {
   *:focus { outline: 4px solid #000; }
@@ -207,11 +223,13 @@ import SkipLink from '../components/a11y/SkipLink';
 ## 🧪 Tests d'Accessibilité
 
 ### Tests Automatisés
+
 ```bash
 npm run test:a11y
 ```
 
 **Couvre :**
+
 - Conformité axe-core
 - Navigation clavier
 - Attributs ARIA
@@ -271,6 +289,7 @@ npm run test:a11y
 - **Colour Contrast Analyser** : Vérification contrastes
 
 ### Outils Ligne de Commande
+
 ```bash
 # Installation axe-core CLI
 npm install -g axe-core
@@ -280,6 +299,7 @@ axe http://localhost:3000
 ```
 
 ### Validation Continue
+
 ```bash
 # Tests automatisés dans CI/CD
 npm run build
