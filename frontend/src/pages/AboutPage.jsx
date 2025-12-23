@@ -1,296 +1,81 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
-import { 
-  SparklesIcon, 
-  ShieldCheckIcon, 
-  BoltIcon, 
-  DevicePhoneMobileIcon, 
-  EnvelopeIcon, 
-  GlobeAltIcon,
-  UserGroupIcon,
-  ArrowRightIcon 
-} from '@heroicons/react/24/outline';
+import { useAuth } from '../hooks/useAuth';
 
 const AboutPage = () => {
-  
+  const { user } = useAuth();
   return (
-    <>
-      <Helmet>
-        <title>{'aboutPageTitle'}</title>
-        <meta name="description" content={'aboutPageDescription'} />
-      </Helmet>
-      
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-screen bg-neutral-50 dark:bg-gray-900 py-12 px-4"
-      >
-      <div className="container mx-auto max-w-4xl">
-        {/* Header */}
-        <motion.div 
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-center mb-16"
-        >
-          <motion.h1 
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-500 to-primary-700 bg-clip-text text-transparent mb-6 flex items-center justify-center"
-          >
-            <SparklesIcon className="w-12 h-12 text-primary-500 mr-4" />
-            {'aboutCardPro'}
-          </motion.h1>
-          <motion.p 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto"
-          >
-            {'aboutSubtitle'}
-          </motion.p>
-        </motion.div>
+    <div className="min-h-screen bg-gray-50 py-12 px-4" data-testid="about-page">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">À propos de FuturistCards</h1>
+          <p className="text-xl text-gray-600">L&apos;avenir des cartes de visite est numérique</p>
+        </div>
 
-        {/* Sections */}
-        <div className="space-y-12">
-          {/* Mission */}
-          <motion.div 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-gray-700 glass-light dark:glass-dark"
-          >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-              <UserGroupIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {'ourMission'}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-              {'missionDescription'}
+        <div className="bg-white rounded-2xl p-8 shadow-md border border-gray-200">
+          <div className="prose max-w-none">
+            <p className="text-gray-700 mb-6">
+              FuturistCards révolutionne l&apos;échange de contacts professionnels en digitalisant vos cartes de visite.
             </p>
-          </motion.div>
-
-          {/* Features */}
-          <motion.div 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-gray-700 glass-light dark:glass-dark"
-          >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-              <SparklesIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {'features'}
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 1.0 }}
-                whileHover={{ scale: 1.05 }}
-                className="flex items-start space-x-3 p-4 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all"
-              >
-                <div className="p-2 bg-primary-100 dark:bg-primary-900 rounded-lg">
-                  <SparklesIcon className="w-6 h-6 text-primary-500" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{'modernDesign'}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {'modernDesignDesc'}
-                  </p>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 1.1 }}
-                whileHover={{ scale: 1.05 }}
-                className="flex items-start space-x-3 p-4 rounded-xl hover:bg-success-50 dark:hover:bg-success-900/20 transition-all"
-              >
-                <div className="p-2 bg-success-100 dark:bg-success-900 rounded-lg">
-                  <ShieldCheckIcon className="w-6 h-6 text-success-500" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{'secure'}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {'secureDesc'}
-                  </p>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 1.2 }}
-                whileHover={{ scale: 1.05 }}
-                className="flex items-start space-x-3 p-4 rounded-xl hover:bg-accent-50 dark:hover:bg-accent-900/20 transition-all"
-              >
-                <div className="p-2 bg-accent-100 dark:bg-accent-900 rounded-lg">
-                  <BoltIcon className="w-6 h-6 text-accent-500" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{'performant'}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {'performantDesc'}
-                  </p>
-                </div>
-              </motion.div>
-              
-              <motion.div 
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 1.3 }}
-                whileHover={{ scale: 1.05 }}
-                className="flex items-start space-x-3 p-4 rounded-xl hover:bg-error-50 dark:hover:bg-error-900/20 transition-all"
-              >
-                <div className="p-2 bg-error-100 dark:bg-error-900 rounded-lg">
-                  <DevicePhoneMobileIcon className="w-6 h-6 text-error-500" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 dark:text-white">{'mobileFirst'}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm">
-                    {'mobileFirstDesc'}
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
-
-          {/* Technologies */}
-          <motion.div 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1.4 }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-gray-700 glass-light dark:glass-dark"
-          >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center">
-              <BoltIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {'technologiesUsed'}
-            </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[
-                { name: 'React 18', icon: '⚛️', color: 'primary' },
-                { name: 'Node.js', icon: '🟢', color: 'success' },
-                { name: 'MongoDB', icon: '🍃', color: 'accent' },
-                { name: 'Tailwind', icon: '🎨', color: 'error' }
-              ].map((tech, index) => (
-                <motion.div
-                  key={tech.name}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 1.5 + index * 0.1 }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  className={`text-center p-6 bg-${tech.color}-50 dark:bg-${tech.color}-900/20 rounded-xl shadow-lg border border-${tech.color}-200 dark:border-${tech.color}-800 cursor-pointer`}
-                >
-                  <div className="text-3xl mb-3">{tech.icon}</div>
-                  <p className="font-medium text-gray-900 dark:text-white">{tech.name}</p>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          {/* Contact */}
-          <motion.div 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 1.9 }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-gray-700 glass-light dark:glass-dark"
-          >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
-              <EnvelopeIcon className="w-6 h-6 text-primary-500 mr-3" />
-              {'contact'}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {'contactDescription'}
+            <p className="text-gray-700 mb-6">
+              Notre plateforme moderne vous permet de créer et partager vos cartes de visite numériques en quelques clics. Plus besoin d&apos;imprimer !
             </p>
-            <div className="space-y-4">
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 2.0 }}
-                className="flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-primary-500 transition-colors"
-              >
-                <EnvelopeIcon className="w-5 h-5 text-primary-500" />
-                <span>{'Email'} : contact@cardpro.com</span>
-              </motion.div>
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 2.1 }}
-                className="flex items-center space-x-3 text-gray-600 dark:text-gray-400 hover:text-primary-500 transition-colors"
-              >
-                <GlobeAltIcon className="w-5 h-5 text-primary-500" />
-                <span>{'Site web'} : www.cardpro.com</span>
-              </motion.div>
-            </div>
-          </motion.div>
 
-          {/* Call to Action */}
-          <motion.div 
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 2.2 }}
-            whileHover={{ scale: 1.02 }}
-            className="bg-gradient-to-r from-primary-500 to-primary-700 rounded-2xl p-8 text-center text-white shadow-2xl"
-          >
-            <motion.h2 
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 2.3 }}
-              className="text-2xl font-bold mb-4 flex items-center justify-center"
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-12">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Rapide</h3>
+                <p className="text-gray-600">Créez votre carte en quelques minutes</p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Mobile</h3>
+                <p className="text-gray-600">Accessible partout, sur tous les appareils</p>
+              </div>
+
+              <div className="text-center">
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Sécurisé</h3>
+                <p className="text-gray-600">Vos données sont protégées</p>
+              </div>
+            </div>
+
+            <p className="text-lg text-gray-700 leading-relaxed">
+              Que vous soyez entrepreneur, freelance, ou salarié, FuturistCards vous offre les outils nécessaires 
+              pour créer une présence professionnelle moderne et mémorable. Rejoignez des milliers de professionnels 
+              qui ont déjà adopté l&apos;avenir du networking.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <div className="bg-blue-600 rounded-2xl p-6 shadow-md">
+            <h3 className="text-2xl font-bold text-white mb-4">Prêt à commencer ?</h3>
+            <p className="text-blue-100 mb-6">Créez votre première carte de visite dès maintenant</p>
+            <Link 
+              to={user ? "/create-card" : "/register"}
+              data-testid="about-cta-button"
+              className="inline-block px-8 py-3 bg-white text-blue-600 hover:bg-gray-50 rounded-lg font-semibold shadow-lg transition-all duration-200 transform hover:-translate-y-0.5"
             >
-              <SparklesIcon className="w-6 h-6 mr-3" />
-              {'readyToStart'}
-            </motion.h2>
-            <motion.p 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 2.4 }}
-              className="mb-6 opacity-90"
-            >
-              {'joinProfessionals'}
-            </motion.p>
-            <motion.div 
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 2.5 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link 
-                  to="/register" 
-                  className="inline-flex items-center bg-white text-primary-600 px-6 py-3 rounded-lg font-medium hover:bg-neutral-100 transition-all shadow-lg"
-                >
-                  {'createAccount'}
-                  <ArrowRightIcon className="w-4 h-4 ml-2" />
-                </Link>
-              </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link 
-                  to="/cards" 
-                  className="inline-flex items-center bg-transparent border-2 border-white text-white px-6 py-3 rounded-lg font-medium hover:bg-white hover:text-primary-600 transition-all"
-                >
-                  {'exploreCards'}
-                  <ArrowRightIcon className="w-4 h-4 ml-2" />
-                </Link>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+              {user ? "Créer ma carte" : "Créer mon compte"}
+            </Link>
+          </div>
         </div>
       </div>
-      </motion.div>
-    </>
+    </div>
   );
 };
 

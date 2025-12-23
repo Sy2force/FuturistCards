@@ -1,217 +1,151 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import toast from 'react-hot-toast';
-import { useAuth } from '../context/AuthContext';
-import { validateEmail, validatePassword, isFormValid } from '../utils/validation';
-import { 
-  FormContainer, 
-  EmailInput, 
-  PasswordInput, 
-  SubmitButton 
-} from '../components/FormComponents';
-import { ArrowRightIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import { useAuth } from '../hooks/useAuth';
+
+// Booking.com style icons
+const EmailIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.12 1.39 3.12 3.1V8h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v12z"/>
+  </svg>
+);
+
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, loading } = useAuth();
-  
-  // State pour les valeurs et erreurs du formulaire
+  const { login, loading, error, clearError } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  const [errors, setErrors] = useState({});
-  const [touchedFields, setTouchedFields] = useState({});
+  const [success, setSuccess] = useState('');
 
-  // Validation en temps réel
-  const validateForm = () => {
-    const newErrors = {};
-    
-    const emailValidation = validateEmail(formData.email);
-    if (!emailValidation.isValid) {
-      newErrors.email = emailValidation.error;
-    }
-    
-    const passwordValidation = validatePassword(formData.password);
-    if (!passwordValidation.isValid) {
-      newErrors.password = passwordValidation.error;
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setTouchedFields(prev => ({ ...prev, [field]: true }));
+  const handleChange = (e) => {
+    clearError();
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefaul;
-    if (validateForm()) {
-      try {
-        const result = await login(formData.email, formData.password);
-        if (result?.success) {
-          // Rediriger selon le rôle de l'utilisateur
-          const user = result.user;
-          if (user?.role === 'admin') {
-            navigate('/admin', { replace: true });
-          } else if (user?.role === 'business') {
-            navigate('/my-cards', { replace: true });
-          } else {
-            navigate('/cards', { replace: true });
-          }
-        }
-      } catch (error) {
-        // Gestion d'erreur spécifique pour Network Error
-        if (error.message?.includes('Network Error') || error.code === 'ERR_NETWORK') {
-          toast.error('Erreur de connexion au serveur. Vérifiez votre connexion internet.');
-        }
-        // Les autres erreurs sont gérées par AuthContext avec toast
+    e.preventDefault();
+    
+    if (!formData.email || !formData.password) {
+      return;
+    }
+
+    try {
+      setSuccess('');
+      const result = await login(formData.email, formData.password);
+      
+      if (result.success) {
+        setSuccess('Connexion réussie ! Redirection...');
+        // Force a small delay to ensure state is updated
+        setTimeout(() => {
+          navigate('/cards', { replace: true });
+        }, 100);
       }
+    } catch (err) {
+      // Erreur gérée par AuthContext
     }
   };
 
-  // Fonction pour remplir rapidement avec le compte demo
-  const fillDemoAccount = () => {
-    setFormData({
-      email: 'test@example.com',
-      password: 'Test123!'
-    });
-    setTouchedFields({ email: true, password: true });
-  };
-
-  const requiredFields = ['email', 'password'];
-  const formIsValid = isFormValid(errors, formData, requiredFields);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-green-50 dark:from-gray-900 dark:via-blue-900 dark:to-gray-800 flex items-center justify-center px-4 py-8">
-      <motion.div 
-        className="max-w-md w-full space-y-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        {/* En-tête avec animation */}
-        <motion.div 
-          className="text-center"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          <div className="flex items-center justify-center mb-4">
-            <SparklesIcon className="h-8 w-8 text-blue-500 mr-2" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-green-500 bg-clip-text text-transparent">
-              Connexion
-            </h1>
-          </div>
-          <p className="text-gray-600 dark:text-gray-300 text-lg">
-            Accédez à votre compte
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 px-4" data-testid="login-page">
+      <div className="w-full max-w-md mx-auto">
+        <div className="text-center mb-8">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            Connexion
+          </h2>
+          <p className="text-lg text-gray-600">
+            Connectez-vous à votre compte FuturistCards
           </p>
-        </motion.div>
+        </div>
 
-        {/* Formulaire principal */}
-        <motion.div 
-          className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 dark:border-gray-700/30"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-        >
-          <FormContainer onSubmit={handleSubmit}>
-            {/* Email avec validation HackerU */}
-            <EmailInput 
-              name="email"
-              label="Email"
-              value={formData.email}
-              onChange={(e) => handleInputChange('email', e.target.value)}
-              onBlur={() => {}}
-              error={errors.email}
-              touched={touchedFields.email}
-              required
-              placeholder="votre@email.com"
-            />
+        <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 w-full max-w-md">
+          {error && (
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-600 font-medium">{error}</p>
+            </div>
+          )}
 
-            {/* Mot de passe avec validation HackerU */}
-            <PasswordInput
-              name="password"
-              label="Mot de passe"
-              value={formData.password}
-              onChange={(e) => handleInputChange('password', e.target.value)}
-              onBlur={() => {}}
-              error={errors.password}
-              touched={touchedFields.password}
-              required
-              placeholder="Mot de passe"
-            />
+          {success && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-sm text-green-600 font-medium">{success}</p>
+            </div>
+          )}
 
-            {/* Bouton de connexion avec feedback visuel */}
-            <SubmitButton 
-              isValid={formIsValid} 
-              isLoading={loading}
-            >
-              <div className="flex items-center justify-center">
-                {!loading && <ArrowRightIcon className="w-5 h-5 mr-2" />}
-                Se connecter
+          <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Adresse email
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <EmailIcon />
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="votre@email.com"
+                  required
+                  data-testid="login-email"
+                />
               </div>
-            </SubmitButton>
-          </FormContainer>
+            </div>
 
-          {/* Lien vers inscription */}
-          <motion.div 
-            className="mt-6 text-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.3 }}
-          >
-            <p className="text-gray-600 dark:text-gray-400">
-              Pas encore de compte ?{' '}
-              <Link 
-                to="/register" 
-                data-testid="login-register-link"
-                className="text-blue-600 hover:text-blue-700 font-semibold transition-colors"
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                Mot de passe
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <LockIcon />
+                </div>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Votre mot de passe"
+                  required
+                  data-testid="login-password"
+                />
+              </div>
+            </div>
+
+
+            <div>
+              <button
+                type="submit"
+                disabled={loading}
+                data-testid="login-submit"
+                className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200"
               >
-                Créer un compte
-              </Link>
-            </p>
-          </motion.div>
-        </motion.div>
+                {loading ? 'Connexion...' : 'Se connecter'}
+              </button>
+            </div>
+          </form>
 
-        {/* Compte de démonstration avec bouton de remplissage automatique */}
-        <motion.div 
-          className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-lg rounded-2xl p-6 shadow-xl border border-white/20 dark:border-gray-700/30"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.5 }}
-        >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 text-center flex items-center justify-center">
-            <SparklesIcon className="w-5 h-5 mr-2 text-green-500" />
-            Compte de démonstration
-          </h3>
-          <div className="space-y-3 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">Email :</span>
-              <span className="text-blue-600 font-mono text-xs bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
-                test@example.com
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">Mot de passe :</span>
-              <span className="text-green-600 font-mono text-xs bg-green-50 dark:bg-green-900/30 px-2 py-1 rounded">
-                Test123!
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={fillDemoAccount}
-              data-testid="fill-demo-button"
-              className="w-full mt-3 py-2 px-4 bg-gradient-to-r from-blue-500 to-green-500 text-white rounded-lg font-medium hover:from-blue-600 hover:to-green-600 transition-all duration-300 transform hover:scale-105"
-            >
-              Remplir automatiquement
-            </button>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600">
+              Pas encore de compte ? <Link to="/register" data-testid="register-link" className="text-blue-600 hover:text-blue-700 font-medium">Créer un compte</Link>
+            </p>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </div>
   );
 };

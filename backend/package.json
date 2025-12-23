@@ -1,12 +1,16 @@
 {
-  "name": "cardpro-backend",
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "futuristcards-backend",
   "version": "1.0.0",
-  "description": "Backend API pour CardPro - Plateforme de cartes de visite digitales",
+  "description": "Backend API pour FuturistCards - Plateforme de cartes de visite digitales",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js",
     "build": "echo 'Backend built successfully'",
+    "test": "jest --detectOpenHandles --forceExit --passWithNoTests",
+    "test:watch": "jest --watch --detectOpenHandles",
+    "test:coverage": "jest --coverage --detectOpenHandles --forceExit",
     "seed": "node scripts/seed.js",
     "seed:reset": "node scripts/seed.js reset"
   },
@@ -36,6 +40,8 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
     "nodemon": "^3.1.10"
   },
   "engines": {

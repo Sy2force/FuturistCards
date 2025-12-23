@@ -1,167 +1,139 @@
-import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
-import mongoose from 'mongoose';
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 
-// Helper function to create mock user for development
-const createMockUser = (decodedToken = null) => {
-  // If we have decoded token info, use that
-  if (decodedToken && decodedToken.role) {
-    const isAdmin = decodedToken.role === 'admin';
-    const isBusiness = decodedToken.role === 'business' || isAdmin;
-    
-    return {
-      id: decodedToken.id || decodedToken.userId || '507f1f77bcf86cd799439015',
-      userId: decodedToken.id || decodedToken.userId || '507f1f77bcf86cd799439015', 
-      _id: decodedToken.id || decodedToken.userId || '507f1f77bcf86cd799439015',
-      email: 'mock@test.com',
-      firstName: 'Mock',
-      lastName: 'User',
-      role: decodedToken.role,
-      isActive: true,
-      isBusiness,
-      isAdmin
-    };
-  }
-  
-  // Default mock user
-  return {
-    id: '507f1f77bcf86cd799439015',
-    userId: '507f1f77bcf86cd799439015',
-    _id: '507f1f77bcf86cd799439015',
-    email: 'business@test.com',
-    firstName: 'Business',
-    lastName: 'User',
-    role: 'business',
-    isActive: true,
-    isBusiness: true,
-    isAdmin: false
-  };
-};
-
-// JWT authentication middleware with mock fallback for development
 const protect = async (req, res, next) => {
   try {
-    const authHeader = req.header('Authorization');
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('No valid Authorization header found');
-      }
-      // Fallback: create mock user for development
-      req.user = createMockUser();
-      return next();
+    let token;
+
+    // Vérifier si le token est présent dans les headers
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Token received:', token.substring(0, 20) + '...');
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authorized, no token'
+      });
     }
 
     try {
-      // Attempt to verify JWT token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret_key_for_development');
-      if (process.env.NODE_ENV === 'development') {
-        console.log('Token verified successfully:', decoded);
-      }
-      
-      // Look for user in database
-      const user = await User.findById(decoded.id).select('-password');
-      
-      if (!user) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('User not found in database, using mock user with token info');
+      // Vérifier le token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+
+      // Mode mock pour développement
+      if (process.env.NODE_ENV === 'development' || !process.env.MONGODB_URI) {
+        // Récupérer l'utilisateur mock depuis le module global
+        const mockUsers = global.mockUsers || new Map();
+        const mockUser = mockUsers.get(decoded.id);
+        
+        if (mockUser) {
+          req.user = {
+            id: decoded.id,
+            role: mockUser.role,
+            isAdmin: mockUser.isAdmin,
+            isBusiness: mockUser.isBusiness,
+            firstName: mockUser.firstName,
+            lastName: mockUser.lastName,
+            email: mockUser.email
+          };
+        } else {
+          req.user = {
+            id: decoded.id,
+            role: 'user',
+            isAdmin: false,
+            isBusiness: false
+          };
         }
-        req.user = createMockUser(decoded);
         return next();
       }
-      
-      req.user = user;
-      if (process.env.NODE_ENV === 'development') {
-        console.log('User authenticated:', user.email);
-      }
-      next();
-    } catch (jwtError) {
-      if (process.env.NODE_ENV === 'development') {
-        console.log('JWT verification failed:', jwtError.message);
-      }
-      // Try to decode without verification for mock user creation
-      try {
-        const decodedUnsafe = jwt.decode(token);
-        if (decodedUnsafe) {
-          req.user = createMockUser(decodedUnsafe);
-        } else {
-          req.user = createMockUser();
-        }
-      } catch {
-        req.user = createMockUser();
-      }
-      next();
-    }
-  } catch (error) {
-    console.error('Auth middleware error:', error);
-    // In case of error, use mock user
-    req.user = createMockUser();
-    next();
-  }
-};
 
-// Grant access to specific roles
-const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!req.user) {
+      // Récupérer l'utilisateur depuis la base de données
+      req.user = await User.findById(decoded.id).select('-password');
+
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          message: 'Not authorized, user not found'
+        });
+      }
+
+      next();
+    } catch (error) {
+      // Erreur de vérification du token
       return res.status(401).json({
         success: false,
-        message: 'Not authorized',
+        message: 'Not authorized, token failed'
       });
     }
+  } catch (error) {
+    // Erreur du middleware d'authentification
+    return res.status(500).json({
+      success: false,
+      message: 'Server error in authentication'
+    });
+  }
+};
 
-    if (!roles.includes(req.user.role)) {
-      return res.status(403).json({
-        success: false,
-        message: `User role ${req.user.role} is not authorized to access this route`,
-      });
-    }
+// Middleware pour vérifier les rôles admin
+const admin = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
     next();
-  };
+  } else {
+    res.status(403).json({
+      success: false,
+      message: 'Not authorized as admin'
+    });
+  }
 };
 
-// Check if user is business or admin
-const requireBusiness = (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).json({
+// Middleware pour vérifier les rôles business
+const business = (req, res, next) => {
+  if (req.user && (req.user.isBusiness || req.user.isAdmin)) {
+    next();
+  } else {
+    res.status(403).json({
       success: false,
-      message: 'Not authorized',
+      message: 'Not authorized as business user'
     });
   }
-
-  if (!req.user.isBusiness && !req.user.isAdmin) {
-    return res.status(403).json({
-      success: false,
-      message: 'Business account required',
-    });
-  }
-  next();
 };
 
-// Check if user is admin
-const requireAdmin = (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).json({
-      success: false,
-      message: 'Not authorized',
-    });
-  }
+// Optional auth middleware - doesn't fail if no token
+const optionalAuth = async (req, res, next) => {
+  try {
+    let token;
 
-  if (!req.user.isAdmin) {
-    return res.status(403).json({
-      success: false,
-      message: 'Admin access required',
-    });
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+
+        // Mode mock pour développement
+        if (process.env.NODE_ENV === 'development' || !process.env.MONGODB_URI) {
+          req.user = {
+            id: decoded.id,
+            role: 'user',
+            isAdmin: false,
+            isBusiness: false
+          };
+        } else {
+          req.user = await User.findById(decoded.id).select('-password');
+        }
+      } catch (error) {
+        // Token invalid, but continue without user
+        req.user = null;
+      }
+    }
+
+    next();
+  } catch (error) {
+    // Erreur du middleware d'authentification optionnel
+    next();
   }
-  next();
 };
 
-// Alias for protect to maintain consistency
-const authMiddleware = protect;
-
-export { protect, authMiddleware, authorize, requireBusiness, requireAdmin };
+module.exports = { protect, admin, business, optionalAuth };

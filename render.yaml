@@ -1,9 +1,34 @@
 services:
   - type: web
-    name: cardpro-backend
+    name: futuristcards-backend
     env: node
-    region: oregon
     plan: free
-    buildCommand: "npm install"
-    startCommand: "node server.js"
-    rootDir: backend
+    region: frankfurt
+    buildCommand: cd backend && npm install --production
+    startCommand: cd backend && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://futuristcards.vercel.app
+      - key: MONGO_URI
+        fromDatabase:
+          name: futuristcards-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+
+databases:
+  - name: futuristcards-db
+    databaseName: futuristcards
+    user: futuristcards_user
+    plan: free
+    region: frankfurt

@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'url'
 
 export default defineConfig({
-  base: '/',
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -11,22 +11,20 @@ export default defineConfig({
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
       '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
       '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
-      '@utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
-      '@services': fileURLToPath(new URL('./src/services', import.meta.url)),
-      '@hooks': fileURLToPath(new URL('./src/hooks', import.meta.url)),
     }
   },
   server: {
     port: 3010,
-    strictPort: true, // Force port 3010 only, fail if busy
-    host: '0.0.0.0',
-    open: false,
+    host: true,
+    open: true,
     cors: true,
-    hmr: {
-      overlay: true,
-      port: 3011 // Use different port for HMR to avoid conflicts
-    }
-    // No proxy needed - we use full URLs via VITE_API_URL env variable
+    strictPort: true
+  },
+  // Configuration for Playwright tests
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./tests/setup.js']
   },
   preview: {
     port: 4173,

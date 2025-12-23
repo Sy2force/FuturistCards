@@ -1,219 +1,161 @@
-import Joi from 'joi';
+const Joi = require('joi');
 
-// Middleware pour validation Joi
-export const validate = (schema) => {
-  return (req, res, next) => {
-    const { error } = schema.validate(req.body);
-    if (error) {
-      return res.status(400).json({
-        success: false,
-        message: 'Données invalides',
-        errors: error.details.map(detail => detail.message)
-      });
-    }
-    next();
-  };
+// User registration validation schema
+const registerSchema = Joi.object({
+  firstName: Joi.string()
+    .min(2)
+    .max(30)
+    .required()
+    .messages({
+      'string.min': 'First name must be at least 2 characters',
+      'string.max': 'First name cannot exceed 30 characters',
+      'any.required': 'First name is required'
+    }),
+  lastName: Joi.string()
+    .min(2)
+    .max(30)
+    .required()
+    .messages({
+      'string.min': 'Last name must be at least 2 characters',
+      'string.max': 'Last name cannot exceed 30 characters',
+      'any.required': 'Last name is required'
+    }),
+  email: Joi.string()
+    .email()
+    .required()
+    .messages({
+      'string.email': 'Please enter a valid email address',
+      'any.required': 'Email is required'
+    }),
+  password: Joi.string()
+    .min(8)
+    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]'))
+    .required()
+    .messages({
+      'string.min': 'Password must be at least 8 characters',
+      'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character',
+      'any.required': 'Password is required'
+    }),
+  role: Joi.string()
+    .valid('user', 'business', 'admin')
+    .default('user')
+    .messages({
+      'any.only': 'Role must be user, business, or admin'
+    })
+});
+
+// User login validation schema
+const loginSchema = Joi.object({
+  email: Joi.string()
+    .email()
+    .required()
+    .messages({
+      'string.email': 'Please enter a valid email address',
+      'any.required': 'Email is required'
+    }),
+  password: Joi.string()
+    .required()
+    .messages({
+      'any.required': 'Password is required'
+    })
+});
+
+// Business card validation schema
+const cardSchema = Joi.object({
+  title: Joi.string()
+    .min(2)
+    .max(100)
+    .required()
+    .messages({
+      'string.min': 'Title must be at least 2 characters',
+      'string.max': 'Title cannot exceed 100 characters',
+      'any.required': 'Title is required'
+    }),
+  subtitle: Joi.string()
+    .max(200)
+    .allow('')
+    .messages({
+      'string.max': 'Subtitle cannot exceed 200 characters'
+    }),
+  description: Joi.string()
+    .min(10)
+    .max(1000)
+    .required()
+    .messages({
+      'string.min': 'Description must be at least 10 characters',
+      'string.max': 'Description cannot exceed 1000 characters',
+      'any.required': 'Description is required'
+    }),
+  phone: Joi.string()
+    .pattern(/^[\+]?[1-9][\d]{0,15}$/)
+    .allow('')
+    .messages({
+      'string.pattern.base': 'Please enter a valid phone number'
+    }),
+  email: Joi.string()
+    .email()
+    .allow('')
+    .messages({
+      'string.email': 'Please enter a valid email address'
+    }),
+  web: Joi.string()
+    .uri()
+    .allow('')
+    .messages({
+      'string.uri': 'Please enter a valid URL'
+    }),
+  image: Joi.object({
+    url: Joi.string().uri().required(),
+    alt: Joi.string().max(100).required()
+  }).allow(null),
+  address: Joi.object({
+    state: Joi.string().allow(''),
+    country: Joi.string().allow(''),
+    city: Joi.string().allow(''),
+    street: Joi.string().allow(''),
+    houseNumber: Joi.number().allow(null),
+    zip: Joi.string().allow('')
+  }).allow(null)
+});
+
+// Registration data validation middleware
+const validateRegistration = (req, res, next) => {
+  const { error } = registerSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
+  }
+  next();
 };
 
-// Schémas de validation pour l'authentification
-export const authSchemas = {
-  register: Joi.object({
-    firstName: Joi.string().min(2).max(50).required().messages({
-      'string.min': 'Le prénom doit contenir au moins 2 caractères',
-      'string.max': 'Le prénom ne peut pas dépasser 50 caractères',
-      'any.required': 'Le prénom est requis'
-    }),
-    lastName: Joi.string().min(2).max(50).required().messages({
-      'string.min': 'Le nom doit contenir au moins 2 caractères',
-      'string.max': 'Le nom ne peut pas dépasser 50 caractères',
-      'any.required': 'Le nom est requis'
-    }),
-    email: Joi.string().email().required().messages({
-      'string.email': 'Format d\'email invalide',
-      'any.required': 'L\'email est requis'
-    }),
-    password: Joi.string().min(8).pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/).required().messages({
-      'string.min': 'Le mot de passe doit contenir au moins 8 caractères',
-      'string.pattern.base': 'Le mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre',
-      'any.required': 'Le mot de passe est requis'
-    }),
-    phone: Joi.string().pattern(/^(\+972-?|0)[2-9]\d{1,2}-?\d{3}-?\d{4}$/).optional().messages({
-      'string.pattern.base': 'Format de téléphone israélien invalide'
-    }),
-    isBusiness: Joi.boolean().default(false),
-    website: Joi.string().uri().optional().messages({
-      'string.uri': 'Format d\'URL invalide'
-    }),
-    description: Joi.string().max(500).optional().messages({
-      'string.max': 'La description ne peut pas dépasser 500 caractères'
-    })
-  }),
-
-  login: Joi.object({
-    email: Joi.string().email().required().messages({
-      'string.email': 'Format d\'email invalide',
-      'any.required': 'L\'email est requis'
-    }),
-    password: Joi.string().required().messages({
-      'any.required': 'Le mot de passe est requis'
-    })
-  }),
-
-  changePassword: Joi.object({
-    currentPassword: Joi.string().required().messages({
-      'any.required': 'Le mot de passe actuel est requis'
-    }),
-    newPassword: Joi.string().min(8).pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/).required().messages({
-      'string.min': 'Le nouveau mot de passe doit contenir au moins 8 caractères',
-      'string.pattern.base': 'Le nouveau mot de passe doit contenir au moins une majuscule, une minuscule et un chiffre',
-      'any.required': 'Le nouveau mot de passe est requis'
-    })
-  }),
-
-  updateProfile: Joi.object({
-    firstName: Joi.string().min(2).max(50).optional().messages({
-      'string.min': 'Le prénom doit contenir au moins 2 caractères',
-      'string.max': 'Le prénom ne peut pas dépasser 50 caractères'
-    }),
-    lastName: Joi.string().min(2).max(50).optional().messages({
-      'string.min': 'Le nom doit contenir au moins 2 caractères',
-      'string.max': 'Le nom ne peut pas dépasser 50 caractères'
-    }),
-    phone: Joi.string().pattern(/^(\+972-?|0)[2-9]\d{1,2}-?\d{3}-?\d{4}$/).optional().messages({
-      'string.pattern.base': 'Format de téléphone israélien invalide'
-    }),
-    website: Joi.string().uri().optional().allow('').messages({
-      'string.uri': 'Format d\'URL invalide'
-    }),
-    description: Joi.string().max(500).optional().allow('').messages({
-      'string.max': 'La description ne peut pas dépasser 500 caractères'
-    })
-  }),
-
-  changeRole: Joi.object({
-    role: Joi.string().valid('user', 'business', 'admin').required().messages({
-      'any.only': 'Rôle invalide. Doit être: user, business ou admin',
-      'any.required': 'Le rôle est requis'
-    })
-  })
+// Login data validation middleware
+const validateLogin = (req, res, next) => {
+  const { error } = loginSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
+  }
+  next();
 };
 
-// Schémas de validation pour les cartes
-export const cardSchemas = {
-  createCard: Joi.object({
-    title: Joi.string().min(2).max(100).required().messages({
-      'string.min': 'Le titre doit contenir au moins 2 caractères',
-      'string.max': 'Le titre ne peut pas dépasser 100 caractères',
-      'any.required': 'Le titre est requis'
-    }),
-    subtitle: Joi.string().max(100).optional().allow('').messages({
-      'string.max': 'Le sous-titre ne peut pas dépasser 100 caractères'
-    }),
-    description: Joi.string().min(10).max(1000).required().messages({
-      'string.min': 'La description doit contenir au moins 10 caractères',
-      'string.max': 'La description ne peut pas dépasser 1000 caractères',
-      'any.required': 'La description est requise'
-    }),
-    phone: Joi.string().pattern(/^(\+972-?|0)[2-9]\d{1,2}-?\d{3}-?\d{4}$/).required().messages({
-      'string.pattern.base': 'Format de téléphone israélien invalide',
-      'any.required': 'Le téléphone est requis'
-    }),
-    email: Joi.string().email().required().messages({
-      'string.email': 'Format d\'email invalide',
-      'any.required': 'L\'email est requis'
-    }),
-    website: Joi.string().uri().optional().allow('').messages({
-      'string.uri': 'Format d\'URL invalide'
-    }),
-    image: Joi.object({
-      url: Joi.string().uri().optional().messages({
-        'string.uri': 'Format d\'URL d\'image invalide'
-      }),
-      alt: Joi.string().max(100).optional().messages({
-        'string.max': 'Le texte alternatif ne peut pas dépasser 100 caractères'
-      })
-    }).optional(),
-    address: Joi.object({
-      state: Joi.string().optional(),
-      country: Joi.string().required().messages({
-        'any.required': 'Le pays est requis'
-      }),
-      city: Joi.string().required().messages({
-        'any.required': 'La ville est requise'
-      }),
-      street: Joi.string().required().messages({
-        'any.required': 'La rue est requise'
-      }),
-      houseNumber: Joi.string().required().messages({
-        'any.required': 'Le numéro de rue est requis'
-      }),
-      zip: Joi.string().optional()
-    }).required().messages({
-      'any.required': 'L\'adresse est requise'
-    }),
-    category: Joi.string().valid('technology', 'business', 'creative', 'healthcare', 'education', 'finance', 'marketing', 'consulting', 'other').required().messages({
-      'any.only': 'Catégorie invalide',
-      'any.required': 'La catégorie est requise'
-    }),
-    skills: Joi.array().items(Joi.string().max(50)).max(10).optional().messages({
-      'array.max': 'Maximum 10 compétences autorisées',
-      'string.max': 'Chaque compétence ne peut pas dépasser 50 caractères'
-    })
-  }),
+// Card data validation middleware
+const validateCard = (req, res, next) => {
+  const { error } = cardSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
+  }
+  next();
+};
 
-  updateCard: Joi.object({
-    title: Joi.string().min(2).max(100).optional().messages({
-      'string.min': 'Le titre doit contenir au moins 2 caractères',
-      'string.max': 'Le titre ne peut pas dépasser 100 caractères'
-    }),
-    subtitle: Joi.string().max(100).optional().allow('').messages({
-      'string.max': 'Le sous-titre ne peut pas dépasser 100 caractères'
-    }),
-    description: Joi.string().min(10).max(1000).optional().messages({
-      'string.min': 'La description doit contenir au moins 10 caractères',
-      'string.max': 'La description ne peut pas dépasser 1000 caractères'
-    }),
-    phone: Joi.string().pattern(/^(\+972-?|0)[2-9]\d{1,2}-?\d{3}-?\d{4}$/).optional().messages({
-      'string.pattern.base': 'Format de téléphone israélien invalide'
-    }),
-    email: Joi.string().email().optional().messages({
-      'string.email': 'Format d\'email invalide'
-    }),
-    website: Joi.string().uri().optional().allow('').messages({
-      'string.uri': 'Format d\'URL invalide'
-    }),
-    image: Joi.object({
-      url: Joi.string().uri().optional().messages({
-        'string.uri': 'Format d\'URL d\'image invalide'
-      }),
-      alt: Joi.string().max(100).optional().messages({
-        'string.max': 'Le texte alternatif ne peut pas dépasser 100 caractères'
-      })
-    }).optional(),
-    address: Joi.object({
-      state: Joi.string().optional(),
-      country: Joi.string().optional(),
-      city: Joi.string().optional(),
-      street: Joi.string().optional(),
-      houseNumber: Joi.number().integer().min(1).optional().messages({
-        'number.min': 'Le numéro de rue doit être positif'
-      }),
-      zip: Joi.string().optional()
-    }).optional(),
-    category: Joi.string().valid('technology', 'business', 'creative', 'healthcare', 'education', 'finance', 'marketing', 'consulting', 'other').optional().messages({
-      'any.only': 'Catégorie invalide'
-    }),
-    skills: Joi.array().items(Joi.string().max(50)).max(10).optional().messages({
-      'array.max': 'Maximum 10 compétences autorisées',
-      'string.max': 'Chaque compétence ne peut pas dépasser 50 caractères'
-    })
-  }),
-
-  updateBizNumber: Joi.object({
-    bizNumber: Joi.string().length(7).pattern(/^\d{7}$/).required().messages({
-      'string.length': 'Le numéro d\'entreprise doit contenir exactement 7 chiffres',
-      'string.pattern.base': 'Le numéro d\'entreprise doit être composé uniquement de chiffres',
-      'any.required': 'Le numéro d\'entreprise est requis'
-    })
-  })
+module.exports = {
+  validateRegistration,
+  validateLogin,
+  validateCard
 };

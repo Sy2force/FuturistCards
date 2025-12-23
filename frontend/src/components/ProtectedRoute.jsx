@@ -1,35 +1,53 @@
 import React from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
-const ProtectedRoute = ({ children, requiredRole = null, requireAuth = true }) => {
+const ProtectedRoute = ({ children, role, allowedRoles, requireAuth = true, requireBusiness = false, requireAdmin = false }) => {
   const { user, loading } = useAuth();
-  const location = useLocation();
 
-  // Afficher un spinner pendant le chargement
+  // OBLIGATOIRE: Aucune redirection tant que loading === true
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Vérification des permissions...</p>
-        </div>
+      <div className="min-h-screen flex items-center justify-center" data-testid="auth-loading">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
   }
 
-  // Rediriger vers login si l'utilisateur n'est pas connecté
-  if (requireAuth && !user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+  // Si requireAuth === false (pour login/register), permettre l'accès sans auth
+  if (requireAuth === false) {
+    // Si déjà connecté, rediriger vers /cards
+    if (user) {
+      return <Navigate to="/cards" replace />;
+    }
+    return children;
   }
 
-  // Vérifier le rôle requis
-  if (requiredRole && user && user.role !== requiredRole) {
-    // Rediriger vers une page d'accès refusé ou la page d'accueil
-    return <Navigate to="/" replace />;
+  // Redirection uniquement après loading === false
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
-  // Afficher le composant si toutes les conditions sont remplies
+  // Check business requirement
+  if (requireBusiness && !['business', 'admin'].includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // Check admin requirement
+  if (requireAdmin && user.role !== 'admin') {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // Check single role
+  if (role && user.role !== role) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  // Check multiple allowed roles
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
   return children;
 };
 

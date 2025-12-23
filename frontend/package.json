@@ -1,36 +1,36 @@
 {
-  "name": "cardpro",
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "futuristcards-frontend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3010 --host",
+    "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview --port 3010"
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
-    "@heroicons/react": "^2.2.0",
     "axios": "^1.3.4",
-    "framer-motion": "^10.0.1",
-    "i18next": "^25.6.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-helmet-async": "^2.0.5",
-    "react-hot-toast": "^2.4.0",
-    "react-i18next": "^16.3.5",
     "react-router-dom": "^6.8.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
     "@vitejs/plugin-react": "^4.0.0",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.45.0",
+    "autoprefixer": "^10.4.23",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "postcss": "^8.4.21",
-    "tailwindcss": "^3.3.0",
-    "terser": "^5.44.1",
-    "vite": "^7.1.7"
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.0",
+    "vite": "^7.3.0"
   }
 }
