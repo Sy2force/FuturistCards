@@ -63,10 +63,10 @@ const LoginPage = () => {
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
           <h2 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-white'} mb-4 animate-float`}>
-            {t('loginPageTitle')}
+{t('auth.loginTitle')}
           </h2>
           <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-indigo-200'}`}>
-            {t('loginPageSubtitle')}
+            {t('auth.loginSubtitle')}
           </p>
         </div>
 
@@ -86,7 +86,7 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
             <div>
               <label htmlFor="email" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('email')}
+                {t('auth.email')}
               </label>
               <div className="relative">
                 <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${isDark ? 'text-gray-400' : 'text-white/60'}`}>
@@ -99,7 +99,7 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full pl-12 pr-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                  placeholder={t('emailPlaceholder')}
+                  placeholder={t('auth.emailPlaceholder')}
                   required
                   data-testid="login-email"
                 />
@@ -108,7 +108,7 @@ const LoginPage = () => {
 
             <div>
               <label htmlFor="password" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('password')}
+                {t('auth.password')}
               </label>
               <div className="relative">
                 <div className={`absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none ${isDark ? 'text-gray-400' : 'text-white/60'}`}>
@@ -121,7 +121,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className={`w-full pl-12 pr-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                  placeholder={t('passwordPlaceholder')}
+                  placeholder={t('auth.passwordPlaceholder')}
                   required
                   data-testid="login-password"
                 />

@@ -110,9 +110,10 @@ const MyCardsPage = () => {
     try {
       await api.delete(`/cards/${cardId}`);
       setCards(cards.filter(card => card._id !== cardId));
+      setError(null); // Clear any previous errors
     } catch (error) {
-      // console.error('Erreur lors de la suppression:', error);
-      alert(t('errorDeleting'));
+      console.error('Error deleting card:', error);
+      setError(t('errorDeleting'));
     }
   };
 

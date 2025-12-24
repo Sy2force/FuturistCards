@@ -1,4 +1,6 @@
 export const sampleCards = [
+  // Sample cards data for development and testing
+  // This file provides mock data for the application
   {
     _id: "1",
     titleKey: "tech_solutions",

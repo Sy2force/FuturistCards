@@ -1,7 +1,7 @@
 import React from 'react';
-import { useI18n } from '../contexts/I18nContext';
 
 class ErrorBoundary extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = { hasError: false, error: null, errorInfo: null };
@@ -32,16 +32,16 @@ class ErrorBoundary extends React.Component {
             <div className="text-center">
               <div className="text-6xl mb-4">⚠️</div>
               <h1 className="text-2xl font-bold text-white mb-4">
-                Une erreur est survenue
+                An error occurred
               </h1>
               <p className="text-gray-300 mb-6">
-                Une erreur s&apos;est produite. Veuillez rafraîchir la page.
+                An error has occurred. Please refresh the page.
               </p>
               
               {!import.meta.env.PROD && this.state.error && (
                 <details className="text-left bg-black/30 rounded-lg p-4 mb-4">
                   <summary className="cursor-pointer text-red-400 font-semibold mb-2">
-                    Détails de l&apos;erreur (dev only)
+                    Error details (dev only)
                   </summary>
                   <pre className="text-xs text-red-300 overflow-auto">
                     {this.state.error.toString()}
@@ -54,7 +54,7 @@ class ErrorBoundary extends React.Component {
                 onClick={() => window.location.reload()}
                 className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
               >
-                Rafraîchir la page
+                Refresh page
               </button>
             </div>
           </div>

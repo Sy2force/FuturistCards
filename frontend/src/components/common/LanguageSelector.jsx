@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useI18n } from '../../contexts/I18nContext';
 
 const LanguageSelector = () => {
-  const { language, changeLanguage, isRTL } = useI18n();
+  const { language, changeLanguage, isRTL, t } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
 
   const languages = [
@@ -32,6 +32,7 @@ const LanguageSelector = () => {
         data-testid="language-selector"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
+        title={t('changeLanguage')}
       >
         <span className="text-lg">{currentLang.flag}</span>
         <span className="font-medium text-sm">{currentLang.nativeName}</span>

@@ -84,10 +84,10 @@ const RegisterPage = () => {
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
           <h2 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-white'} mb-4 animate-float`}>
-            {t('registerPageTitle')}
+            {t('auth.registerTitle')}
           </h2>
           <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-indigo-200'}`}>
-            {t('registerPageSubtitle')}
+            {t('auth.registerSubtitle')}
           </p>
         </div>
 
@@ -107,7 +107,7 @@ const RegisterPage = () => {
           <form onSubmit={handleSubmit} className="space-y-5" data-testid="register-form">
             <div>
               <label htmlFor="firstName" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('firstName')}
+                {t('auth.firstName')}
               </label>
               <input
                 type="text"
@@ -116,7 +116,7 @@ const RegisterPage = () => {
                 value={formData.firstName}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                placeholder={t('firstNamePlaceholder')}
+                placeholder={t('auth.firstNamePlaceholder')}
                 required
                 data-testid="firstName-input"
               />
@@ -124,7 +124,7 @@ const RegisterPage = () => {
 
             <div>
               <label htmlFor="lastName" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('lastName')}
+                {t('auth.lastName')}
               </label>
               <input
                 type="text"
@@ -133,7 +133,7 @@ const RegisterPage = () => {
                 value={formData.lastName}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                placeholder={t('lastNamePlaceholder')}
+                placeholder={t('auth.lastNamePlaceholder')}
                 required
                 data-testid="lastName-input"
               />
@@ -141,7 +141,7 @@ const RegisterPage = () => {
 
             <div>
               <label htmlFor="email" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('email')}
+                {t('auth.email')}
               </label>
               <input
                 type="email"
@@ -150,7 +150,7 @@ const RegisterPage = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                placeholder={t('emailPlaceholder')}
+                placeholder={t('auth.emailPlaceholder')}
                 required
                 data-testid="email-input"
               />
@@ -158,7 +158,7 @@ const RegisterPage = () => {
 
             <div>
               <label htmlFor="password" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('password')}
+                {t('auth.password')}
               </label>
               <input
                 type="password"
@@ -167,7 +167,7 @@ const RegisterPage = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                placeholder={t('passwordPlaceholder')}
+                placeholder={t('auth.passwordPlaceholder')}
                 required
                 data-testid="password-input"
               />
@@ -175,7 +175,7 @@ const RegisterPage = () => {
 
             <div>
               <label htmlFor="confirmPassword" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('confirmPassword')}
+                {t('auth.confirmPassword')}
               </label>
               <input
                 type="password"
@@ -184,7 +184,7 @@ const RegisterPage = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                placeholder={t('confirmPasswordPlaceholder')}
+                placeholder={t('auth.confirmPasswordPlaceholder')}
                 required
                 data-testid="confirmPassword-input"
               />
@@ -192,7 +192,7 @@ const RegisterPage = () => {
 
             <div>
               <label htmlFor="role" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
-                {t('accountType')}
+{t('auth.accountType')}
               </label>
               <select
                 id="role"
@@ -202,9 +202,9 @@ const RegisterPage = () => {
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
                 data-testid="role-select"
               >
-                <option value="user" className="bg-gray-800 text-white">{t('userAccount')}</option>
-                <option value="business" className="bg-gray-800 text-white">{t('businessAccount')}</option>
-                <option value="admin" className="bg-gray-800 text-white">{t('adminAccount')}</option>
+                <option value="user" className="bg-gray-800 text-white">{t('auth.userAccount')}</option>
+                <option value="business" className="bg-gray-800 text-white">{t('auth.businessAccount')}</option>
+                <option value="admin" className="bg-gray-800 text-white">{t('auth.adminAccount')}</option>
               </select>
               <p className={`mt-2 text-xs ${isDark ? 'text-gray-400' : 'text-white/70'}`}>
                 {formData.role === 'user' && t('userAccountDesc')}
