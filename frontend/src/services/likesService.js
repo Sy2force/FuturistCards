@@ -1,0 +1,96 @@
+import api from '../api/api';
+
+export const likesService = {
+  // Toggle like/unlike for a card
+  toggleLike: async (cardId) => {
+    try {
+      const response = await api.post(`/likes/${cardId}/toggle`);
+      return {
+        success: true,
+        data: response.data.data,
+        message: response.data.message
+      };
+    } catch (error) {
+      console.error('Error toggling like:', error);
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to toggle like'
+      };
+    }
+  },
+
+  // Get like status for a card
+  getLikeStatus: async (cardId) => {
+    try {
+      const response = await api.get(`/likes/${cardId}/status`);
+      return {
+        success: true,
+        data: response.data.data
+      };
+    } catch (error) {
+      console.error('Error getting like status:', error);
+      // Return default state instead of mock data
+      return {
+        success: false,
+        data: { isLiked: false, likesCount: 0, cardId },
+        error: error.response?.data?.message || 'Failed to get like status'
+      };
+    }
+  },
+
+  // Get users who liked a card
+  getCardLikers: async (cardId, limit = 10) => {
+    try {
+      const response = await api.get(`/likes/${cardId}/users?limit=${limit}`);
+      return {
+        success: true,
+        data: response.data.data
+      };
+    } catch (error) {
+      console.error('Error getting card likers:', error);
+      return {
+        success: false,
+        data: { users: [], totalLikes: 0, cardId },
+        error: error.response?.data?.message || 'Failed to get card likers'
+      };
+    }
+  },
+
+  // Get current user's liked cards
+  getMyLikes: async (limit = 20) => {
+    try {
+      const response = await api.get(`/likes/my-likes?limit=${limit}`);
+      return {
+        success: true,
+        data: response.data.data
+      };
+    } catch (error) {
+      console.error('Error getting my likes:', error);
+      return {
+        success: false,
+        data: { likedCards: [], count: 0 },
+        error: error.response?.data?.message || 'Failed to get liked cards'
+      };
+    }
+  },
+
+  // Get likes for a specific user (public)
+  getUserLikes: async (userId, limit = 10) => {
+    try {
+      const response = await api.get(`/likes/user/${userId}?limit=${limit}`);
+      return {
+        success: true,
+        data: response.data.data
+      };
+    } catch (error) {
+      console.error('Error getting user likes:', error);
+      return {
+        success: false,
+        data: { likedCards: [], count: 0 },
+        error: error.response?.data?.message || 'Failed to get user likes'
+      };
+    }
+  }
+};
+
+export default likesService;

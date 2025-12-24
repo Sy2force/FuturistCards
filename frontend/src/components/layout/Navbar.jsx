@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useI18n } from '../../contexts/I18nContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import LanguageSelector from '../common/LanguageSelector';
+import ThemeToggle from '../common/ThemeToggle';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const { t, isRTL } = useI18n();
+  const { isDark } = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isActive = (path) => location.pathname === path;
@@ -24,134 +29,128 @@ const Navbar = () => {
     : "navbar-user";
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 shadow-lg" data-testid={testId}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 ${isDark ? 'bg-gray-900/95 border-gray-700' : 'bg-white/95 border-gray-200'} backdrop-blur-lg border-b shadow-lg ${isRTL ? 'rtl' : 'ltr'}`} data-testid={testId}>
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex justify-between items-center h-16">
+        <div className={`flex justify-between items-center h-16 ${isRTL ? 'flex-row-reverse' : ''}`}>
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center text-gray-900 hover:text-blue-600 transition-colors duration-200"
-            aria-label="Accueil FuturistCards"
+            className={`flex items-center ${isDark ? 'text-white hover:text-blue-400' : 'text-gray-900 hover:text-blue-600'} transition-colors duration-200`}
+            aria-label={t('homeLabel')}
             data-testid="navbar-logo"
           >
-            <span className="text-2xl font-bold">FuturistCards</span>
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">FuturistCards</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
+            {/* Liens publics toujours visibles */}
             <Link
               to="/"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 isActive('/') 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                  : `${isDark ? 'text-gray-300 hover:text-blue-400 hover:bg-gray-700' : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'}`
               }`}
-              aria-label="Page d'accueil"
-              data-testid="navbar-home"
+              aria-label={t('home')}
+              data-testid="navbar-link-home"
             >
-              Accueil
+              {t('home')}
             </Link>
             <Link
               to="/cards"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 isActive('/cards') 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                  : `${isDark ? 'text-gray-300 hover:text-blue-400 hover:bg-gray-700' : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'}`
               }`}
-              aria-label="Voir toutes les cartes"
-              data-testid="navbar-cards"
+              aria-label={t('cards')}
+              data-testid="navbar-link-cards"
             >
-              Cartes
+              {t('cards')}
             </Link>
             <Link
               to="/about"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                 isActive('/about') 
-                  ? 'bg-blue-600 text-white' 
-                  : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                  : `${isDark ? 'text-gray-300 hover:text-blue-400 hover:bg-gray-700' : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'}`
               }`}
-              aria-label="À propos de FuturistCards"
-              data-testid="navbar-about"
+              aria-label={t('about')}
+              data-testid="navbar-link-about"
             >
-              À propos
+              {t('about')}
             </Link>
-          </div>
 
-          {/* Auth Section */}
-          <div className="hidden md:flex items-center space-x-3">
-            {user ? (
-              <div className="flex items-center space-x-3">
-                {/* Liens communs à tous les utilisateurs connectés */}
-                <Link
-                  to="/profile"
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    isActive('/profile') 
-                      ? 'bg-blue-600 text-white' 
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
-                  }`}
-                  aria-label="Mon profil"
-                  data-testid="navbar-profile"
-                >
-                  Profil
-                </Link>
-                <Link
-                  to="/favorites"
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    isActive('/favorites') 
-                      ? 'bg-blue-600 text-white' 
-                      : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
-                  }`}
-                  aria-label="Mes favoris"
-                  data-testid="navbar-favorites"
-                >
-                  Favoris
-                </Link>
-
-                {/* Liens spécifiques aux utilisateurs Business */}
-                {(user.role === 'business' || user.role === 'admin') && (
-                  <Link
-                    to="/cards/create"
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      isActive('/cards/create') 
-                        ? 'bg-green-600 text-white' 
-                        : 'text-green-700 hover:text-green-600 hover:bg-green-50'
-                    }`}
-                    aria-label="Créer une carte"
-                    data-testid="navbar-create-card"
-                  >
-                    Créer une carte
-                  </Link>
-                )}
-
-                {/* Liens spécifiques aux utilisateurs Business */}
+            {/* Liens utilisateur connecté dans l'ordre demandé */}
+            {user && (
+              <>
+                {/* Mes cartes - pour business et admin */}
                 {(user.role === 'business' || user.role === 'admin') && (
                   <Link
                     to="/my-cards"
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                       isActive('/my-cards') 
-                        ? 'bg-purple-600 text-white' 
-                        : 'text-purple-700 hover:text-purple-600 hover:bg-purple-50'
+                        ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' 
+                        : `${isDark ? 'text-purple-300 hover:text-purple-200 hover:bg-purple-900/20' : 'text-purple-700 hover:text-purple-600 hover:bg-purple-50'}`
                     }`}
-                    aria-label="Mes cartes"
+                    aria-label={t('myCards')}
                     data-testid="navbar-my-cards"
                   >
-                    Mes cartes
+                    {t('myCards')}
                   </Link>
                 )}
 
-                {/* Liens spécifiques aux Administrateurs */}
+                {/* Favoris - pour tous les utilisateurs connectés */}
+                <Link
+                  to="/favorites"
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    isActive('/favorites') 
+                      ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg' 
+                      : `${isDark ? 'text-red-300 hover:text-red-200 hover:bg-red-900/20' : 'text-red-700 hover:text-red-600 hover:bg-red-50'}`
+                  }`}
+                  aria-label={t('favorites')}
+                  data-testid="navbar-favorites"
+                >
+                  {t('favorites')}
+                </Link>
+
+                {/* Profil - pour tous les utilisateurs connectés */}
+                <Link
+                  to="/profile"
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
+                    isActive('/profile') 
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                      : `${isDark ? 'text-gray-300 hover:text-blue-400 hover:bg-gray-700' : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'}`
+                  }`}
+                  aria-label={t('profile')}
+                  data-testid="navbar-profile"
+                >
+                  {t('profile')}
+                </Link>
+              </>
+            )}
+          </div>
+
+          {/* Auth Section */}
+          <div className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse space-x-3' : 'space-x-3'}`}>
+            <ThemeToggle />
+            <LanguageSelector />
+            {user ? (
+              <div className="flex items-center space-x-3">
+                {/* Lien Admin pour les administrateurs */}
                 {user.role === 'admin' && (
                   <Link
                     to="/admin"
-                    className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+                    className={`px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 ${
                       isActive('/admin') 
-                        ? 'bg-red-600 text-white' 
-                        : 'text-red-700 hover:text-red-600 hover:bg-red-50'
+                        ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg' 
+                        : `${isDark ? 'text-red-400 hover:text-red-300 hover:bg-red-900/20' : 'text-red-700 hover:text-red-600 hover:bg-red-50'}`
                     }`}
-                    aria-label="Administration"
-                    data-testid="navbar-admin-link"
+                    aria-label={t('admin')}
+                    data-testid="navbar-admin"
                   >
-                    Admin
+                    {t('admin')}
                   </Link>
                 )}
 
@@ -168,34 +167,36 @@ const Navbar = () => {
                     {user.role === 'admin' ? 'Admin' : 
                      user.role === 'business' ? 'Business' : 'User'}
                   </span>
-                  <span className="text-gray-600 text-sm">Bonjour, {user.firstName}</span>
+                  <span className={`${isDark ? 'text-gray-400' : 'text-gray-600'} text-sm`}>{t('hello')}, {user.firstName}</span>
                 </div>
+                
+                {/* Bouton de déconnexion */}
                 <button
                   onClick={handleLogout}
                   className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm font-medium transition-colors duration-200 shadow-md"
-                  aria-label="Se déconnecter"
+                  aria-label={t('logout')}
                   data-testid="navbar-logout"
                 >
-                  Déconnexion
+                  {t('logout')}
                 </button>
               </div>
             ) : (
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"
-                  className="px-6 py-2 text-gray-700 hover:text-blue-600 rounded-md text-sm font-medium border border-gray-300 hover:border-blue-500 transition-colors duration-200"
-                  aria-label="Se connecter"
-                  data-testid="navbar-login"
+                  className={`px-6 py-2 ${isDark ? 'text-gray-300 hover:text-blue-400 border-gray-600 hover:border-blue-400' : 'text-gray-700 hover:text-blue-600 border-gray-300 hover:border-blue-500'} rounded-md text-sm font-medium border transition-all duration-200 hover:shadow-md`}
+                  aria-label={t('login')}
+              data-testid="navbar-link-login"
                 >
-                  Connexion
+                  {t('login')}
                 </Link>
                 <Link
                   to="/register"
-                  className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-sm font-medium transition-colors duration-200 shadow-md"
-                  aria-label="S'inscrire"
-                  data-testid="navbar-register"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-md text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                  aria-label={t('register')}
+                  data-testid="navbar-link-register"
                 >
-                  Inscription
+                  {t('register')}
                 </Link>
               </div>
             )}
@@ -204,8 +205,8 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden text-gray-700 hover:text-blue-600 p-2 rounded-md transition-colors duration-200"
-            aria-label={isMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'}
+            className={`md:hidden ${isDark ? 'text-gray-300 hover:text-blue-400' : 'text-gray-700 hover:text-blue-600'} p-2 rounded-md transition-colors duration-200`}
+            aria-label={isMenuOpen ? t('closeMenu') : t('openMenu')}
             aria-expanded={isMenuOpen}
             data-testid="navbar-mobile-toggle"
           >
@@ -221,95 +222,136 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-2 border-t border-gray-200">
+          <div className={`md:hidden py-4 space-y-2 border-t ${isDark ? 'border-gray-700 bg-gray-900/95' : 'border-gray-200 bg-white/95'} backdrop-blur-lg`}>
+            {/* Navigation Links dans l'ordre demandé */}
             <Link
               to="/"
               onClick={() => setIsMenuOpen(false)}
-              className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
-                isActive('/') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+              className={`block px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                isActive('/') ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' : `${isDark ? 'text-gray-300 hover:bg-gray-700 hover:text-blue-400' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'}`
               }`}
             >
-              Accueil
+              {t('home')}
             </Link>
             <Link
               to="/cards"
               onClick={() => setIsMenuOpen(false)}
-              className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
-                isActive('/cards') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+              className={`block px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                isActive('/cards') ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' : `${isDark ? 'text-gray-300 hover:bg-gray-700 hover:text-blue-400' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'}`
               }`}
             >
-              Cartes
+              {t('cards')}
             </Link>
             <Link
               to="/about"
               onClick={() => setIsMenuOpen(false)}
-              className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
-                isActive('/about') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+              className={`block px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                isActive('/about') ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' : `${isDark ? 'text-gray-300 hover:bg-gray-700 hover:text-blue-400' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'}`
               }`}
             >
-              À propos
+              {t('about')}
             </Link>
 
             {user ? (
               <>
-                <Link
-                  to="/profile"
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    isActive('/profile') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
-                  }`}
-                >
-                  Profil
-                </Link>
+                {/* Mes cartes - pour business et admin */}
+                {(user.role === 'business' || user.role === 'admin') && (
+                  <Link
+                    to="/my-cards"
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                      isActive('/my-cards') ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg' : `${isDark ? 'text-purple-300 hover:bg-purple-900/20 hover:text-purple-200' : 'text-purple-700 hover:bg-purple-50 hover:text-purple-600'}`
+                    }`}
+                  >
+                    {t('myCards')}
+                  </Link>
+                )}
+
+                {/* Favoris */}
                 <Link
                   to="/favorites"
                   onClick={() => setIsMenuOpen(false)}
-                  className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
-                    isActive('/favorites') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                  className={`block px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                    isActive('/favorites') ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg' : `${isDark ? 'text-red-300 hover:bg-red-900/20 hover:text-red-200' : 'text-red-700 hover:bg-red-50 hover:text-red-600'}`
                   }`}
                 >
-                  Favoris
+                  {t('favorites')}
                 </Link>
+
+                {/* Profil */}
+                <Link
+                  to="/profile"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                    isActive('/profile') ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' : `${isDark ? 'text-gray-300 hover:bg-gray-700 hover:text-blue-400' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'}`
+                  }`}
+                >
+                  {t('profile')}
+                </Link>
+
+                {/* Admin - pour les administrateurs */}
                 {user.role === 'admin' && (
                   <Link
                     to="/admin"
                     onClick={() => setIsMenuOpen(false)}
-                    className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      isActive('/admin') ? 'bg-blue-600 text-white' : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                    className={`block px-4 py-3 rounded-md text-sm font-medium transition-all duration-200 ${
+                      isActive('/admin') ? 'bg-gradient-to-r from-red-600 to-pink-600 text-white shadow-lg' : `${isDark ? 'text-red-400 hover:bg-red-900/20 hover:text-red-300' : 'text-red-700 hover:bg-red-50 hover:text-red-600'}`
                     }`}
                   >
-                    Admin
+                    {t('admin')}
                   </Link>
                 )}
-                <div className="px-4 py-2 text-gray-600 text-sm border-t border-gray-200 mt-2 pt-4">
-                  Bonjour, {user.firstName}
+
+                {/* Séparateur avant les contrôles */}
+                <div className={`border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} my-4`}></div>
+
+                {/* Mobile Theme and Language Controls */}
+                <div className={`flex items-center justify-center space-x-4 px-4 py-2 mb-4`}>
+                  <ThemeToggle />
+                  <LanguageSelector />
                 </div>
+
+                {/* Informations utilisateur */}
+                <div className={`px-4 py-2 ${isDark ? 'text-gray-400 border-gray-700' : 'text-gray-600 border-gray-200'} text-sm border-t pt-4`}>
+                  {t('hello')}, {user.firstName}
+                </div>
+
+                {/* Bouton de déconnexion */}
                 <button
                   onClick={() => {
                     handleLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full text-left px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-md text-sm font-medium transition-colors duration-200"
+                  className="w-full text-left px-4 py-3 bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white rounded-md text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
-                  Déconnexion
+                  {t('logout')}
                 </button>
               </>
             ) : (
               <>
-                <div className="border-t border-gray-200 mt-2 pt-4">
+                {/* Séparateur avant les contrôles pour visiteurs */}
+                <div className={`border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} my-4`}></div>
+
+                {/* Mobile Theme and Language Controls pour visiteurs */}
+                <div className={`flex items-center justify-center space-x-4 px-4 py-2 mb-4`}>
+                  <ThemeToggle />
+                  <LanguageSelector />
+                </div>
+
+                <div className={`border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} pt-4`}>
                   <Link
                     to="/login"
                     onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-3 text-center border border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600 rounded-md text-sm font-medium transition-colors duration-200 mb-2"
+                    className={`block px-4 py-3 text-center border ${isDark ? 'border-gray-600 hover:border-blue-400 text-gray-300 hover:text-blue-400' : 'border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600'} rounded-md text-sm font-medium transition-all duration-200 mb-2 hover:shadow-md`}
                   >
-                    Connexion
+                    {t('login')}
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-md text-center text-sm font-medium transition-colors duration-200"
+                    className="block px-4 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-md text-center text-sm font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
                   >
-                    Inscription
+                    {t('register')}
                   </Link>
                 </div>
               </>

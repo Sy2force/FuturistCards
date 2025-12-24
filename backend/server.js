@@ -76,16 +76,17 @@ app.get('/api/health', (req, res) => {
 });
 
 // Import and setup routes after middleware
-try {
-  const authRoutes = require("./routes/authRoutes");
-  const cardRoutes = require("./routes/cardRoutes");
-  
-  // Routes
-  app.use('/api/auth', authRoutes);
-  app.use('/api/cards', cardRoutes);
-} catch (error) {
-  // Route configuration failed - server will continue without routes
-}
+const authRoutes = require("./routes/authRoutes");
+const cardRoutes = require("./routes/cardRoutes");
+const likesRoutes = require("./routes/likes");
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/cards', cardRoutes);
+app.use('/api/likes', likesRoutes);
+
+// Log routes for debugging
+console.log('✅ Routes configured: /api/auth, /api/cards, /api/likes');
 
 async function startServer() {
   try {

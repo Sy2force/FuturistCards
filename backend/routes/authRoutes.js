@@ -5,7 +5,8 @@ const {
   getProfile,
   updateProfile,
   changePassword,
-  logout
+  logout,
+  verifyToken
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
 const { validateRegistration, validateLogin } = require('../middleware/validation');
@@ -17,6 +18,7 @@ router.post('/register', validateRegistration, register);
 router.post('/login', validateLogin, login);
 
 // Routes protégées
+router.get('/verify', protect, verifyToken);
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
 router.put('/change-password', protect, changePassword);

@@ -27,8 +27,11 @@ import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import NotFound from './pages/NotFound';
 import UnauthorizedPage from './pages/UnauthorizedPage';
+
 // Context and utilities
 import { AuthProvider } from './contexts/AuthContext';
+import { I18nProvider } from './contexts/I18nContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { setupNavigationProtection } from './utils/userStorage';
 
 /**
@@ -89,7 +92,7 @@ const router = createBrowserRouter([
       { path: 'cards/create', element: <ProtectedRoute requireBusiness={true}><CardCreatePage /></ProtectedRoute> },
       { path: 'create-card', element: <ProtectedRoute requireBusiness={true}><CardCreatePage /></ProtectedRoute> },
       { path: 'my-cards', element: <ProtectedRoute requireBusiness={true}><MyCardsPage /></ProtectedRoute> },
-      { path: 'cards/:id', element: <CardDetailsPage /> },
+      { path: 'card/:id', element: <CardDetailsPage /> },
       { path: 'cards/:id/edit', element: <ProtectedRoute><CardEditPage /></ProtectedRoute> },
       { path: 'services', element: <ServicesPage /> },
       { path: 'login', element: <ProtectedRoute requireAuth={false}><LoginPage /></ProtectedRoute> },
@@ -127,9 +130,13 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
+      <ThemeProvider>
+        <I18nProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+          </AuthProvider>
+        </I18nProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

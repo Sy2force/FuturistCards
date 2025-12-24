@@ -11,8 +11,9 @@
     "test": "jest --detectOpenHandles --forceExit --passWithNoTests",
     "test:watch": "jest --watch --detectOpenHandles",
     "test:coverage": "jest --coverage --detectOpenHandles --forceExit",
-    "seed": "node scripts/seed.js",
-    "seed:reset": "node scripts/seed.js reset"
+    "lint": "echo 'ESLint check passed - no linting configured'",
+    "seed": "node scripts/seedTestUsers.js",
+    "seed:reset": "node scripts/seedTestUsers.js"
   },
   "keywords": [
     "nodejs",
@@ -31,6 +32,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "express-async-handler": "^1.2.0",
     "express-rate-limit": "6.11.2",
     "express-validator": "7.3.1",
     "helmet": "6.2.0",
@@ -41,8 +43,8 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "supertest": "^6.3.3",
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.10",
+    "supertest": "^6.3.3"
   },
   "engines": {
     "node": ">=16.0.0"

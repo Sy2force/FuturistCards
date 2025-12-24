@@ -1,114 +1,118 @@
 import React from 'react';
+import { useI18n } from '../contexts/I18nContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 const TermsPage = () => {
+  const { t, dir } = useI18n();
+  const { isDark } = useTheme();
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8" data-testid="terms-page">
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} py-8`} data-testid="terms-page" dir={dir}>
       <div className="container mx-auto max-w-4xl px-4">
-        <div className="bg-white rounded-xl shadow-md p-8">
+        <div className={`${isDark ? 'bg-gray-800/80 backdrop-blur-lg border border-gray-700' : 'bg-white/80 backdrop-blur-lg border border-white/20'} rounded-xl shadow-xl p-8`}>
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Conditions d&apos;utilisation</h1>
-            <p className="text-xl text-gray-600">Conditions générales d&apos;utilisation de FuturistCards</p>
-            <p className="text-gray-600">Dernière mise à jour : Décembre 2024</p>
+            <h1 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.title')}</h1>
+            <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{t('terms.subtitle')}</p>
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>{t('terms.lastUpdated')}</p>
           </div>
 
           <div className="prose max-w-none">
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptation des conditions</h2>
-              <p className="text-gray-700 mb-4">
-                En accédant et en utilisant FuturistCards, vous acceptez d&apos;être lié par ces conditions d&apos;utilisation. Si vous n&apos;êtes pas d&apos;accord avec ces conditions, veuillez ne pas utiliser notre service.
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section1.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section1.content')}
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Description du service</h2>
-              <p className="text-gray-700 mb-4">
-                FuturistCards est une plateforme de création et de partage de cartes de visite numériques qui permet aux utilisateurs de :
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section2.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section2.content')}
               </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>Créer des cartes de visite professionnelles</li>
-                <li>Partager leurs informations de contact</li>
-                <li>Gérer leur présence professionnelle en ligne</li>
-                <li>Analyser les interactions avec leurs cartes</li>
+              <ul className={`list-disc list-inside ${isDark ? 'text-gray-300' : 'text-gray-700'} space-y-2`}>
+                <li>{t('terms.section2.features.create')}</li>
+                <li>{t('terms.section2.features.share')}</li>
+                <li>{t('terms.section2.features.manage')}</li>
+                <li>{t('terms.section2.features.analyze')}</li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">3. Compte utilisateur</h2>
-              <p className="text-gray-700 mb-4">
-                Pour utiliser nos services, vous devez :
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section3.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section3.content')}
               </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>Vous devez être âgé d&apos;au moins 16 ans pour utiliser ce service</li>
-                <li>Vous devez fournir des informations exactes et à jour lors de l&apos;inscription</li>
-                <li>Vous êtes responsable de maintenir la confidentialité de votre mot de passe</li>
-                <li>Vous ne devez pas partager votre compte avec d&apos;autres personnes</li>
-                <li>Nous notifier immédiatement de tout usage non autorisé</li>
+              <ul className={`list-disc list-inside ${isDark ? 'text-gray-300' : 'text-gray-700'} space-y-2`}>
+                <li>{t('terms.section3.requirements.age')}</li>
+                <li>{t('terms.section3.requirements.accurate')}</li>
+                <li>{t('terms.section3.requirements.password')}</li>
+                <li>{t('terms.section3.requirements.sharing')}</li>
+                <li>{t('terms.section3.requirements.notify')}</li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">4. Utilisation acceptable</h2>
-              <p className="text-gray-700 mb-4">
-                Vous vous engagez à ne pas :
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section4.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section4.content')}
               </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>Utiliser le service à des fins illégales ou non autorisées</li>
-                <li>Publier du contenu illégal, offensant ou inapproprié</li>
-                <li>Usurper l&apos;identité d&apos;une autre personne ou organisation</li>
-                <li>Utiliser le service à des fins commerciales non autorisées</li>
-                <li>Perturber ou compromettre la sécurité du service</li>
+              <ul className={`list-disc list-inside ${isDark ? 'text-gray-300' : 'text-gray-700'} space-y-2`}>
+                <li>{t('terms.section4.prohibited.illegal')}</li>
+                <li>{t('terms.section4.prohibited.content')}</li>
+                <li>{t('terms.section4.prohibited.identity')}</li>
+                <li>{t('terms.section4.prohibited.commercial')}</li>
+                <li>{t('terms.section4.prohibited.security')}</li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Propriété intellectuelle</h2>
-              <p className="text-gray-700 mb-4">
-                Vous conservez tous les droits sur le contenu que vous créez. En utilisant notre service, vous nous accordez une licence pour :
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section5.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section5.content')}
               </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>Héberger et afficher votre contenu</li>
-                <li>Permettre le partage selon vos paramètres</li>
-                <li>Créer des sauvegardes de sécurité</li>
+              <ul className={`list-disc list-inside ${isDark ? 'text-gray-300' : 'text-gray-700'} space-y-2`}>
+                <li>{t('terms.section5.rights.host')}</li>
+                <li>{t('terms.section5.rights.share')}</li>
+                <li>{t('terms.section5.rights.backup')}</li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Limitation de responsabilité</h2>
-              <p className="text-gray-700 mb-4">
-                Le service est fourni &quot;en l&apos;état&quot; sans garantie d&apos;aucune sorte. Nous ne garantissons pas que le service sera ininterrompu ou exempt d&apos;erreurs.
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section6.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section6.content')}
               </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-2">
-                <li>La perte de données ou l&apos;interruption de service</li>
-                <li>Les dommages directs ou indirects liés à l&apos;utilisation</li>
-                <li>Le contenu publié par d&apos;autres utilisateurs</li>
-                <li>Les problèmes techniques indépendants de notre volonté</li>
+              <ul className={`list-disc list-inside ${isDark ? 'text-gray-300' : 'text-gray-700'} space-y-2`}>
+                <li>{t('terms.section6.limitations.data')}</li>
+                <li>{t('terms.section6.limitations.damages')}</li>
+                <li>{t('terms.section6.limitations.userContent')}</li>
+                <li>{t('terms.section6.limitations.technical')}</li>
               </ul>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">7. Résiliation</h2>
-              <p className="text-gray-700 mb-4">
-                Nous nous réservons le droit de suspendre ou résilier votre compte en cas de violation de ces conditions. 
-                Vous pouvez également supprimer votre compte à tout moment depuis vos paramètres.
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section7.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section7.content')}
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Modifications</h2>
-              <p className="text-gray-700 mb-4">
-                Nous nous réservons le droit de modifier ces conditions à tout moment. Les modifications prendront effet immédiatement après leur publication sur cette page.
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section8.title')}</h2>
+              <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-4`}>
+                {t('terms.section8.content')}
               </p>
             </section>
 
             <section className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">9. Contact</h2>
-              <p className="text-gray-600">
-                Pour toute question concernant ces conditions d&apos;utilisation, contactez-nous à legal@futuristcards.com
+              <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>{t('terms.section9.title')}</h2>
+              <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+                {t('terms.section9.content')}
               </p>
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-gray-700">
-                  <strong>Email :</strong> legal@futuristcards.com<br />
-                  <strong>Adresse :</strong> 123 Rue de la Tech, 75001 Paris, France
+              <div className={`${isDark ? 'bg-gray-700/50' : 'bg-gray-50'} p-4 rounded-lg`}>
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                  <strong>{t('terms.section9.email')}:</strong> legal@futuristcards.com<br />
+                  <strong>{t('terms.section9.address')}:</strong> {t('terms.section9.addressValue')}
                 </p>
               </div>
             </section>

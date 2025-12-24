@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { sampleCards } from '../data/sampleCards';
+import { useI18n } from '../contexts/I18nContext';
+import { useTheme } from '../contexts/ThemeContext';
+import { useLikes } from '../hooks/useLikes';
+import LikeButton from '../components/ui/LikeButton';
 
 const CardsPage = () => {
+  const { t, isRTL } = useI18n();
+  const { isDark } = useTheme();
+  const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { initializeMultipleCards } = useLikes();
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -18,12 +26,15 @@ const CardsPage = () => {
         const response = await axios.get(`${API_URL}/cards`);
         
         if (response.data.success) {
-          setCards(response.data.cards || []);
+          const fetchedCards = response.data.cards || [];
+          setCards(fetchedCards);
+          // Initialize likes for all cards
+          initializeMultipleCards(fetchedCards.map(card => card._id));
         } else {
-          throw new Error(response.data.message || 'Erreur lors du chargement des cartes');
+          throw new Error(response.data.message || t('errorLoadingCards'));
         }
       } catch (err) {
-        setError(err.message || 'Erreur de connexion');
+        setError(err.message || t('connectionError'));
         // Fallback vers les données mock
         setCards(sampleCards);
       } finally {
@@ -36,28 +47,35 @@ const CardsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} flex items-center justify-center`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Chargement des cartes...</p>
+          <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{t('loadingCards')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+    <div className={`min-h-screen ${isDark ? 'bg-gray-900' : 'bg-gray-50'} py-12 px-4 ${isRTL ? 'rtl' : 'ltr'}`} data-testid="cards-page">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Découvrez les cartes
+          <h1 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
+            {t('allCards')}
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Explorez notre collection de cartes de visite professionnelles créées par notre communauté
+          <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'} mb-8`}>
+            {t('discoverCards')}
           </p>
+          
           {error && (
-            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-700">
-              Mode hors ligne - Affichage des cartes de démonstration
+            <div className={`mt-4 p-3 ${isDark ? 'bg-red-900/20 border-red-700/30 text-red-300' : 'bg-red-50 border-red-200 text-red-700'} border rounded-lg`}>
+              {error}
+            </div>
+          )}
+          
+          {!error && cards.length > 0 && cards === sampleCards && (
+            <div className={`mt-4 p-3 ${isDark ? 'bg-yellow-900/20 border-yellow-700/30 text-yellow-300' : 'bg-yellow-50 border-yellow-200 text-yellow-700'} border rounded-lg`}>
+              {t('offlineMode')}
             </div>
           )}
         </div>
@@ -66,8 +84,9 @@ const CardsPage = () => {
           {cards.map((card) => (
             <div
               key={card._id}
-              className="bg-white rounded-xl border border-gray-200 shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl border shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer`}
               data-testid="card-item"
+              onClick={() => navigate(`/card/${card._id}`)}
             >
               <div className="h-48 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
                 <div className="text-center">
@@ -76,44 +95,57 @@ const CardsPage = () => {
                       {card.title?.charAt(0) || 'C'}
                     </span>
                   </div>
-                  <h3 className="text-xl font-semibold text-white">{card.title}</h3>
-                  <p className="text-blue-100 text-sm">{card.subtitle}</p>
+                  <h3 className="text-xl font-semibold text-white">
+                    {t(`sampleCardTitles.${card.titleKey}`) || card.title}
+                  </h3>
+                  <p className="text-blue-100 text-sm">
+                    {t(`sampleCardSubtitles.${card.subtitleKey}`) || card.subtitle}
+                  </p>
                 </div>
               </div>
               
               <div className="p-6">
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {card.description}
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm mb-4 line-clamp-2`}>
+                  {t(`sampleCardDescriptions.${card.descriptionKey}`) || card.description}
                 </p>
                 
                 <div className="space-y-2 mb-4">
                   {card.email && (
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className={`flex items-center text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       <span className="w-4 h-4 mr-2">📧</span>
-                      {card.email}
+                      {t(`sampleCardContacts.${card.emailKey}`) || card.email}
                     </div>
                   )}
                   {card.phone && (
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className={`flex items-center text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       <span className="w-4 h-4 mr-2">📞</span>
-                      {card.phone}
+                      {t(`sampleCardContacts.${card.phoneKey}`) || card.phone}
                     </div>
                   )}
                   {card.address && (
-                    <div className="flex items-center text-sm text-gray-500">
+                    <div className={`flex items-center text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                       <span className="w-4 h-4 mr-2">📍</span>
-                      {card.address.city}, {card.address.country}
+                      {t(`sampleCardAddresses.${card.addressKey}`) || `${card.address.city}, ${card.address.country}`}
                     </div>
                   )}
                 </div>
                 
                 <div className="flex items-center justify-between">
                   <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                    {card.category}
+                    {t(`cardCategories.${card.category}`) || card.category}
                   </span>
-                  <div className="flex items-center space-x-4 text-sm text-gray-500">
-                    <span>👁 {card.views || 0}</span>
-                    <span>❤️ {card.likes || 0}</span>
+                  <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'} text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <span className="flex items-center">
+                      <span className="mr-1">👁</span>
+                      {card.views || 0} {t('views')}
+                    </span>
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <LikeButton 
+                        cardId={card._id} 
+                        size="sm" 
+                        initialLikesCount={card.likes || 0}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -122,16 +154,20 @@ const CardsPage = () => {
         </div>
 
         {cards.length === 0 && !loading && (
-          <div className="text-center py-12">
-            <div className="text-6xl mb-4">📋</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucune carte disponible</h3>
-            <p className="text-gray-600">Les cartes apparaîtront ici une fois créées.</p>
+          <div className="col-span-full text-center py-12">
+            <div className={`${isDark ? 'text-gray-400' : 'text-gray-500'} mb-4`}>
+              <svg className="w-16 h-16 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h3 className={`text-xl font-semibold ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>{t('noCardsAvailable')}</h3>
+            <p className={`${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t('cardsWillAppear')}</p>
             <Link 
               to="/create-card" 
-              className="inline-block mt-4 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200"
+              className="inline-block mt-4 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg shadow-md transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
               data-testid="create-card-link"
             >
-              Créer ma première carte
+              {t('createFirstCard')}
             </Link>
           </div>
         )}

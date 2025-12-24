@@ -1,13 +1,17 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useI18n } from '../contexts/I18nContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 const AdminPage = () => {
   const { user, loading } = useAuth();
+  const { t } = useI18n();
+  const { isDark } = useTheme();
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${isDark ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50'}`}>
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
@@ -22,15 +26,15 @@ const AdminPage = () => {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4" data-testid="admin-page">
+    <div className={`min-h-screen py-12 px-4 ${isDark ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50'}`} data-testid="admin-page">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold gradient-text mb-4">Administration</h1>
-          <p className="text-lg text-gray-300 mb-8">
-            Panneau d&apos;administration pour gérer les utilisateurs et les cartes
+          <h1 className="text-4xl font-bold gradient-text mb-4">{t('administration')}</h1>
+          <p className={`text-lg ${isDark ? 'text-gray-300' : 'text-gray-600'} mb-8`}>
+            {t('adminPanelDescription')}
           </p>
         </div>
-        <div className="glass-effect rounded-2xl p-8 shadow-3d border border-white/20 animate-fade-in hover-lift text-center">
+        <div className={`${isDark ? 'glass-effect border-white/20' : 'bg-white/80 backdrop-blur-lg border-gray-200/50'} rounded-2xl p-8 shadow-3d border animate-fade-in hover-lift text-center`}>
           <div className="max-w-2xl mx-auto">
             <div className="w-24 h-24 gradient-primary rounded-full flex items-center justify-center mx-auto mb-6">
               <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -39,82 +43,82 @@ const AdminPage = () => {
               </svg>
             </div>
             
-            <h2 className="text-3xl font-bold text-white mb-4">Espace Administrateur</h2>
-            <p className="text-gray-300 mb-6">
-              Gérez les utilisateurs, modérez le contenu et surveillez l&apos;activité de la plateforme.
+            <h2 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>{t('adminSpace')}</h2>
+            <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-6`}>
+              {t('adminSpaceDescription')}
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-              <div className="glass-effect rounded-xl p-6 border border-white/10">
-                <h3 className="text-xl font-semibold text-white mb-2">Gestion des utilisateurs</h3>
-                <p className="text-gray-300 text-sm">Voir et gérer tous les comptes utilisateurs</p>
+              <div className={`${isDark ? 'glass-effect border-white/10' : 'bg-gray-50/80 border-gray-200/50'} rounded-xl p-6 border`}>
+                <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-800'} mb-2`}>{t('userManagement')}</h3>
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm`}>{t('userManagementDescription')}</p>
                 <div className="mt-4">
                   <span className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs">
-                    En développement
+                    {t('inDevelopment')}
                   </span>
                 </div>
               </div>
               
-              <div className="glass-effect rounded-xl p-6 border border-white/10">
-                <h3 className="text-xl font-semibold text-white mb-2">Modération des cartes</h3>
-                <p className="text-gray-300 text-sm">Approuver et modérer les cartes publiées</p>
+              <div className={`${isDark ? 'glass-effect border-white/10' : 'bg-gray-50/80 border-gray-200/50'} rounded-xl p-6 border`}>
+                <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-800'} mb-2`}>{t('cardModeration')}</h3>
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm`}>{t('cardModerationDescription')}</p>
                 <div className="mt-4">
                   <span className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs">
-                    En développement
+                    {t('inDevelopment')}
                   </span>
                 </div>
               </div>
               
-              <div className="glass-effect rounded-xl p-6 border border-white/10">
-                <h3 className="text-xl font-semibold text-white mb-2">Statistiques</h3>
-                <p className="text-gray-300 text-sm">Analytics et métriques de la plateforme</p>
+              <div className={`${isDark ? 'glass-effect border-white/10' : 'bg-gray-50/80 border-gray-200/50'} rounded-xl p-6 border`}>
+                <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-800'} mb-2`}>{t('statistics')}</h3>
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm`}>{t('statisticsDescription')}</p>
                 <div className="mt-4">
                   <span className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs">
-                    En développement
+                    {t('inDevelopment')}
                   </span>
                 </div>
               </div>
               
-              <div className="glass-effect rounded-xl p-6 border border-white/10">
-                <h3 className="text-xl font-semibold text-white mb-2">Configuration</h3>
-                <p className="text-gray-300 text-sm">Paramètres globaux de l&apos;application</p>
+              <div className={`${isDark ? 'glass-effect border-white/10' : 'bg-gray-50/80 border-gray-200/50'} rounded-xl p-6 border`}>
+                <h3 className={`text-xl font-semibold ${isDark ? 'text-white' : 'text-gray-800'} mb-2`}>{t('configuration')}</h3>
+                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} text-sm`}>{t('configurationDescription')}</p>
                 <div className="mt-4">
                   <span className="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-xs">
-                    En développement
+                    {t('inDevelopment')}
                   </span>
                 </div>
               </div>
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="px-6 py-3 gradient-secondary hover-lift hover-glow text-white rounded-lg font-semibold shadow-3d">
-                Voir les logs système
+              <button className="px-6 py-3 gradient-secondary hover-lift hover-glow text-white rounded-lg font-semibold shadow-3d transition-all duration-300">
+                {t('viewSystemLogs')}
               </button>
               <button 
                 onClick={() => window.location.href = '/'}
-                className="px-6 py-3 glass-effect hover-lift text-white rounded-lg font-semibold border border-white/20"
+                className={`px-6 py-3 ${isDark ? 'glass-effect border-white/20 text-white' : 'bg-gray-100 border-gray-300 text-gray-700 hover:bg-gray-200'} hover-lift rounded-lg font-semibold border transition-all duration-300`}
               >
-                Retour à l&apos;accueil
+                {t('backToHome')}
               </button>
             </div>
           </div>
         </div>
 
         {/* Informations système */}
-        <div className="mt-8 glass-effect rounded-2xl p-6 shadow-3d border border-white/20 animate-fade-in" style={{animationDelay: '0.2s'}}>
-          <h3 className="text-lg font-semibold text-white mb-4">Informations système</h3>
+        <div className={`mt-8 ${isDark ? 'glass-effect border-white/20' : 'bg-white/80 backdrop-blur-lg border-gray-200/50'} rounded-2xl p-6 shadow-3d border animate-fade-in`} style={{animationDelay: '0.2s'}}>
+          <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>{t('systemInformation')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
             <div>
-              <span className="text-gray-400">Version:</span>
-              <span className="text-white ml-2">1.0.0</span>
+              <span className={isDark ? 'text-gray-400' : 'text-gray-500'}>{t('version')}:</span>
+              <span className={`${isDark ? 'text-white' : 'text-gray-800'} ml-2`}>1.0.0</span>
             </div>
             <div>
-              <span className="text-gray-400">Environnement:</span>
-              <span className="text-white ml-2">Développement</span>
+              <span className={isDark ? 'text-gray-400' : 'text-gray-500'}>{t('environment')}:</span>
+              <span className={`${isDark ? 'text-white' : 'text-gray-800'} ml-2`}>{t('development')}</span>
             </div>
             <div>
-              <span className="text-gray-400">Statut:</span>
-              <span className="text-green-400 ml-2">Opérationnel</span>
+              <span className={isDark ? 'text-gray-400' : 'text-gray-500'}>{t('status')}:</span>
+              <span className="text-green-400 ml-2">{t('operational')}</span>
             </div>
           </div>
         </div>

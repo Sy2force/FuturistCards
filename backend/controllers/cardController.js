@@ -444,6 +444,14 @@ const deleteCard = async (req, res) => {
       });
     }
 
+    // Empêcher la suppression des cartes de démonstration
+    if (card.isDemo) {
+      return res.status(403).json({
+        success: false,
+        message: 'Impossible de supprimer une carte de démonstration'
+      });
+    }
+
     // Vérifier que l'utilisateur est propriétaire ou admin
     if (card.user_id.toString() !== userId && !req.user.isAdmin) {
       return res.status(403).json({
@@ -485,6 +493,18 @@ const getMyCards = async (req, res) => {
       const endIndex = startIndex + parseInt(limit);
       const paginatedCards = userCards.slice(startIndex, endIndex);
 
+      if (paginatedCards.length === 0) {
+        return res.json({
+          success: true,
+          count: 0,
+          total: 0,
+          totalPages: 0,
+          currentPage: parseInt(page),
+          cards: [],
+          message: "Aucune carte trouvée pour cet utilisateur"
+        });
+      }
+
       return res.json({
         success: true,
         count: paginatedCards.length,
@@ -513,9 +533,9 @@ const getMyCards = async (req, res) => {
 
   } catch (error) {
     // Erreur gérée par errorHandler
-    res.status(500).json({
+    res.status(404).json({
       success: false,
-      message: 'Erreur serveur lors de la récupération de vos cartes'
+      message: 'Carte non trouvée'
     });
   }
 };
@@ -573,6 +593,179 @@ const toggleLike = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Erreur serveur lors de la mise à jour du like'
+    });
+  }
+};
+
+// Stockage des favoris en mode mock
+const userFavorites = new Map();
+
+/**
+ * Ajouter/Retirer une carte des favoris
+ */
+const toggleFavorite = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (isMockMode()) {
+      const card = testCards.get(id);
+      if (!card) {
+        return res.status(404).json({
+          success: false,
+          message: 'Carte non trouvée'
+        });
+      }
+
+      // Gérer les favoris en mode mock
+      if (!userFavorites.has(userId)) {
+        userFavorites.set(userId, new Set());
+      }
+
+      const favorites = userFavorites.get(userId);
+      const isFavorite = favorites.has(id);
+
+      if (isFavorite) {
+        favorites.delete(id);
+      } else {
+        favorites.add(id);
+      }
+
+      return res.json({
+        success: true,
+        message: isFavorite ? 'Carte retirée des favoris' : 'Carte ajoutée aux favoris',
+        isFavorite: !isFavorite
+      });
+    }
+
+    // Mode production avec MongoDB
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+
+    const card = await Card.findById(id);
+    if (!card) {
+      return res.status(404).json({
+        success: false,
+        message: 'Carte non trouvée'
+      });
+    }
+
+    const favorites = user.favoriteCards || [];
+    const isFavorite = favorites.includes(id);
+
+    if (isFavorite) {
+      user.favoriteCards = favorites.filter(favId => favId.toString() !== id);
+    } else {
+      user.favoriteCards = [...favorites, id];
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: isFavorite ? 'Carte retirée des favoris' : 'Carte ajoutée aux favoris',
+      isFavorite: !isFavorite
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la mise à jour des favoris'
+    });
+  }
+};
+
+/**
+ * Obtenir les cartes favorites de l'utilisateur
+ */
+const getFavorites = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    if (isMockMode()) {
+      const favorites = userFavorites.get(userId) || new Set();
+      const favoriteCards = Array.from(favorites)
+        .map(cardId => testCards.get(cardId))
+        .filter(card => card !== undefined);
+
+      return res.json({
+        success: true,
+        count: favoriteCards.length,
+        cards: favoriteCards
+      });
+    }
+
+    const user = await User.findById(userId).populate({
+      path: 'favoriteCards',
+      populate: {
+        path: 'user_id',
+        select: 'firstName lastName email'
+      }
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+
+    res.json({
+      success: true,
+      count: user.favoriteCards.length,
+      cards: user.favoriteCards
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la récupération des favoris'
+    });
+  }
+};
+
+/**
+ * Vérifier si une carte est dans les favoris
+ */
+const checkFavorite = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    if (isMockMode()) {
+      const favorites = userFavorites.get(userId) || new Set();
+      const isFavorite = favorites.has(id);
+
+      return res.json({
+        success: true,
+        isFavorite
+      });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+
+    const isFavorite = user.favoriteCards && user.favoriteCards.includes(id);
+
+    res.json({
+      success: true,
+      isFavorite
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Erreur serveur lors de la vérification des favoris'
     });
   }
 };
@@ -688,6 +881,9 @@ module.exports = {
   deleteCard,
   getMyCards,
   toggleLike,
+  toggleFavorite,
+  getFavorites,
+  checkFavorite,
   searchCards,
   getPopularCards
 };

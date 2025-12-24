@@ -58,7 +58,15 @@ const AuthProvider = ({ children }) => {
       });
 
       if (response.data.success) {
-        const userData = createUserData(response.data.user, { email, token: response.data.token });
+        // Créer les données utilisateur avec le rôle correct
+        const userData = {
+          id: response.data.user?.id || 'user-id',
+          email: response.data.user?.email || email,
+          firstName: response.data.user?.firstName || 'Test',
+          lastName: response.data.user?.lastName || 'User',
+          role: response.data.user?.role || 'user', // CRITIQUE: S'assurer que le rôle est défini
+          token: response.data.token
+        };
 
         // Sauvegarder dans localStorage
         safeSetItem(AUTH_CONFIG.STORAGE_KEY, userData);
@@ -66,7 +74,12 @@ const AuthProvider = ({ children }) => {
         // Configurer le token axios
         axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`;
         
+        // CRITIQUE: Mettre à jour l'état React IMMÉDIATEMENT
         setUser(userData);
+        
+        // Force un re-render en attendant un tick
+        setTimeout(() => setUser(userData), 0);
+        
         return { success: true, user: userData };
       }
 
@@ -121,13 +134,8 @@ const AuthProvider = ({ children }) => {
       setError(null);
       setLoading(false);
       
-      // 🔥 REDIRECTION FORCÉE ET IMMÉDIATE
-      window.location.href = "/";
-      
       return { success: true };
     } catch (error) {
-      // Même en cas d'erreur, forcer la redirection
-      window.location.href = "/";
       return { success: false, error: 'Erreur de déconnexion' };
     }
   };

@@ -99,41 +99,48 @@ const business = (req, res, next) => {
   }
 };
 
-// Optional auth middleware - doesn't fail if no token
+// Optional auth middleware - doesn't require authentication but adds user if available
 const optionalAuth = async (req, res, next) => {
   try {
-    let token;
-
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
-
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    
     if (token) {
-      try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
-
-        // Mode mock pour développement
-        if (process.env.NODE_ENV === 'development' || !process.env.MONGODB_URI) {
-          req.user = {
-            id: decoded.id,
-            role: 'user',
-            isAdmin: false,
-            isBusiness: false
-          };
-        } else {
-          req.user = await User.findById(decoded.id).select('-password');
-        }
-      } catch (error) {
-        // Token invalid, but continue without user
-        req.user = null;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = await User.findById(decoded.id).select('-password');
+      if (user) {
+        req.user = user;
       }
     }
-
+    
     next();
   } catch (error) {
-    // Erreur du middleware d'authentification optionnel
+    // Continue without user if token is invalid
     next();
   }
 };
 
-module.exports = { protect, admin, business, optionalAuth };
+// Public route with optional auth for likes status
+const publicWithOptionalAuth = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    
+    if (token) {
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select('-password');
+        if (user) {
+          req.user = user;
+        }
+      } catch (tokenError) {
+        // Invalid token, continue without user
+        console.log('Invalid token in optional auth:', tokenError.message);
+      }
+    }
+    
+    next();
+  } catch (error) {
+    next();
+  }
+};
+
+module.exports = { protect, admin, business, optionalAuth, publicWithOptionalAuth };

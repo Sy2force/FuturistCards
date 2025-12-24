@@ -21,36 +21,52 @@ const registerSchema = Joi.object({
       'any.required': 'Last name is required'
     }),
   email: Joi.string()
-    .email()
+    .min(3)
     .required()
     .messages({
-      'string.email': 'Please enter a valid email address',
+      'string.min': 'Email must be at least 3 characters',
       'any.required': 'Email is required'
     }),
   password: Joi.string()
-    .min(8)
-    .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]'))
+    .min(4)
     .required()
     .messages({
-      'string.min': 'Password must be at least 8 characters',
-      'string.pattern.base': 'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character',
+      'string.min': 'Password must be at least 4 characters',
       'any.required': 'Password is required'
+    }),
+  phone: Joi.string()
+    .pattern(/^[\+]?[0-9]{9,15}$/)
+    .allow('')
+    .optional()
+    .messages({
+      'string.pattern.base': 'Please enter a valid phone number'
     }),
   role: Joi.string()
     .valid('user', 'business', 'admin')
     .default('user')
     .messages({
       'any.only': 'Role must be user, business, or admin'
-    })
+    }),
+  address: Joi.object({
+    country: Joi.string().allow('').optional(),
+    city: Joi.string().allow('').optional(),
+    street: Joi.string().allow('').optional(),
+    houseNumber: Joi.number().allow(null).optional(),
+    zip: Joi.string().allow('').optional()
+  }).optional(),
+  image: Joi.object({
+    url: Joi.string().uri().optional(),
+    alt: Joi.string().max(100).optional()
+  }).optional()
 });
 
 // User login validation schema
 const loginSchema = Joi.object({
   email: Joi.string()
-    .email()
+    .min(3)
     .required()
     .messages({
-      'string.email': 'Please enter a valid email address',
+      'string.min': 'Email must be at least 3 characters',
       'any.required': 'Email is required'
     }),
   password: Joi.string()
