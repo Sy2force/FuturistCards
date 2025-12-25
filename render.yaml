@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: futuristcards-backend
+    env: node
+    plan: free
+    region: frankfurt
+    buildCommand: cd backend && npm ci --only=production
+    startCommand: cd backend && node server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    disk:
+      name: futuristcards-disk
+      mountPath: /opt/render/project/backend/uploads
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: CLIENT_URL
+        value: https://futuristcards.vercel.app
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://futuristcards.vercel.app
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 100
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+    headers:
+      - key: X-Frame-Options
+        value: DENY
+      - key: X-Content-Type-Options
+        value: nosniff
+      - key: Referrer-Policy
+        value: strict-origin-when-cross-origin
+
+databases:
+  - name: futuristcards-db
+    databaseName: futuristcards
+    user: futuristcards_user
+    plan: free
+    region: frankfurt
+    ipAllowList:
+      - source: 0.0.0.0/0
+        description: Allow all connections

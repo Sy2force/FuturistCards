@@ -1,77 +1,63 @@
+<<<<<<< HEAD
 import { useState, useCallback } from 'react';
 import axiosInstance from '../services/api';
 import { useAuth } from '../context/AuthContext';
+=======
+import { useState, useEffect } from 'react';
+import { useAuth } from './useAuth';
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
 
 /**
- * Hook personnalisé pour les appels API avec gestion d'état
- * Fournit loading, error, et success states automatiquement
+ * Custom hook for API calls with loading, error, and data state management
+ * @param {Function} apiCall - The API function to call
+ * @param {Array} dependencies - Dependencies array for useEffect
+ * @param {boolean} immediate - Whether to call the API immediately
+ * @returns {Object} { data, loading, error, refetch }
  */
-export const useApi = () => {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+const useApi = (apiCall, dependencies = [], immediate = true) => {
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(immediate);
+  const [error, setError] = useState(null);
   const { logout } = useAuth();
 
-  // Wrapper pour les appels API avec gestion automatique des erreurs
-  const apiCall = useCallback(async (apiFunction, ...args) => {
-    setLoading(true);
-    setError(null);
-    
+  const execute = async (...args) => {
     try {
-      const response = await apiFunction(...args);
-      setData(response.data);
-      return response.data;
+      setLoading(true);
+      setError(null);
+      const result = await apiCall(...args);
+      setData(result);
+      return result;
     } catch (err) {
-      const errorMessage = err.response?.data?.message || err.message || 'Une erreur est survenue';
-      
-      // Déconnexion automatique si token expiré
+      // Handle authentication errors
       if (err.response?.status === 401) {
         logout();
+<<<<<<< HEAD
+=======
+        return;
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
       }
       
-      setError(errorMessage);
+      setError(err.response?.data?.message || err.message || 'Une erreur est survenue');
       throw err;
     } finally {
       setLoading(false);
     }
-  }, [logout]);
+  };
 
-  // Méthodes HTTP spécialisées
-  const get = useCallback(async (url, config = {}) => {
-    return apiCall(axiosInstance.get, url, config);
-  }, [apiCall]);
+  const refetch = () => execute();
 
-  const post = useCallback(async (url, data = {}, config = {}) => {
-    return apiCall(axiosInstance.post, url, data, config);
-  }, [apiCall]);
-
-  const put = useCallback(async (url, data = {}, config = {}) => {
-    return apiCall(axiosInstance.put, url, data, config);
-  }, [apiCall]);
-
-  const del = useCallback(async (url, config = {}) => {
-    return apiCall(axiosInstance.delete, url, config);
-  }, [apiCall]);
-
-  // Méthodes utilitaires
-  const clearError = useCallback(() => {
-    setError(null);
-  }, []);
-
-  const clearData = useCallback(() => {
-    setData(null);
-  }, []);
-
-  const reset = useCallback(() => {
-    setLoading(false);
-    setError(null);
-    setData(null);
-  }, []);
+  useEffect(() => {
+    if (immediate) {
+      execute();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, dependencies);
 
   return {
-    // États
+    data,
     loading,
     error,
+<<<<<<< HEAD
     data,
     
     // Méthodes HTTP
@@ -198,6 +184,12 @@ export const useCrud = (resourceEndpoint) => {
     create,
     update,
     remove
+=======
+    execute,
+    refetch,
+    setData,
+    setError
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
   };
 };
 

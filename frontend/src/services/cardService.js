@@ -1,105 +1,218 @@
-import api from './api';
+import axios from 'axios';
+
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+
+// Configure axios instance for cards API
+const cardsAPI = axios.create({
+  baseURL: `${API_URL}/cards`,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
+// Add token to requests if available
+cardsAPI.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const cardService = {
-  // Obtenir toutes les cartes avec filtres
-  getCards: async () => {
+  // Get all cards
+  getAllCards: async (filters = {}) => {
     try {
-      const response = await api.getCards();
-      return response;
+      const response = await cardsAPI.get('/', { params: filters });
+      return {
+        success: true,
+        data: response.data
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error fetching cards');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to fetch cards'
+      };
     }
   },
 
-  // Obtenir une carte par ID
-  getCard: async (id) => {
+  // Get card by ID
+  getCardById: async (cardId) => {
     try {
-      const response = await api.getCard(id);
-      return response;
+      const response = await cardsAPI.get(`/${cardId}`);
+      return {
+        success: true,
+        data: response.data.card
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error fetching card');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to fetch card'
+      };
     }
   },
 
-  // Créer une nouvelle carte
+  // Get user's cards
+  getMyCards: async () => {
+    try {
+      const response = await cardsAPI.get('/my-cards');
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to fetch your cards'
+      };
+    }
+  },
+
+  // Create new card
   createCard: async (cardData) => {
     try {
-      const response = await api.createCard(cardData);
-      return response;
+      const response = await cardsAPI.post('/', cardData);
+      return {
+        success: true,
+        data: response.data.card,
+        message: response.data.message
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error creating card');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to create card'
+      };
     }
   },
 
-  // Mettre à jour une carte
-  updateCard: async (id, cardData) => {
+  // Update card
+  updateCard: async (cardId, cardData) => {
     try {
-      const response = await api.updateCard(id, cardData);
-      return response;
+      const response = await cardsAPI.put(`/${cardId}`, cardData);
+      return {
+        success: true,
+        data: response.data.card,
+        message: response.data.message
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error updating card');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to update card'
+      };
     }
   },
 
-  // Supprimer une carte
-  deleteCard: async (id) => {
+  // Delete card (only user-created cards, not demo cards)
+  deleteCard: async (cardId) => {
     try {
-      const response = await api.deleteCard(id);
-      return response;
+      const response = await cardsAPI.delete(`/${cardId}`);
+      return {
+        success: true,
+        message: response.data.message || 'Card deleted successfully'
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error deleting card');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to delete card'
+      };
     }
   },
 
-  // Obtenir les cartes de l'utilisateur connecté
-  getUserCards: async () => {
+  // Check if user can delete a card
+  canDeleteCard: (card, user) => {
+    if (!card || !user) return false;
+    
+    // Demo cards cannot be deleted
+    if (card.isDemo) return false;
+    
+    // Only card owner or admin can delete
+    return card.user_id === user.id || user.role === 'admin';
+  },
+
+  // Check if user can edit a card
+  canEditCard: (card, user) => {
+    if (!card || !user) return false;
+    
+    // Demo cards cannot be edited
+    if (card.isDemo) return false;
+    
+    // Only card owner or admin can edit
+    return card.user_id === user.id || user.role === 'admin';
+  },
+
+  // Search cards
+  searchCards: async (query, filters = {}) => {
     try {
-      const response = await api.get('/cards/my-cards');
-      return response;
+      const params = { q: query, ...filters };
+      const response = await cardsAPI.get('/search', { params });
+      return {
+        success: true,
+        data: response.data
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error fetching user cards');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to search cards'
+      };
     }
   },
 
-  // Rechercher des cartes
-  searchCards: async (query) => {
+  // Get popular cards
+  getPopularCards: async (limit = 10) => {
     try {
-      const response = await api.get('/cards/search', { 
-        params: { q: query } 
-      });
-      return response;
+      const response = await cardsAPI.get('/popular', { params: { limit } });
+      return {
+        success: true,
+        data: response.data
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error searching cards');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to fetch popular cards'
+      };
     }
   },
 
-  // Liker/unliker une carte
-  likeCard: async (id) => {
+  // Toggle favorite
+  toggleFavorite: async (cardId) => {
     try {
-      const response = await api.pos`/cards/${id}/like`;
-      return response;
+      const response = await cardsAPI.post(`/${cardId}/favorite`);
+      return {
+        success: true,
+        data: response.data,
+        message: response.data.message
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error liking card');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to toggle favorite'
+      };
     }
   },
 
-  // Ajouter/retirer des favoris
-  toggleFavorite: async (id) => {
-    try {
-      const response = await api.pos`/cards/${id}/favorite`;
-      return response;
-    } catch (error) {
-      throw new Error(error.message || 'Error toggling favorite');
-    }
-  },
-
-  // Obtenir les cartes favorites
+  // Get favorites
   getFavorites: async () => {
     try {
-      const response = await api.getFavorites();
-      return response;
+      const response = await cardsAPI.get('/favorites');
+      return {
+        success: true,
+        data: response.data
+      };
     } catch (error) {
-      throw new Error(error.message || 'Error fetching favorites');
+      // Error handled in return statement
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to fetch favorites'
+      };
     }
   }
 };

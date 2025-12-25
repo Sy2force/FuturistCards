@@ -1,8 +1,10 @@
 {
-  "name": "cardpro",
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "futuristcards-frontend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+<<<<<<< HEAD
     "dev": "vite --port 3010",
     "start": "vite --port 3010 --host",
     "build": "vite build",
@@ -11,27 +13,54 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage"
+=======
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:ui": "playwright test --ui",
+    "analyze": "npm run build && npx vite-bundle-analyzer dist/stats.html",
+    "clean": "rm -rf dist node_modules/.vite"
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "axios": "^1.3.4",
+<<<<<<< HEAD
     "framer-motion": "^10.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.5",
     "react-hot-toast": "^2.4.0",
+=======
+    "i18next": "^25.7.3",
+    "i18next-browser-languagedetector": "^8.2.0",
+    "i18next-http-backend": "^3.0.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-i18next": "^16.5.0",
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
     "react-router-dom": "^6.8.1"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/language-server": "^0.14.29",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.0.0",
-    "autoprefixer": "^10.4.14",
-    "eslint": "^8.45.0",
+    "autoprefixer": "^10.4.23",
+    "eslint": "^8.57.1",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-n": "^16.6.2",
+    "eslint-plugin-promise": "^6.6.0",
     "eslint-plugin-react": "^7.37.5",
+<<<<<<< HEAD
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.24",
     "jsdom": "^27.3.0",
@@ -40,5 +69,12 @@
     "terser": "^5.44.1",
     "vite": "^7.1.7",
     "vitest": "^4.0.15"
+=======
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.0",
+    "vite": "^7.3.0"
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
   }
 }

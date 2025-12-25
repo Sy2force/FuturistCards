@@ -1,0 +1,409 @@
+{
+  "bundleAnalysis": {
+    "totalSize": 729764,
+    "assets": [
+      {
+        "name": "assets/js/index-DQVxzw8P.js",
+        "size": 365523,
+        "type": "js"
+      },
+      {
+        "name": "assets/js/vendor-B7aToqcS.js",
+        "size": 139611,
+        "type": "js"
+      },
+      {
+        "name": "assets/js/router-D9mTGHpr.js",
+        "size": 62692,
+        "type": "js"
+      },
+      {
+        "name": "assets/css/index-D-9ZpwRg.css",
+        "size": 56741,
+        "type": "css"
+      },
+      {
+        "name": "assets/js/i18n-TE5ojss6.js",
+        "size": 54902,
+        "type": "js"
+      },
+      {
+        "name": "assets/js/utils-ClPlP9YV.js",
+        "size": 35983,
+        "type": "js"
+      },
+      {
+        "name": "assets/js/browser-ponyfill-D_kwMzOT.js",
+        "size": 9993,
+        "type": "js"
+      },
+      {
+        "name": "index.html",
+        "size": 2978,
+        "type": "html"
+      },
+      {
+        "name": "404.html",
+        "size": 1212,
+        "type": "html"
+      },
+      {
+        "name": "favicon.ico",
+        "size": 129,
+        "type": "ico"
+      }
+    ],
+    "recommendations": []
+  },
+  "componentAnalysis": {
+    "totalComponents": 23,
+    "largeComponents": [
+      {
+        "name": "CardItem.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/cards/CardItem.jsx",
+        "lines": 234,
+        "complexity": 32,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "CardSearch.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/cards/CardSearch.jsx",
+        "lines": 226,
+        "complexity": 16,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": true,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "CardForm.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/forms/CardForm.jsx",
+        "lines": 385,
+        "complexity": 40,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "Navbar.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/layout/Navbar.jsx",
+        "lines": 377,
+        "complexity": 63,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "ChangePasswordModal.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/profile/ChangePasswordModal.jsx",
+        "lines": 275,
+        "complexity": 47,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "EditProfileModal.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/profile/EditProfileModal.jsx",
+        "lines": 232,
+        "complexity": 42,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "LikeButton.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/ui/LikeButton.jsx",
+        "lines": 207,
+        "complexity": 19,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      }
+    ],
+    "complexComponents": [
+      {
+        "name": "ProtectedRoute.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/ProtectedRoute.jsx",
+        "lines": 55,
+        "complexity": 15,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "CardItem.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/cards/CardItem.jsx",
+        "lines": 234,
+        "complexity": 32,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "CardSearch.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/cards/CardSearch.jsx",
+        "lines": 226,
+        "complexity": 16,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": true,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "LanguageSelector.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/common/LanguageSelector.jsx",
+        "lines": 104,
+        "complexity": 11,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "OfflineBanner.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/common/OfflineBanner.jsx",
+        "lines": 91,
+        "complexity": 14,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "CardForm.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/forms/CardForm.jsx",
+        "lines": 385,
+        "complexity": 40,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "FormField.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/forms/FormField.jsx",
+        "lines": 179,
+        "complexity": 15,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "Navbar.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/layout/Navbar.jsx",
+        "lines": 377,
+        "complexity": 63,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "ChangePasswordModal.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/profile/ChangePasswordModal.jsx",
+        "lines": 275,
+        "complexity": 47,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "EditProfileModal.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/profile/EditProfileModal.jsx",
+        "lines": 232,
+        "complexity": 42,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "LikeButton.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/ui/LikeButton.jsx",
+        "lines": 207,
+        "complexity": 19,
+        "optimizations": {
+          "hasUseMemo": false,
+          "hasUseCallback": false,
+          "hasMemo": false
+        }
+      },
+      {
+        "name": "Memoized.jsx",
+        "path": "/Users/shayacoca/projet react/FuturistCards/frontend/src/components/ui/Memoized.jsx",
+        "lines": 95,
+        "complexity": 13,
+        "optimizations": {
+          "hasUseMemo": true,
+          "hasUseCallback": true,
+          "hasMemo": true
+        }
+      }
+    ],
+    "recommendations": [
+      {
+        "type": "warning",
+        "component": "CardItem.jsx",
+        "message": "Large component (234 lines). Consider breaking into smaller components."
+      },
+      {
+        "type": "warning",
+        "component": "CardItem.jsx",
+        "message": "High complexity (32). Consider refactoring."
+      },
+      {
+        "type": "info",
+        "component": "CardItem.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "warning",
+        "component": "CardSearch.jsx",
+        "message": "Large component (226 lines). Consider breaking into smaller components."
+      },
+      {
+        "type": "warning",
+        "component": "CardSearch.jsx",
+        "message": "High complexity (16). Consider refactoring."
+      },
+      {
+        "type": "info",
+        "component": "CardSearch.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "info",
+        "component": "LanguageSelector.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "warning",
+        "component": "CardForm.jsx",
+        "message": "Large component (385 lines). Consider breaking into smaller components."
+      },
+      {
+        "type": "warning",
+        "component": "CardForm.jsx",
+        "message": "High complexity (40). Consider refactoring."
+      },
+      {
+        "type": "info",
+        "component": "CardForm.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "info",
+        "component": "FormField.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "warning",
+        "component": "Navbar.jsx",
+        "message": "Large component (377 lines). Consider breaking into smaller components."
+      },
+      {
+        "type": "warning",
+        "component": "Navbar.jsx",
+        "message": "High complexity (63). Consider refactoring."
+      },
+      {
+        "type": "info",
+        "component": "Navbar.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "warning",
+        "component": "ChangePasswordModal.jsx",
+        "message": "Large component (275 lines). Consider breaking into smaller components."
+      },
+      {
+        "type": "warning",
+        "component": "ChangePasswordModal.jsx",
+        "message": "High complexity (47). Consider refactoring."
+      },
+      {
+        "type": "info",
+        "component": "ChangePasswordModal.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "warning",
+        "component": "EditProfileModal.jsx",
+        "message": "Large component (232 lines). Consider breaking into smaller components."
+      },
+      {
+        "type": "warning",
+        "component": "EditProfileModal.jsx",
+        "message": "High complexity (42). Consider refactoring."
+      },
+      {
+        "type": "info",
+        "component": "EditProfileModal.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      },
+      {
+        "type": "warning",
+        "component": "LikeButton.jsx",
+        "message": "Large component (207 lines). Consider breaking into smaller components."
+      },
+      {
+        "type": "warning",
+        "component": "LikeButton.jsx",
+        "message": "High complexity (19). Consider refactoring."
+      },
+      {
+        "type": "info",
+        "component": "LikeButton.jsx",
+        "message": "Consider using React.memo for performance optimization."
+      }
+    ]
+  },
+  "optimizations": [
+    {
+      "type": "suggestion",
+      "title": "Implement Lazy Loading",
+      "description": "Use React.lazy() for route-based code splitting to reduce initial bundle size."
+    },
+    {
+      "type": "suggestion",
+      "title": "Optimize Images",
+      "description": "Implement lazy loading for images and use modern formats (WebP, AVIF)."
+    },
+    {
+      "type": "suggestion",
+      "title": "Add Service Worker",
+      "description": "Implement service worker for caching and offline functionality."
+    }
+  ],
+  "score": 55
+}

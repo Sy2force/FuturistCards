@@ -5,7 +5,7 @@ import { fileURLToPath, URL } from 'url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/',
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -13,17 +13,28 @@ export default defineConfig({
       '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
       '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
       '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
-      '@utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
-      '@services': fileURLToPath(new URL('./src/services', import.meta.url)),
-      '@hooks': fileURLToPath(new URL('./src/hooks', import.meta.url)),
     }
   },
   server: {
+<<<<<<< HEAD
     port: 3010, // Frontend sur 3010, backend sur 5001
     strictPort: true,
     host: '0.0.0.0',
     open: false,
     cors: true,
+=======
+    port: 3010,
+    host: true,
+    open: true,
+    cors: true,
+    strictPort: true
+  },
+  // Configuration for Playwright tests
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: ['./tests/setup.js']
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
   },
   preview: {
     port: 4173,
@@ -51,10 +62,18 @@ export default defineConfig({
         },
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          utils: ['axios']
+        }
       }
     },
     chunkSizeWarningLimit: 1000,
-    target: 'esnext'
+    target: 'esnext',
+    reportCompressedSize: false,
+    cssCodeSplit: true
   },
   define: {
     __APP_VERSION__: JSON.stringify('1.0.0'),
@@ -64,9 +83,10 @@ export default defineConfig({
       'react',
       'react-dom',
       'react-router-dom',
-      'framer-motion',
       'axios',
-      'react-hot-toast'
+      'i18next',
+      'react-i18next',
+      'i18next-browser-languagedetector'
     ],
   },
   test: {

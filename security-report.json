@@ -1,0 +1,31 @@
+{
+  "vulnerabilities": [],
+  "bestPractices": [
+    {
+      "type": "security_headers",
+      "severity": "medium",
+      "issue": "Missing security header: X-Content-Type-Options",
+      "recommendation": "Implement comprehensive security headers using helmet.js"
+    },
+    {
+      "type": "security_headers",
+      "severity": "medium",
+      "issue": "Missing security header: X-Frame-Options",
+      "recommendation": "Implement comprehensive security headers using helmet.js"
+    },
+    {
+      "type": "security_headers",
+      "severity": "medium",
+      "issue": "Missing security header: X-XSS-Protection",
+      "recommendation": "Implement comprehensive security headers using helmet.js"
+    },
+    {
+      "type": "security_headers",
+      "severity": "medium",
+      "issue": "Missing security header: Strict-Transport-Security",
+      "recommendation": "Implement comprehensive security headers using helmet.js"
+    }
+  ],
+  "compliance": [],
+  "score": 80
+}

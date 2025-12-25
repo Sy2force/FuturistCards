@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
 import { Toaster } from 'react-hot-toast'
 import App from './App.jsx'
+<<<<<<< HEAD
 import { AuthProvider } from './context/AuthContext';
 import { FavoritesProvider } from './context/FavoritesContext';
 import { ThemeProvider } from './context/ThemeContext';
@@ -60,3 +61,13 @@ if (document.readyState === 'loading') {
 } else {
   renderApp()
 }
+=======
+import './index.css'
+import './i18n/index.js'
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
+>>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
