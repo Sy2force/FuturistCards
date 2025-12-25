@@ -1,9 +1,18 @@
-import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const ProtectedRoute = ({ children, role, allowedRoles, requireAuth = true, requireBusiness = false, requireAdmin = false }) => {
   const { user, loading } = useAuth();
+
+  // Si requireAuth === false (pour login/register et pages publiques), permettre l'accès sans auth
+  if (requireAuth === false) {
+    // Pour les pages login/register, rediriger si déjà connecté
+    if (user && (window.location.pathname === '/login' || window.location.pathname === '/register')) {
+      return <Navigate to="/cards" replace />;
+    }
+    // Pour toutes les autres pages avec requireAuth=false, permettre l'accès libre même pendant loading
+    return children;
+  }
 
   // OBLIGATOIRE: Aucune redirection tant que loading === true
   if (loading) {
@@ -12,15 +21,6 @@ const ProtectedRoute = ({ children, role, allowedRoles, requireAuth = true, requ
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
     );
-  }
-
-  // Si requireAuth === false (pour login/register), permettre l'accès sans auth
-  if (requireAuth === false) {
-    // Si déjà connecté, rediriger vers /cards
-    if (user) {
-      return <Navigate to="/cards" replace />;
-    }
-    return children;
   }
 
   // Redirection uniquement après loading === false

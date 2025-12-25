@@ -2,9 +2,13 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
+// Add timeout to prevent hanging requests
+const REQUEST_TIMEOUT = 10000; // 10 seconds
+
 // Create axios instance with default configuration
 const api = axios.create({
   baseURL: API_BASE_URL,
+  timeout: REQUEST_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -29,11 +33,43 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    // Handle network errors
+    if (!error.response) {
+      // Network error - no response from server
+      error.message = 'Erreur de connexion au serveur. Vérifiez votre connexion internet.';
+      
+      // Dispatch custom event for network error handling
+      window.dispatchEvent(new CustomEvent('api-error', {
+        detail: { type: 'network', error: error.message }
+      }));
+      
+      return Promise.reject(error);
+    }
+    
     if (error.response?.status === 401) {
+      // Only redirect to login if we're on a protected route
+      const currentPath = window.location.pathname;
+      const publicRoutes = ['/cards', '/', '/about', '/services'];
+      
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      localStorage.removeItem('futuristcards_user');
+      
+      // Don't redirect if we're on a public route
+      if (!publicRoutes.includes(currentPath)) {
+        window.location.href = '/login';
+      }
     }
+    
+    // Handle other HTTP errors
+    if (error.response?.status >= 500) {
+      error.message = 'Erreur serveur. Veuillez réessayer plus tard.';
+    } else if (error.response?.status === 404) {
+      error.message = 'Ressource non trouvée.';
+    } else if (error.response?.status === 403) {
+      error.message = 'Accès refusé.';
+    }
+    
     return Promise.reject(error);
   }
 );

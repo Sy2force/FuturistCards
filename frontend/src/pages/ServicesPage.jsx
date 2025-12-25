@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '../hooks/useI18n';
 import { useTheme } from '../contexts/ThemeContext';
 
 const ServicesPage = () => {
@@ -36,7 +35,7 @@ const ServicesPage = () => {
   ];
 
   return (
-    <div className={`min-h-screen py-12 px-4 ${isDark ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50'}`} data-testid="services-page">
+    <div className={`min-h-screen py-12 px-4 ${isDark ? 'dark-gradient' : 'glass-gradient'}`} data-testid="services-page">
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">

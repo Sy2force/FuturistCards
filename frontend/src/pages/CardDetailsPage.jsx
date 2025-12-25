@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { sampleCards } from '../data/sampleCards';
-import { useI18n } from '../contexts/I18nContext';
-import { useTheme } from '../contexts/ThemeContext';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useLikes } from '../hooks/useLikes';
+import { useI18n } from '../hooks/useI18n';
+import { useTheme } from '../contexts/ThemeContext';
 import LikeButton from '../components/ui/LikeButton';
+import axios from 'axios';
 
 const CardDetailsPage = () => {
   const { id } = useParams();
@@ -22,8 +20,23 @@ const CardDetailsPage = () => {
   useEffect(() => {
     // Simuler un chargement
     setTimeout(() => {
-      const foundCard = sampleCards.find(c => c._id === id);
-      setCard(foundCard);
+      const mockCard = {
+        _id: '12345',
+        title: 'Mock Card Title',
+        subtitle: 'Mock Card Subtitle',
+        image: {
+          url: 'https://example.com/image.jpg',
+          alt: 'Mock Card Image'
+        },
+        email: 'mock@example.com',
+        phone: '123-456-7890',
+        address: {
+          city: 'Mock City',
+          country: 'Mock Country'
+        },
+        web: 'https://example.com'
+      };
+      setCard(mockCard);
       setLoading(false);
     }, 500);
   }, [id]);
@@ -98,10 +111,10 @@ const CardDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center px-4 ${isDark ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50'}`}>
+      <div className={`min-h-screen flex items-center justify-center px-4 ${isDark ? 'dark-gradient' : 'glass-gradient'}`}>
         <div className={`${isDark ? 'glass-effect border-white/20' : 'bg-white/80 backdrop-blur-lg border-gray-200/50'} rounded-2xl p-8 shadow-3d border animate-fade-in text-center`}>
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
-          <p className={isDark ? 'text-gray-300' : 'text-gray-600'}>{t('loadingCard')}</p>
+          <p className={isDark ? 'text-gray-300' : 'text-gray-600'}>{t('cardDetails.loadingCard')}</p>
         </div>
       </div>
     );
@@ -109,35 +122,31 @@ const CardDetailsPage = () => {
 
   if (!card) {
     return (
-      <div className={`min-h-screen flex items-center justify-center px-4 ${isDark ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50'}`}>
+      <div className={`min-h-screen flex items-center justify-center px-4 ${isDark ? 'dark-gradient' : 'glass-gradient'}`}>
         <div className={`${isDark ? 'glass-effect border-white/20' : 'bg-white/80 backdrop-blur-lg border-gray-200/50'} rounded-2xl p-8 shadow-3d border w-full max-w-md animate-fade-in text-center`}>
           <div className="w-16 h-16 gradient-danger rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
-          <h1 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-2`}>
-            {t('cardNotFound')}
-          </h1>
-          <p className={`text-xl ${isDark ? 'text-blue-300' : 'text-blue-600'} mb-6`}>
-            {t('cardNotFoundSubtitle')}
-          </p>
-          <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-8`}>
-            {t('cardNotFoundDescription')}
-          </p>
-          <button 
-            onClick={() => navigate('/cards')}
-            className="px-6 py-3 gradient-primary hover-lift hover-glow text-white rounded-lg font-semibold shadow-3d transition-all duration-300"
+          <h2 className={`text-xl font-bold mb-2 ${isDark ? 'text-white' : 'text-gray-800'}`}>{t('cardDetails.cardNotFound')}</h2>
+          <p className={`mb-6 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{t('cardDetails.cardNotFoundDesc')}</p>
+          <Link
+            to="/cards"
+            className="btn-primary inline-flex items-center"
           >
-            {t('backToCards')}
-          </button>
+            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            {t('cardDetails.backToCards')}
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`min-h-screen py-12 px-4 ${isDark ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50'}`}>
+    <div className={`min-h-screen py-12 px-4 ${isDark ? 'dark-gradient' : 'glass-gradient'}`}>
       <div className="max-w-4xl mx-auto">
         {/* Bouton retour */}
         <button 
@@ -147,7 +156,7 @@ const CardDetailsPage = () => {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          <span>{t('backToCards')}</span>
+          <span>{t('cardDetails.backToCards')}</span>
         </button>
 
         <div className={`${isDark ? 'glass-effect border-white/20' : 'bg-white/80 backdrop-blur-lg border-gray-200/50'} rounded-2xl p-8 shadow-3d border animate-fade-in hover-lift`}>
@@ -166,7 +175,7 @@ const CardDetailsPage = () => {
               
               {/* Informations de contact */}
               <div className={`${isDark ? 'glass-effect border-white/10' : 'bg-gray-50/80 border-gray-200/50'} rounded-xl p-6 border`}>
-                <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>{t('contactInformation')}</h3>
+                <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>{t('cardDetails.contactInformation')}</h3>
                 <div className="space-y-3">
                   {card.email && (
                     <div className="flex items-center space-x-3">
@@ -229,7 +238,7 @@ const CardDetailsPage = () => {
 
               {card.description && (
                 <div className="mb-6">
-                  <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-3`}>{t('description')}</h3>
+                  <h3 className={`text-xl font-bold ${isDark ? 'text-white' : 'text-gray-800'} mb-3`}>{t('cardDetails.description')}</h3>
                   <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} leading-relaxed`}>
                     {t(`sampleCardDescriptions.${card.descriptionKey}`) || card.description}
                   </p>
@@ -265,13 +274,13 @@ const CardDetailsPage = () => {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        <span>{t('edit')}</span>
+                        <span>{t('cardDetails.edit')}</span>
                       </button>
                     )}
                     {user && card.user_id === user.id && !card.isDemo && (
                       <button 
                         onClick={() => {
-                          if (window.confirm(t('deleteCardConfirm'))) {
+                          if (window.confirm(t('cardDetails.deleteCardConfirm'))) {
                             // Logique de suppression ici
                             navigate('/my-cards');
                           }
@@ -295,8 +304,8 @@ const CardDetailsPage = () => {
                   disabled={favoriteLoading}
                   className={`px-6 py-3 ${
                     isFavorite 
-                      ? 'bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600' 
-                      : 'gradient-primary hover-lift hover-glow'
+                      ? 'secondary-gradient hover:opacity-90' 
+                      : 'btn-primary'
                   } text-white rounded-lg font-semibold shadow-3d flex items-center justify-center space-x-2 transition-all duration-300 disabled:opacity-50`}
                 >
                   {favoriteLoading ? (

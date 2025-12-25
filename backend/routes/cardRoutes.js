@@ -13,7 +13,7 @@ const {
   searchCards,
   getPopularCards
 } = require('../controllers/cardController');
-const { protect, optionalAuth } = require('../middleware/authMiddleware');
+const { protect, business, admin, optionalAuth } = require('../middleware/authMiddleware');
 const { validateCard } = require('../middleware/validation');
 const { sampleCards } = require('../data/sampleCards');
 const Card = require('../models/Card');
@@ -49,9 +49,9 @@ router.post('/seed', asyncHandler(async (req, res) => {
 router.get('/my-cards', protect, getMyCards);
 router.get('/user', protect, getMyCards);
 router.get('/favorites', protect, getFavorites);
-router.post('/', protect, validateCard, createCard);
-router.put('/:id', protect, validateCard, updateCard);
-router.delete('/:id', protect, deleteCard);
+router.post('/', protect, business, validateCard, createCard);
+router.put('/:id', protect, business, validateCard, updateCard);
+router.delete('/:id', protect, business, deleteCard);
 router.post('/:id/like', protect, toggleLike);
 router.post('/:id/favorite', protect, toggleFavorite);
 router.get('/:id/favorite', protect, checkFavorite);

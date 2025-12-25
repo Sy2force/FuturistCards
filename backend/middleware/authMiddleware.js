@@ -77,24 +77,36 @@ const protect = async (req, res, next) => {
 
 // Middleware pour vérifier les rôles admin
 const admin = (req, res, next) => {
-  if (req.user && req.user.isAdmin) {
+  if (req.user && (req.user.role === 'admin' || req.user.isAdmin)) {
     next();
   } else {
     res.status(403).json({
       success: false,
-      message: 'Not authorized as admin'
+      message: 'Access denied. Admin role required.'
     });
   }
 };
 
 // Middleware pour vérifier les rôles business
 const business = (req, res, next) => {
-  if (req.user && (req.user.isBusiness || req.user.isAdmin)) {
+  if (req.user && (req.user.role === 'business' || req.user.role === 'admin' || req.user.isBusiness || req.user.isAdmin)) {
     next();
   } else {
     res.status(403).json({
       success: false,
-      message: 'Not authorized as business user'
+      message: 'Access denied. Business or Admin role required.'
+    });
+  }
+};
+
+// Middleware pour vérifier les rôles utilisateur (user, business, admin)
+const user = (req, res, next) => {
+  if (req.user && ['user', 'business', 'admin'].includes(req.user.role)) {
+    next();
+  } else {
+    res.status(403).json({
+      success: false,
+      message: 'Access denied. Valid user role required.'
     });
   }
 };
@@ -133,7 +145,6 @@ const publicWithOptionalAuth = async (req, res, next) => {
         }
       } catch (tokenError) {
         // Invalid token, continue without user
-        console.log('Invalid token in optional auth:', tokenError.message);
       }
     }
     
@@ -143,4 +154,4 @@ const publicWithOptionalAuth = async (req, res, next) => {
   }
 };
 
-module.exports = { protect, admin, business, optionalAuth, publicWithOptionalAuth };
+module.exports = { protect, admin, business, user, optionalAuth, publicWithOptionalAuth };

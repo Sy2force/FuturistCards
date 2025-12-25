@@ -52,10 +52,18 @@ export default defineConfig({
         },
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
+          utils: ['axios']
+        }
       }
     },
     chunkSizeWarningLimit: 1000,
-    target: 'esnext'
+    target: 'esnext',
+    reportCompressedSize: false,
+    cssCodeSplit: true
   },
   define: {
     __APP_VERSION__: JSON.stringify('1.0.0'),
@@ -65,9 +73,10 @@ export default defineConfig({
       'react',
       'react-dom',
       'react-router-dom',
-      'framer-motion',
       'axios',
-      'react-hot-toast'
+      'i18next',
+      'react-i18next',
+      'i18next-browser-languagedetector'
     ],
   },
 })

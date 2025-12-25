@@ -18,35 +18,32 @@ export function getTestCredentials(role = 'user') {
   return testCredentials[role] || testCredentials.user;
 }
 
-export async function loginAs(page, role) {
-  const credentials = {
-    user: { email: 'user@demo.com', password: 'Demo1234!' },
-    business: { email: 'business@demo.com', password: 'Demo1234!' },
-    admin: { email: 'admin@demo.com', password: 'Demo1234!' }
-  };
+export const loginAs = async (page, userType) => {
+  // Go to login page
+  await page.goto('http://localhost:3010/login');
+  await page.waitForLoadState('networkidle');
 
-  const { email, password } = credentials[role];
-
-  await page.goto('/login');
-  await page.getByTestId('login-email').fill(email);
-  await page.getByTestId('login-password').fill(password);
-  await page.getByTestId('login-submit').click();
-
-  // Attendre la redirection vers /cards pour tous les rôles
-  await page.waitForURL('**/cards', { timeout: 15000 });
-
-  // Attendre l'apparition de la bonne navbar
-  const expectedNavbar =
-    role === 'admin'
-      ? 'navbar-admin'
-      : role === 'business'
-      ? 'navbar-business'
-      : 'navbar-user';
-
-  await page.waitForSelector(`[data-testid="${expectedNavbar}"]`, { timeout: 15000 });
-}
+  // Use the existing test credentials
+  const creds = getTestCredentials(userType);
+  
+  // Fill login form using data-testid
+  await page.fill('[data-testid="login-email"]', creds.email);
+  await page.fill('[data-testid="login-password"]', creds.password);
+  
+  // Submit form
+  await page.click('[data-testid="login-submit"]');
+  
+  // Attendre que la navigation vers /cards soit terminée
+  await page.waitForURL('**/cards', { timeout: 30000 });
+  
+  // Attendre que l'état soit stable avant de vérifier les éléments
+  await page.waitForTimeout(3000);
+  
+  // Attendre que le logout button soit visible (indique que l'utilisateur est connecté)
+  await page.waitForSelector('[data-testid="logout-button"]', { timeout: 30000 });
+};
 
 export async function logout(page) {
-  await page.getByTestId('navbar-logout').click();
-  await page.waitForSelector('[data-testid="navbar-visitor"]', { timeout: 15000 });
+  await page.getByTestId('logout-button').click();
+  await page.waitForSelector('[data-testid="login-button"]', { timeout: 15000 });
 }

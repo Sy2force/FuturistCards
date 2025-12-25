@@ -29,7 +29,7 @@ export const cardService = {
         data: response.data
       };
     } catch (error) {
-      console.error('Error fetching cards:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to fetch cards'
@@ -46,7 +46,7 @@ export const cardService = {
         data: response.data.card
       };
     } catch (error) {
-      console.error('Error fetching card:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to fetch card'
@@ -63,7 +63,7 @@ export const cardService = {
         data: response.data
       };
     } catch (error) {
-      console.error('Error fetching my cards:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to fetch your cards'
@@ -81,7 +81,7 @@ export const cardService = {
         message: response.data.message
       };
     } catch (error) {
-      console.error('Error creating card:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to create card'
@@ -99,7 +99,7 @@ export const cardService = {
         message: response.data.message
       };
     } catch (error) {
-      console.error('Error updating card:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to update card'
@@ -116,7 +116,7 @@ export const cardService = {
         message: response.data.message || 'Card deleted successfully'
       };
     } catch (error) {
-      console.error('Error deleting card:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to delete card'
@@ -156,7 +156,7 @@ export const cardService = {
         data: response.data
       };
     } catch (error) {
-      console.error('Error searching cards:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to search cards'
@@ -173,7 +173,7 @@ export const cardService = {
         data: response.data
       };
     } catch (error) {
-      console.error('Error fetching popular cards:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to fetch popular cards'
@@ -191,7 +191,7 @@ export const cardService = {
         message: response.data.message
       };
     } catch (error) {
-      console.error('Error toggling favorite:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to toggle favorite'
@@ -208,7 +208,7 @@ export const cardService = {
         data: response.data
       };
     } catch (error) {
-      console.error('Error fetching favorites:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to fetch favorites'

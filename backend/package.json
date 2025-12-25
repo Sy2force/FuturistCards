@@ -7,13 +7,15 @@
   "scripts": {
     "start": "node server.js",
     "dev": "NODE_ENV=development nodemon server.js",
-    "build": "echo 'Backend built successfully'",
+    "build": "npm ci --only=production && echo 'Backend built successfully'",
+    "postinstall": "echo 'Backend dependencies installed'",
     "test": "jest --detectOpenHandles --forceExit --passWithNoTests",
     "test:watch": "jest --watch --detectOpenHandles",
     "test:coverage": "jest --coverage --detectOpenHandles --forceExit",
     "lint": "echo 'ESLint check passed - no linting configured'",
     "seed": "node scripts/seedTestUsers.js",
-    "seed:reset": "node scripts/seedTestUsers.js"
+    "seed:reset": "node scripts/seedTestUsers.js",
+    "health": "curl -f http://localhost:$PORT/api/health || exit 1"
   },
   "keywords": [
     "nodejs",
@@ -27,6 +29,7 @@
   "author": "Shaï Acoca <contact@shayacoca.dev>",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '../hooks/useI18n';
 import { useTheme } from '../contexts/ThemeContext';
 
 const RegisterPage = () => {
@@ -13,8 +13,12 @@ const RegisterPage = () => {
     firstName: '',
     lastName: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: '',
+    address: '',
+    city: '',
+    country: '',
     role: 'user' // Default role
   });
   const [validationError, setValidationError] = useState('');
@@ -31,17 +35,35 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
-      setValidationError(t('required'));
+      setValidationError(t('validation.required'));
       return false;
     }
 
-    if (formData.password.length < 8) {
-      setValidationError(t('passwordTooShort'));
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      setValidationError(t('validation.invalidEmail'));
+      return false;
+    }
+
+    // Phone validation (optional but if provided must be valid)
+    if (formData.phone && formData.phone.trim()) {
+      const phoneRegex = /^[+]?[1-9][\d]{0,15}$/;
+      if (!phoneRegex.test(formData.phone.replace(/[\s\-()]/g, ''))) {
+        setValidationError(t('validation.invalidPhone'));
+        return false;
+      }
+    }
+
+    // Password validation: 8+ chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])[A-Za-z\d!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      setValidationError(t('validation.passwordRequirements'));
       return false;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setValidationError(t('passwordsNotMatch'));
+      setValidationError(t('validation.passwordsNotMatch'));
       return false;
     }
 
@@ -61,13 +83,17 @@ const RegisterPage = () => {
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
+        phone: formData.phone,
         password: formData.password,
+        address: formData.address,
+        city: formData.city,
+        country: formData.country,
         role: formData.role
       };
       const result = await register(userData);
       
       if (result.success) {
-        setSuccess(t('registerSuccess'));
+        setSuccess(t('validation.registerSuccess'));
         setTimeout(() => {
           navigate('/cards');
         }, 1500);
@@ -80,7 +106,7 @@ const RegisterPage = () => {
   const displayError = validationError || error;
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900'} flex flex-col justify-center py-12 px-4 ${isRTL ? 'rtl' : 'ltr'}`} data-testid="register-page" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className={`min-h-screen ${isDark ? 'dark-gradient' : 'primary-gradient'} flex flex-col justify-center py-12 px-4 ${isRTL ? 'rtl' : 'ltr'}`} data-testid="register-page" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="w-full max-w-md mx-auto">
         <div className="text-center mb-8">
           <h2 className={`text-4xl font-bold ${isDark ? 'text-white' : 'text-white'} mb-4 animate-float`}>
@@ -118,7 +144,7 @@ const RegisterPage = () => {
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
                 placeholder={t('auth.firstNamePlaceholder')}
                 required
-                data-testid="firstName-input"
+                data-testid="register-firstName"
               />
             </div>
 
@@ -135,7 +161,23 @@ const RegisterPage = () => {
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
                 placeholder={t('auth.lastNamePlaceholder')}
                 required
-                data-testid="lastName-input"
+                data-testid="register-lastName"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="phone" className={`block text-sm font-medium ${isDark ? 'text-gray-200' : 'text-white'} mb-2`}>
+                {t('auth.phone')} <span className="text-gray-400 text-xs">({t('validation.optional')})</span>
+              </label>
+              <input
+                type="tel"
+                id="phone"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
+                placeholder={t('auth.phonePlaceholder')}
+                data-testid="register-phone"
               />
             </div>
 
@@ -152,7 +194,7 @@ const RegisterPage = () => {
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
                 placeholder={t('auth.emailPlaceholder')}
                 required
-                data-testid="email-input"
+                data-testid="register-email"
               />
             </div>
 
@@ -169,7 +211,7 @@ const RegisterPage = () => {
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
                 placeholder={t('auth.passwordPlaceholder')}
                 required
-                data-testid="password-input"
+                data-testid="register-password"
               />
             </div>
 
@@ -186,7 +228,7 @@ const RegisterPage = () => {
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white placeholder-gray-400 hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
                 placeholder={t('auth.confirmPasswordPlaceholder')}
                 required
-                data-testid="confirmPassword-input"
+                data-testid="register-confirmPassword"
               />
             </div>
 
@@ -200,30 +242,30 @@ const RegisterPage = () => {
                 value={formData.role}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700/50 text-white hover:bg-gray-600/50 focus:ring-blue-500' : 'border-white/30 bg-white/10 text-white hover:bg-white/20 focus:ring-blue-400'} rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm`}
-                data-testid="role-select"
+                data-testid="register-role"
               >
                 <option value="user" className="bg-gray-800 text-white">{t('auth.userAccount')}</option>
                 <option value="business" className="bg-gray-800 text-white">{t('auth.businessAccount')}</option>
                 <option value="admin" className="bg-gray-800 text-white">{t('auth.adminAccount')}</option>
               </select>
               <p className={`mt-2 text-xs ${isDark ? 'text-gray-400' : 'text-white/70'}`}>
-                {formData.role === 'user' && t('userAccountDesc')}
-                {formData.role === 'business' && t('businessAccountDesc')}
-                {formData.role === 'admin' && t('adminAccountDesc')}
+                {formData.role === 'user' && t('validation.userAccountDesc')}
+                {formData.role === 'business' && t('validation.businessAccountDesc')}
+                {formData.role === 'admin' && t('validation.adminAccountDesc')}
               </p>
             </div>
 
             <div>
               <button
                 type="submit"
-                className={`w-full ${isDark ? 'bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 focus:ring-blue-500' : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 focus:ring-blue-400'} text-white py-3 px-4 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105`}
+                className="btn-primary w-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
                 disabled={loading}
                 data-testid="register-submit-button"
               >
                 {loading ? (
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                 ) : (
-                  t('registerSubmit')
+                  t('validation.registerSubmit')
                 )}
               </button>
             </div>
@@ -231,13 +273,13 @@ const RegisterPage = () => {
 
           <div className="mt-6 text-center">
             <p className={`text-sm ${isDark ? 'text-gray-300' : 'text-white/80'}`}>
-              {t('haveAccount')} {' '}
+              {t('validation.haveAccount')} {' '}
               <Link 
                 to="/login" 
                 className={`font-medium ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-300 hover:text-blue-200'} transition-colors`}
                 data-testid="login-link"
               >
-                {t('login')}
+                {t('auth.loginButton')}
               </Link>
             </p>
           </div>

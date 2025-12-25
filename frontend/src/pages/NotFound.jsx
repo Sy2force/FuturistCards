@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '../hooks/useI18n';
 import { useTheme } from '../contexts/ThemeContext';
 
 const NotFound = () => {
@@ -8,7 +7,7 @@ const NotFound = () => {
   const { isDark } = useTheme();
   
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900' : 'bg-gradient-to-br from-blue-50 via-indigo-100 to-purple-50'} flex items-center justify-center px-4`}>
+    <div className={`min-h-screen ${isDark ? 'dark-gradient' : 'glass-gradient'} flex items-center justify-center px-4`}>
       <div className="text-center max-w-md mx-auto">
         <div className={`${isDark ? 'bg-white/5 backdrop-blur-sm border-white/10' : 'bg-white/80 backdrop-blur-lg border-gray-200/50'} rounded-2xl p-8 border`}>
           <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">

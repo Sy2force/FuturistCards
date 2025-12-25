@@ -10,7 +10,7 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
   });
 
   test('1. Navigation et tous les liens fonctionnent', async () => {
-    console.log('🧪 Test Navigation...');
+    // console.log('🧪 Test Navigation...');
     
     // Test navbar links
     await expect(page.locator('nav')).toBeVisible();
@@ -27,18 +27,18 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await page.click('a[href="/about"]');
     await expect(page).toHaveURL(/.*\/about/);
     
-    console.log('✅ Navigation fonctionne');
+    // console.log('✅ Navigation fonctionne');
   });
 
   test('2. Boutons de thème et langue fonctionnent', async () => {
-    console.log('🧪 Test Thème et Langue...');
+    // console.log('🧪 Test Thème et Langue...');
     
     // Test theme toggle
     const themeToggle = page.locator('[data-testid="theme-toggle"], button:has-text("🌙"), button:has-text("☀️")').first();
     if (await themeToggle.isVisible()) {
       await themeToggle.click();
       await page.waitForTimeout(500);
-      console.log('✅ Theme toggle fonctionne');
+      // console.log('✅ Theme toggle fonctionne');
     }
     
     // Test language selector
@@ -46,14 +46,14 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     if (await langSelector.isVisible()) {
       await langSelector.click();
       await page.waitForTimeout(500);
-      console.log('✅ Language selector fonctionne');
+      // console.log('✅ Language selector fonctionne');
     }
     
-    console.log('✅ Thème et langue fonctionnent');
+    // console.log('✅ Thème et langue fonctionnent');
   });
 
   test('3. Page de connexion - tous les boutons', async () => {
-    console.log('🧪 Test Page Login...');
+    // console.log('🧪 Test Page Login...');
     
     await page.goto('http://localhost:3010/login');
     await page.waitForLoadState('networkidle');
@@ -62,11 +62,11 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await expect(page.locator('[data-testid="login-form"]')).toBeVisible();
     
     // Test des champs de saisie
-    await page.fill('[data-testid="email-input"]', 'test@example.com');
-    await page.fill('[data-testid="password-input"]', 'TestPass123!');
+    await page.fill('[data-testid="login-email"]', 'test@example.com');
+    await page.fill('[data-testid="login-password"]', 'TestPass123!');
     
     // Test bouton de soumission (ne pas soumettre réellement)
-    const submitBtn = page.locator('[data-testid="login-submit-button"]');
+    const submitBtn = page.locator('[data-testid="login-submit"]');
     await expect(submitBtn).toBeVisible();
     await expect(submitBtn).toBeEnabled();
     
@@ -76,11 +76,11 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await registerLink.click();
     await expect(page).toHaveURL(/.*\/register/);
     
-    console.log('✅ Page Login fonctionne');
+    // console.log('✅ Page Login fonctionne');
   });
 
   test('4. Page d\'inscription - tous les boutons', async () => {
-    console.log('🧪 Test Page Register...');
+    // console.log('🧪 Test Page Register...');
     
     await page.goto('http://localhost:3010/register');
     await page.waitForLoadState('networkidle');
@@ -89,11 +89,14 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await expect(page.locator('[data-testid="register-form"]')).toBeVisible();
     
     // Test des champs de saisie
-    await page.fill('[data-testid="firstName-input"]', 'Test');
-    await page.fill('[data-testid="lastName-input"]', 'User');
-    await page.fill('[data-testid="email-input"]', 'test@example.com');
-    await page.fill('[data-testid="password-input"]', 'TestPass123!');
-    await page.fill('[data-testid="confirmPassword-input"]', 'TestPass123!');
+    await page.fill('[data-testid="register-firstName"]', 'Test');
+    await page.fill('[data-testid="register-lastName"]', 'User');
+    await page.fill('[data-testid="register-email"]', 'test@example.com');
+    await page.fill('[data-testid="register-password"]', 'TestPass123!');
+    await page.fill('[data-testid="register-confirmPassword"]', 'TestPass123!');
+    
+    // Test sélecteur de rôle
+    await page.selectOption('[data-testid="register-role"]', 'user');
     
     // Test bouton de soumission
     const submitBtn = page.locator('[data-testid="register-submit-button"]');
@@ -106,11 +109,11 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await loginLink.click();
     await expect(page).toHaveURL(/.*\/login/);
     
-    console.log('✅ Page Register fonctionne');
+    // console.log('✅ Page Register fonctionne');
   });
 
   test('5. Page Cards - boutons de recherche et filtres', async () => {
-    console.log('🧪 Test Page Cards...');
+    // console.log('🧪 Test Page Cards...');
     
     await page.goto('http://localhost:3010/cards');
     await page.waitForLoadState('networkidle');
@@ -120,7 +123,7 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     if (await searchInput.isVisible()) {
       await searchInput.fill('developer');
       await page.waitForTimeout(1000);
-      console.log('✅ Recherche fonctionne');
+      // console.log('✅ Recherche fonctionne');
     }
     
     // Test boutons de catégorie si présents
@@ -129,14 +132,14 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     if (categoryCount > 0) {
       await categoryButtons.first().click();
       await page.waitForTimeout(500);
-      console.log('✅ Filtres catégorie fonctionnent');
+      // console.log('✅ Filtres catégorie fonctionnent');
     }
     
-    console.log('✅ Page Cards fonctionne');
+    // console.log('✅ Page Cards fonctionne');
   });
 
   test('6. Boutons de cartes (like, favoris, détails)', async () => {
-    console.log('🧪 Test Boutons de Cartes...');
+    // console.log('🧪 Test Boutons de Cartes...');
     
     await page.goto('http://localhost:3010/cards');
     await page.waitForLoadState('networkidle');
@@ -145,28 +148,28 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await page.waitForTimeout(2000);
     
     // Test bouton like sur la première carte
-    const likeButtons = page.locator('button:has-text("❤️"), button:has-text("♥"), [data-testid*="like"]');
+    const likeButtons = page.locator('[data-testid="like-button-action"]');
     const likeCount = await likeButtons.count();
     if (likeCount > 0) {
       await likeButtons.first().click();
       await page.waitForTimeout(500);
-      console.log('✅ Bouton Like fonctionne');
+      // console.log('✅ Bouton Like fonctionne');
     }
     
     // Test bouton détails/voir plus
-    const detailButtons = page.locator('button:has-text("Voir"), button:has-text("Détails"), a:has-text("Voir")');
+    const detailButtons = page.locator('[data-testid="card-view-details"]');
     const detailCount = await detailButtons.count();
     if (detailCount > 0) {
       await detailButtons.first().click();
       await page.waitForTimeout(1000);
-      console.log('✅ Bouton Détails fonctionne');
+      // console.log('✅ Bouton Détails fonctionne');
     }
     
-    console.log('✅ Boutons de cartes fonctionnent');
+    // console.log('✅ Boutons de cartes fonctionnent');
   });
 
   test('7. Navigation mobile et menu hamburger', async () => {
-    console.log('🧪 Test Navigation Mobile...');
+    // console.log('🧪 Test Navigation Mobile...');
     
     // Simuler un écran mobile
     await page.setViewportSize({ width: 375, height: 667 });
@@ -174,26 +177,26 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await page.waitForLoadState('networkidle');
     
     // Test menu hamburger
-    const mobileMenuButton = page.locator('button:has-text("☰"), [data-testid="mobile-menu"], button:has-text("Menu")').first();
+    const mobileMenuButton = page.locator('[data-testid="navbar-mobile-toggle"]');
     if (await mobileMenuButton.isVisible()) {
       await mobileMenuButton.click();
       await page.waitForTimeout(500);
       
       // Vérifier que le menu mobile s'ouvre
-      const mobileMenu = page.locator('[data-testid="mobile-menu-content"], .mobile-menu, nav ul').first();
+      const mobileMenu = page.locator('.md\\:hidden.py-4');
       if (await mobileMenu.isVisible()) {
-        console.log('✅ Menu mobile fonctionne');
+        // console.log('✅ Menu mobile fonctionne');
       }
     }
     
     // Remettre la taille normale
     await page.setViewportSize({ width: 1280, height: 720 });
     
-    console.log('✅ Navigation mobile fonctionne');
+    // console.log('✅ Navigation mobile fonctionne');
   });
 
   test('8. Boutons de partage et actions', async () => {
-    console.log('🧪 Test Boutons de Partage...');
+    // console.log('🧪 Test Boutons de Partage...');
     
     await page.goto('http://localhost:3010/cards');
     await page.waitForLoadState('networkidle');
@@ -205,14 +208,14 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     if (shareCount > 0) {
       await shareButtons.first().click();
       await page.waitForTimeout(500);
-      console.log('✅ Bouton Partage fonctionne');
+      // console.log('✅ Bouton Partage fonctionne');
     }
     
-    console.log('✅ Boutons de partage fonctionnent');
+    // console.log('✅ Boutons de partage fonctionnent');
   });
 
   test('9. Formulaires et validation', async () => {
-    console.log('🧪 Test Validation des Formulaires...');
+    // console.log('🧪 Test Validation des Formulaires...');
     
     await page.goto('http://localhost:3010/register');
     await page.waitForLoadState('networkidle');
@@ -226,14 +229,14 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     const errorMessages = page.locator('.error, .text-red, [class*="error"]');
     const errorCount = await errorMessages.count();
     if (errorCount > 0) {
-      console.log('✅ Validation des formulaires fonctionne');
+      // console.log('✅ Validation des formulaires fonctionne');
     }
     
-    console.log('✅ Validation fonctionne');
+    // console.log('✅ Validation fonctionne');
   });
 
   test('10. Test de persistance et localStorage', async () => {
-    console.log('🧪 Test Persistance...');
+    // console.log('🧪 Test Persistance...');
     
     await page.goto('http://localhost:3010');
     await page.waitForLoadState('networkidle');
@@ -250,10 +253,10 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await page.waitForLoadState('networkidle');
     
     // Vérifier que le thème est persisté
-    const bodyClass = await page.locator('body').getAttribute('class');
-    console.log('✅ Persistance testée (classe body:', bodyClass, ')');
+    await page.locator('body').getAttribute('class');
+    // console.log('✅ Persistance testée (classe body:', bodyClass, ')');
     
-    console.log('✅ Persistance fonctionne');
+    // console.log('✅ Persistance fonctionne');
   });
 
   test.afterEach(async () => {
@@ -265,19 +268,19 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
 
 test.describe('Résumé des Tests', () => {
   test('Rapport final des fonctionnalités', async () => {
-    console.log('\n🎉 RAPPORT FINAL DES TESTS 🎉');
-    console.log('================================');
-    console.log('✅ Navigation et liens');
-    console.log('✅ Boutons thème et langue');
-    console.log('✅ Page de connexion');
-    console.log('✅ Page d\'inscription');
-    console.log('✅ Page des cartes');
-    console.log('✅ Boutons de cartes (like, détails)');
-    console.log('✅ Navigation mobile');
-    console.log('✅ Boutons de partage');
-    console.log('✅ Validation des formulaires');
-    console.log('✅ Persistance des données');
-    console.log('================================');
-    console.log('🚀 TOUTES LES FONCTIONNALITÉS TESTÉES!');
+    // console.log('\n🎉 RAPPORT FINAL DES TESTS 🎉');
+    // console.log('================================');
+    // console.log('✅ Navigation et liens');
+    // console.log('✅ Boutons thème et langue');
+    // console.log('✅ Page de connexion');
+    // console.log('✅ Page d\'inscription');
+    // console.log('✅ Page des cartes');
+    // console.log('✅ Boutons de cartes (like, détails)');
+    // console.log('✅ Navigation mobile');
+    // console.log('✅ Boutons de partage');
+    // console.log('✅ Validation des formulaires');
+    // console.log('✅ Persistance des données');
+    // console.log('================================');
+    // console.log('🚀 TOUTES LES FONCTIONNALITÉS TESTÉES!');
   });
 });

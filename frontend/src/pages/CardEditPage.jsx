@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '../hooks/useI18n';
 import { useTheme } from '../contexts/ThemeContext';
 
 const CardEditPage = () => {
@@ -113,7 +113,7 @@ const CardEditPage = () => {
           <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-6`}>{t('cardEdit.loginRequired')}</p>
           <button 
             onClick={() => navigate('/login')}
-            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="btn-primary"
           >
             {t('auth.login')}
           </button>
@@ -300,7 +300,7 @@ const CardEditPage = () => {
                 type="submit"
                 disabled={loading}
                 data-testid="card-edit-submit"
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {loading ? t('cardEdit.updating') : t('cardEdit.update')}
               </button>

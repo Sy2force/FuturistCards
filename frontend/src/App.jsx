@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import axios from 'axios';
 
 // Layout components
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import ErrorBoundary from './components/ErrorBoundary';
+// import ErrorBoundary from './components/ErrorBoundary';
 import ProtectedRoute from './components/ProtectedRoute';
+import OfflineBanner from './components/common/OfflineBanner';
 
 // Page components
 import HomePage from './pages/HomePage';
@@ -25,13 +26,19 @@ import MyCardsPage from './pages/MyCardsPage';
 import ServicesPage from './pages/ServicesPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
-import NotFound from './pages/NotFound';
 import UnauthorizedPage from './pages/UnauthorizedPage';
+import NotFound from './pages/NotFound';
+// Offline demo page removed - functionality integrated into main app
 
-// Context and utilities
+import './styles/design-system.css';
+
+// Context providers
 import { AuthProvider } from './contexts/AuthContext';
-import { I18nProvider } from './contexts/I18nContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { I18nProvider } from './contexts/I18nContext';
+import { CardsStatsProvider } from './contexts/CardsStatsContext';
+import { FavoritesProvider } from './contexts/FavoritesContext';
+import { OfflineModeProvider } from './hooks/useOfflineMode';
 import { setupNavigationProtection } from './utils/userStorage';
 
 /**
@@ -67,9 +74,10 @@ const initializeTheme = () => {
  */
 function Layout() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]">
+    <div className="min-h-screen bg-gray-50">
+      <OfflineBanner />
       <Navbar />
-      <main className="pt-16">
+      <main>
         <Outlet />
       </main>
       <Footer />
@@ -88,6 +96,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, element: <HomePage /> },
+      { path: 'demo', element: <HomePage /> },
       { path: 'cards', element: <CardsPage /> },
       { path: 'cards/create', element: <ProtectedRoute requireBusiness={true}><CardCreatePage /></ProtectedRoute> },
       { path: 'create-card', element: <ProtectedRoute requireBusiness={true}><CardCreatePage /></ProtectedRoute> },
@@ -129,15 +138,19 @@ function App() {
   }, []);
 
   return (
-    <ErrorBoundary>
+    <AuthProvider>
       <ThemeProvider>
         <I18nProvider>
-          <AuthProvider>
-            <RouterProvider router={router} />
-          </AuthProvider>
+          <CardsStatsProvider>
+            <FavoritesProvider>
+              <OfflineModeProvider>
+                <RouterProvider router={router} />
+              </OfflineModeProvider>
+            </FavoritesProvider>
+          </CardsStatsProvider>
         </I18nProvider>
       </ThemeProvider>
-    </ErrorBoundary>
+    </AuthProvider>
   );
 }
 

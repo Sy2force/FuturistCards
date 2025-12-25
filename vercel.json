@@ -1,31 +1,56 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "https://futuristcards-api.onrender.com/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/frontend/$1"
-    }
-  ],
+  "buildCommand": "cd frontend && npm ci && npm run build",
+  "outputDirectory": "frontend/dist",
+  "installCommand": "cd frontend && npm ci",
+  "devCommand": "cd frontend && npm run dev -- --port 3010",
+  "framework": "vite",
   "rewrites": [
     {
       "source": "/((?!api).*)",
-      "destination": "/frontend/index.html"
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "env": {
-    "VITE_API_BASE_URL": "https://futuristcards-api.onrender.com/api"
+    "VITE_API_BASE_URL": "https://futuristcards-backend.onrender.com/api",
+    "VITE_APP_NAME": "FuturistCards",
+    "VITE_APP_VERSION": "1.0.0",
+    "VITE_APP_DESCRIPTION": "Plateforme de cartes de visite numériques"
   }
 }

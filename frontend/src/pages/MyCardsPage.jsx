@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '../hooks/useI18n';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLikes } from '../hooks/useLikes';
 import LikeButton from '../components/ui/LikeButton';
@@ -28,7 +28,7 @@ const MyCardsPage = () => {
       // Initialize likes for all cards
       initializeMultipleCards(sortedCards.map(card => card._id));
     } catch (error) {
-      // console.error('Erreur lors du chargement des cartes:', error);
+      // Error handled - using mock data
       setError(t('errorLoadingYourCards'));
       // Mode mock pour le développement - avec dates différentes pour tester le tri
       const mockCards = [
@@ -87,7 +87,7 @@ const MyCardsPage = () => {
     } finally {
       setLoading(false);
     }
-  }, [user?.email, t]);
+  }, [user?.email, t, initializeMultipleCards]);
 
   useEffect(() => {
     fetchMyCards();
@@ -112,14 +112,14 @@ const MyCardsPage = () => {
       setCards(cards.filter(card => card._id !== cardId));
       setError(null); // Clear any previous errors
     } catch (error) {
-      console.error('Error deleting card:', error);
+      // Error handled in state
       setError(t('errorDeleting'));
     }
   };
 
   if (loading) {
     return (
-      <div className={`min-h-screen ${isDark ? 'bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'} flex items-center justify-center`}>
+      <div className={`min-h-screen ${isDark ? 'dark-gradient' : 'glass-gradient'} flex items-center justify-center`}>
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
           <p className={`${isDark ? 'text-white' : 'text-gray-700'}`}>{t('loadingYourCards')}</p>
@@ -129,7 +129,7 @@ const MyCardsPage = () => {
   }
 
   return (
-    <div className={`min-h-screen ${isDark ? 'bg-gradient-to-br from-[#0f172a] via-[#1e293b] to-[#0f172a]' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'} py-12`} data-testid="my-cards-page">
+    <div className={`min-h-screen ${isDark ? 'dark-gradient' : 'glass-gradient'} py-12`} data-testid="my-cards-page">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* En-tête */}
         <div className="text-center mb-12">
@@ -150,7 +150,7 @@ const MyCardsPage = () => {
           {/* Bouton créer une carte */}
           <Link
             to="/cards/create"
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
+            className="btn-primary inline-flex items-center"
             data-testid="create-card-button"
           >
             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -179,7 +179,7 @@ const MyCardsPage = () => {
             </p>
             <Link
               to="/cards/create"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
+              className="btn-primary inline-flex items-center"
             >
               {t('createFirstCardAction')}
             </Link>
@@ -239,21 +239,21 @@ const MyCardsPage = () => {
                 <div className="flex justify-center space-x-2">
                   <Link
                     to={`/cards/${card._id}`}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-sm rounded-lg transition-all duration-200 hover:shadow-md"
+                    className="btn-primary px-4 py-2 text-sm"
                     data-testid={`view-card-${card._id}`}
                   >
                     {t('view')}
                   </Link>
                   <Link
                     to={`/cards/${card._id}/edit`}
-                    className="px-4 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white text-sm rounded-lg transition-all duration-200 hover:shadow-md"
+                    className="btn-secondary px-4 py-2 text-sm"
                     data-testid={`edit-card-${card._id}`}
                   >
                     {t('edit')}
                   </Link>
                   <button
                     onClick={() => handleDeleteCard(card._id)}
-                    className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white text-sm rounded-lg transition-all duration-200 hover:shadow-md"
+                    className="px-4 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200 hover:shadow-md"
                     data-testid={`delete-card-${card._id}`}
                   >
                     {t('delete')}

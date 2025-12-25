@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useI18n } from '../contexts/I18nContext';
+import { useI18n } from '../hooks/useI18n';
 import { useTheme } from '../contexts/ThemeContext';
 
 const CardCreatePage = () => {
@@ -30,7 +30,7 @@ const CardCreatePage = () => {
     
     // Validation côté client
     if (!formData.title.trim()) {
-      setError(t('titleRequired'));
+      setError(t('common.titleRequired'));
       setLoading(false);
       return;
     }
@@ -53,11 +53,11 @@ const CardCreatePage = () => {
         }, 1500);
       } else {
         const errorData = await response.json();
-        setError(errorData.message || t('cardCreationError'));
+        setError(errorData.message || t('common.cardCreationError'));
       }
     } catch (error) {
       // Error creating card - network error
-      setError(t('networkError'));
+      setError(t('common.networkError'));
     } finally {
       setLoading(false);
     }
@@ -91,8 +91,8 @@ const CardCreatePage = () => {
       <div className="container mx-auto max-w-2xl px-4">
         <div className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-xl shadow-md p-8 border backdrop-blur-sm`}>
           <div className="text-center mb-8">
-            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>{t('createNewCardTitle')}</h1>
-            <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{t('fillCardInfo')}</p>
+            <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`}>{t('common.createNewCardTitle')}</h1>
+            <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>{t('common.fillCardInfo')}</p>
           </div>
 
           {/* Messages d'erreur et succès */}
@@ -104,14 +104,14 @@ const CardCreatePage = () => {
 
           {success && (
             <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg" data-testid="card-create-success">
-              {t('cardCreatedSuccessfully')}
+              {t('common.cardCreatedSuccessfully')}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="title" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                {t('titleRequired')}
+                {t('common.titleRequired')}
               </label>
               <input
                 type="text"
@@ -122,13 +122,13 @@ const CardCreatePage = () => {
                 onChange={handleChange}
                 required
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                placeholder={t('titlePlaceholder')}
+                placeholder={t('common.titlePlaceholder')}
               />
             </div>
 
             <div>
               <label htmlFor="subtitle" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                {t('subtitle')}
+                {t('common.subtitle')}
               </label>
               <input
                 type="text"
@@ -138,13 +138,13 @@ const CardCreatePage = () => {
                 value={formData.subtitle}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                placeholder={t('subtitlePlaceholder')}
+                placeholder={t('common.subtitlePlaceholder')}
               />
             </div>
 
             <div>
               <label htmlFor="description" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                {t('description')}
+                {t('common.description')}
               </label>
               <textarea
                 id="description"
@@ -154,14 +154,14 @@ const CardCreatePage = () => {
                 onChange={handleChange}
                 rows={4}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                placeholder={t('descriptionPlaceholder')}
+                placeholder={t('common.descriptionPlaceholder')}
               />
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="phone" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                  {t('phone')}
+                  {t('common.phone')}
                 </label>
                 <input
                   type="tel"
@@ -171,13 +171,13 @@ const CardCreatePage = () => {
                   value={formData.phone}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                  placeholder={t('phonePlaceholder')}
+                  placeholder={t('common.phonePlaceholder')}
                 />
               </div>
 
               <div>
                 <label htmlFor="email" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                  {t('email')}
+                  {t('common.email')}
                 </label>
                 <input
                   type="email"
@@ -187,14 +187,14 @@ const CardCreatePage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                  placeholder={t('emailPlaceholder')}
+                  placeholder={t('auth.emailPlaceholder')}
                 />
               </div>
             </div>
 
             <div>
               <label htmlFor="website" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                {t('website')}
+                {t('common.website')}
               </label>
               <input
                 type="url"
@@ -204,13 +204,13 @@ const CardCreatePage = () => {
                 value={formData.website}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                placeholder={t('websitePlaceholder')}
+                placeholder={t('common.websitePlaceholder')}
               />
             </div>
 
             <div>
               <label htmlFor="address" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                {t('address')}
+                {t('common.address')}
               </label>
               <input
                 type="text"
@@ -220,13 +220,13 @@ const CardCreatePage = () => {
                 value={formData.address}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                placeholder={t('addressPlaceholder')}
+                placeholder={t('common.addressPlaceholder')}
               />
             </div>
 
             <div>
               <label htmlFor="image" className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                {t('imageUrl')}
+                {t('common.imageUrl')}
               </label>
               <input
                 type="url"
@@ -236,7 +236,7 @@ const CardCreatePage = () => {
                 value={formData.image}
                 onChange={handleChange}
                 className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600 bg-gray-700 text-white placeholder-gray-400' : 'border-gray-300 bg-white text-gray-900 placeholder-gray-500'} rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors`}
-                placeholder={t('imagePlaceholder')}
+                placeholder={t('common.imagePlaceholder')}
               />
             </div>
 
@@ -247,15 +247,15 @@ const CardCreatePage = () => {
                 data-testid="card-create-cancel"
                 className={`flex-1 px-6 py-3 border ${isDark ? 'border-gray-600 text-gray-300 hover:bg-gray-700' : 'border-gray-300 text-gray-700 hover:bg-gray-50'} rounded-lg transition-all duration-200 font-medium hover:shadow-md`}
               >
-                {t('cancel')}
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 disabled={loading}
                 data-testid="card-create-submit"
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:-translate-y-0.5"
+                className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? t('creating') : t('createCardAction')}
+                {loading ? t('common.creating') : t('common.createCardAction')}
               </button>
             </div>
           </form>

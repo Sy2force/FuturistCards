@@ -36,12 +36,13 @@ const initializeTestUsers = () => {
       email: 'admin@demo.com',
       role: 'admin',
       isAdmin: true,
-      isBusiness: false
+      isBusiness: true
     }
   ];
 
   testUsers.forEach(user => {
     mockUsers.set(user.email, user);
+    mockUsers.set(user._id, user);
   });
 };
 
@@ -216,7 +217,14 @@ const login = async (req, res) => {
 
     // Mock mode for development
     if (process.env.NODE_ENV === 'development' || !process.env.MONGODB_URI) {
-      const mockUser = Array.from(mockUsers.values()).find(user => user.email === email.toLowerCase());
+      // Find user by email (not by ID for login)
+      let mockUser = null;
+      for (let [key, user] of mockUsers.entries()) {
+        if (user.email === email.toLowerCase()) {
+          mockUser = user;
+          break;
+        }
+      }
       
       if (!mockUser) {
         return res.status(401).json({
@@ -284,7 +292,6 @@ const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Login error:', error);
     res.status(500).json({
       success: false,
       message: 'Server error during login'
@@ -333,7 +340,18 @@ const getProfile = async (req, res) => {
 
     // Mock mode for development
     if (process.env.NODE_ENV === 'development' || !process.env.MONGODB_URI) {
-      const mockUser = mockUsers.get(userId);
+      // Try to find user by ID first, then by email
+      let mockUser = mockUsers.get(userId);
+      if (!mockUser) {
+        // If not found by ID, try to find by email (fallback)
+        for (let [key, user] of mockUsers.entries()) {
+          if (user._id === userId) {
+            mockUser = user;
+            break;
+          }
+        }
+      }
+      
       if (!mockUser) {
         return res.status(404).json({
           success: false,

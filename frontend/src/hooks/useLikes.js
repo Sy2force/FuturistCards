@@ -150,7 +150,7 @@ export const useLikes = (cardId = null) => {
       } else {
         // Only set default state if API call fails
         finalStates[cardId] = { isLiked: false, likesCount: 0, loading: false };
-        console.warn(`Failed to load like status for card ${cardId}:`, result.reason || result.value?.error);
+        // Failed to load like status - using default state
       }
     });
 

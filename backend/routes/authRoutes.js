@@ -19,6 +19,7 @@ router.post('/login', validateLogin, login);
 
 // Routes protégées
 router.get('/verify', protect, verifyToken);
+router.get('/me', protect, getProfile);
 router.get('/profile', protect, getProfile);
 router.put('/profile', protect, updateProfile);
 router.put('/change-password', protect, changePassword);

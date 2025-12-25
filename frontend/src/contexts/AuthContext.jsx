@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { safeGetItem, safeSetItem, safeRemoveItem } from '../utils/safeStorage';
 import { AUTH_CONFIG, createUserData, handleAuthError } from '../utils/auth.helpers';
 import axios from 'axios';
@@ -13,8 +13,6 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
-        setLoading(true);
-        
         // Charger l'utilisateur depuis le localStorage au démarrage
         const savedUser = safeGetItem(AUTH_CONFIG.STORAGE_KEY);
         if (savedUser?.token) {
@@ -35,6 +33,9 @@ const AuthProvider = ({ children }) => {
             safeRemoveItem(AUTH_CONFIG.STORAGE_KEY);
             setUser(null);
           }
+        } else {
+          // Pas d'utilisateur sauvegardé, s'assurer que user est null
+          setUser(null);
         }
       } catch (error) {
         // Auth initialization error handled silently
@@ -44,7 +45,12 @@ const AuthProvider = ({ children }) => {
       }
     };
 
-    initializeAuth();
+    // Use setTimeout to ensure this runs after initial render
+    const timer = setTimeout(() => {
+      initializeAuth();
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const login = async (email, password) => {
@@ -55,6 +61,8 @@ const AuthProvider = ({ children }) => {
       const response = await axios.post(`${AUTH_CONFIG.API_URL}/auth/login`, {
         email,
         password
+      }, {
+        timeout: 10000 // 10 seconds timeout
       });
 
       if (response.data.success) {
@@ -74,18 +82,26 @@ const AuthProvider = ({ children }) => {
         // Configurer le token axios
         axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`;
         
-        // CRITIQUE: Mettre à jour l'état React IMMÉDIATEMENT
-        setUser(userData);
+        // CRITIQUE: Mettre à jour l'état React IMMÉDIATEMENT avec force update
+        const userWithTimestamp = { ...userData, _timestamp: Date.now() };
+        setUser(userWithTimestamp);
         
-        // Force un re-render en attendant un tick
-        setTimeout(() => setUser(userData), 0);
+        // Force un re-render supplémentaire pour garantir la mise à jour
+        setTimeout(() => setUser(prev => ({ ...prev, _forceUpdate: Date.now() })), 50);
         
         return { success: true, user: userData };
       }
 
       throw new Error(response.data.message || 'Erreur de connexion');
     } catch (error) {
-      const errorMessage = handleAuthError(error);
+      let errorMessage;
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = 'Délai d\'attente dépassé. Vérifiez votre connexion internet.';
+      } else if (!error.response) {
+        errorMessage = 'Erreur de connexion au serveur. Vérifiez votre connexion internet.';
+      } else {
+        errorMessage = handleAuthError(error);
+      }
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -98,7 +114,9 @@ const AuthProvider = ({ children }) => {
       setError(null);
       setLoading(true);
 
-      const response = await axios.post(`${AUTH_CONFIG.API_URL}/auth/register`, userData);
+      const response = await axios.post(`${AUTH_CONFIG.API_URL}/auth/register`, userData, {
+        timeout: 10000 // 10 seconds timeout
+      });
 
       if (response.data.success) {
         const newUser = createUserData(response.data.user, { ...userData, token: response.data.token });
@@ -113,7 +131,14 @@ const AuthProvider = ({ children }) => {
 
       throw new Error(response.data.message || 'Erreur d\'inscription');
     } catch (error) {
-      const errorMessage = handleAuthError(error);
+      let errorMessage;
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = 'Délai d\'attente dépassé. Vérifiez votre connexion internet.';
+      } else if (!error.response) {
+        errorMessage = 'Erreur de connexion au serveur. Vérifiez votre connexion internet.';
+      } else {
+        errorMessage = handleAuthError(error);
+      }
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {

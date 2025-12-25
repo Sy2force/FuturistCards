@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
-import { useLikes } from '../../hooks/useLikes';
 import { useAuth } from '../../hooks/useAuth';
-import { useI18n } from "../../contexts/I18nContext";
+import { useI18n } from '../../hooks/useI18n';
+import { useCardsStats } from '../../contexts/CardsStatsContext';
+import { useFavorites } from '../../contexts/FavoritesContext';
 
 const LikeButton = ({ 
   cardId, 
@@ -15,27 +16,21 @@ const LikeButton = ({
 }) => {
   const { user } = useAuth();
   const { t } = useI18n();
-  const { getLikeState, toggleLike, initializeLikeState, error } = useLikes();
+  const { getCardStats, toggleLike, initializeCardStats } = useCardsStats();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Initialize like state for this card - always fetch from API
+  // Initialize card stats
   useEffect(() => {
     if (cardId) {
-      initializeLikeState(cardId);
+      initializeCardStats(cardId);
     }
-  }, [cardId, initializeLikeState]);
+  }, [cardId, initializeCardStats]);
 
-  const likeState = getLikeState(cardId);
-  const { isLiked, likesCount, loading } = likeState;
-
-  // Show error temporarily
-  useEffect(() => {
-    if (error) {
-      setShowError(true);
-      const timer = setTimeout(() => setShowError(false), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+  const cardStats = getCardStats(cardId);
+  const { isLiked, likes: likesCount } = cardStats;
+  const isCardFavorite = isFavorite(cardId);
 
   const handleLikeClick = async (e) => {
     e.preventDefault();
@@ -43,13 +38,33 @@ const LikeButton = ({
 
     if (!user) {
       setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
       return;
     }
 
-    const result = await toggleLike(cardId);
-    
-    if (result.success && onLikeChange) {
-      onLikeChange(result.data);
+    setLoading(true);
+    try {
+      // Toggle like in stats
+      toggleLike(cardId);
+      
+      // Get updated stats
+      const newStats = getCardStats(cardId);
+      const willBeLiked = !isLiked;
+      
+      // If liking the card, add to favorites
+      if (willBeLiked && !isCardFavorite) {
+        await toggleFavorite(cardId);
+      }
+      
+      if (onLikeChange) {
+        onLikeChange({ isLiked: willBeLiked, likesCount: newStats.likes + (willBeLiked ? 1 : -1) });
+      }
+    } catch (error) {
+      // Error toggling like
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -78,7 +93,7 @@ const LikeButton = ({
   const config = sizeConfig[size];
 
   return (
-    <div className="relative">
+    <div className={`relative inline-flex items-center ${className}`} data-testid="like-button">
       <motion.button
         onClick={handleLikeClick}
         disabled={loading}
@@ -95,7 +110,9 @@ const LikeButton = ({
         `}
         whileHover={{ scale: loading ? 1 : 1.05 }}
         whileTap={{ scale: loading ? 1 : 0.95 }}
+        initial={false}
         title={!user ? t('auth.loginRequired') : (isLiked ? t('likes.unlike') : t('likes.like'))}
+        data-testid="like-button-action"
       >
         <AnimatePresence mode="wait">
           {loading ? (
@@ -152,7 +169,7 @@ const LikeButton = ({
             className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50"
           >
             <div className="bg-red-600 text-white text-xs px-3 py-2 rounded-lg shadow-lg whitespace-nowrap">
-              {!user ? t('auth.loginRequired') : error}
+              {!user ? t('auth.loginRequired') : t('common.error')}
               <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600"></div>
             </div>
           </motion.div>

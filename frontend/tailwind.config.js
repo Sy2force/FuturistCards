@@ -29,6 +29,19 @@ export default {
         }
       },
       colors: {
+        // Booking.com Color System
+        booking: {
+          blue: '#003580',
+          'blue-hover': '#00224f',
+          'blue-light': '#0071c2',
+          yellow: '#febb02',
+          green: '#008009',
+          red: '#cc0000',
+          gray: '#6b6b6b',
+          'gray-light': '#f5f5f5',
+          white: '#ffffff',
+          black: '#262626',
+        },
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',

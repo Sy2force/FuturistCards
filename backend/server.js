@@ -9,16 +9,34 @@ const { connectDB, getConnectionStatus } = require('./config/db');
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-// Security middleware
-app.use(helmet());
+// Security middleware with comprehensive headers
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      scriptSrc: ["'self'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
 
-// Rate limiting - disabled in development for tests
+// Rate limiting - configurable for production
+const limiter = rateLimit({
+  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000, // 15 minutes default
+  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100, // 100 requests default
+  message: {
+    success: false,
+    message: 'Trop de requêtes, veuillez réessayer plus tard'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
 if (process.env.NODE_ENV === 'production') {
-  const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
-  });
-  app.use(limiter);
+  app.use('/api/', limiter);
 }
 
 // CORS configuration
@@ -51,7 +69,7 @@ app.use(cors({
 app.options('*', cors());
 
 // Body parsing middleware
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Dev logging middleware for request tracking
@@ -78,15 +96,20 @@ app.get('/api/health', (req, res) => {
 // Import and setup routes after middleware
 const authRoutes = require("./routes/authRoutes");
 const cardRoutes = require("./routes/cardRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const likesRoutes = require("./routes/likes");
+const usersRoutes = require("./routes/users");
+const favoritesRoutes = require("./routes/favorites");
 
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/cards', cardRoutes);
+app.use('/api/admin', adminRoutes);
 app.use('/api/likes', likesRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/favorites', favoritesRoutes);
 
-// Log routes for debugging
-console.log('✅ Routes configured: /api/auth, /api/cards, /api/likes');
+// Routes configured: /api/auth, /api/cards, /api/likes
 
 async function startServer() {
   try {

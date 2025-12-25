@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useI18n } from '../../contexts/I18nContext';
+import { useState } from 'react';
+import { useI18n } from '../../hooks/useI18n';
 
 const LanguageSelector = () => {
   const { language, changeLanguage, isRTL, t } = useI18n();
@@ -25,14 +25,14 @@ const LanguageSelector = () => {
         onClick={() => setIsOpen(!isOpen)}
         className={`
           flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 transform hover:scale-105
-          bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40
+          success-gradient text-white shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40
           border-2 border-white/20 backdrop-blur-sm
           ${isOpen ? 'ring-2 ring-emerald-300' : ''}
         `}
         data-testid="language-selector"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        title={t('changeLanguage')}
+        title={t('common.changeLanguage')}
       >
         <span className="text-lg">{currentLang.flag}</span>
         <span className="font-medium text-sm">{currentLang.nativeName}</span>
@@ -46,7 +46,7 @@ const LanguageSelector = () => {
         </svg>
         
         {/* Glow effect */}
-        <div className="absolute inset-0 rounded-full blur-md opacity-75 -z-10 bg-gradient-to-r from-emerald-500 to-teal-600"></div>
+        <div className="absolute inset-0 rounded-full blur-md opacity-75 -z-10 success-gradient"></div>
       </button>
 
       {/* Dropdown menu */}

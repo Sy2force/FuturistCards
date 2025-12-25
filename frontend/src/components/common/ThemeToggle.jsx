@@ -1,6 +1,5 @@
-import React from 'react';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useI18n } from '../../contexts/I18nContext';
+import { useI18n } from '../../hooks/useI18n';
 
 const ThemeToggle = () => {
   const { isDark, toggleTheme } = useTheme();
@@ -12,14 +11,14 @@ const ThemeToggle = () => {
       className={`
         relative p-3 rounded-full transition-all duration-300 transform hover:scale-110
         ${isDark 
-          ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40' 
-          : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40'
+          ? 'warning-gradient text-white shadow-lg shadow-yellow-500/25 hover:shadow-yellow-500/40' 
+          : 'primary-gradient text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40'
         }
         border-2 border-white/20 backdrop-blur-sm
       `}
-      aria-label={isDark ? t('lightMode') : t('darkMode')}
+      aria-label={isDark ? t('common.lightMode') : t('common.darkMode')}
       data-testid="theme-toggle"
-      title={isDark ? t('lightMode') : t('darkMode')}
+      title={isDark ? t('common.lightMode') : t('common.darkMode')}
     >
       <div className="relative">
         {isDark ? (
@@ -38,15 +37,15 @@ const ThemeToggle = () => {
         <div className={`
           absolute inset-0 rounded-full blur-md opacity-75 -z-10
           ${isDark 
-            ? 'bg-gradient-to-r from-yellow-400 to-orange-500' 
-            : 'bg-gradient-to-r from-indigo-600 to-purple-600'
+            ? 'warning-gradient' 
+            : 'primary-gradient'
           }
         `}></div>
       </div>
       
       {/* Tooltip text */}
       <span className="sr-only">
-        {isDark ? t('switchToLight') : t('switchToDark')}
+        {isDark ? t('common.switchToLight') : t('common.switchToDark')}
       </span>
     </button>
   );

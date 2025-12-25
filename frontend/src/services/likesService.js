@@ -11,7 +11,7 @@ export const likesService = {
         message: response.data.message
       };
     } catch (error) {
-      console.error('Error toggling like:', error);
+      // Error handled in return statement
       return {
         success: false,
         error: error.response?.data?.message || 'Failed to toggle like'
@@ -28,7 +28,7 @@ export const likesService = {
         data: response.data.data
       };
     } catch (error) {
-      console.error('Error getting like status:', error);
+      // Error handled in return statement
       // Return default state instead of mock data
       return {
         success: false,
@@ -47,7 +47,7 @@ export const likesService = {
         data: response.data.data
       };
     } catch (error) {
-      console.error('Error getting card likers:', error);
+      // Error handled in return statement
       return {
         success: false,
         data: { users: [], totalLikes: 0, cardId },
@@ -65,7 +65,7 @@ export const likesService = {
         data: response.data.data
       };
     } catch (error) {
-      console.error('Error getting my likes:', error);
+      // Error handled in return statement
       return {
         success: false,
         data: { likedCards: [], count: 0 },
@@ -83,7 +83,7 @@ export const likesService = {
         data: response.data.data
       };
     } catch (error) {
-      console.error('Error getting user likes:', error);
+      // Error handled in return statement
       return {
         success: false,
         data: { likedCards: [], count: 0 },

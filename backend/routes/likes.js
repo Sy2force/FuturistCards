@@ -47,7 +47,6 @@ router.post('/:cardId/toggle', protect, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error toggling like:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error while toggling like' 
@@ -87,7 +86,6 @@ router.get('/:cardId/status', protect, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error getting like status:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error while getting like status' 
@@ -134,7 +132,6 @@ router.get('/:cardId/users', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error getting card likes:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error while getting card likes' 
@@ -166,7 +163,6 @@ router.get('/user/:userId', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error getting user likes:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error while getting user likes' 
@@ -198,7 +194,6 @@ router.get('/my-likes', protect, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error getting my likes:', error);
     res.status(500).json({ 
       success: false, 
       message: 'Server error while getting liked cards' 
