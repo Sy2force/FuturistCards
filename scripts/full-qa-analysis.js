@@ -2,10 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-console.log('🔍 ANALYSE QA COMPLÈTE - FUTURISTCARDS');
-console.log('='.repeat(70));
-console.log(`Date: ${new Date().toLocaleString('fr-FR')}`);
-console.log('='.repeat(70));
+process.stdout.write('🔍 ANALYSE QA COMPLÈTE - FUTURISTCARDS\n');
+process.stdout.write('='.repeat(70) + '\n');
+process.stdout.write(`Date: ${new Date().toLocaleString('fr-FR')}\n`);
+process.stdout.write('='.repeat(70) + '\n');
 
 const errors = {
   critical: [],

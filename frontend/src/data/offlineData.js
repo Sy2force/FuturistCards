@@ -83,7 +83,7 @@ export const offlineCards = [
   {
     _id: 'demo_card_3',
     title: 'Marketing Digital Expert',
-    subtitle: 'Stratégie & Growth Hacking',
+    subtitle: 'Stratégie & Growth Marketing',
     description: 'Consultant en marketing digital avec expertise en SEO, SEM, réseaux sociaux et analytics. Accompagnement personnalisé pour booster votre présence en ligne.',
     phone: '+33 1 55 44 33 22',
     email: 'expert@marketing-digital.fr',

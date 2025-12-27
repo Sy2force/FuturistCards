@@ -80,7 +80,7 @@ class Analytics {
     });
   }
 
-  // Get stored events (for debugging)
+  // Get stored events for analysis
   getEvents() {
     return JSON.parse(localStorage.getItem('analytics_events') || '[]');
   }

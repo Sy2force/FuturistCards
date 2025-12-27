@@ -22,7 +22,7 @@ export const validatePassword = (password) => {
     return { isValid: false, error: 'Le mot de passe est requis' };
   }
   
-  // Conformité PDF HackerU: ≥8 chars, 1 maj, 1 min, ≥4 chiffres, 1 symbole !@%$#^&*-_*
+  // Password requirements: ≥8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char
   const minLength = 8;
   const uppercaseRegex = /[A-Z]/;
   const lowercaseRegex = /[a-z]/;

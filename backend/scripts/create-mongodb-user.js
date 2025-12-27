@@ -16,7 +16,7 @@ const newUri = 'mongodb+srv://cardpro-admin:FuturistCards2025!@cluster0.lhvxveo.
 
 // Variables d'environnement pour Render:
 // MONGO_URI=mongodb+srv://cardpro-admin:FuturistCards2025!@cluster0.lhvxveo.mongodb.net/cardpro?retryWrites=true&w=majority&authSource=admin
-// JWT_SECRET=super-secret-cardpro-2025-hack3ru-validé-✅
+// JWT_SECRET=super-secret-cardpro-2025-production-key
 // NODE_ENV=production
 // CORS_ORIGIN=https://futuristcards.vercel.app
 // PORT=5001

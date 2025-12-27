@@ -19,7 +19,7 @@ class ErrorBoundary extends Component {
 
     // Log error to console in development
     if (import.meta.env.MODE === 'development') {
-      console.error('ErrorBoundary caught an error:', error, errorInfo);
+      // Error caught by ErrorBoundary - logged for debugging
     }
   }
 

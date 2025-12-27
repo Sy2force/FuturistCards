@@ -21,7 +21,7 @@ const AdminPanel = () => {
         setStats(response.data.stats);
       } catch (error) {
         toast.error('Erreur lors du chargement des statistiques');
-        console.error('Error fetching admin stats:', error);
+        // Error fetching admin stats - handled by toast
       } finally {
         setLoading(false);
       }

@@ -59,7 +59,7 @@ const EditCardPage = () => {
           category: card.category || 'technology',
           image: card.image || null
         });
-        if (card.image && card.image !== 'https://via.placeholder.com/300x200') {
+        if (card.image && card.image !== 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=200&fit=crop') {
           setImagePreview(card.image);
         }
       } else {
@@ -133,7 +133,7 @@ const EditCardPage = () => {
         web: formData.website,
         address: formData.address,
         category: formData.category,
-        image: formData.image || imagePreview || 'https://via.placeholder.com/300x200',
+        image: formData.image || imagePreview || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=300&h=200&fit=crop',
         updatedAt: new Date()
       };
       

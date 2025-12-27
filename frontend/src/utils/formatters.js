@@ -88,7 +88,7 @@ export const formatPhoneNumber = (phone) => {
     // US with country code: +1 (123) 456-7890
     return `+1 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7)}`;
   } else if (digits.length > 7) {
-    // International format: +XX XXX XXX XXXX
+    // International format with country code
     return `+${digits.slice(0, -10)} ${digits.slice(-10, -7)} ${digits.slice(-7, -4)} ${digits.slice(-4)}`;
   }
   

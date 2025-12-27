@@ -66,7 +66,7 @@ const FavoritesPage = () => {
       
       setCards(mockCards);
     } catch (error) {
-      console.error('Error fetching favorite cards:', error);
+      // Error fetching favorites - handled by UI
       setError('Erreur lors du chargement des favoris');
     } finally {
       setLoading(false);
