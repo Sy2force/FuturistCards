@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
@@ -18,9 +18,10 @@ const LikeButton = ({
   const { toggleFavorite, isFavorite } = useFavorites();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 50));
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(false);
 
+  // Check if card is favorited
   const isCardFavorite = isFavorite(cardId);
 
   const handleLikeClick = async (e) => {
@@ -33,7 +34,7 @@ const LikeButton = ({
       return;
     }
 
-    setIsAnimating(true);
+    setLoading(true);
     try {
       const willBeLiked = !isLiked;
       setIsLiked(willBeLiked);
@@ -49,7 +50,7 @@ const LikeButton = ({
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
     } finally {
-      setIsAnimating(false);
+      setLoading(false);
     }
   };
 
@@ -134,12 +135,12 @@ const LikeButton = ({
 
         {showCount && (
           <motion.span
-            key={likesCount}
+            key={likeCount}
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             className={`${config.text} font-medium tabular-nums`}
           >
-            {likesCount}
+            {likeCount}
           </motion.span>
         )}
       </motion.button>

@@ -97,9 +97,9 @@ const LoginPage = () => {
 
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
-              Pas de compte ?{' '}
+              Vous n&apos;avez pas encore de compte ?{' '}
               <a href="/register" className="text-blue-600 hover:text-blue-500 font-medium" data-testid="register-link">
-                S'inscrire
+                S&apos;inscrire
               </a>
             </p>
           </div>

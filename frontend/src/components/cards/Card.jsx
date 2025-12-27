@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React from 'react';
 import { useFavorites } from '../../context/FavoritesContext';
 // import CardPreview from './CardPreview'; // Removed - unused component
 
@@ -25,7 +25,7 @@ const Card = ({
               src={card.image?.url || card.image} 
               alt={card.image?.alt || card.title}
               className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110 cursor-pointer"
-              onClick={() => setIsPreviewOpen(true)}
+              onClick={() => {/* Preview functionality */}}
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'flex';
@@ -34,7 +34,7 @@ const Card = ({
           ) : null}
           <div 
             className={`absolute inset-0 flex items-center justify-center cursor-pointer ${(card.image?.url || card.image) ? 'hidden' : 'flex'}`}
-            onClick={() => setIsPreviewOpen(true)}
+            onClick={() => {/* Preview functionality */}}
           >
             <div className="text-center">
               <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-3">

@@ -15,7 +15,7 @@ i18n
   .init({
     fallbackLng: 'fr',
     lng: 'fr',
-    debug: process.env.NODE_ENV === 'development',
+    debug: import.meta.env.MODE === 'development',
     
     interpolation: {
       escapeValue: false,

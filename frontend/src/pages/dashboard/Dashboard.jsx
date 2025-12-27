@@ -27,7 +27,7 @@ const Dashboard = () => {
             🎯 Tableau de Bord
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
-            Bonjour {user?.name || 'Utilisateur'} ! Bienvenue dans votre espace personnel
+            Bienvenue sur votre tableau de bord ! Gérez vos cartes et découvrez l&apos;avenir {user?.name || 'Utilisateur'} !
           </p>
         </div>
 

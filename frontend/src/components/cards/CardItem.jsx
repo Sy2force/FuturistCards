@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
@@ -10,15 +10,17 @@ import LikeButton from '../ui/LikeButton';
 const CardItem = ({ card, onLike, showActions = true, onClick }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { isDark } = useTheme();
+  const { isDark } = useTheme(); // Theme context for styling
   
-  // Mock card stats
-  const getCardStats = (cardId) => ({
-    views: Math.floor(Math.random() * 100),
-    likes: Math.floor(Math.random() * 50)
-  });
-
-  const cardStats = getCardStats(card._id);
+  // Mock card stats - using useMemo to prevent re-renders
+  const cardStats = useMemo(() => {
+    // Generate deterministic stats based on card ID
+    const seed = card._id ? card._id.length : 0;
+    return {
+      views: Math.floor((seed * 17) % 100) + 10,
+      likes: Math.floor((seed * 7) % 50) + 1
+    };
+  }, [card._id]);
 
   const handleCardClick = () => {
     if (onClick) {

@@ -17,12 +17,10 @@ const AboutPage = () => {
         <div className={`${isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} rounded-2xl p-8 shadow-md border backdrop-blur-sm`}>
           <div className="prose max-w-none">
             <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-6`}>
-              FuturistCards révolutionne la façon dont vous partagez vos informations professionnelles. 
-              Fini les cartes de visite papier qui se perdent ou s'abîment !
+              Notre mission est de révolutionner l'échange de cartes de visite en vous permettant de partager vos informations professionnelles de manière élégante et moderne. Créez des cartes de visite numériques qui s'adaptent à vos besoins !
             </p>
             <p className={`${isDark ? 'text-gray-300' : 'text-gray-700'} mb-6`}>
-              Notre plateforme moderne vous permet de créer, personnaliser et partager vos cartes de visite 
-              numériques en quelques clics. Accessible partout, tout le temps.
+              Notre plateforme moderne vous permet de créer, personnaliser et partager vos cartes de visite numériques en quelques clics. Accessible partout, tout le temps.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 my-12" data-testid="about-features">

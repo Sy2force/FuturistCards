@@ -12,23 +12,21 @@ import LikeButton from '../components/ui/LikeButton';
 
 const FavoritesPage = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
+  // Translation hook for internationalization
   const { isDark } = useTheme();
   const { favorites } = useFavorites();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm] = useState('');
   const [sortBy, setSortBy] = useState('recent');
   const navigate = useNavigate();
 
   // Mock function for card stats
-  const getCardStats = (cardId) => {
-    return {
-      likes: Math.floor(Math.random() * 50),
-      views: Math.floor(Math.random() * 200)
-    };
-  };
+  const getCardStats = () => ({
+    likes: Math.floor(Math.random() * 50),
+    views: Math.floor(Math.random() * 200)
+  });
 
   // Fetch cards data for favorites
   const fetchCards = useCallback(async () => {

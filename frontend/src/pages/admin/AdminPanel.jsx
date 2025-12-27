@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
-import { api } from '../../services/api';
-import toast from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-hot-toast';
+import api from '../../services/api';
 
 const AdminPanel = () => {
-  const { user, isAdmin } = useAuth();
+  const { isAdmin } = useAuth();
   const { isDark } = useTheme();
   const [stats, setStats] = useState({
     users: { total: 0, user: 0, business: 0, admin: 0 },
@@ -53,7 +54,7 @@ const AdminPanel = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            Panneau d'Administration
+            Tableau de bord d&apos;administration
           </h1>
           <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
             Gérez la plateforme FuturistCards

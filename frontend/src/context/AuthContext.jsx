@@ -80,6 +80,7 @@ export const AuthProvider = ({ children }) => {
       // Simple registration simulation
       return { success: true, user: userData };
     } catch (error) {
+      // Login error handled by UI
       throw error;
     } finally {
       setLoading(false);
