@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
 
 
 // Créer une instance axios centralisée pour tous les appels API
@@ -88,8 +88,20 @@ const apiService = {
   
   // Favorites methods
   getFavorites: () => api.get('/favorites'),
-  addFavorite: (cardId) => api.post('/favorites', { cardId }),
-  removeFavorite: (cardId) => api.delete(`/favorites/${cardId}`)
+  addFavorite: (cardId) => api.post(`/favorites/${cardId}`),
+  removeFavorite: (cardId) => api.delete(`/favorites/${cardId}`),
+  
+  // Search methods
+  searchCards: (query) => api.get(`/cards/search?q=${encodeURIComponent(query)}`),
+  
+  // Admin methods
+  getUsers: () => api.get('/admin/users'),
+  getUser: (id) => api.get(`/admin/users/${id}`),
+  updateUserRole: (id, role) => api.put(`/admin/users/${id}/role`, { role }),
+  deleteUser: (id) => api.delete(`/admin/users/${id}`),
+  getAdminCards: () => api.get('/admin/cards'),
+  deleteCardAdmin: (id) => api.delete(`/admin/cards/${id}`),
+  getStats: () => api.get('/admin/stats')
 };
 
 export default apiService;

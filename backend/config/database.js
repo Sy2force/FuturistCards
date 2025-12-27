@@ -2,35 +2,37 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGO_URI;
+    const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI;
     
     if (!mongoURI) {
-      throw new Error('MONGO_URI environment variable is not defined');
+      console.error('❌ MONGODB_URI environment variable is not defined');
+      throw new Error('MONGODB_URI environment variable is not defined');
     }
 
+    console.log('🔄 Connecting to MongoDB...');
     const conn = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
-    // MongoDB Connected successfully
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     
     // Connection event handlers
     mongoose.connection.on('error', (err) => {
-      // MongoDB connection error - handle gracefully
+      console.error('❌ MongoDB connection error:', err);
     });
 
     mongoose.connection.on('disconnected', () => {
-      // MongoDB disconnected
+      console.warn('⚠️ MongoDB disconnected');
     });
 
     mongoose.connection.on('reconnected', () => {
-      // MongoDB reconnected
+      console.log('🔄 MongoDB reconnected');
     });
 
     return conn;
   } catch (error) {
-    // MongoDB connection failed
+    console.error('❌ MongoDB connection failed:', error.message);
     throw error;
   }
 };
@@ -38,9 +40,9 @@ const connectDB = async () => {
 const disconnectDB = async () => {
   try {
     await mongoose.connection.close();
-    // MongoDB connection closed
+    console.log('✅ MongoDB connection closed');
   } catch (error) {
-    // Error closing MongoDB connection
+    console.error('❌ Error closing MongoDB connection:', error);
   }
 };
 

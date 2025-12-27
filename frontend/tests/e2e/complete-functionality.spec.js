@@ -66,7 +66,7 @@ test.describe('FuturistCards - Tests Complets de Fonctionnalités', () => {
     await page.fill('[data-testid="login-password"]', 'TestPass123!');
     
     // Test bouton de soumission (ne pas soumettre réellement)
-    const submitBtn = page.locator('[data-testid="login-submit"]');
+    const submitBtn = page.locator('[data-testid="submit-button"]');
     await expect(submitBtn).toBeVisible();
     await expect(submitBtn).toBeEnabled();
     

@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import axiosInstance from '../services/api';
 import { useAuth } from '../context/AuthContext';
-=======
-import { useState, useEffect } from 'react';
-import { useAuth } from './useAuth';
->>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
 
 /**
  * Custom hook for API calls with loading, error, and data state management
@@ -20,7 +15,7 @@ const useApi = (apiCall, dependencies = [], immediate = true) => {
   const [error, setError] = useState(null);
   const { logout } = useAuth();
 
-  const execute = async (...args) => {
+  const execute = useCallback(async (...args) => {
     try {
       setLoading(true);
       setError(null);
@@ -31,10 +26,6 @@ const useApi = (apiCall, dependencies = [], immediate = true) => {
       // Handle authentication errors
       if (err.response?.status === 401) {
         logout();
-<<<<<<< HEAD
-=======
-        return;
->>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
       }
       
       setError(err.response?.data?.message || err.message || 'Une erreur est survenue');
@@ -42,23 +33,47 @@ const useApi = (apiCall, dependencies = [], immediate = true) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiCall, logout]);
 
-  const refetch = () => execute();
+  const refetch = useCallback(() => execute(), [execute]);
+
+  const clearError = useCallback(() => setError(null), []);
+  const clearData = useCallback(() => setData(null), []);
+  const reset = useCallback(() => {
+    setData(null);
+    setError(null);
+    setLoading(false);
+  }, []);
+
+  // HTTP methods
+  const get = useCallback(async (url, config = {}) => {
+    return execute(() => axiosInstance.get(url, config));
+  }, [execute]);
+
+  const post = useCallback(async (url, data, config = {}) => {
+    return execute(() => axiosInstance.post(url, data, config));
+  }, [execute]);
+
+  const put = useCallback(async (url, data, config = {}) => {
+    return execute(() => axiosInstance.put(url, data, config));
+  }, [execute]);
+
+  const del = useCallback(async (url, config = {}) => {
+    return execute(() => axiosInstance.delete(url, config));
+  }, [execute]);
 
   useEffect(() => {
-    if (immediate) {
+    if (immediate && apiCall) {
       execute();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, dependencies);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [immediate, apiCall, execute, ...dependencies]);
 
   return {
     data,
     loading,
     error,
-<<<<<<< HEAD
-    data,
+    refetch,
     
     // Méthodes HTTP
     get,
@@ -72,7 +87,7 @@ const useApi = (apiCall, dependencies = [], immediate = true) => {
     reset,
     
     // Appel API générique
-    apiCall
+    execute
   };
 };
 
@@ -184,12 +199,6 @@ export const useCrud = (resourceEndpoint) => {
     create,
     update,
     remove
-=======
-    execute,
-    refetch,
-    setData,
-    setError
->>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
   };
 };
 

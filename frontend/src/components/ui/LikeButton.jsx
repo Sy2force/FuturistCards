@@ -4,8 +4,7 @@ import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../../hooks/useAuth';
 import { useI18n } from '../../hooks/useI18n';
-import { useCardsStats } from '../../contexts/CardsStatsContext';
-import { useFavorites } from '../../contexts/FavoritesContext';
+import { useFavorites } from '../../context/FavoritesContext';
 
 const LikeButton = ({ 
   cardId, 
@@ -16,20 +15,12 @@ const LikeButton = ({
 }) => {
   const { user } = useAuth();
   const { t } = useI18n();
-  const { getCardStats, toggleLike, initializeCardStats } = useCardsStats();
   const { toggleFavorite, isFavorite } = useFavorites();
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 50));
+  const [isAnimating, setIsAnimating] = useState(false);
   const [showError, setShowError] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  // Initialize card stats
-  useEffect(() => {
-    if (cardId) {
-      initializeCardStats(cardId);
-    }
-  }, [cardId, initializeCardStats]);
-
-  const cardStats = getCardStats(cardId);
-  const { isLiked, likes: likesCount } = cardStats;
   const isCardFavorite = isFavorite(cardId);
 
   const handleLikeClick = async (e) => {
@@ -42,29 +33,23 @@ const LikeButton = ({
       return;
     }
 
-    setLoading(true);
+    setIsAnimating(true);
     try {
-      // Toggle like in stats
-      toggleLike(cardId);
-      
-      // Get updated stats
-      const newStats = getCardStats(cardId);
       const willBeLiked = !isLiked;
+      setIsLiked(willBeLiked);
+      setLikeCount(prev => willBeLiked ? prev + 1 : prev - 1);
       
-      // If liking the card, add to favorites
-      if (willBeLiked && !isCardFavorite) {
-        await toggleFavorite(cardId);
-      }
+      // Toggle favorite
+      await toggleFavorite(cardId);
       
       if (onLikeChange) {
-        onLikeChange({ isLiked: willBeLiked, likesCount: newStats.likes + (willBeLiked ? 1 : -1) });
+        onLikeChange({ isLiked: willBeLiked, likesCount: likeCount });
       }
     } catch (error) {
-      // Error toggling like
       setShowError(true);
       setTimeout(() => setShowError(false), 3000);
     } finally {
-      setLoading(false);
+      setIsAnimating(false);
     }
   };
 

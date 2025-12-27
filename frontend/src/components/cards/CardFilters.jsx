@@ -1,5 +1,5 @@
 import { useI18n } from '../../hooks/useI18n';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const CardFilters = ({ 
   searchTerm, 

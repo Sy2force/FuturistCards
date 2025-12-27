@@ -1,16 +1,25 @@
+// Helper functions for Playwright tests
+export async function waitForPageLoad(page) {
+  await page.waitForLoadState('networkidle');
+}
+
+export async function waitForFramerMotion(page, timeout = 800) {
+  await page.waitForTimeout(timeout);
+}
+
 // Test credentials for different user roles
 const testCredentials = {
   user: {
-    email: 'user@demo.com',
-    password: 'Demo1234!'
+    email: 'testnormal@example.com',
+    password: 'TestPass123!'
   },
   business: {
-    email: 'business@demo.com', 
-    password: 'Demo1234!'
+    email: 'testpro@example.com', 
+    password: 'TestPass123!'
   },
   admin: {
-    email: 'admin@demo.com',
-    password: 'Demo1234!'
+    email: 'admin@example.com',
+    password: 'TestPass123!'
   }
 };
 
@@ -18,32 +27,26 @@ export function getTestCredentials(role = 'user') {
   return testCredentials[role] || testCredentials.user;
 }
 
-export const loginAs = async (page, userType) => {
-  // Go to login page
+export const loginAs = async (page, role = 'user') => {
+  const { email, password } = testCredentials[role];
+  
   await page.goto('http://localhost:3010/login');
-  await page.waitForLoadState('networkidle');
-
-  // Use the existing test credentials
-  const creds = getTestCredentials(userType);
+  await waitForPageLoad(page);
+  await waitForFramerMotion(page);
   
-  // Fill login form using data-testid
-  await page.fill('[data-testid="login-email"]', creds.email);
-  await page.fill('[data-testid="login-password"]', creds.password);
+  await page.fill('[data-testid="login-email"]', email);
+  await page.fill('[data-testid="login-password"]', password);
+  await page.click('[data-testid="submit-button"]');
   
-  // Submit form
-  await page.click('[data-testid="login-submit"]');
+  // Wait for form submission and any navigation
+  await waitForPageLoad(page);
+  await waitForFramerMotion(page);
   
-  // Attendre que la navigation vers /cards soit terminée
-  await page.waitForURL('**/cards', { timeout: 30000 });
-  
-  // Attendre que l'état soit stable avant de vérifier les éléments
-  await page.waitForTimeout(3000);
-  
-  // Attendre que le logout button soit visible (indique que l'utilisateur est connecté)
-  await page.waitForSelector('[data-testid="logout-button"]', { timeout: 30000 });
+  // Wait for the navbar to be visible with correct role
+  await page.waitForSelector(`[data-testid="navbar-${role}"]`, { timeout: 15000 });
 };
 
 export async function logout(page) {
-  await page.getByTestId('logout-button').click();
-  await page.waitForSelector('[data-testid="login-button"]', { timeout: 15000 });
+  await page.getByTestId('link-logout').click();
+  await page.waitForSelector('[data-testid="link-login"]', { timeout: 15000 });
 }

@@ -1,5 +1,5 @@
 const express = require('express');
-const { protect, admin } = require('../middleware/authMiddleware');
+const { protect, adminOnly } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const Card = require('../models/Card');
 const asyncHandler = require('express-async-handler');
@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Toutes les routes admin nécessitent une authentification et le rôle admin
 router.use(protect);
-router.use(admin);
+router.use(adminOnly);
 
 /**
  * @desc    Get all users (admin only)

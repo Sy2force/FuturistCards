@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { STORAGE_KEYS, API_CONFIG } from '../utils/constants.js';
-import { safeGetItem, safeSetItem, safeRemoveItem } from '../utils/safeStorage.js';
+import { STORAGE_KEYS, API_CONFIG } from '../utils/constants';
+import { safeGetItem, safeSetItem, safeRemoveItem } from '../utils/safeStorage';
 
 const API_URL = API_CONFIG.BASE_URL;
 

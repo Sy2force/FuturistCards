@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useI18n } from '../hooks/useI18n';
-import { useTheme } from '../contexts/ThemeContext';
+import { useTheme } from '../context/ThemeContext';
 
 const NotFound = () => {
   const { t } = useI18n();

@@ -1,10 +1,8 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../contexts/AuthContext';
-import { useCardsStats } from '../../contexts/CardsStatsContext';
-// import { useFavorites } from '../../contexts/FavoritesContext';
-// import { useTheme } from '../../contexts/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { formatPhoneNumber, formatDisplayUrl, truncateText } from '../../utils/formatters';
 import { cardService } from '../../services/cardService';
 import LikeButton from '../ui/LikeButton';
@@ -12,20 +10,15 @@ import LikeButton from '../ui/LikeButton';
 const CardItem = ({ card, onLike, showActions = true, onClick }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { initializeCardStats, getCardStats } = useCardsStats();
-  // const { favorites } = useFavorites();
+  const { isDark } = useTheme();
+  
+  // Mock card stats
+  const getCardStats = (cardId) => ({
+    views: Math.floor(Math.random() * 100),
+    likes: Math.floor(Math.random() * 50)
+  });
 
-  // Initialize card stats
-  useEffect(() => {
-    if (card._id) {
-      initializeCardStats(card._id);
-    }
-  }, [card._id, initializeCardStats]);
-
-  // Get real-time stats
   const cardStats = getCardStats(card._id);
-  // Check if card is in favorites
-  // const isCardFavorite = favorites.some(fav => fav._id === card._id);
 
   const handleCardClick = () => {
     if (onClick) {

@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '../../context/AuthContext';
 import { validateEmail, validatePassword, validateName, isFormValid } from '../../utils/validation';
 
@@ -86,22 +84,15 @@ const RegisterForm = ({ onSuccess }) => {
   };
 
   return (
-    <motion.form
+    <form
       onSubmit={handleSubmit}
       className="space-y-6"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
       data-testid="register-form"
     >
       {errors.general && (
-        <motion.div 
-          className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg text-sm"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
+        <div className="bg-red-500/10 border border-red-500 text-red-500 p-3 rounded-lg text-sm">
           {errors.general}
-        </motion.div>
+        </div>
       )}
 
       {/* Name */}
@@ -190,11 +181,9 @@ const RegisterForm = ({ onSuccess }) => {
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
             disabled={loading}
           >
-            {showPassword ? (
-              <EyeSlashIcon className="h-5 w-5" />
-            ) : (
-              <EyeIcon className="h-5 w-5" />
-            )}
+            <span className="text-lg">
+              {showPassword ? '🙈' : '👁️'}
+            </span>
           </button>
         </div>
         {errors.password && (
@@ -226,11 +215,9 @@ const RegisterForm = ({ onSuccess }) => {
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
             disabled={loading}
           >
-            {showConfirmPassword ? (
-              <EyeSlashIcon className="h-5 w-5" />
-            ) : (
-              <EyeIcon className="h-5 w-5" />
-            )}
+            <span className="text-lg">
+              {showConfirmPassword ? '🙈' : '👁️'}
+            </span>
           </button>
         </div>
         {errors.confirmPassword && (
@@ -239,12 +226,10 @@ const RegisterForm = ({ onSuccess }) => {
       </div>
 
       {/* Submit Button */}
-      <motion.button
+      <button
         type="submit"
         disabled={loading || !isFormValid(errors, formData, ['name', 'email', 'password', 'confirmPassword'])}
         className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center"
-        whileHover={{ scale: loading ? 1 : 1.05 }}
-        whileTap={{ scale: loading ? 1 : 0.95 }}
         data-testid="register-submit"
       >
         {loading ? (
@@ -252,8 +237,8 @@ const RegisterForm = ({ onSuccess }) => {
         ) : (
           'Créer mon compte'
         )}
-      </motion.button>
-    </motion.form>
+      </button>
+    </form>
   );
 };
 

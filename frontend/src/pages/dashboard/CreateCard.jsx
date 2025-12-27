@@ -1,29 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
-import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api';
-import { 
-  validateCardTitle, 
-  validateEmail, 
-  validatePhone, 
-  validateWebsite, 
-  validateDescription 
-} from '../../utils/validation';
-import { 
-  UserIcon, 
-  EnvelopeIcon, 
-  PhoneIcon, 
-  GlobeAltIcon, 
-  MapPinIcon,
-  PhotoIcon,
-  PlusIcon,
-  XMarkIcon,
-  DocumentCheckIcon,
-  ArrowLeftIcon
-} from '@heroicons/react/24/outline';
 
 const CreateCardPage = () => {
   const [formData, setFormData] = useState({
@@ -72,39 +50,31 @@ const CreateCardPage = () => {
     { value: 'other', label: 'Autre' }
   ];
 
-  // validation en temps réel complète
+  // validation simple
   const validateField = (name, value) => {
     const errors = { ...validationErrors };
-    let validation;
     
     switch (name) {
       case 'title':
-        validation = validateCardTitle(value);
+        if (!value || value.trim().length < 2) {
+          errors[name] = 'Le nom doit contenir au moins 2 caractères';
+        } else {
+          delete errors[name];
+        }
         break;
       case 'email':
-        validation = validateEmail(value);
-        break;
-      case 'phone':
-        validation = validatePhone(value);
-        break;
-      case 'website':
-        validation = validateWebsite(value);
-        break;
-      case 'description':
-        validation = validateDescription(value);
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          errors[name] = 'Format d\'email invalide';
+        } else {
+          delete errors[name];
+        }
         break;
       default:
-        validation = { isValid: true };
-    }
-    
-    if (!validation.isValid) {
-      errors[name] = validation.error;
-    } else {
-      delete errors[name];
+        delete errors[name];
     }
     
     setValidationErrors(errors);
-    return validation.isValid;
+    return !errors[name];
   };
 
   const handleChange = (e) => {
@@ -115,7 +85,7 @@ const CreateCardPage = () => {
     }));
     setError('');
     
-    // Real-time validation
+    // Validation en temps réel
     validateField(name, value);
   };
 
@@ -123,7 +93,7 @@ const CreateCardPage = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) { // 5MB limit
-        toast.error('Image trop volumineuse (max 5MB)');
+        alert('Image trop volumineuse (max 5MB)');
         return;
       }
       
@@ -167,7 +137,7 @@ const CreateCardPage = () => {
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
       const firstError = Object.values(errors)[0];
-      toast.error(firstError);
+      alert(firstError);
       setLoading(false);
       return;
     }
@@ -193,7 +163,7 @@ const CreateCardPage = () => {
       const response = await apiService.createCard(cardData);
       
       if (response.success) {
-        toast.success('🎉 Votre carte a été créée avec succès !');
+        alert('🎉 Votre carte a été créée avec succès !');
         navigate('/my-cards');
       } else {
         throw new Error(response.message || 'Erreur lors de la création');
@@ -208,7 +178,7 @@ const CreateCardPage = () => {
       }
       
       setError(errorMessage);
-      toast.error(errorMessage);
+      alert(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -244,70 +214,30 @@ const CreateCardPage = () => {
   // }
 
   return (
-    <>
-      <Helmet>
-        <title>Créer une nouvelle carte - CardPro</title>
-        <meta name="description" content="Créez votre carte de visite professionnelle personnalisée" />
-      </Helmet>
-      
-      <motion.div 
-        className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <motion.div 
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.5 }}
-          >
-            <motion.div 
-              className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <PlusIcon className="w-8 h-8 text-white" />
-            </motion.div>
-            <motion.h1 
-              className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-6 hover:scale-110 transition-transform">
+              <span className="text-2xl">➕</span>
+            </div>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
               Créer une nouvelle carte
-            </motion.h1>
-            <motion.p 
-              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Créez votre carte de visite professionnelle en quelques minutes
-            </motion.p>
-          </motion.div>
+            </p>
+          </div>
 
-          <motion.div 
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-          >
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Preview Card */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4 flex items-center">
-                <PhotoIcon className="w-5 h-5 mr-2" />
+                <span className="mr-2">📷</span>
                 Aperçu de la carte
               </h3>
-                <motion.div 
-                  className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
-                >
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700">
                 <div className="text-center">
                   <div className="relative inline-block mb-4">
                     {imagePreview ? (
@@ -318,7 +248,7 @@ const CreateCardPage = () => {
                       />
                     ) : (
                       <div className="w-24 h-24 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center">
-                        <UserIcon className="w-12 h-12 text-white" />
+                        <span className="text-3xl text-white">👤</span>
                       </div>
                     )}
                   </div>
@@ -334,30 +264,25 @@ const CreateCardPage = () => {
                   <div className="space-y-2 text-sm">
                     {formData.email && (
                       <div className="flex items-center justify-center text-gray-600 dark:text-gray-400">
-                        <EnvelopeIcon className="w-4 h-4 mr-2" />
+                        <span className="mr-2">📧</span>
                         {formData.email}
                       </div>
                     )}
                     {formData.phone && (
                       <div className="flex items-center justify-center text-gray-600 dark:text-gray-400">
-                        <PhoneIcon className="w-4 h-4 mr-2" />
+                        <span className="mr-2">📱</span>
                         {formData.phone}
                       </div>
                     )}
                   </div>
                 </div>
-                </motion.div>
+                </div>
               </div>
             </div>
 
           {/* Form */}
           <div className="lg:col-span-2">
-            <motion.div 
-              className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-            >
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 p-8">
               <div className="bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 px-8 py-6 relative overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-600/90 to-purple-700/90" />
                 <div className="relative z-10">
@@ -403,15 +328,13 @@ const CreateCardPage = () => {
                           alt="Preview"
                           className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800 shadow-lg"
                         />
-                        <motion.button
+                        <button
                           type="button"
                           onClick={removeImage}
-                          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-colors"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
+                          className="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-all hover:scale-110"
                         >
-                          <XMarkIcon className="w-4 h-4" />
-                        </motion.button>
+                          <span className="text-sm">❌</span>
+                        </button>
                       </div>
                     ) : (
                       <button
@@ -420,7 +343,7 @@ const CreateCardPage = () => {
                         className="w-32 h-32 rounded-full border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 flex items-center justify-center bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all group"
                       >
                         <div className="text-center">
-                          <PhotoIcon className="w-8 h-8 text-gray-400 group-hover:text-blue-500 mx-auto mb-2" />
+                          <span className="text-2xl text-gray-400 group-hover:text-blue-500 mx-auto mb-2 block">📷</span>
                           <p className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-500">
                             Ajouter une photo
                           </p>
@@ -437,7 +360,7 @@ const CreateCardPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      <UserIcon className="w-4 h-4 inline mr-1" />
+                      <span className="mr-1">👤</span>
                       Nom complet *
                     </label>
                     <input
@@ -461,7 +384,7 @@ const CreateCardPage = () => {
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      <UserIcon className="w-4 h-4 inline mr-1" />
+                      <span className="mr-1">💼</span>
                       Titre/Poste
                     </label>
                     <input
@@ -480,7 +403,7 @@ const CreateCardPage = () => {
                 <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-blue-200 dark:border-blue-800">
                   <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center">
                     <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                      <UserIcon className="w-4 h-4 text-white" />
+                      <span className="text-white">💼</span>
                     </div>
                     Détails professionnels
                   </h3>
@@ -536,7 +459,7 @@ const CreateCardPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      <EnvelopeIcon className="w-4 h-4 inline mr-1" />
+                      <span className="mr-1">📧</span>
                       Email
                     </label>
                     <input
@@ -559,7 +482,7 @@ const CreateCardPage = () => {
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      <PhoneIcon className="w-4 h-4 inline mr-1" />
+                      <span className="mr-1">📱</span>
                       Téléphone
                     </label>
                     <input
@@ -585,7 +508,7 @@ const CreateCardPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      <GlobeAltIcon className="w-4 h-4 inline mr-1" />
+                      <span className="mr-1">🌐</span>
                       Site web
                     </label>
                     <input
@@ -627,7 +550,7 @@ const CreateCardPage = () => {
                 {/* Address */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    <MapPinIcon className="w-4 h-4 inline mr-1" />
+                    <span className="mr-1">📍</span>
                     Adresse
                   </label>
                   <input
@@ -643,48 +566,39 @@ const CreateCardPage = () => {
 
                 {/* Submit Button */}
                 <div className="flex justify-end space-x-4">
-                  <motion.button
+                  <button
                     type="button"
                     onClick={() => navigate('/cards')}
-                    className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors font-medium"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                    className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-all hover:scale-105 font-medium"
                   >
-                    <ArrowLeftIcon className="w-5 h-5 mr-2 inline" />
+                    <span className="mr-2">←</span>
                     Annuler
-                  </motion.button>
-                  <motion.button
+                  </button>
+                  <button
                     type="submit"
                     data-testid="submit-button"
                     disabled={loading}
-                    className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-                    whileHover={{ scale: loading ? 1 : 1.02 }}
-                    whileTap={{ scale: loading ? 1 : 0.98 }}
+                    className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center hover:scale-105"
                   >
                     {loading ? (
                       <>
-                        <motion.div 
-                          className="rounded-full h-5 w-5 border-b-2 border-white mr-2"
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                        ></motion.div>
+                        <div className="rounded-full h-5 w-5 border-b-2 border-white mr-2 animate-spin"></div>
                         Création en cours...
                       </>
                     ) : (
                       <>
-                        <DocumentCheckIcon className="w-5 h-5 mr-2" />
+                        <span className="mr-2">✓</span>
                         Créer une carte
                       </>
                     )}
-                  </motion.button>
+                  </button>
                 </div>
               </form>
-              </motion.div>
             </div>
-          </motion.div>
+          </div>
         </div>
-      </motion.div>
-    </>
+      </div>
+    </div>
   );
 };
 

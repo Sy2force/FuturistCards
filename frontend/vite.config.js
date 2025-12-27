@@ -16,25 +16,11 @@ export default defineConfig({
     }
   },
   server: {
-<<<<<<< HEAD
-    port: 3010, // Frontend sur 3010, backend sur 5001
+    port: 3010, // Frontend sur 3010, backend sur 3002
     strictPort: true,
     host: '0.0.0.0',
     open: false,
     cors: true,
-=======
-    port: 3010,
-    host: true,
-    open: true,
-    cors: true,
-    strictPort: true
-  },
-  // Configuration for Playwright tests
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./tests/setup.js']
->>>>>>> 1ca665d3f5f764417ada1cdd89a898f39ac3dccd
   },
   preview: {
     port: 4173,
@@ -43,25 +29,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false, 
-    minify: 'terser',
+    minify: 'esbuild',
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo) => {
-          const info = assetInfo.name.split('.');
-          const ext = info[info.length - 1];
-          if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp|avif/i.test(ext)) {
-            return `assets/images/[name]-[hash][extname]`;
-          }
-          if (/woff2?|eot|ttf|otf/i.test(ext)) {
-            return `assets/fonts/[name]-[hash][extname]`;
-          }
-          if (/css/i.test(ext)) {
-            return `assets/css/[name]-[hash][extname]`;
-          }
-          return `assets/[name]-[hash][extname]`;
-        },
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
@@ -71,7 +41,7 @@ export default defineConfig({
       }
     },
     chunkSizeWarningLimit: 1000,
-    target: 'esnext',
+    target: 'es2015',
     reportCompressedSize: false,
     cssCodeSplit: true
   },

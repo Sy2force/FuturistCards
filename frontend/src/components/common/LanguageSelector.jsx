@@ -29,7 +29,7 @@ const LanguageSelector = () => {
           border-2 border-white/20 backdrop-blur-sm
           ${isOpen ? 'ring-2 ring-emerald-300' : ''}
         `}
-        data-testid="language-selector"
+        data-testid="language-dropdown"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         title={t('common.changeLanguage')}

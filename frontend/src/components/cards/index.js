@@ -1,3 +1,3 @@
 export { default as CardItem } from './CardItem';
-export { default as CardGrid } from './CardGrid';
+// CardGrid removed - using Card component directly
 export { default as CardSearch } from './CardSearch';

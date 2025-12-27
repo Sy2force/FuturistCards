@@ -1,11 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CardPro</title>
+    <title>FuturistCards - Page non trouvée</title>
+    <style>
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            text-align: center;
+            padding: 2rem;
+        }
+        h1 { font-size: 3rem; margin-bottom: 1rem; }
+        p { font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9; }
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+    </style>
     <script>
-        // GitHub Pages SPA redirect
+        // SPA redirect for Vercel deployment
         (function(l) {
             if (l.search[1] === '/' ) {
                 var decoded = l.search.slice(1).split('&').map(function(s) { 
@@ -19,17 +52,24 @@
     </script>
 </head>
 <body>
+    <div class="container">
+        <h1>404</h1>
+        <p>Page non trouvée</p>
+        <a href="/" class="btn">Retour à l'accueil</a>
+    </div>
     <script>
-        // Redirect to index.html with path preserved
-        var pathSegmentsToKeep = 1;
-        var l = window.location;
-        l.replace(
-            l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-            l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
-            l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
-            (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-            l.hash
-        );
+        // Redirect to index.html with path preserved for SPA
+        setTimeout(function() {
+            var pathSegmentsToKeep = 1;
+            var l = window.location;
+            l.replace(
+                l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+                '/' + l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + 
+                '/?/' + l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') + 
+                (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') + 
+                l.hash
+            );
+        }, 0);
     </script>
 </body>
 </html>

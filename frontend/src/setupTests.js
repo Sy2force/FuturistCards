@@ -83,14 +83,20 @@ Object.defineProperty(window, 'sessionStorage', {
 // Suppress console warnings during tests
 const originalWarn = console.warn;
 beforeAll(() => {
+  // Suppress specific React warnings during tests
+  const suppressedWarnings = [
+    'ReactDOM.render is no longer supported',
+    'Warning: componentWillMount has been renamed',
+    'Warning: componentWillReceiveProps has been renamed'
+  ];
+  
   console.warn = (...args) => {
-    if (
-      typeof args[0] === 'string' &&
-      args[0].includes('ReactDOM.render is no longer supported')
-    ) {
-      return;
+    const message = typeof args[0] === 'string' ? args[0] : '';
+    const shouldSuppress = suppressedWarnings.some(warning => message.includes(warning));
+    
+    if (!shouldSuppress) {
+      originalWarn(...args);
     }
-    originalWarn(...args);
   };
 });
 
