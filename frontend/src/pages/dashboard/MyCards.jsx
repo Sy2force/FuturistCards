@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { api } from '../../services/api';
+import { useTranslation } from "../../hooks/useTranslation";
+import apiService from '../../services/api';
 
 const MyCardsPage = () => {
   const { user } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,17 +15,17 @@ const MyCardsPage = () => {
   const fetchMyCards = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await api.get('/cards/my-cards');
+      const response = await apiService.getMyCards();
       setCards(response.data.cards || []);
     } catch (error) {
-      setError('Erreur lors du chargement des cartes');
+      setError(t('myCards.loadError'));
       // Mock data for development
       const mockCards = [
         {
           _id: '1',
-          title: 'Ma Carte',
-          subtitle: 'Développeur',
-          description: 'Description de ma carte',
+          title: t('myCards.sampleTitle'),
+          subtitle: t('categories.developer'),
+          description: t('myCards.sampleDescription'),
           email: user?.email || 'test@example.com'
         }
       ];
@@ -35,11 +37,11 @@ const MyCardsPage = () => {
 
   const handleDeleteCard = async (cardId) => {
     try {
-      await api.delete(`/cards/${cardId}`);
+      await apiService.deleteCard(cardId);
       setCards(cards.filter(card => card._id !== cardId));
-      alert('Carte supprimée avec succès');
+      toast.success(t('cardDeletedSuccess'));
     } catch (error) {
-      alert('Erreur lors de la suppression');
+      toast.error(t('deleteError'));
     }
   };
 
@@ -52,29 +54,31 @@ const MyCardsPage = () => {
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-700 dark:text-gray-300">Chargement de vos cartes...</p>
+          <p className="text-gray-700 dark:text-gray-300">{t('common.loading')}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 px-4">
-        <div className="container mx-auto max-w-6xl">
+    <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 py-8" dir="rtl">
+        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Mes Cartes
+              {t('myCards.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-300 mb-8">
-              Gérez vos cartes de visite professionnelles
+              {t('myCards.subtitle')}
             </p>
             
             <Link
               to="/cards/create"
               className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
-              <span className="mr-2">➕</span>
-              Créer une nouvelle carte
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              {t('createCard.title')}
             </Link>
           </div>
 
@@ -86,23 +90,29 @@ const MyCardsPage = () => {
 
           {cards.length === 0 ? (
             <div className="text-center py-12">
-              <div className="text-6xl mb-4">📋</div>
+              <div className="mb-4">
+                <svg className="w-16 h-16 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
               <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
-                Aucune carte créée
+                {t('myCards.noCards')}
               </h3>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Créez votre première carte de visite
+                {t('myCards.createFirst')}
               </p>
               <Link
                 to="/cards/create"
                 className="inline-flex items-center bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
               >
-                <span className="mr-2">➕</span>
-                Créer ma première carte
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                {t('createCard.title')}
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
               {cards.map((card) => (
                 <div
                   key={card._id}
@@ -118,18 +128,18 @@ const MyCardsPage = () => {
                     <p className="text-gray-500 dark:text-gray-400 mb-4">
                       {card.description}
                     </p>
-                    <div className="flex justify-center space-x-2">
+                    <div className="flex justify-center space-x-2 rtl:space-x-reverse">
                       <button
                         onClick={() => navigate(`/cards/edit/${card._id}`)}
                         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
                       >
-                        Modifier
+                        {t('common.edit')}
                       </button>
                       <button
                         onClick={() => handleDeleteCard(card._id)}
                         className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
                       >
-                        Supprimer
+                        {t('common.delete')}
                       </button>
                     </div>
                   </div>
@@ -138,7 +148,7 @@ const MyCardsPage = () => {
             </div>
           )}
         </div>
-      </div>
+    </div>
   );
 };
 

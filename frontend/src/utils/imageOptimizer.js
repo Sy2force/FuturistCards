@@ -68,7 +68,7 @@ export const validateImageFile = (file) => {
   const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
   if (!file) {
-    return { isValid: false, error: 'Aucun fichier sélectionné' };
+    return { isValid: false, error: 'No file selected' };
   }
 
   if (!allowedTypes.includes(file.type)) {

@@ -1,10 +1,6 @@
-export { default as LoadingSpinner } from './LoadingSpinner';
-export { default as ErrorBoundary } from './ErrorBoundary';
-export { default as Modal } from './Modal';
-export { default as Button } from './Button';
-export { default as Input } from './Input';
+// Export des composants UI existants
+export { default as GlassButton } from './GlassButton';
+export { default as GlassCard } from './GlassCard';
+export { default as GlassInput } from './GlassInput';
+export { default as GlassModal } from './GlassModal';
 export { default as LikeButton } from './LikeButton';
-export { default as LazyImage } from './LazyImage';
-export { default as VirtualizedList } from './VirtualizedList';
-export { default as Skeleton, SkeletonCard, SkeletonList } from './Skeleton';
-export { default as memo, MemoizedCardItem, MemoizedList, withMemo, withPerformanceMonitoring } from './Memoized';

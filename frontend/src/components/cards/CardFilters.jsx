@@ -1,5 +1,5 @@
-import { useI18n } from '../../hooks/useI18n';
-import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from "../../hooks/useTranslation";
+import { useRoleTheme } from '../../context/ThemeProvider';
 
 const CardFilters = ({ 
   searchTerm, 
@@ -14,8 +14,8 @@ const CardFilters = ({
   categories,
   sortOptions
 }) => {
-  const { t, isRTL } = useI18n();
-  const { isDark } = useTheme();
+  const { t } = useTranslation();
+  const { isDark } = useRoleTheme();
 
   const clearAllFilters = () => {
     setSearchTerm('');
@@ -40,13 +40,13 @@ const CardFilters = ({
               placeholder={t('cards.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-full px-4 py-2 ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} rounded-lg border ${
+              className={`w-full px-4 py-2 pr-10 pl-4 rounded-lg border ${
                 isDark 
                   ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-blue-500' 
                   : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-blue-500'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
             />
-            <div className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 transform -translate-y-1/2`}>
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <svg className={`w-4 h-4 ${isDark ? 'text-gray-400' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -54,7 +54,7 @@ const CardFilters = ({
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className={`absolute ${isRTL ? 'left-3' : 'right-3'} top-1/2 transform -translate-y-1/2 ${isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'} transition-colors`}
+                className={`absolute left-3 top-1/2 transform -translate-y-1/2 ${isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-500 hover:text-gray-700'} transition-colors`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

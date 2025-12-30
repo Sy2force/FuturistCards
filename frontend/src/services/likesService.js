@@ -1,4 +1,4 @@
-import api from '../api/api';
+import { api } from './api';
 
 export const likesService = {
   // Toggle like/unlike for a card
@@ -14,7 +14,7 @@ export const likesService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to toggle like'
+        error: error.response?.data?.message || 'נכשל בהחלפת מצב לייק'
       };
     }
   },
@@ -33,7 +33,7 @@ export const likesService = {
       return {
         success: false,
         data: { isLiked: false, likesCount: 0, cardId },
-        error: error.response?.data?.message || 'Failed to get like status'
+        error: error.response?.data?.message || 'נכשל בקבלת מצב לייק'
       };
     }
   },
@@ -51,7 +51,7 @@ export const likesService = {
       return {
         success: false,
         data: { users: [], totalLikes: 0, cardId },
-        error: error.response?.data?.message || 'Failed to get card likers'
+        error: error.response?.data?.message || 'נכשל בקבלת רשימת מלייקים'
       };
     }
   },
@@ -69,7 +69,7 @@ export const likesService = {
       return {
         success: false,
         data: { likedCards: [], count: 0 },
-        error: error.response?.data?.message || 'Failed to get liked cards'
+        error: error.response?.data?.message || 'נכשל בקבלת כרטיסים מועדפים'
       };
     }
   },
@@ -87,7 +87,7 @@ export const likesService = {
       return {
         success: false,
         data: { likedCards: [], count: 0 },
-        error: error.response?.data?.message || 'Failed to get user likes'
+        error: error.response?.data?.message || 'נכשל בקבלת לייקים של המשתמש'
       };
     }
   }

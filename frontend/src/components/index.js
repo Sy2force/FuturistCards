@@ -8,7 +8,6 @@ export { default as Footer } from './layout/Footer';
 
 // Common components
 export { default as ThemeToggle } from './common/ThemeToggle';
-export { default as LanguageSelector } from './common/LanguageSelector';
 export { default as LoadingSpinner } from './common/LoadingSpinner';
 export { default as NotFound } from './common/NotFound';
 export { default as SearchBar } from './common/SearchBar';

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "../../hooks/useTranslation";
 import FormField from './FormField';
 import { validateCardForm } from '../../utils/validation';
 import { CARD_CATEGORIES } from '../../utils/constants';

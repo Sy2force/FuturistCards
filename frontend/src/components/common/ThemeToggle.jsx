@@ -1,26 +1,28 @@
 import { motion } from 'framer-motion';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context/ThemeProvider';
+import { useTranslation } from "../../hooks/useTranslation";
 
 const ThemeToggle = () => {
-  const { isDark, toggleTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <motion.button
-      onClick={toggleTheme}
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      aria-label={isDark ? 'Activer le mode clair' : 'Activer le mode sombre'}
-      title={isDark ? 'Mode clair' : 'Mode sombre'}
-      data-testid="dark-mode-toggle"
+      aria-label={theme === 'dark' ? t('theme.enableLightMode') : t('theme.enableDarkMode')}
+      title={theme === 'dark' ? t('theme.lightMode') : t('theme.darkMode')}
+      data-testid="dark-toggle"
     >
       <motion.div
         initial={false}
-        animate={{ rotate: isDark ? 180 : 0 }}
+        animate={{ rotate: theme === 'dark' ? 180 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        {isDark ? (
+        {theme === 'dark' ? (
           <SunIcon className="w-5 h-5 text-yellow-500" />
         ) : (
           <MoonIcon className="w-5 h-5 text-gray-600" />

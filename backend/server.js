@@ -21,7 +21,7 @@ const {
 const { errorHandler } = require("./middleware/errorHandler");
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 5001;
 
 // URLs autorisées pour CORS
 const allowedOrigins = [

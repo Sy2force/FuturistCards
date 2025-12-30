@@ -1,27 +1,29 @@
-// Mode hors ligne - Données de démonstration pour FuturistCards
+// Offline mode - Demo data for FuturistCards
+// Note: This file contains static demo data. For full i18n support, 
+// consider implementing dynamic translation keys for card content.
 export const offlineUsers = [
   {
     _id: 'demo_user_1',
-    firstName: 'Jean',
-    lastName: 'Dupont',
-    email: 'jean.dupont@example.com',
+    firstName: 'דוד',
+    lastName: 'כהן',
+    email: 'david.cohen@example.com',
     role: 'business',
     isActive: true,
     createdAt: '2024-01-15T10:00:00.000Z'
   },
   {
     _id: 'demo_user_2',
-    firstName: 'Marie',
-    lastName: 'Martin',
-    email: 'marie.martin@example.com',
+    firstName: 'רחל',
+    lastName: 'לוי',
+    email: 'rachel.levi@example.com',
     role: 'user',
     isActive: true,
     createdAt: '2024-02-10T14:30:00.000Z'
   },
   {
     _id: 'demo_user_3',
-    firstName: 'Admin',
-    lastName: 'System',
+    firstName: 'מנהל',
+    lastName: 'מערכת',
     email: 'admin@futuristcards.com',
     role: 'admin',
     isActive: true,
@@ -32,20 +34,20 @@ export const offlineUsers = [
 export const offlineCards = [
   {
     _id: 'demo_card_1',
-    title: 'Tech Solutions Pro',
-    subtitle: 'Développement Web & Mobile',
-    description: 'Spécialiste en développement d\'applications modernes avec React, Node.js et technologies cloud. Plus de 10 ans d\'expérience dans la création de solutions digitales innovantes.',
-    phone: '+33 1 23 45 67 89',
-    email: 'contact@techsolutions.fr',
-    web: 'https://techsolutions.fr',
+    title: 'פתרונות טכנולוגיים מתקדמים',
+    subtitle: 'פיתוח אתרים ואפליקציות',
+    description: 'מומחה בפיתוח אפליקציות מודרניות עם React, Node.js וטכנולוגיות ענן. למעלה מעשור ניסיון ביצירת פתרונות דיגיטליים חדשניים.',
+    phone: '+972-3-123-4567',
+    email: 'contact@techsolutions.co.il',
+    web: 'https://techsolutions.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=200&fit=crop',
       alt: 'Bureau moderne avec ordinateurs'
     },
     address: {
-      street: '123 Avenue des Champs-Élysées',
-      city: 'Paris',
-      country: 'France',
+      street: 'רחוב הרצל 123',
+      city: 'תל אביב',
+      country: 'ישראל',
       houseNumber: '123'
     },
     category: 'technology',
@@ -57,20 +59,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_2',
-    title: 'Design Studio Creative',
-    subtitle: 'UI/UX Design & Branding',
-    description: 'Studio de design créatif spécialisé dans l\'expérience utilisateur et l\'identité visuelle. Nous créons des interfaces modernes et intuitives pour vos projets digitaux.',
-    phone: '+33 1 98 76 54 32',
-    email: 'hello@designstudio.fr',
-    web: 'https://designstudio.fr',
+    title: 'סטודיו עיצוב יצירתי',
+    subtitle: 'עיצוב UI/UX ומיתוג',
+    description: 'סטודיו עיצוב יצירתי המתמחה בחוויית משתמש וזהות חזותית. אנו יוצרים ממשקים מודרניים ואינטואיטיביים לפרויקטים הדיגיטליים שלכם.',
+    phone: '+972-3-987-6543',
+    email: 'hello@designstudio.co.il',
+    web: 'https://designstudio.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=200&fit=crop',
       alt: 'Espace de travail design'
     },
     address: {
-      street: '456 Rue de Rivoli',
-      city: 'Paris',
-      country: 'France',
+      street: 'שדרות רוטשילד 456',
+      city: 'תל אביב',
+      country: 'ישראל',
       houseNumber: '456'
     },
     category: 'design',
@@ -82,20 +84,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_3',
-    title: 'Marketing Digital Expert',
-    subtitle: 'Stratégie & Growth Marketing',
-    description: 'Consultant en marketing digital avec expertise en SEO, SEM, réseaux sociaux et analytics. Accompagnement personnalisé pour booster votre présence en ligne.',
-    phone: '+33 1 55 44 33 22',
-    email: 'expert@marketing-digital.fr',
-    web: 'https://marketing-digital.fr',
+    title: 'מומחה שיווק דיגיטלי',
+    subtitle: 'אסטרטגיה ושיווק צמיחה',
+    description: 'יועץ שיווק דיגיטלי עם מומחיות ב-SEO, SEM, רשתות חברתיות ואנליטיקס. ליווי אישי להגברת הנוכחות המקוונת שלכם.',
+    phone: '+972-3-555-4433',
+    email: 'expert@marketing-digital.co.il',
+    web: 'https://marketing-digital.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop',
       alt: 'Graphiques marketing'
     },
     address: {
-      street: '789 Boulevard Saint-Germain',
-      city: 'Paris',
-      country: 'France',
+      street: 'שדרות בן גוריון 789',
+      city: 'תל אביב',
+      country: 'ישראל',
       houseNumber: '789'
     },
     category: 'marketing',
@@ -107,20 +109,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_4',
-    title: 'Conseil Business Strategy',
-    subtitle: 'Transformation Digitale',
-    description: 'Cabinet de conseil spécialisé dans la transformation digitale des entreprises. Accompagnement stratégique pour optimiser vos processus et accélérer votre croissance.',
-    phone: '+33 1 77 88 99 00',
-    email: 'contact@business-strategy.fr',
-    web: 'https://business-strategy.fr',
+    title: 'ייעוץ אסטרטגיה עסקית',
+    subtitle: 'טרנספורמציה דיגיטלית',
+    description: 'משרד ייעוץ המתמחה בטרנספורמציה דיגיטלית של עסקים. ליווי אסטרטגי לייעול התהליכים והאצת הצמיחה שלכם.',
+    phone: '+972-3-778-8990',
+    email: 'contact@business-strategy.co.il',
+    web: 'https://business-strategy.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop',
       alt: 'Réunion d\'affaires'
     },
     address: {
-      street: '321 Avenue Montaigne',
-      city: 'Paris',
-      country: 'France',
+      street: 'רחוב דיזנגוף 321',
+      city: 'תל אביב',
+      country: 'ישראל',
       houseNumber: '321'
     },
     category: 'business',
@@ -132,20 +134,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_5',
-    title: 'Finance & Investment',
-    subtitle: 'Gestion de Patrimoine',
-    description: 'Conseiller financier indépendant spécialisé dans la gestion de patrimoine et les investissements. Solutions personnalisées pour optimiser votre épargne et vos placements.',
-    phone: '+33 1 66 55 44 33',
-    email: 'conseiller@finance-invest.fr',
-    web: 'https://finance-invest.fr',
+    title: 'כספים והשקעות',
+    subtitle: 'ניהול תיק השקעות',
+    description: 'יועץ פיננסי עצמאי המתמחה בניהול תיק השקעות והשקעות. פתרונות מותאמים אישית לייעול החיסכון וההשקעות שלכם.',
+    phone: '+972-3-665-5443',
+    email: 'conseiller@finance-invest.co.il',
+    web: 'https://finance-invest.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=200&fit=crop',
       alt: 'Graphiques financiers'
     },
     address: {
-      street: '654 Rue de la Paix',
-      city: 'Paris',
-      country: 'France',
+      street: 'רחוב השלום 654',
+      city: 'תל אביב',
+      country: 'ישראל',
       houseNumber: '654'
     },
     category: 'finance',
@@ -157,20 +159,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_6',
-    title: 'Cabinet Médical Moderne',
-    subtitle: 'Médecine Générale',
-    description: 'Cabinet médical équipé des dernières technologies pour un suivi médical complet. Consultations sur rendez-vous et téléconsultations disponibles.',
-    phone: '+33 1 44 33 22 11',
-    email: 'cabinet@medecine-moderne.fr',
-    web: 'https://medecine-moderne.fr',
+    title: 'מרפאה רפואית מודרנית',
+    subtitle: 'רפואה כללית',
+    description: 'מרפאה רפואית המצוידת בטכנולוגיות החדישות ביותר למעקב רפואי מלא. ייעוץ רפואי בתיאום מראש וטלה-רפואה זמינים.',
+    phone: '+972-3-443-3221',
+    email: 'cabinet@medecine-moderne.co.il',
+    web: 'https://medecine-moderne.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop',
       alt: 'Cabinet médical moderne'
     },
     address: {
-      street: '987 Avenue Victor Hugo',
-      city: 'Paris',
-      country: 'France',
+      street: 'שדרות ויקטור הוגו 987',
+      city: 'תל אביב',
+      country: 'ישראל',
       houseNumber: '987'
     },
     category: 'medical',
@@ -221,19 +223,19 @@ export const offlineStats = {
   recentActivity: [
     {
       type: 'card_created',
-      user: 'Jean Dupont',
-      target: 'Cabinet Médical Moderne',
+      user: 'דוד כהן',
+      target: 'מרפאה רפואית מודרנית',
       timestamp: '2024-03-20T08:00:00.000Z'
     },
     {
       type: 'card_liked',
-      user: 'Marie Martin',
-      target: 'Design Studio Creative',
+      user: 'רחל לוי',
+      target: 'סטודיו עיצוב יצירתי',
       timestamp: '2024-12-21T14:30:00.000Z'
     },
     {
       type: 'user_registered',
-      user: 'Marie Martin',
+      user: 'רחל לוי',
       timestamp: '2024-02-10T14:30:00.000Z'
     }
   ]

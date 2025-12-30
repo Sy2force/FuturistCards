@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useTranslation } from "../../hooks/useTranslation";
 import { useAuth } from '../../context/AuthContext';
 import { validateEmail, validatePassword, validateName, isFormValid } from '../../utils/validation';
 
 const RegisterForm = ({ onSuccess }) => {
+  const { t } = useTranslation();
   const { register } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
@@ -35,7 +37,7 @@ const RegisterForm = ({ onSuccess }) => {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
+      newErrors.confirmPassword = t('validation.passwordMismatch');
     }
 
     setErrors(newErrors);
@@ -77,7 +79,7 @@ const RegisterForm = ({ onSuccess }) => {
         onSuccess(result.user);
       }
     } catch (error) {
-      setErrors({ general: error.message || 'Erreur lors de l\'inscription' });
+      setErrors({ general: error.message || t('auth.registerError') });
     } finally {
       setLoading(false);
     }
@@ -98,7 +100,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Name */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Nom complet
+          {t('auth.fullName')}
         </label>
         <input
           type="text"
@@ -108,7 +110,7 @@ const RegisterForm = ({ onSuccess }) => {
           className={`w-full px-4 py-3 bg-white/5 border ${
             errors.name ? 'border-red-500' : 'border-gray-600'
           } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300`}
-          placeholder="Votre nom"
+          placeholder={t('auth.fullNamePlaceholder')}
           disabled={loading}
           data-testid="register-name"
         />
@@ -120,7 +122,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Email
+          {t('auth.email')}
         </label>
         <input
           type="email"
@@ -130,7 +132,7 @@ const RegisterForm = ({ onSuccess }) => {
           className={`w-full px-4 py-3 bg-white/5 border ${
             errors.email ? 'border-red-500' : 'border-gray-600'
           } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300`}
-          placeholder="votre@email.com"
+          placeholder={t('auth.emailPlaceholder')}
           disabled={loading}
           data-testid="register-email"
         />
@@ -142,7 +144,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Role Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Type de compte
+          {t('auth.accountType')}
         </label>
         <select
           name="role"
@@ -152,15 +154,15 @@ const RegisterForm = ({ onSuccess }) => {
           disabled={loading}
           data-testid="register-role"
         >
-          <option value="user" className="bg-gray-800">Utilisateur</option>
-          <option value="business" className="bg-gray-800">Professionnel</option>
+          <option value="user" className="bg-gray-800">{t('auth.userAccount')}</option>
+          <option value="business" className="bg-gray-800">{t('auth.businessAccount')}</option>
         </select>
       </div>
 
       {/* Password */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Mot de passe
+          {t('auth.password')}
         </label>
         <div className="relative">
           <input
@@ -171,7 +173,7 @@ const RegisterForm = ({ onSuccess }) => {
             className={`w-full px-4 py-3 bg-white/5 border ${
               errors.password ? 'border-red-500' : 'border-gray-600'
             } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 pr-12`}
-            placeholder="••••••••"
+            placeholder={t('auth.passwordPlaceholder')}
             disabled={loading}
             data-testid="register-password"
           />
@@ -181,9 +183,16 @@ const RegisterForm = ({ onSuccess }) => {
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
             disabled={loading}
           >
-            <span className="text-lg">
-              {showPassword ? '🙈' : '👁️'}
-            </span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {showPassword ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+              ) : (
+                <>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </>
+              )}
+            </svg>
           </button>
         </div>
         {errors.password && (
@@ -194,7 +203,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Confirm Password */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          Confirmer le mot de passe
+          {t('auth.confirmPassword')}
         </label>
         <div className="relative">
           <input
@@ -205,7 +214,7 @@ const RegisterForm = ({ onSuccess }) => {
             className={`w-full px-4 py-3 bg-white/5 border ${
               errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
             } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 pr-12`}
-            placeholder="••••••••"
+            placeholder={t('auth.confirmPasswordPlaceholder')}
             disabled={loading}
             data-testid="register-confirm-password"
           />
@@ -215,9 +224,16 @@ const RegisterForm = ({ onSuccess }) => {
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
             disabled={loading}
           >
-            <span className="text-lg">
-              {showConfirmPassword ? '🙈' : '👁️'}
-            </span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {showConfirmPassword ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+              ) : (
+                <>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </>
+              )}
+            </svg>
           </button>
         </div>
         {errors.confirmPassword && (
@@ -228,14 +244,14 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Submit Button */}
       <button
         type="submit"
-        disabled={loading || !isFormValid(errors, formData, ['name', 'email', 'password', 'confirmPassword'])}
+        disabled={loading || !isFormValid(errors, formData, ['name', 'email', 'password', t('auth.confirmPassword')])}
         className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center"
         data-testid="register-submit"
       >
         {loading ? (
           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
         ) : (
-          'Créer mon compte'
+          t('auth.registerButton')
         )}
       </button>
     </form>

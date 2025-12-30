@@ -1,6 +1,6 @@
 import { 
-  offlineUsers, 
   offlineCards, 
+  offlineUsers, 
   offlineFavorites, 
   offlineStats, 
   offlineConfig 
@@ -38,7 +38,7 @@ class OfflineService {
         } else {
           resolve({
             success: false,
-            message: 'Email ou mot de passe incorrect'
+            message: 'אימייל או סיסמה שגויים'
           });
         }
       }, 500);
@@ -60,7 +60,7 @@ class OfflineService {
         
         resolve({
           success: true,
-          message: 'Inscription réussie (mode démo)',
+          message: 'הרשמה הצליחה (מצב דמו)',
           user: newUser
         });
       }, 800);
@@ -130,7 +130,7 @@ class OfflineService {
         } else {
           resolve({
             success: false,
-            message: 'Carte non trouvée'
+            message: 'כרטיס לא נמצא'
           });
         }
       }, 200);
@@ -143,7 +143,7 @@ class OfflineService {
         if (!this.currentUser || (this.currentUser.role !== 'business' && this.currentUser.role !== 'admin')) {
           resolve({
             success: false,
-            message: 'Accès non autorisé'
+            message: 'גישה לא מורשית'
           });
           return;
         }
@@ -162,7 +162,7 @@ class OfflineService {
         
         resolve({
           success: true,
-          message: 'Carte créée avec succès (mode démo)',
+          message: 'כרטיס נוצר בהצלחה (מצב דמו)',
           card: newCard
         });
       }, 600);
@@ -180,7 +180,7 @@ class OfflineService {
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
-              message: 'Accès non autorisé'
+              message: 'גישה לא מורשית'
             });
             return;
           }
@@ -193,13 +193,13 @@ class OfflineService {
           
           resolve({
             success: true,
-            message: 'Carte mise à jour (mode démo)',
+            message: 'כרטיס עודכן (מצב דמו)',
             card: offlineCards[cardIndex]
           });
         } else {
           resolve({
             success: false,
-            message: 'Carte non trouvée'
+            message: 'כרטיס לא נמצא'
           });
         }
       }, 400);
@@ -217,7 +217,7 @@ class OfflineService {
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
-              message: 'Accès non autorisé'
+              message: 'גישה לא מורשית'
             });
             return;
           }
@@ -226,12 +226,12 @@ class OfflineService {
           
           resolve({
             success: true,
-            message: 'Carte supprimée (mode démo)'
+            message: 'כרטיס נמחק (מצב דמו)'
           });
         } else {
           resolve({
             success: false,
-            message: 'Carte non trouvée'
+            message: 'כרטיס לא נמצא'
           });
         }
       }, 300);
@@ -243,7 +243,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser) {
-          resolve({ success: false, message: 'Non connecté' });
+          resolve({ success: false, message: 'לא מחובר' });
           return;
         }
         
@@ -265,7 +265,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser) {
-          resolve({ success: false, message: 'Non connecté' });
+          resolve({ success: false, message: 'לא מחובר' });
           return;
         }
         
@@ -280,7 +280,7 @@ class OfflineService {
           resolve({
             success: true,
             action: 'removed',
-            message: 'Retiré des favoris'
+            message: 'הוסר מהמועדפים'
           });
         } else {
           // Ajouter aux favoris
@@ -293,7 +293,7 @@ class OfflineService {
           resolve({
             success: true,
             action: 'added',
-            message: 'Ajouté aux favoris'
+            message: 'נוסף למועדפים'
           });
         }
       }, 200);
@@ -305,7 +305,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser || this.currentUser.role !== 'admin') {
-          resolve({ success: false, message: 'Accès non autorisé' });
+          resolve({ success: false, message: 'גישה לא מורשית' });
           return;
         }
         
@@ -321,7 +321,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser || this.currentUser.role !== 'admin') {
-          resolve({ success: false, message: 'Accès non autorisé' });
+          resolve({ success: false, message: 'גישה לא מורשית' });
           return;
         }
         

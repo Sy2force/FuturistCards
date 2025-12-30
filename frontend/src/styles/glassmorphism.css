@@ -1,0 +1,239 @@
+/* 🎨 FUTURISTCARDS - DESIGN SYSTEM GLASSMORPHISME TESLA/APPLE/IRON MAN */
+
+:root {
+  /* === GLASSMORPHISM BASE === */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-bg-dark: rgba(0, 0, 0, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.15);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --glass-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.18);
+  --glass-blur: blur(12px);
+  
+  /* === TESLA/IRON MAN COLORS === */
+  --primary-red: #e31837;
+  --primary-blue: #003d7a;
+  --primary-dark: #1a1a1a;
+  --accent-cyan: #00d4ff;
+  --accent-gold: #ffd700;
+  --accent-purple: #8b5cf6;
+  
+  /* === GRADIENTS === */
+  --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --card-gradient: linear-gradient(145deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+  --button-gradient: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 100%);
+  --button-gradient-hover: linear-gradient(135deg, #00b8e6 0%, #7c3aed 100%);
+  --navbar-gradient: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.6) 100%);
+  
+  /* === ANIMATIONS === */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-fast: all 0.2s ease-out;
+  --hover-scale: scale(1.02);
+  --hover-glow: 0 0 20px rgba(0, 212, 255, 0.3);
+  --pulse-glow: 0 0 0 0 rgba(0, 212, 255, 0.7);
+  
+  /* === SPACING === */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  
+  /* === BORDER RADIUS === */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+}
+
+/* === DARK MODE VARIABLES === */
+[data-theme="dark"] {
+  --glass-bg: rgba(0, 0, 0, 0.2);
+  --glass-bg-dark: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+}
+
+[data-theme="light"] {
+  --glass-bg: rgba(255, 255, 255, 0.25);
+  --glass-bg-dark: rgba(0, 0, 0, 0.05);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --text-primary: #1a1a1a;
+  --text-secondary: #6b7280;
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+}
+
+/* === GLASSMORPHISM COMPONENTS === */
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  transition: var(--transition-smooth);
+}
+
+.glass-card:hover {
+  transform: var(--hover-scale);
+  box-shadow: var(--glass-shadow-hover), var(--hover-glow);
+}
+
+.glass-button {
+  background: var(--button-gradient);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: white;
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-lg);
+  transition: var(--transition-smooth);
+  cursor: pointer;
+}
+
+.glass-button:hover {
+  background: var(--button-gradient-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--hover-glow);
+}
+
+.glass-input {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  transition: var(--transition-smooth);
+  color: var(--text-primary);
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+}
+
+.glass-navbar {
+  background: var(--navbar-gradient);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-modal {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+/* === ANIMATIONS === */
+
+@keyframes pulse-glow {
+  0% {
+    box-shadow: var(--pulse-glow);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 212, 255, 0);
+  }
+  100% {
+    box-shadow: var(--pulse-glow);
+  }
+}
+
+.pulse-animation {
+  animation: pulse-glow 2s infinite;
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-up {
+  animation: slide-in-up 0.6s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.4s ease-out;
+}
+
+/* === UTILITY CLASSES === */
+
+.text-gradient {
+  background: var(--button-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hover-lift {
+  transition: var(--transition-smooth);
+}
+
+.hover-lift:hover {
+  transform: translateY(-4px);
+}
+
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--button-gradient);
+  border-radius: inherit;
+  opacity: 0;
+  transition: var(--transition-smooth);
+  z-index: -1;
+  filter: blur(20px);
+}
+
+.glow-effect:hover::before {
+  opacity: 0.3;
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 768px) {
+  :root {
+    --space-lg: 1rem;
+    --space-xl: 1.5rem;
+    --space-2xl: 2rem;
+  }
+  
+  .glass-card {
+    border-radius: var(--radius-md);
+  }
+  
+  .glass-button {
+    padding: var(--space-xs) var(--space-md);
+    font-size: 0.875rem;
+  }
+}

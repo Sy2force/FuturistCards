@@ -1,6 +1,7 @@
 const Favorite = require('../models/Favorite');
 const Card = require('../models/Card');
 const { mockFavorites, mockCards } = require('../data/mockData');
+const { t } = require('../utils/i18n');
 
 // récupérer les favoris de l'utilisateur
 const getFavorites = async (req, res) => {
@@ -26,7 +27,7 @@ const getFavorites = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur serveur',
+      message: t('server.serverError'),
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
@@ -42,7 +43,7 @@ const addToFavorites = async (req, res) => {
     if (!card) {
       return res.status(404).json({
         success: false,
-        message: 'Carte non trouvée'
+        message: t('cards.cardNotFound')
       });
     }
     
@@ -55,7 +56,7 @@ const addToFavorites = async (req, res) => {
     if (existingFavorite) {
       return res.status(400).json({
         success: false,
-        message: 'Déjà en favoris'
+        message: 'כבר במועדפים'
       });
     }
     
@@ -71,7 +72,7 @@ const addToFavorites = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur serveur'
+      message: t('server.serverError')
     });
   }
 };
@@ -89,18 +90,18 @@ const removeFromFavorites = async (req, res) => {
     if (!favorite) {
       return res.status(404).json({
         success: false,
-        message: 'Favori non trouvé'
+        message: 'מועדף לא נמצא'
       });
     }
     
     res.json({
       success: true,
-      message: 'Retiré des favoris'
+      message: 'הוסר מהמועדפים'
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur serveur'
+      message: t('server.serverError')
     });
   }
 };
@@ -122,7 +123,7 @@ const checkFavorite = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur serveur'
+      message: t('server.serverError')
     });
   }
 };
@@ -139,7 +140,7 @@ const getFavoritesCount = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur serveur'
+      message: t('server.serverError')
     });
   }
 };

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
+const { t } = require('../utils/i18n');
 
 // Get user profile
 router.get('/profile', protect, async (req, res) => {
@@ -24,7 +25,7 @@ router.get('/profile', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: t('server.serverError')
     });
   }
 });
@@ -48,13 +49,13 @@ router.put('/profile', protect, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Profile updated successfully (mock mode)',
+      message: t('users.profileUpdated'),
       user: updatedUser
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: t('server.serverError')
     });
   }
 });
@@ -66,7 +67,7 @@ router.get('/admin/users', protect, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Access denied. Admin role required.'
+        message: t('server.adminRequired')
       });
     }
 
@@ -100,7 +101,7 @@ router.get('/admin/users', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: t('server.serverError')
     });
   }
 });
@@ -112,7 +113,7 @@ router.delete('/admin/users/:id', protect, async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({
         success: false,
-        message: 'Access denied. Admin role required.'
+        message: t('server.adminRequired')
       });
     }
 
@@ -122,18 +123,18 @@ router.delete('/admin/users/:id', protect, async (req, res) => {
     if (id === req.user.id) {
       return res.status(400).json({
         success: false,
-        message: 'Cannot delete your own account'
+        message: t('users.cannotDeleteSelf')
       });
     }
 
     res.json({
       success: true,
-      message: 'User deleted successfully (mock mode)'
+      message: t('users.userDeleted') + ' (מצב דמו)'
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: t('server.serverError')
     });
   }
 });

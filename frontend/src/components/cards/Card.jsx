@@ -1,6 +1,6 @@
 import React from 'react';
+import { useTranslation } from "../../hooks/useTranslation";
 import { useFavorites } from '../../context/FavoritesContext';
-// import CardPreview from './CardPreview'; // Removed - unused component
 
 const Card = ({ 
   card, 
@@ -8,8 +8,8 @@ const Card = ({
   onEdit, 
   showActions = false 
 }) => {
+  const { t } = useTranslation();
   const { toggleFavorite, isFavorite } = useFavorites();
-  // const [isPreviewOpen, setIsPreviewOpen] = useState(false); // Removed - unused state
   
   return (
     <article
@@ -38,17 +38,22 @@ const Card = ({
           >
             <div className="text-center">
               <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-3">
-                <span className="text-white text-2xl">👤</span>
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
               </div>
               <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{card.title}</p>
-              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? card.category || card.category : 'Catégorie'}</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? card.category || card.category : t('common.category')}</p>
             </div>
           </div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 pointer-events-none">
           <div className="absolute bottom-4 right-4">
             <div className="bg-white/90 dark:bg-gray-800/90 p-2 rounded-full shadow-lg hover:scale-110 transition-transform">
-              <span className="text-blue-600 dark:text-blue-400 text-lg">👁️</span>
+              <svg className="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
             </div>
           </div>
         </div>
@@ -60,11 +65,15 @@ const Card = ({
             {card.title}
           </h3>
           <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm mb-2">
-            <span className="mr-1">🏢</span>
-            <span className="mr-2">{card.subtitle || 'Poste'}</span>
+            <svg className="w-4 h-4 inline mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+            <span className="mr-2">{card.subtitle || t('common.position')}</span>
             <span className="text-gray-400">•</span>
-            <span className="ml-2 mr-1">👤</span>
-            <span>{card.category ? card.category || card.category : 'Catégorie'}</span>
+            <svg className="w-4 h-4 inline ml-2 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span>{card.category ? card.category || card.category : t('common.category')}</span>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed">
             {card.description}
@@ -75,20 +84,26 @@ const Card = ({
         <div className="flex items-center space-x-4 mb-4 text-xs text-gray-500 dark:text-gray-400">
           {card.email && (
             <div className="flex items-center">
-              <span className="mr-1">📧</span>
+              <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
               <span className="truncate max-w-[80px]">{card.email}</span>
             </div>
           )}
           {card.phone && (
             <div className="flex items-center">
-              <span className="mr-1">📱</span>
+              <svg className="w-4 h-4 inline mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a1 1 0 001-1V4a1 1 0 00-1-1H8a1 1 0 00-1 1v16a1 1 0 001 1z" />
+              </svg>
               <span>{card.phone}</span>
             </div>
           )}
           {card.website && (
             <div className="flex items-center">
-              <span className="mr-1">🌐</span>
-              <span className="truncate max-w-[60px]">Site web</span>
+              <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+              </svg>
+              <span className="truncate max-w-[60px]">{t('common.website')}</span>
             </div>
           )}
         </div>
@@ -99,10 +114,10 @@ const Card = ({
             data-testid={isFavorite(card.id || card._id) ? "remove-favorite-btn" : "add-favorite-btn"}
             className="flex items-center space-x-2 px-3 py-2 rounded-lg text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 hover:scale-105"
           >
-            <span className={`text-lg ${isFavorite(card.id || card._id) ? 'text-red-500' : ''}`}>
-              {isFavorite(card.id || card._id) ? '❤️' : '🤍'}
-            </span>
-            <span className="text-sm font-medium">Favoris</span>
+            <svg className={`w-5 h-5 ${isFavorite(card.id || card._id) ? 'text-red-500 fill-current' : 'text-gray-400'}`} fill={isFavorite(card.id || card._id) ? 'currentColor' : 'none'} stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span className="text-sm font-medium">{t('favorites.title')}</span>
           </button>
           
           {showActions && (onEdit || onDelete) && (
@@ -112,7 +127,7 @@ const Card = ({
                   onClick={() => onEdit(card._id || card.id)}
                   data-testid="edit-card-btn"
                   className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200 shadow-sm hover:scale-110"
-                  aria-label="Modifier la carte"
+                  aria-label={t('cards.editCard')}
                 >
                   <span className="text-lg">✏️</span>
                 </button>
@@ -122,7 +137,7 @@ const Card = ({
                   onClick={() => onDelete(card._id || card.id)}
                   data-testid="delete-card-btn"
                   className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 shadow-sm hover:scale-110"
-                  aria-label="Supprimer la carte"
+                  aria-label={t('cards.deleteCard')}
                 >
                   <span className="text-lg">🗑️</span>
                 </button>

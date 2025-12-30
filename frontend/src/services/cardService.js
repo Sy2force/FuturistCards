@@ -32,7 +32,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch cards'
+        error: error.response?.data?.message || 'נכשל בטעינת כרטיסים'
       };
     }
   },
@@ -49,7 +49,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch card'
+        error: error.response?.data?.message || 'נכשל בטעינת כרטיס'
       };
     }
   },
@@ -66,7 +66,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch your cards'
+        error: error.response?.data?.message || 'נכשל בטעינת הכרטיסים שלך'
       };
     }
   },
@@ -84,7 +84,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to create card'
+        error: error.response?.data?.message || 'נכשל ביצירת כרטיס'
       };
     }
   },
@@ -102,7 +102,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to update card'
+        error: error.response?.data?.message || 'נכשל בעדכון כרטיס'
       };
     }
   },
@@ -113,13 +113,13 @@ export const cardService = {
       const response = await cardsAPI.delete(`/${cardId}`);
       return {
         success: true,
-        message: response.data.message || 'Card deleted successfully'
+        message: response.data.message || 'כרטיס נמחק בהצלחה'
       };
     } catch (error) {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to delete card'
+        error: error.response?.data?.message || 'נכשל במחיקת כרטיס'
       };
     }
   },
@@ -159,7 +159,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to search cards'
+        error: error.response?.data?.message || 'נכשל בחיפוש כרטיסים'
       };
     }
   },
@@ -176,7 +176,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch popular cards'
+        error: error.response?.data?.message || 'נכשל בטעינת כרטיסים פופולריים'
       };
     }
   },
@@ -194,7 +194,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to toggle favorite'
+        error: error.response?.data?.message || 'נכשל בהחלפת מצב מועדפים'
       };
     }
   },
@@ -211,7 +211,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch favorites'
+        error: error.response?.data?.message || 'נכשל בטעינת מועדפים'
       };
     }
   }

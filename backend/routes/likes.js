@@ -1,8 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const Like = require('../models/Like');
-const Card = require('../models/Card');
 const { protect } = require('../middleware/authMiddleware');
+const Card = require('../models/Card');
+const Like = require('../models/Like');
+const { t } = require('../utils/i18n');
+
+const router = express.Router();
 
 // @route   POST /api/likes/:cardId/toggle
 // @desc    Toggle like for a card (like/unlike)
@@ -19,7 +21,7 @@ router.post('/:cardId/toggle', protect, async (req, res) => {
     if (!card) {
       return res.status(404).json({ 
         success: false, 
-        message: 'Card not found' 
+        message: t('cards.cardNotFound') 
       });
     }
 
@@ -36,7 +38,7 @@ router.post('/:cardId/toggle', protect, async (req, res) => {
     
     res.json({
       success: true,
-      message: result.action === 'liked' ? 'Card liked successfully' : 'Card unliked successfully',
+      message: result.action === 'liked' ? t('likes.cardLiked') : t('likes.cardUnliked'),
       data: {
         isLiked: result.isLiked,
         action: result.action,
@@ -49,7 +51,7 @@ router.post('/:cardId/toggle', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ 
       success: false, 
-      message: 'Server error while toggling like' 
+      message: t('likes.likeError') 
     });
   }
 });
@@ -69,7 +71,7 @@ router.get('/:cardId/status', protect, async (req, res) => {
     if (!card) {
       return res.status(404).json({ 
         success: false, 
-        message: 'Card not found' 
+        message: t('cards.cardNotFound') 
       });
     }
 
@@ -88,7 +90,7 @@ router.get('/:cardId/status', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ 
       success: false, 
-      message: 'Server error while getting like status' 
+      message: t('likes.likeStatusError') 
     });
   }
 });
@@ -106,7 +108,7 @@ router.get('/:cardId/users', async (req, res) => {
     if (!card) {
       return res.status(404).json({ 
         success: false, 
-        message: 'Card not found' 
+        message: t('cards.cardNotFound') 
       });
     }
 
@@ -134,7 +136,7 @@ router.get('/:cardId/users', async (req, res) => {
   } catch (error) {
     res.status(500).json({ 
       success: false, 
-      message: 'Server error while getting card likes' 
+      message: t('likes.likeStatusError') 
     });
   }
 });
@@ -165,7 +167,7 @@ router.get('/user/:userId', async (req, res) => {
   } catch (error) {
     res.status(500).json({ 
       success: false, 
-      message: 'Server error while getting user likes' 
+      message: t('likes.likeStatusError') 
     });
   }
 });
@@ -196,7 +198,7 @@ router.get('/my-likes', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({ 
       success: false, 
-      message: 'Server error while getting liked cards' 
+      message: t('likes.likeStatusError') 
     });
   }
 });

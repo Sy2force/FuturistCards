@@ -4,11 +4,11 @@ export const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   
   if (!email) {
-    return { isValid: false, error: 'L\'email est requis' };
+    return { isValid: false, error: 'אימייל נדרש' };
   }
   
   if (!emailRegex.test(email)) {
-    return { isValid: false, error: 'Format d\'email invalide' };
+    return { isValid: false, error: 'פורמט אימייל לא תקין' };
   }
   
   return { isValid: true };
@@ -19,7 +19,7 @@ export const validateEmail = (email) => {
  */
 export const validatePassword = (password) => {
   if (!password) {
-    return { isValid: false, error: 'Le mot de passe est requis' };
+    return { isValid: false, error: 'סיסמה נדרשת' };
   }
   
   // Password requirements: ≥8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char
@@ -30,24 +30,24 @@ export const validatePassword = (password) => {
   const specialCharRegex = /[!@%$#^&*\-_*]/;
   
   if (password.length < minLength) {
-    return { isValid: false, error: `Le mot de passe doit contenir au moins ${minLength} caractères` };
+    return { isValid: false, error: `הסיסמה חייבת להכיל לפחות ${minLength} תווים` };
   }
   
   if (!uppercaseRegex.test(password)) {
-    return { isValid: false, error: 'Le mot de passe doit contenir au moins 1 majuscule' };
+    return { isValid: false, error: 'הסיסמה חייבת להכיל לפחות אות גדולה אחת' };
   }
   
   if (!lowercaseRegex.test(password)) {
-    return { isValid: false, error: 'Le mot de passe doit contenir au moins 1 minuscule' };
+    return { isValid: false, error: 'הסיסמה חייבת להכיל לפחות אות קטנה אחת' };
   }
   
   const numberMatches = password.match(numberRegex);
   if (!numberMatches || numberMatches.length < 4) {
-    return { isValid: false, error: 'Le mot de passe doit contenir au moins 4 chiffres' };
+    return { isValid: false, error: 'הסיסמה חייבת להכיל לפחות 4 ספרות' };
   }
   
   if (!specialCharRegex.test(password)) {
-    return { isValid: false, error: 'Le mot de passe doit contenir au moins 1 symbole (!@%$#^&*-_*)' };
+    return { isValid: false, error: 'הסיסמה חייבת להכיל לפחות סמל אחד (!@%$#^&*-_*)' };
   }
   
   return { isValid: true };
@@ -55,26 +55,26 @@ export const validatePassword = (password) => {
 
 export const validateName = (name) => {
   if (!name) {
-    return { isValid: false, error: 'Le nom est requis' };
+    return { isValid: false, error: 'השם נדרש' };
   }
   
   if (name.length < 2) {
-    return { isValid: false, error: 'Le nom doit contenir au moins 2 caractères' };
+    return { isValid: false, error: 'השם חייב להכיל לפחות 2 תווים' };
   }
   
   return { isValid: true };
 };
 
-export const validateRequired = (value, fieldName = 'Ce champ') => {
+export const validateRequired = (value, fieldName = 'שדה זה') => {
   if (!value || value.trim() === '') {
-    return { isValid: false, error: `${fieldName} est requis` };
+    return { isValid: false, error: `${fieldName} נדרש` };
   }
   return { isValid: true };
 };
 
-export const validateLength = (value, minLength, fieldName = 'Ce champ') => {
+export const validateLength = (value, minLength, fieldName = 'שדה זה') => {
   if (!value || value.length < minLength) {
-    return { isValid: false, error: `${fieldName} doit contenir au moins ${minLength} caractères` };
+    return { isValid: false, error: `${fieldName} חייב להכיל לפחות ${minLength} תווים` };
   }
   return { isValid: true };
 };
@@ -89,7 +89,7 @@ export const validatePhone = (phone) => {
   
   const phoneRegex = /^[+]?[\d\s\-()]{8,20}$/;
   if (!phoneRegex.test(phone)) {
-    return { isValid: false, error: 'Format de téléphone invalide (8-20 caractères, chiffres, espaces, +, -, () autorisés)' };
+    return { isValid: false, error: 'פורמט טלפון לא תקין (8-20 תווים, מספרים, רווחים, +, -, () מותרים)' };
   }
   
   return { isValid: true };
@@ -103,25 +103,25 @@ export const validateWebsite = (url) => {
   try {
     const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     if (!urlPattern.test(url)) {
-      return { isValid: false, error: 'Format d\'URL invalide' };
+      return { isValid: false, error: 'פורמט URL לא תקין' };
     }
     return { isValid: true };
   } catch (error) {
-    return { isValid: false, error: 'Format d\'URL invalide' };
+    return { isValid: false, error: 'פורמט URL לא תקין' };
   }
 };
 
 export const validateCardTitle = (title) => {
   if (!title || title.trim() === '') {
-    return { isValid: false, error: 'Le nom/titre est requis' };
+    return { isValid: false, error: 'השם/כותרת נדרשים' };
   }
   
   if (title.length < 2) {
-    return { isValid: false, error: 'Le nom doit contenir au moins 2 caractères' };
+    return { isValid: false, error: 'השם חייב להכיל לפחות 2 תווים' };
   }
   
   if (title.length > 100) {
-    return { isValid: false, error: 'Le nom ne peut pas dépasser 100 caractères' };
+    return { isValid: false, error: 'השם חייב להיות פחות מ-100 תווים' };
   }
   
   return { isValid: true };
@@ -133,7 +133,7 @@ export const validateDescription = (description) => {
   }
   
   if (description.length > 500) {
-    return { isValid: false, error: 'La description ne peut pas dépasser 500 caractères' };
+    return { isValid: false, error: 'התיאור חייב להיות פחות מ-500 תווים' };
   }
   
   return { isValid: true };

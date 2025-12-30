@@ -4,6 +4,7 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const { mockUsers } = require('../data/mockData');
+const { t } = require('../utils/i18n');
 
 // créer un token JWT
 const generateToken = (id) => {
@@ -13,12 +14,19 @@ const generateToken = (id) => {
 // inscription
 const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { firstName, lastName, name, email, password, role } = req.body;
+
+    // Combiner firstName et lastName ou utiliser name
+    const fullName = name || `${firstName} ${lastName}`.trim();
+    
+    if (!fullName || fullName.length < 2) {
+      return res.status(400).json({ message: t('auth.nameRequired') });
+    }
 
     // vérifier si l'email existe déjà
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: 'Cet email est déjà utilisé' });
+      return res.status(400).json({ message: t('auth.emailExists') });
     }
 
     // hasher le mot de passe
@@ -27,7 +35,7 @@ const register = async (req, res) => {
 
     // créer l'utilisateur
     const user = await User.create({
-      name,
+      name: fullName,
       email,
       password: hashedPassword,
       role: role || 'user'
@@ -37,7 +45,7 @@ const register = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: 'Compte créé avec succès',
+      message: t('auth.accountCreated'),
       token,
       user: {
         id: user._id,
@@ -47,7 +55,7 @@ const register = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de l\'inscription', error: error.message });
+    res.status(500).json({ message: t('auth.registrationError'), error: error.message });
   }
 };
 
@@ -66,20 +74,20 @@ const login = async (req, res) => {
     }
     
     if (!user) {
-      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+      return res.status(401).json({ message: t('auth.invalidCredentials') });
     }
 
     // vérifier le mot de passe
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Email ou mot de passe incorrect' });
+      return res.status(401).json({ message: t('auth.invalidCredentials') });
     }
 
     const token = generateToken(user._id);
 
     res.json({
       success: true,
-      message: 'Connexion réussie',
+      message: t('auth.loginSuccess'),
       token,
       user: {
         id: user._id,
@@ -89,7 +97,7 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur de connexion', error: error.message });
+    res.status(500).json({ message: t('auth.loginError'), error: error.message });
   }
 };
 
@@ -99,7 +107,7 @@ const getProfile = async (req, res) => {
     const user = await User.findById(req.user.id).select('-password');
     res.json({ user });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur serveur', error: error.message });
+    res.status(500).json({ message: t('server.serverError'), error: error.message });
   }
 };
 
@@ -116,11 +124,11 @@ const updateProfile = async (req, res) => {
 
     res.json({ 
       success: true,
-      message: 'Profil mis à jour',
+      message: t('auth.profileUpdated'),
       user 
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur de mise à jour', error: error.message });
+    res.status(500).json({ message: t('auth.updateError'), error: error.message });
   }
 };
 
@@ -134,7 +142,7 @@ const changePassword = async (req, res) => {
     // vérifier l'ancien mot de passe
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: 'Mot de passe actuel incorrect' });
+      return res.status(400).json({ message: t('auth.wrongCurrentPassword') });
     }
 
     // hasher le nouveau mot de passe
@@ -145,10 +153,10 @@ const changePassword = async (req, res) => {
 
     res.json({ 
       success: true,
-      message: 'Mot de passe modifié avec succès' 
+      message: t('auth.passwordChanged') 
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors du changement de mot de passe', error: error.message });
+    res.status(500).json({ message: t('auth.passwordChangeError'), error: error.message });
   }
 };
 
@@ -156,7 +164,7 @@ const changePassword = async (req, res) => {
 const logout = (req, res) => {
   res.json({ 
     success: true,
-    message: 'Déconnexion réussie' 
+    message: t('auth.logoutSuccess') 
   });
 };
 

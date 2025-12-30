@@ -16,10 +16,13 @@ const isStrongPassword = (password) => {
 };
 
 const validateRegistration = (req, res, next) => {
-  const { name, email, password, role } = req.body;
+  const { firstName, lastName, name, email, password, role } = req.body;
 
+  // Combine firstName and lastName or use name
+  const fullName = name || `${firstName} ${lastName}`.trim();
+  
   // Sanitize inputs
-  const sanitizedName = sanitizeString(name);
+  const sanitizedName = sanitizeString(fullName);
   const sanitizedEmail = sanitizeString(email);
 
   if (!sanitizedName || sanitizedName.length < 2 || sanitizedName.length > 100) {

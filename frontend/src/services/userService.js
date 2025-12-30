@@ -33,7 +33,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch profile'
+        error: error.response?.data?.message || 'נכשל בטעינת פרופיל'
       };
     }
   },
@@ -58,7 +58,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to update profile'
+        error: error.response?.data?.message || 'נכשל בעדכון פרופיל'
       };
     }
   },
@@ -74,7 +74,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to change password'
+        error: error.response?.data?.message || 'נכשל בשינוי סיסמה'
       };
     }
   },
@@ -90,7 +90,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch users'
+        error: error.response?.data?.message || 'נכשל בטעינת משתמשים'
       };
     }
   },
@@ -107,7 +107,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to update user role'
+        error: error.response?.data?.message || 'נכשל בעדכון תפקיד משתמש'
       };
     }
   },
@@ -123,7 +123,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to delete user'
+        error: error.response?.data?.message || 'נכשל במחיקת משתמש'
       };
     }
   },
@@ -139,7 +139,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch user statistics'
+        error: error.response?.data?.message || 'נכשל בטעינת סטטיסטיקות משתמש'
       };
     }
   },
@@ -156,7 +156,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to search users'
+        error: error.response?.data?.message || 'נכשל בחיפוש משתמשים'
       };
     }
   },
@@ -188,7 +188,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to upload profile picture'
+        error: error.response?.data?.message || 'נכשל בהעלאת תמונת פרופיל'
       };
     }
   },
@@ -204,7 +204,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to fetch preferences'
+        error: error.response?.data?.message || 'נכשל בטעינת העדפות'
       };
     }
   },
@@ -221,7 +221,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'Failed to update preferences'
+        error: error.response?.data?.message || 'נכשל בעדכון העדפות'
       };
     }
   },

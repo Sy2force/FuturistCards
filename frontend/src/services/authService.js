@@ -23,10 +23,10 @@ export const authService = {
         safeSetItem(STORAGE_KEYS.USER, response.data.user);
         return response.data;
       } else {
-        throw new Error(response.data.message || 'Connexion échouée');
+        throw new Error(response.data.message || 'כשל בהתחברות');
       }
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'Erreur réseau');
+      throw new Error(error.response?.data?.message || error.message || 'שגיאת רשת');
     }
   },
 
@@ -40,10 +40,10 @@ export const authService = {
         safeSetItem(STORAGE_KEYS.USER, response.data.user);
         return response.data;
       } else {
-        throw new Error(response.data.message || 'Inscription échouée');
+        throw new Error(response.data.message || 'כשל ברישום');
       }
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'Erreur réseau');
+      throw new Error(error.response?.data?.message || error.message || 'שגיאת רשת');
     }
   },
 
@@ -80,7 +80,7 @@ export const authService = {
       });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Erreur profil');
+      throw new Error(error.response?.data?.message || 'שגיאה בטעינת פרופיל');
     }
   },
 
@@ -97,10 +97,10 @@ export const authService = {
         safeSetItem(STORAGE_KEYS.USER, updatedUser);
         return response.data;
       } else {
-        throw new Error(response.data.message || 'Erreur mise à jour');
+        throw new Error(response.data.message || 'שגיאה בעדכון פרופיל');
       }
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'Erreur profil');
+      throw new Error(error.response?.data?.message || error.message || 'שגיאה בעדכון פרופיל');
     }
   },
 
@@ -117,7 +117,7 @@ export const authService = {
       
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'Erreur mot de passe');
+      throw new Error(error.response?.data?.message || error.message || 'שגיאה בשינוי סיסמה');
     }
   }
 };

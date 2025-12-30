@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "../../hooks/useTranslation";
 import { useAuth } from '../../context/AuthContext';
-import { useTheme } from '../../context/ThemeContext';
+import { useRoleTheme } from '../../context/ThemeProvider';
 import { formatPhoneNumber, formatDisplayUrl, truncateText } from '../../utils/formatters';
 import { cardService } from '../../services/cardService';
 import LikeButton from '../ui/LikeButton';
@@ -10,7 +10,7 @@ import LikeButton from '../ui/LikeButton';
 const CardItem = ({ card, onLike, showActions = true, onClick }) => {
   const { user } = useAuth();
   const { t } = useTranslation();
-  const { isDark } = useTheme(); // Theme context for styling
+  const { isDark } = useRoleTheme(); // Theme context for styling
   
   // Mock card stats - using useMemo to prevent re-renders
   const cardStats = useMemo(() => {
@@ -45,8 +45,10 @@ const CardItem = ({ card, onLike, showActions = true, onClick }) => {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-white text-6xl">
-            💼
+          <div className="w-full h-full flex items-center justify-center text-white">
+            <svg className="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
+            </svg>
           </div>
         )}
         

@@ -5,7 +5,7 @@
 /**
  * Format date to readable string
  */
-export const formatDate = (date, locale = 'en-US') => {
+export const formatDate = (date, locale = 'he-IL') => {
   if (!date) return '';
   
   try {
@@ -23,7 +23,7 @@ export const formatDate = (date, locale = 'en-US') => {
 /**
  * Format date with time
  */
-export const formatDateTime = (date, locale = 'en-US') => {
+export const formatDateTime = (date, locale = 'he-IL') => {
   if (!date) return '';
   
   try {
@@ -43,7 +43,7 @@ export const formatDateTime = (date, locale = 'en-US') => {
 /**
  * Format relative time (e.g., "2 hours ago")
  */
-export const formatRelativeTime = (date, locale = 'en-US') => {
+export const formatRelativeTime = (date, locale = 'he-IL') => {
   if (!date) return '';
   
   try {
@@ -110,7 +110,7 @@ export const formatFileSize = (bytes) => {
 /**
  * Format number with thousands separator
  */
-export const formatNumber = (number, locale = 'en-US') => {
+export const formatNumber = (number, locale = 'he-IL') => {
   if (number === null || number === undefined) return '';
   
   return new Intl.NumberFormat(locale).format(number);
@@ -119,7 +119,7 @@ export const formatNumber = (number, locale = 'en-US') => {
 /**
  * Format currency
  */
-export const formatCurrency = (amount, currency = 'USD', locale = 'en-US') => {
+export const formatCurrency = (amount, currency = 'ILS', locale = 'he-IL') => {
   if (amount === null || amount === undefined) return '';
   
   return new Intl.NumberFormat(locale, {
@@ -131,7 +131,7 @@ export const formatCurrency = (amount, currency = 'USD', locale = 'en-US') => {
 /**
  * Format percentage
  */
-export const formatPercentage = (value, decimals = 1, locale = 'en-US') => {
+export const formatPercentage = (value, decimals = 1, locale = 'he-IL') => {
   if (value === null || value === undefined) return '';
   
   return new Intl.NumberFormat(locale, {

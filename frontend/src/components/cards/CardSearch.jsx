@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "../../hooks/useTranslation";
 
 // Search configuration
 const SEARCH_CONFIG = {

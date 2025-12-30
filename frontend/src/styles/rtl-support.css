@@ -1,0 +1,312 @@
+/* RTL Support Styles for FuturistCards */
+
+/* Base RTL styles */
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.ltr {
+  direction: ltr;
+  text-align: left;
+}
+
+/* Navigation RTL adjustments */
+.rtl .navbar {
+  direction: rtl;
+}
+
+.rtl .navbar-brand {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.rtl .navbar-nav {
+  flex-direction: row-reverse;
+}
+
+.rtl .navbar-nav .nav-item {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+.rtl .dropdown-menu {
+  right: 0;
+  left: auto;
+  text-align: right;
+}
+
+/* Button and form RTL adjustments */
+.rtl .btn-group {
+  flex-direction: row-reverse;
+}
+
+.rtl .form-group {
+  text-align: right;
+}
+
+.rtl .form-control {
+  text-align: right;
+}
+
+.rtl .input-group .input-group-text {
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+.rtl .input-group .form-control:not(:last-child) {
+  border-radius: 0.375rem 0 0 0.375rem;
+}
+
+/* Card RTL adjustments */
+.rtl .card {
+  text-align: right;
+}
+
+.rtl .card-header {
+  text-align: right;
+}
+
+.rtl .card-body {
+  text-align: right;
+}
+
+.rtl .card-footer {
+  text-align: right;
+}
+
+/* Grid and layout RTL adjustments */
+.rtl .row {
+  direction: rtl;
+}
+
+.rtl .col-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* Flexbox RTL adjustments */
+.rtl .d-flex {
+  direction: rtl;
+}
+
+.rtl .justify-content-start {
+  justify-content: flex-end !important;
+}
+
+.rtl .justify-content-end {
+  justify-content: flex-start !important;
+}
+
+.rtl .text-left {
+  text-align: right !important;
+}
+
+.rtl .text-right {
+  text-align: left !important;
+}
+
+/* Margin and padding RTL adjustments */
+.rtl .ml-1 { margin-left: 0; margin-right: 0.25rem; }
+.rtl .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+.rtl .ml-3 { margin-left: 0; margin-right: 1rem; }
+.rtl .ml-4 { margin-left: 0; margin-right: 1.5rem; }
+.rtl .ml-5 { margin-left: 0; margin-right: 3rem; }
+
+.rtl .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+.rtl .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+.rtl .mr-3 { margin-right: 0; margin-left: 1rem; }
+.rtl .mr-4 { margin-right: 0; margin-left: 1.5rem; }
+.rtl .mr-5 { margin-right: 0; margin-left: 3rem; }
+
+.rtl .pl-1 { padding-left: 0; padding-right: 0.25rem; }
+.rtl .pl-2 { padding-left: 0; padding-right: 0.5rem; }
+.rtl .pl-3 { padding-left: 0; padding-right: 1rem; }
+.rtl .pl-4 { padding-left: 0; padding-right: 1.5rem; }
+.rtl .pl-5 { padding-left: 0; padding-right: 3rem; }
+
+.rtl .pr-1 { padding-right: 0; padding-left: 0.25rem; }
+.rtl .pr-2 { padding-right: 0; padding-left: 0.5rem; }
+.rtl .pr-3 { padding-right: 0; padding-left: 1rem; }
+.rtl .pr-4 { padding-right: 0; padding-left: 1.5rem; }
+.rtl .pr-5 { padding-right: 0; padding-left: 3rem; }
+
+/* Tailwind RTL utilities */
+.rtl .space-x-1 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.25rem;
+  margin-left: 0;
+}
+
+.rtl .space-x-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 0.5rem;
+  margin-left: 0;
+}
+
+.rtl .space-x-3 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 1rem;
+  margin-left: 0;
+}
+
+.rtl .space-x-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-right: 1.5rem;
+  margin-left: 0;
+}
+
+/* Icon RTL adjustments */
+.rtl .icon-left {
+  margin-right: 0;
+  margin-left: 0.5rem;
+}
+
+.rtl .icon-right {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Language-specific font adjustments */
+.lang-he {
+  font-family: 'Segoe UI', 'Arial Hebrew', 'Noto Sans Hebrew', sans-serif;
+  line-height: 1.6;
+}
+
+.lang-ar {
+  font-family: 'Segoe UI', 'Arial Arabic', 'Noto Sans Arabic', sans-serif;
+  line-height: 1.6;
+}
+
+/* Hebrew-specific adjustments */
+.lang-he .navbar-brand {
+  font-weight: 600;
+}
+
+.lang-he h1, .lang-he h2, .lang-he h3, .lang-he h4, .lang-he h5, .lang-he h6 {
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.lang-he .btn {
+  font-weight: 500;
+}
+
+/* Glassmorphism RTL adjustments */
+.rtl .glass-card {
+  text-align: right;
+}
+
+.rtl .glass-nav {
+  direction: rtl;
+}
+
+/* Animation RTL adjustments */
+.rtl .slide-in-left {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.rtl .slide-in-right {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Mobile RTL adjustments */
+@media (max-width: 768px) {
+  .rtl .mobile-menu {
+    text-align: right;
+  }
+  
+  .rtl .mobile-menu .menu-item {
+    text-align: right;
+    padding-right: 1rem;
+    padding-left: 0;
+  }
+  
+  .rtl .hamburger {
+    margin-left: 0;
+    margin-right: auto;
+  }
+}
+
+/* Dark mode RTL adjustments */
+.dark .rtl .glass-card {
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark .rtl .text-primary {
+  color: #60a5fa;
+}
+
+/* Focus and hover RTL adjustments */
+.rtl .btn:focus,
+.rtl .form-control:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.rtl .dropdown-item:hover {
+  text-align: right;
+  padding-right: 1.5rem;
+  padding-left: 1rem;
+}
+
+/* Table RTL adjustments */
+.rtl table {
+  direction: rtl;
+}
+
+.rtl th {
+  text-align: right;
+}
+
+.rtl td {
+  text-align: right;
+}
+
+/* Modal RTL adjustments */
+.rtl .modal-header {
+  text-align: right;
+}
+
+.rtl .modal-body {
+  text-align: right;
+}
+
+.rtl .modal-footer {
+  justify-content: flex-start;
+}
+
+.rtl .modal-footer .btn {
+  margin-left: 0;
+  margin-right: 0.5rem;
+}
+
+/* Toast RTL adjustments */
+.rtl .toast {
+  text-align: right;
+}
+
+.rtl .toast-header {
+  text-align: right;
+}
+
+.rtl .toast-body {
+  text-align: right;
+}

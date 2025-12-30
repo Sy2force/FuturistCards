@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
-import { useAuth } from '../../hooks/useAuth';
-import { useI18n } from '../../hooks/useI18n';
+import { useAuth } from '../../context/AuthContext';
+import { useTranslation } from "../../hooks/useTranslation";
 import { useFavorites } from '../../context/FavoritesContext';
 
 const LikeButton = ({ 
@@ -14,7 +14,7 @@ const LikeButton = ({
   onLikeChange = null
 }) => {
   const { user } = useAuth();
-  const { t } = useI18n();
+  const { t } = useTranslation();
   const { toggleFavorite, isFavorite } = useFavorites();
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 50));

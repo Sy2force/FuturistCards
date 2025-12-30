@@ -1,19 +1,21 @@
 // Barrel export for all pages
 export { default as HomePage } from './HomePage';
 export { default as AboutPage } from './AboutPage';
-export { default as ServicesPage } from './ServicesPage';
-export { default as ContactPage } from './ContactPage';
 export { default as LoginPage } from './LoginPage';
 export { default as RegisterPage } from './RegisterPage';
-export { default as ProfilePage } from './ProfilePage';
 export { default as CardsPage } from './CardsPage';
 export { default as CardDetailsPage } from './CardDetailsPage';
-export { default as CardCreatePage } from './CardCreatePage';
-export { default as CardEditPage } from './CardEditPage';
-export { default as MyCardsPage } from './MyCardsPage';
+export { default as EditCardPage } from './EditCardPage';
 export { default as FavoritesPage } from './FavoritesPage';
-export { default as AdminPage } from './AdminPage';
 export { default as NotFound } from './NotFound';
 export { default as UnauthorizedPage } from './UnauthorizedPage';
-export { default as PrivacyPage } from './PrivacyPage';
-export { default as TermsPage } from './TermsPage';
+export { default as ErrorPage } from './ErrorPage';
+
+// Dashboard pages
+export { default as Dashboard } from './dashboard/Dashboard';
+export { default as Profile } from './dashboard/Profile';
+export { default as CreateCard } from './dashboard/CreateCard';
+export { default as MyCards } from './dashboard/MyCards';
+
+// Admin pages
+export { default as AdminPanel } from './admin/AdminPanel';

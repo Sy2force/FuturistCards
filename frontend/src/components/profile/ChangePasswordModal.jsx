@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useI18n } from '../../hooks/useI18n';
-import { useTheme } from '../../context/ThemeContext';
+import { useTranslation } from "../../hooks/useTranslation";
+import { useRoleTheme } from '../../context/ThemeProvider';
 
 const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
-  const { t } = useI18n();
-  const { isDark } = useTheme();
+  const { t } = useTranslation();
+  const { isDark } = useRoleTheme();
   
   const [formData, setFormData] = useState({
     currentPassword: '',

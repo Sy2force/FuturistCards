@@ -1,6 +1,9 @@
 const express = require('express');
-const User = require('../models/User');
+const jwt = require('jsonwebtoken');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
+const User = require('../models/User');
+const { mockUsers } = require('../data/mockData');
+const { t } = require('../utils/i18n');
 
 const router = express.Router();
 
@@ -39,7 +42,7 @@ router.get('/demo-user', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Connexion démo réussie',
+      message: t('users.demoLoginSuccess'),
       token,
       user: {
         id: demoUser._id,
@@ -51,7 +54,7 @@ router.get('/demo-user', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de la connexion démo',
+      message: t('users.demoLoginError'),
       error: error.message
     });
   }
@@ -90,7 +93,7 @@ router.get('/demo-business', async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Connexion démo business réussie',
+      message: t('users.demoBusinessLoginSuccess'),
       token,
       user: {
         id: demoBusiness._id,
@@ -102,7 +105,7 @@ router.get('/demo-business', async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de la connexion démo business',
+      message: t('users.demoBusinessLoginError'),
       error: error.message
     });
   }
@@ -146,7 +149,7 @@ router.get('/stats/dashboard', protect, adminOnly, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de la récupération des statistiques',
+      message: t('users.statsError'),
       error: error.message
     });
   }
@@ -163,7 +166,7 @@ router.get('/', protect, adminOnly, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de la récupération des utilisateurs',
+      message: t('users.usersError'),
       error: error.message
     });
   }
@@ -176,7 +179,7 @@ router.get('/:id', protect, adminOnly, async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'Utilisateur non trouvé'
+        message: t('users.userNotFound')
       });
     }
     res.json({
@@ -186,7 +189,7 @@ router.get('/:id', protect, adminOnly, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de la récupération de l\'utilisateur',
+      message: t('users.usersError'),
       error: error.message
     });
   }
@@ -206,19 +209,19 @@ router.put('/:id', protect, adminOnly, async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'Utilisateur non trouvé'
+        message: t('users.userNotFound')
       });
     }
     
     res.json({
       success: true,
-      message: 'Utilisateur mis à jour avec succès',
+      message: t('users.userUpdated'),
       user
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: 'Erreur lors de la mise à jour',
+      message: t('auth.updateError'),
       error: error.message
     });
   }
@@ -232,7 +235,7 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'Utilisateur non trouvé'
+        message: t('users.userNotFound')
       });
     }
     
@@ -240,7 +243,7 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
     if (user._id.toString() === req.user.id) {
       return res.status(400).json({
         success: false,
-        message: 'Vous ne pouvez pas vous supprimer vous-même'
+        message: t('users.cannotDeleteSelf')
       });
     }
     
@@ -248,12 +251,12 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
     
     res.json({
       success: true,
-      message: 'Utilisateur supprimé avec succès'
+      message: t('users.userDeleted')
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Erreur lors de la suppression',
+      message: t('cards.deleteError'),
       error: error.message
     });
   }

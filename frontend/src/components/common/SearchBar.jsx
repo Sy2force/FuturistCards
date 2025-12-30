@@ -1,10 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { useTranslation } from "../../hooks/useTranslation";
 
-const SearchBar = ({ onSearch, placeholder = "Rechercher des cartes...", className = "" }) => {
+const SearchBar = ({ onSearch, placeholder, className = "" }) => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
+  
+  const defaultPlaceholder = placeholder || t('search.placeholder');
 
   const handleSearch = (value) => {
     setSearchTerm(value);
@@ -52,7 +56,7 @@ const SearchBar = ({ onSearch, placeholder = "Rechercher des cartes...", classNa
             transition-all duration-200
             ${isFocused ? 'shadow-md' : 'shadow-sm'}
           `}
-          placeholder={placeholder}
+          placeholder={defaultPlaceholder}
         />
         
         {searchTerm && (
@@ -74,7 +78,7 @@ const SearchBar = ({ onSearch, placeholder = "Rechercher des cartes...", classNa
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          Recherche: &quot;{searchTerm}&quot;
+          {t('search.searching')}: &quot;{searchTerm}&quot;
         </motion.div>
       )}
     </motion.div>

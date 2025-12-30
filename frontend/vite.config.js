@@ -35,7 +35,6 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
-          i18n: ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
           utils: ['axios']
         }
       }
@@ -49,14 +48,11 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify('1.0.0'),
   },
   optimizeDeps: {
-    include: [
+    external: [
       'react',
       'react-dom',
       'react-router-dom',
-      'axios',
-      'i18next',
-      'react-i18next',
-      'i18next-browser-languagedetector'
+      'axios'
     ],
   },
   test: {

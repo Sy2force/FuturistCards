@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
+const { t } = require('../utils/i18n');
 
 // Get user favorites
 router.get('/', protect, async (req, res) => {
@@ -23,7 +24,7 @@ router.get('/', protect, async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: t('server.serverError')
     });
   }
 });
@@ -43,13 +44,13 @@ router.post('/:cardId', protect, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Card added to favorites (mock mode)',
+      message: t('favorites.addedToFavorites'),
       favorite
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: t('server.serverError')
     });
   }
 });
@@ -61,12 +62,12 @@ router.delete('/:cardId', protect, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Card removed from favorites (mock mode)'
+      message: t('favorites.removedFromFavorites')
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: t('server.serverError')
     });
   }
 });

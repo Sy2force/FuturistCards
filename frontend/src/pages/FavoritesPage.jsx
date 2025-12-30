@@ -3,8 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../hooks/useAuth';
-import { useTheme } from '../context/ThemeContext';
-import { useTranslation } from 'react-i18next';
+import { useRoleTheme } from '../context/ThemeProvider';
+import { useTranslation } from "../hooks/useTranslation";
 import { useFavorites } from '../context/FavoritesContext';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, EyeIcon } from '@heroicons/react/24/solid';
@@ -12,8 +12,8 @@ import LikeButton from '../components/ui/LikeButton';
 
 const FavoritesPage = () => {
   const { user } = useAuth();
-  // Translation hook for internationalization
-  const { isDark } = useTheme();
+  const { t } = useTranslation();
+  const { isDark } = useRoleTheme();
   const { favorites } = useFavorites();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -44,28 +44,28 @@ const FavoritesPage = () => {
       const mockCards = [
         {
           _id: '1',
-          title: 'Tech Solutions Pro',
-          description: 'Solutions technologiques innovantes pour votre entreprise',
-          image: { url: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop', alt: 'Tech Solutions' },
+          title: t('mockData.favorites.card1.title'),
+          description: t('mockData.favorites.card1.description'),
+          image: { url: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop', alt: t('mockData.favorites.card1.imageAlt') },
           likes: 45,
           views: 234,
-          category: 'Technology'
+          category: t('categories.technology')
         },
         {
           _id: '2', 
-          title: 'Green Garden Design',
-          description: 'Conception d\'espaces verts durables et esthétiques',
-          image: { url: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop', alt: 'Garden Design' },
+          title: t('mockData.favorites.card2.title'),
+          description: t('mockData.favorites.card2.description'),
+          image: { url: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop', alt: t('mockData.favorites.card2.imageAlt') },
           likes: 32,
           views: 156,
-          category: 'Design'
+          category: t('categories.creative')
         }
       ];
       
       setCards(mockCards);
     } catch (error) {
       // Error fetching favorites - handled by UI
-      setError('Erreur lors du chargement des favoris');
+      setError(t('favorites.loadError'));
     } finally {
       setLoading(false);
     }
@@ -102,7 +102,7 @@ const FavoritesPage = () => {
     return (
       <>
         <Helmet>
-          <title>Connexion requise - FuturistCards</title>
+          <title>{t('auth.loginRequired')} - {t('common.siteName')}</title>
         </Helmet>
         <motion.div 
           className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4"
@@ -123,23 +123,23 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-12 h-12 text-white" />
             </motion.div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              Connexion requise
+              {t('unauthorized.title')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              Vous devez être connecté pour voir vos favoris.
+              {t('unauthorized.description')}
             </p>
             <motion.div className="space-y-4">
               <Link 
                 to="/login"
                 className="block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                Se connecter
+                {t('unauthorized.login')}
               </Link>
               <Link 
                 to="/register"
                 className="block bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                S&apos;inscrire
+                {t('navbar.register')}
               </Link>
             </motion.div>
           </motion.div>
@@ -151,8 +151,8 @@ const FavoritesPage = () => {
   return (
     <>
       <Helmet>
-        <title>Mes Favoris - FuturistCards</title>
-        <meta name="description" content="Gérez vos cartes de visite favorites sur FuturistCards." />
+        <title>{t('favorites.title')} - {t('common.siteName')}</title>
+        <meta name="description" content={t('favorites.metaDescription')} />
       </Helmet>
 
       <motion.div 
@@ -206,7 +206,7 @@ const FavoritesPage = () => {
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-              <span className="ml-3 text-gray-600 dark:text-gray-400">Chargement de vos favoris...</span>
+              <span className="ml-3 text-gray-600 dark:text-gray-400">{t('favorites.loading')}</span>
             </motion.div>
           ) : favorites.length === 0 ? (
             <motion.div 
@@ -223,10 +223,10 @@ const FavoritesPage = () => {
                 💖
               </motion.div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                Aucun favori
+                {t('favorites.noFavorites')}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-                Commencez à explorer les cartes et ajoutez vos préférées à vos favoris.
+                {t('favorites.noFavoritesDescription')}
               </p>
               <motion.div className="space-y-4">
                 <Link 
@@ -234,7 +234,7 @@ const FavoritesPage = () => {
                   className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
                 >
                   <EyeIcon className="w-5 h-5 inline mr-2" />
-                  Explorer les cartes
+                  {t('favorites.exploreCards')}
                 </Link>
               </motion.div>
             </motion.div>
@@ -258,9 +258,9 @@ const FavoritesPage = () => {
                     onChange={(e) => setSortBy(e.target.value)}
                     className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                   >
-                    <option value="recent">Récemment ajoutés</option>
-                    <option value="likes">Plus populaires</option>
-                    <option value="alphabetical">Ordre alphabétique</option>
+                    <option value="recent">{t('favorites.sortRecent')}</option>
+                    <option value="likes">{t('favorites.sortPopular')}</option>
+                    <option value="alphabetical">{t('favorites.sortAlphabetical')}</option>
                   </select>
                 </div>
                 

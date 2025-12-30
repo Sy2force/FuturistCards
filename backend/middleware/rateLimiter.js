@@ -49,9 +49,22 @@ const cardLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// Anonymous card creation rate limiter (more restrictive)
+const anonymousCardLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 3, // Max 3 anonymous cards per minute
+  message: {
+    error: 'Limite de création anonyme atteinte, veuillez réessayer dans 1 minute',
+    retryAfter: '1 minute'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 module.exports = {
   generalLimiter,
   authLimiter,
   registerLimiter,
-  cardLimiter
+  cardLimiter,
+  anonymousCardLimiter
 };

@@ -1,6 +1,7 @@
 const Card = require('../models/Card');
 const User = require('../models/User');
 const { mockCards, mockUsers } = require('../data/mockData');
+const { t } = require('../utils/i18n');
 
 // récupérer toutes les cartes publiques
 const getAllCards = async (req, res) => {
@@ -23,7 +24,7 @@ const getAllCards = async (req, res) => {
       cards
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la récupération des cartes' });
+    res.status(500).json({ message: t('cards.cardsError') });
   }
 };
 
@@ -34,7 +35,7 @@ const getCardById = async (req, res) => {
       .populate('user', 'name email');
 
     if (!card) {
-      return res.status(404).json({ message: 'Carte non trouvée' });
+      return res.status(404).json({ message: t('cards.cardNotFound') });
     }
 
     res.json({
@@ -46,40 +47,63 @@ const getCardById = async (req, res) => {
   }
 };
 
-// créer une nouvelle carte (business seulement)
+// créer une nouvelle carte (business seulement ou anonyme)
 const createCard = async (req, res) => {
   try {
     const { title, description, phone, email, website, address, company } = req.body;
 
-    // vérifier que l'utilisateur est business ou admin
-    const user = await User.findById(req.user.id);
-    if (user.role !== 'business' && user.role !== 'admin') {
-      return res.status(403).json({ 
-        message: 'Seuls les comptes business peuvent créer des cartes' 
+    // Si utilisateur connecté, vérifier le rôle
+    if (req.user) {
+      const user = await User.findById(req.user.id);
+      if (user.role !== 'business' && user.role !== 'admin') {
+        return res.status(403).json({ 
+          message: t('server.businessRequired') 
+        });
+      }
+
+      const card = await Card.create({
+        title: title || user.name,
+        description: description || `Carte professionnelle de ${user.name}`,
+        phone: phone || '',
+        email: email || user.email,
+        website,
+        address,
+        company,
+        user: req.user.id,
+        anonymous: false
+      });
+
+      const populatedCard = await Card.findById(card._id)
+        .populate('user', 'name email');
+
+      return res.json({
+        success: true,
+        message: t('cards.cardCreated'),
+        card: populatedCard
       });
     }
 
+    // Création anonyme (route /public)
     const card = await Card.create({
-      title: title || user.name,
-      description: description || `Carte professionnelle de ${user.name}`,
-      phone: phone || '',
-      email: email || user.email,
+      title,
+      description,
+      phone,
+      email,
       website,
       address,
       company,
-      user: req.user.id
+      user: null,
+      anonymous: true,
+      createdAt: new Date()
     });
-
-    const populatedCard = await Card.findById(card._id)
-      .populate('user', 'name email');
 
     res.json({
       success: true,
-      message: 'Carte créée avec succès',
-      card: populatedCard
+      message: t('cards.cardCreated'),
+      card
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de la création', error: error.message });
+    res.status(500).json({ message: t('cards.createError'), error: error.message });
   }
 };
 
@@ -94,7 +118,7 @@ const updateCard = async (req, res) => {
 
     // vérifier que c'est bien le propriétaire
     if (card.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: 'Pas autorisé à modifier cette carte' });
+      return res.status(403).json({ message: t('cards.unauthorized') });
     }
 
     const updatedCard = await Card.findByIdAndUpdate(
@@ -105,11 +129,11 @@ const updateCard = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Carte mise à jour',
+      message: t('cards.cardUpdated'),
       card: updatedCard
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur de mise à jour' });
+    res.status(500).json({ message: t('cards.updateError') });
   }
 };
 
@@ -125,17 +149,17 @@ const deleteCard = async (req, res) => {
     // vérifier les permissions (propriétaire ou admin)
     const user = await User.findById(req.user.id);
     if (card.user.toString() !== req.user.id && user.role !== 'admin') {
-      return res.status(403).json({ message: 'Pas autorisé' });
+      return res.status(403).json({ message: t('cards.unauthorized') });
     }
 
     await Card.findByIdAndDelete(req.params.id);
 
     res.json({
       success: true,
-      message: 'Carte supprimée'
+      message: t('cards.cardDeleted')
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur de suppression' });
+    res.status(500).json({ message: t('cards.deleteError') });
   }
 };
 
@@ -190,7 +214,7 @@ const getMyCards = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ 
-      message: 'Impossible de charger vos cartes',
+      message: t('cards.cardsError'),
       error: error.message 
     });
   }
@@ -201,7 +225,7 @@ const toggleLike = async (req, res) => {
   try {
     res.json({
       success: true,
-      message: 'Fonctionnalité bientôt disponible'
+      message: 'תכונה תהיה זמינה בקרוב'
     });
   } catch (error) {
     res.status(500).json({ message: 'Erreur serveur' });
@@ -235,7 +259,7 @@ const searchCards = async (req, res) => {
       cards
     });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur de recherche' });
+    res.status(500).json({ message: t('server.serverError') });
   }
 };
 

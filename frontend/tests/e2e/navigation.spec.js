@@ -14,7 +14,7 @@ test.describe('Navigation Tests', () => {
   test('should navigate to Home page', async ({ page }) => {
     await page.getByTestId('navbar-logo').click();
     await expect(page).toHaveURL(/.*\//);
-    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.locator('h1').first()).toBeVisible();
   });
 
   test('should navigate to Cards page', async ({ page }) => {
@@ -26,14 +26,14 @@ test.describe('Navigation Tests', () => {
     // Navigate directly to cards page since navbar doesn't have cards link for visitors
     await page.goto('http://localhost:3010/cards');
     await expect(page).toHaveURL(/.*cards/);
-    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.locator('h1').first()).toBeVisible();
   });
 
   test('should navigate to About page', async ({ page }) => {
     // Navigate directly to about page since navbar doesn't have about link for visitors
     await page.goto('http://localhost:3010/about');
     await expect(page).toHaveURL(/.*about/);
-    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.locator('h1').first()).toBeVisible();
   });
 
   test('should navigate to Login page', async ({ page }) => {
@@ -85,9 +85,9 @@ test.describe('Navigation Tests', () => {
   });
 
   test('should display correct language in navbar', async ({ page }) => {
-    // Test that navbar displays text (simplified test)
-    await expect(page.getByTestId('link-login')).toContainText('Connexion');
-    await expect(page.getByTestId('link-register')).toContainText('Inscription');
+    // Test that navbar displays Hebrew text
+    await expect(page.getByTestId('link-login')).toContainText('התחברות');
+    await expect(page.getByTestId('link-register')).toContainText('הרשמה');
   });
 
   test('should toggle theme correctly', async ({ page }) => {

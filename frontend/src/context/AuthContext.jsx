@@ -1,11 +1,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { t } from '../utils/translations';
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuth חייב להיות בשימוש בתוך AuthProvider');
   }
   return context;
 };
@@ -40,33 +41,41 @@ export const AuthProvider = ({ children }) => {
     setLoading(true);
     try {
       if (!email || !password) {
-        throw new Error('Email et mot de passe requis');
+        throw new Error(t('auth.emailPasswordRequired'));
       }
       
-      // Simple login simulation for tests
-      let role = 'user';
-      if (email.includes('admin')) {
-        role = 'admin';
-      } else if (email.includes('business') || email.includes('pro')) {
-        role = 'business';
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
       }
-      
-      const userData = {
-        id: '1',
-        email: email,
-        role: role,
-        firstName: 'Test',
-        lastName: 'User'
-      };
-      
-      localStorage.setItem('token', 'fake-jwt-token');
-      localStorage.setItem('user', JSON.stringify(userData));
-      
-      setUser(userData);
-      
-      window.dispatchEvent(new Event('userChanged'));
-      
-      return { success: true, user: userData };
+
+      if (data.success && data.user && data.token) {
+        // Transform API user data to match frontend expectations
+        const transformedUser = {
+          ...data.user,
+          firstName: data.user.name?.split(' ')[0] || data.user.firstName || 'User',
+          lastName: data.user.name?.split(' ').slice(1).join(' ') || data.user.lastName || ''
+        };
+        
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(transformedUser));
+        
+        setUser(transformedUser);
+        window.dispatchEvent(new Event('userChanged'));
+        
+        return { success: true, user: transformedUser };
+      } else {
+        throw new Error(data.message || 'Login failed');
+      }
     } catch (error) {
       throw error;
     } finally {
@@ -77,10 +86,39 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     setLoading(true);
     try {
-      // Simple registration simulation
-      return { success: true, user: userData };
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
+
+      if (data.success && data.user && data.token) {
+        // Transform API user data to match frontend expectations
+        const transformedUser = {
+          ...data.user,
+          firstName: data.user.name?.split(' ')[0] || userData.firstName || 'User',
+          lastName: data.user.name?.split(' ').slice(1).join(' ') || userData.lastName || ''
+        };
+        
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(transformedUser));
+        
+        setUser(transformedUser);
+        window.dispatchEvent(new Event('userChanged'));
+        
+        return { success: true, user: transformedUser };
+      } else {
+        throw new Error(data.message || 'Registration failed');
+      }
     } catch (error) {
-      // Login error handled by UI
       throw error;
     } finally {
       setLoading(false);

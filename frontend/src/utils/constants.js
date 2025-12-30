@@ -14,7 +14,6 @@ export const STORAGE_KEYS = {
   USER: 'futuristcards_user',
   TOKEN: 'token',
   THEME: 'futuristcards_theme',
-  LANGUAGE: 'futuristcards_language',
   OFFLINE_DATA: 'futuristcards_offline',
   FAVORITES: 'futuristcards_favorites',
   LAST_SYNC: 'futuristcards_last_sync'
@@ -83,10 +82,8 @@ export const LANGUAGES = {
   HE: 'he'
 };
 
-// Language Options for UI
+// Language Options for UI (Hebrew only)
 export const LANGUAGE_OPTIONS = [
-  { code: LANGUAGES.EN, name: 'English', flag: '🇺🇸' },
-  { code: LANGUAGES.FR, name: 'Français', flag: '🇫🇷' },
   { code: LANGUAGES.HE, name: 'עברית', flag: '🇮🇱' }
 ];
 
@@ -156,24 +153,24 @@ export const HTTP_STATUS = {
 
 // Error Messages
 export const ERROR_MESSAGES = {
-  NETWORK_ERROR: 'Network error. Please check your connection.',
-  UNAUTHORIZED: 'You are not authorized to perform this action.',
-  NOT_FOUND: 'The requested resource was not found.',
-  VALIDATION_ERROR: 'Please check your input and try again.',
-  SERVER_ERROR: 'Server error. Please try again later.',
-  UNKNOWN_ERROR: 'An unexpected error occurred.'
+  NETWORK_ERROR: 'שגיאת רשת. אנא בדוק את החיבור שלך.',
+  UNAUTHORIZED: 'אין לך הרשאה לבצע פעולה זו.',
+  NOT_FOUND: 'המשאב המבוקש לא נמצא.',
+  VALIDATION_ERROR: 'אנא בדוק את הקלט שלך ונסה שוב.',
+  SERVER_ERROR: 'שגיאת שרת. אנא נסה שוב מאוחר יותר.',
+  UNKNOWN_ERROR: 'אירעה שגיאה לא צפויה.'
 };
 
 // Success Messages
 export const SUCCESS_MESSAGES = {
-  CARD_CREATED: 'Card created successfully!',
-  CARD_UPDATED: 'Card updated successfully!',
-  CARD_DELETED: 'Card deleted successfully!',
-  PROFILE_UPDATED: 'Profile updated successfully!',
-  PASSWORD_CHANGED: 'Password changed successfully!',
-  LOGIN_SUCCESS: 'Login successful!',
-  LOGOUT_SUCCESS: 'Logout successful!',
-  REGISTRATION_SUCCESS: 'Registration successful!'
+  CARD_CREATED: 'כרטיס נוצר בהצלחה!',
+  CARD_UPDATED: 'כרטיס עודכן בהצלחה!',
+  CARD_DELETED: 'כרטיס נמחק בהצלחה!',
+  PROFILE_UPDATED: 'פרופיל עודכן בהצלחה!',
+  PASSWORD_CHANGED: 'סיסמה שונתה בהצלחה!',
+  LOGIN_SUCCESS: 'התחברות בהצלחה!',
+  LOGOUT_SUCCESS: 'התנתקות בהצלחה!',
+  REGISTRATION_SUCCESS: 'רישום בהצלחה!'
 };
 
 // Loading States

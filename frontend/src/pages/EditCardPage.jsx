@@ -1,15 +1,20 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useAuth } from '../context/AuthContext';
+import { motion } from 'framer-motion';
+import { useTranslation } from "../hooks/useTranslation";
 import { toast } from 'react-hot-toast';
+import { useAuth } from '../hooks/useAuth';
+import { useRoleTheme } from '../context/ThemeProvider';
+import { api } from '../services/api';
 import { UserIcon, EnvelopeIcon, PhoneIcon, GlobeAltIcon, MapPinIcon, PhotoIcon, DocumentCheckIcon, ArrowLeftIcon, XMarkIcon, PencilIcon } from '@heroicons/react/24/outline';
 
 const EditCardPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user } = useAuth();
+  const { isDark } = useRoleTheme();
   const fileInputRef = useRef(null);
   
   const [formData, setFormData] = useState({
@@ -82,7 +87,7 @@ const EditCardPage = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error('editCard.imageTooLarge');
+        toast.error(t('editCard.imageTooLarge'));
         return;
       }
       
@@ -119,7 +124,7 @@ const EditCardPage = () => {
       const cardIndex = userCards.findIndex(c => c._id === id && c.userId === user.id);
       
       if (cardIndex === -1) {
-        throw new Error('editCard.cardNotFound');
+        throw new Error(t('editCard.cardNotFound'));
       }
       
       const updatedCard = {
@@ -156,16 +161,16 @@ const EditCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-            Accès refusé
+            {t('common.accessDenied')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Un compte professionnel est requis pour modifier des cartes
+            {t('editCard.businessAccountRequired')}
           </p>
           <button 
             onClick={() => navigate('/my-cards')}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
           >
-            Retour à mes cartes
+            {t('navigation.backToMyCards')}
           </button>
         </div>
       </div>
@@ -177,7 +182,7 @@ const EditCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Chargement...</p>
+          <p className="text-gray-600 dark:text-gray-400">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -188,16 +193,16 @@ const EditCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Carte non trouvée
+            {t('editCard.cardNotFound')}
           </h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            La carte que vous essayez de modifier n&apos;existe pas ou vous n&apos;avez pas les permissions nécessaires.
+            {t('editCard.cardNotFoundDescription')}
           </p>
           <button 
             onClick={() => navigate('/my-cards')}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
           >
-            Retour à mes cartes
+            {t('navigation.backToMyCards')}
           </button>
         </div>
       </div>
@@ -207,12 +212,13 @@ const EditCardPage = () => {
   return (
     <>
       <Helmet>
-        <title>Modifier ma carte</title>
-        <meta name="description" content="Modifiez votre carte professionnelle" />
+        <title>{t('editCard.title')}</title>
+        <meta name="description" content={t('editCard.description')} />
       </Helmet>
       
       <motion.div 
         className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12"
+        dir="rtl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -231,10 +237,10 @@ const EditCardPage = () => {
               <PencilIcon className="w-8 h-8 text-white" />
             </motion.div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-              Modifier ma carte
+              {t('editCard.title')}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Mettez à jour les informations de votre carte professionnelle
+              {t('editCard.description')}
             </p>
           </motion.div>
 
@@ -259,7 +265,7 @@ const EditCardPage = () => {
                       {imagePreview ? (
                         <img
                           src={imagePreview}
-                          alt="Profile"
+                          alt={t('editCard.profile')}
                           className="w-24 h-24 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800"
                         />
                       ) : (
@@ -309,7 +315,7 @@ const EditCardPage = () => {
                         <div className="relative">
                           <img
                             src={imagePreview}
-                            alt="Preview"
+                            alt={t('editCard.preview')}
                             className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800 shadow-lg"
                           />
                           <motion.button
@@ -343,7 +349,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 inline mr-1" />
-                        Nom complet *
+                        {t('editCard.fullName')} *
                       </label>
                       <input
                         type="text"
@@ -357,7 +363,7 @@ const EditCardPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Poste *
+                        {t('editCard.position')} *
                       </label>
                       <input
                         type="text"
@@ -373,7 +379,7 @@ const EditCardPage = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Description
+                      {t('editCard.description')}
                     </label>
                     <textarea
                       name="description"
@@ -388,7 +394,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <EnvelopeIcon className="w-4 h-4 inline mr-1" />
-                        Email *
+                        {t('editCard.email')} *
                       </label>
                       <input
                         type="email"
@@ -402,11 +408,11 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <PhoneIcon className="w-4 h-4 inline mr-1" />
-                        Téléphone *
+                        {t('editCard.phone')} *
                       </label>
                       <input
                         type="tel"
-                        placeholder="050-1234567"
+                        placeholder={t('editCard.phonePlaceholder')}
                         value={formData.phone}
                         onChange={handleChange}
                         required
@@ -419,11 +425,11 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         <GlobeAltIcon className="w-4 h-4 inline mr-1" />
-                        Site web
+                        {t('editCard.website')}
                       </label>
                       <input
                         type="url"
-                        placeholder="https://votre-site.com"
+                        placeholder={t('editCard.websitePlaceholder')}
                         value={formData.website}
                         onChange={handleChange}
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
@@ -431,7 +437,7 @@ const EditCardPage = () => {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Catégorie *
+                        {t('editCard.category')} *
                       </label>
                       <select
                         name="category"
@@ -452,11 +458,11 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       <MapPinIcon className="w-4 h-4 inline mr-1" />
-                      Adresse
+                      {t('editCard.address')}
                     </label>
                     <input
                       type="text"
-                      placeholder="Votre adresse complète"
+                      placeholder={t('editCard.addressPlaceholder')}
                       value={formData.address}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
@@ -472,7 +478,7 @@ const EditCardPage = () => {
                       whileHover={{ scale: 1.02 }}
                     >
                       <ArrowLeftIcon className="w-5 h-5 mr-2 inline" />
-                      Annuler
+                      {t('common.cancel')}
                     </motion.button>
                     <motion.button
                       type="submit"

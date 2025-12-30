@@ -3,6 +3,7 @@ const { protect, adminOnly } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const Card = require('../models/Card');
 const asyncHandler = require('express-async-handler');
+const { t } = require('../utils/i18n');
 
 const router = express.Router();
 
@@ -63,7 +64,7 @@ router.get('/users/:id', asyncHandler(async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: t('users.userNotFound')
       });
     }
 
@@ -110,7 +111,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
   if (!['user', 'business', 'admin'].includes(role)) {
     return res.status(400).json({
       success: false,
-      message: 'Invalid role. Must be user, business, or admin'
+      message: t('admin.invalidRole')
     });
   }
 
@@ -122,7 +123,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: t('users.userNotFound')
       });
     }
 
@@ -133,7 +134,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      message: 'User role updated successfully (mock mode)',
+      message: t('admin.roleUpdatedMock'),
       user: {
         id: user._id,
         firstName: user.firstName,
@@ -166,7 +167,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: 'User role updated successfully',
+    message: t('admin.roleUpdated'),
     user
   });
 }));
@@ -183,7 +184,7 @@ router.delete('/users/:id', asyncHandler(async (req, res) => {
   if (userId === req.user.id) {
     return res.status(400).json({
       success: false,
-      message: 'Cannot delete your own account'
+      message: t('users.cannotDeleteSelf')
     });
   }
 
@@ -195,7 +196,7 @@ router.delete('/users/:id', asyncHandler(async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: 'User not found'
+        message: t('users.userNotFound')
       });
     }
 
@@ -203,7 +204,7 @@ router.delete('/users/:id', asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      message: 'User deleted successfully (mock mode)'
+      message: t('users.userDeleted') + ' (מצב דמו)'
     });
   }
 
@@ -220,7 +221,7 @@ router.delete('/users/:id', asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: 'User deleted successfully'
+    message: t('users.userDeleted')
   });
 }));
 
@@ -262,7 +263,7 @@ router.delete('/cards/:id', asyncHandler(async (req, res) => {
   if (process.env.NODE_ENV === 'development' || !process.env.MONGODB_URI) {
     return res.json({
       success: true,
-      message: 'Card deleted successfully (mock mode)'
+      message: t('cards.cardDeletedMock')
     });
   }
 
@@ -271,7 +272,7 @@ router.delete('/cards/:id', asyncHandler(async (req, res) => {
   if (!card) {
     return res.status(404).json({
       success: false,
-      message: 'Card not found'
+      message: t('cards.cardNotFound')
     });
   }
 
@@ -279,7 +280,7 @@ router.delete('/cards/:id', asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: 'Card deleted successfully'
+    message: t('cards.cardDeleted')
   });
 }));
 

@@ -1,40 +1,74 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { useI18n } from '../hooks/useI18n';
-import { useTheme } from '../context/ThemeContext';
+import { useTranslation } from "../hooks/useTranslation";
+import { motion } from 'framer-motion';
+import { useRoleTheme } from '../context/ThemeProvider';
 
 const NotFound = () => {
-  const { t } = useI18n();
-  const { isDark } = useTheme();
+  const { t } = useTranslation();
+  const { currentTheme } = useRoleTheme();
   
   return (
-    <div className={`min-h-screen ${isDark ? 'dark-gradient' : 'glass-gradient'} flex items-center justify-center px-4`}>
-      <div className="text-center max-w-md mx-auto">
-        <div className={`${isDark ? 'bg-white/5 backdrop-blur-sm border-white/10' : 'bg-white/80 backdrop-blur-lg border-gray-200/50'} rounded-2xl p-8 border`}>
-          <div className="w-24 h-24 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+    <div className="min-h-screen glass-gradient flex items-center justify-center px-4" dir="rtl">
+      <motion.div 
+        className="text-center max-w-md mx-auto"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="glass-card p-8">
+          <motion.div 
+            className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
+            style={{ backgroundColor: currentTheme.colors.primary }}
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+          >
             <span className="text-3xl font-bold text-white">404</span>
-          </div>
-          <h2 className={`text-2xl font-semibold ${isDark ? 'text-white' : 'text-gray-800'} mb-4`}>{t('pageNotFound')}</h2>
-          <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-8`}>
-            {t('pageNotFoundDescription')}
-          </p>
+          </motion.div>
           
-          <div className="space-y-4">
+          <motion.h2 
+            className="text-2xl font-semibold mb-4"
+            style={{ color: currentTheme.colors.text.primary }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
+            {t('error.title')}
+          </motion.h2>
+          
+          <motion.p 
+            className="mb-8"
+            style={{ color: currentTheme.colors.text.secondary }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            {t('error.description')}
+          </motion.p>
+          
+          <motion.div 
+            className="space-y-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
             <Link
               to="/"
-              className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-300 hover-lift hover-glow shadow-3d"
+              className="glass-button glass-button-primary inline-block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {t('backToHome')}
+              {t('common.back')}
             </Link>
             
             <Link
               to="/cards"
-              className={`block px-6 py-3 border ${isDark ? 'border-gray-600 hover:border-blue-400 text-white hover:text-blue-400' : 'border-gray-300 hover:border-blue-600 text-gray-700 hover:text-blue-600'} rounded-lg font-semibold transition-all duration-300 hover-lift`}
+              className="glass-button glass-button-secondary block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {t('viewCards')}
+              {t('cards.title')}
             </Link>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

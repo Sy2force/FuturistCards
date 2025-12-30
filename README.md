@@ -4,8 +4,9 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/react-18.2.0-blue.svg)](https://reactjs.org/)
+[![Production Ready](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)]()
 
-> Plateforme moderne pour créer et gérer des cartes de visite numériques avec interface glassmorphism et support multilingue.
+> Plateforme moderne full-stack pour créer et gérer des cartes de visite numériques avec design glassmorphism Tesla/Apple/Iron Man et support multilingue complet (FR/EN/HE).
 
 ## 📋 Table des Matières
 

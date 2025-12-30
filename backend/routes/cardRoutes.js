@@ -12,6 +12,7 @@ const {
 } = require('../controllers/cardController');
 const { protect, optionalAuth } = require('../middleware/authMiddleware');
 const { validateCard } = require('../middleware/validation');
+const { anonymousCardLimiter } = require('../middleware/rateLimiter');
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ const router = express.Router();
 router.get('/', getAllCards);
 router.get('/search', searchCards);
 router.get('/popular', getPopularCards);
+router.post('/public', anonymousCardLimiter, validateCard, createCard);
 
 // routes connectées - attention: routes spécifiques avant celles avec :id
 router.get('/user', protect, getMyCards);
