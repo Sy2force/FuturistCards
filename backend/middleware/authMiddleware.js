@@ -8,7 +8,7 @@ const protect = async (req, res, next) => {
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
     try {
-      // récupérer le token
+      // get le token
       token = req.headers.authorization.split(' ')[1];
 
       // Seulement en mode développement
@@ -17,10 +17,10 @@ const protect = async (req, res, next) => {
         return next();
       }
 
-      // vérifier le token JWT
+      // Verify le token JWT
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-      // récupérer l'utilisateur
+      // get l'user
       let user;
       try {
         user = await User.findById(decoded.id).select('-password');

@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const mockUsers = [
   {
     _id: '674dc8e1234567890abcdef1',
-    name: 'Utilisateur Test',
+    name: 'User Test',
     email: 'testnormal@example.com',
     password: '$2a$12$.cjug7wY.s47GKXiY598yu6awDRbriEpu7.JhsCbMR7UUHp92NKDa', // TestPass123!
     role: 'user',
@@ -79,7 +79,7 @@ const mockCards = [
     email: 'marie@creative.com',
     phone: '+33 1 98 76 54 32',
     website: 'https://mariedupont.design',
-    description: 'Créatrice d\'expériences utilisateur exceptionnelles avec 8 ans d\'expérience.',
+    description: 'Créatrice d\'expériences user exceptionnelles avec 8 ans d\'expérience.',
     userId: '674dc8e1234567890abcdef2',
     isPublic: true,
     tags: ['design', 'ux', 'ui', 'creative'],

@@ -23,7 +23,6 @@ class SecurityAuditor {
   }
 
   async runAudit() {
-    console.log('🔒 Starting Security Audit...\n');
 
     try {
       await this.checkDependencyVulnerabilities();
@@ -34,13 +33,11 @@ class SecurityAuditor {
       await this.auditPermissions();
       await this.generateSecurityReport();
     } catch (error) {
-      console.error('❌ Security audit failed:', error.message);
       process.exit(1);
     }
   }
 
   async checkDependencyVulnerabilities() {
-    console.log('📦 Checking dependency vulnerabilities...');
     
     try {
       // Check frontend dependencies
@@ -68,7 +65,6 @@ class SecurityAuditor {
       }
     }
 
-    console.log('✅ Dependency vulnerability check complete.');
   }
 
   processDependencyResults(auditResults, location) {
@@ -89,7 +85,6 @@ class SecurityAuditor {
   }
 
   async auditAuthentication() {
-    console.log('🔐 Auditing authentication system...');
     
     const authFiles = [
       path.join(this.backendPath, 'controllers', 'authController.js'),
@@ -104,7 +99,6 @@ class SecurityAuditor {
       }
     });
 
-    console.log('✅ Authentication audit complete.');
   }
 
   checkAuthenticationSecurity(content, filePath) {
@@ -149,7 +143,6 @@ class SecurityAuditor {
   }
 
   async checkDataProtection() {
-    console.log('🛡️ Checking data protection measures...');
     
     const serverFile = path.join(this.backendPath, 'server.js');
     if (fs.existsSync(serverFile)) {
@@ -203,11 +196,9 @@ class SecurityAuditor {
       });
     }
 
-    console.log('✅ Data protection check complete.');
   }
 
   async validateInputSanitization() {
-    console.log('🧹 Validating input sanitization...');
     
     const controllerFiles = fs.readdirSync(path.join(this.backendPath, 'controllers'))
       .filter(file => file.endsWith('.js'))
@@ -218,7 +209,6 @@ class SecurityAuditor {
       this.checkInputValidation(content, file);
     });
 
-    console.log('✅ Input sanitization check complete.');
   }
 
   checkInputValidation(content, filePath) {
@@ -257,7 +247,6 @@ class SecurityAuditor {
   }
 
   async checkSecurityHeaders() {
-    console.log('📋 Checking security headers...');
     
     const serverFile = path.join(this.backendPath, 'server.js');
     if (fs.existsSync(serverFile)) {
@@ -283,11 +272,9 @@ class SecurityAuditor {
       });
     }
 
-    console.log('✅ Security headers check complete.');
   }
 
   async auditPermissions() {
-    console.log('👤 Auditing permissions and access control...');
     
     const middlewareFile = path.join(this.backendPath, 'middleware', 'authMiddleware.js');
     if (fs.existsSync(middlewareFile)) {
@@ -303,7 +290,6 @@ class SecurityAuditor {
       }
     }
 
-    console.log('✅ Permissions audit complete.');
   }
 
   calculateSecurityScore() {
@@ -334,46 +320,30 @@ class SecurityAuditor {
   async generateSecurityReport() {
     this.results.score = this.calculateSecurityScore();
     
-    console.log('\n🔒 SECURITY AUDIT REPORT');
-    console.log('='.repeat(50));
     
-    console.log(`\n🎯 Security Score: ${this.results.score}/100`);
     
     if (this.results.vulnerabilities.length > 0) {
-      console.log('\n⚠️  VULNERABILITIES FOUND:');
       this.results.vulnerabilities.forEach((vuln, index) => {
         const icon = vuln.severity === 'critical' ? '🚨' : 
                     vuln.severity === 'high' ? '⚠️' : 
                     vuln.severity === 'medium' ? '⚡' : 'ℹ️';
-        console.log(`   ${icon} [${vuln.severity.toUpperCase()}] ${vuln.issue}`);
-        console.log(`      💡 ${vuln.recommendation}`);
-        if (vuln.file) console.log(`      📁 File: ${vuln.file}`);
-        console.log('');
       });
     }
 
     if (this.results.bestPractices.length > 0) {
-      console.log('\n📋 SECURITY BEST PRACTICES:');
       this.results.bestPractices.forEach(practice => {
-        console.log(`   💡 ${practice.issue}`);
-        console.log(`      ✅ ${practice.recommendation}`);
-        console.log('');
       });
     }
 
     if (this.results.vulnerabilities.length === 0 && this.results.bestPractices.length === 0) {
-      console.log('\n✅ No security issues found! Great job!');
     }
 
     // Save detailed report
     const reportPath = path.join(this.projectRoot, 'security-report.json');
     fs.writeFileSync(reportPath, JSON.stringify(this.results, null, 2));
-    console.log(`\n📄 Detailed security report saved to: ${reportPath}`);
     
-    console.log('\n🔒 Security audit complete!');
     
     if (this.results.score < 80) {
-      console.log('\n⚠️  Security score is below 80. Please address the issues above.');
       process.exit(1);
     }
   }
@@ -382,7 +352,6 @@ class SecurityAuditor {
 // Run audit if called directly
 if (require.main === module) {
   const auditor = new SecurityAuditor();
-  auditor.runAudit().catch(console.error);
 }
 
 module.exports = SecurityAuditor;

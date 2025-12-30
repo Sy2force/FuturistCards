@@ -9,20 +9,20 @@ const router = express.Router();
 
 // Routes publiques (AVANT les middlewares d'authentification)
 
-// GET /api/users/demo-user - Connexion démo utilisateur (public)
+// GET /api/users/demo-user - Connexion démo user (public)
 router.get('/demo-user', async (req, res) => {
   try {
-    // Trouver ou créer un utilisateur démo
+    // Find or create demo user
     let demoUser = await User.findOne({ email: 'testnormal@example.com' });
     
     if (!demoUser) {
-      // Créer utilisateur démo s'il n'existe pas
+      // Create user démo s'il n'existe pas
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash('TestPass123!', salt);
       
       demoUser = new User({
-        name: 'Utilisateur Démo',
+        name: 'User Démo',
         email: 'testnormal@example.com',
         password: hashedPassword,
         role: 'user',
@@ -63,17 +63,17 @@ router.get('/demo-user', async (req, res) => {
 // GET /api/users/demo-business - Connexion démo business (public)
 router.get('/demo-business', async (req, res) => {
   try {
-    // Trouver ou créer un utilisateur business démo
+    // Find or create demo business user
     let demoBusiness = await User.findOne({ email: 'testpro@example.com' });
     
     if (!demoBusiness) {
-      // Créer utilisateur business démo s'il n'existe pas
+      // Create user business démo s'il n'existe pas
       const bcrypt = require('bcryptjs');
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash('TestPass123!', salt);
       
       demoBusiness = new User({
-        name: 'Utilisateur Business',
+        name: 'User Business',
         email: 'testpro@example.com',
         password: hashedPassword,
         role: 'business',
@@ -155,7 +155,7 @@ router.get('/stats/dashboard', protect, adminOnly, async (req, res) => {
   }
 });
 
-// GET /api/users - Liste tous les utilisateurs (admin seulement)
+// GET /api/users - Liste tous les users (admin seulement)
 router.get('/', protect, adminOnly, async (req, res) => {
   try {
     const users = await User.find({}).select('-password');
@@ -172,7 +172,7 @@ router.get('/', protect, adminOnly, async (req, res) => {
   }
 });
 
-// GET /api/users/:id - Récupérer un utilisateur spécifique (admin seulement)
+// GET /api/users/:id - Récupérer un user spécifique (admin seulement)
 router.get('/:id', protect, adminOnly, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
@@ -195,7 +195,7 @@ router.get('/:id', protect, adminOnly, async (req, res) => {
   }
 });
 
-// PUT /api/users/:id - Mettre à jour un utilisateur (admin seulement)
+// PUT /api/users/:id - Mettre à jour un user (admin seulement)
 router.put('/:id', protect, adminOnly, async (req, res) => {
   try {
     const { name, email, role, isActive } = req.body;
@@ -227,7 +227,7 @@ router.put('/:id', protect, adminOnly, async (req, res) => {
   }
 });
 
-// DELETE /api/users/:id - Supprimer un utilisateur (admin seulement)
+// DELETE /api/users/:id - Supprimer un user (admin seulement)
 router.delete('/:id', protect, adminOnly, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);

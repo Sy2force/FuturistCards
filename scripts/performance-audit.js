@@ -22,7 +22,6 @@ class PerformanceAuditor {
   }
 
   async runAudit() {
-    console.log('🔍 Starting Performance Audit...\n');
 
     try {
       await this.analyzeBundleSize();
@@ -30,17 +29,14 @@ class PerformanceAuditor {
       await this.checkOptimizations();
       await this.generateReport();
     } catch (error) {
-      console.error('❌ Audit failed:', error.message);
       process.exit(1);
     }
   }
 
   async analyzeBundleSize() {
-    console.log('📦 Analyzing bundle size...');
     
     const distPath = path.join(this.frontendPath, 'dist');
     if (!fs.existsSync(distPath)) {
-      console.log('⚠️  No build found, creating production build...');
       execSync('npm run build', { cwd: this.frontendPath, stdio: 'inherit' });
     }
 
@@ -51,7 +47,6 @@ class PerformanceAuditor {
       recommendations: this.getBundleRecommendations(assets)
     };
 
-    console.log(`✅ Bundle analysis complete. Total size: ${this.formatBytes(this.results.bundleAnalysis.totalSize)}`);
   }
 
   getAssetSizes(distPath) {
@@ -110,7 +105,6 @@ class PerformanceAuditor {
   }
 
   async analyzeComponents() {
-    console.log('🧩 Analyzing components...');
     
     const componentsPath = path.join(this.frontendPath, 'src', 'components');
     const components = this.scanComponents(componentsPath);
@@ -122,7 +116,6 @@ class PerformanceAuditor {
       recommendations: this.getComponentRecommendations(components)
     };
 
-    console.log(`✅ Component analysis complete. Found ${components.length} components.`);
   }
 
   scanComponents(dir, components = []) {
@@ -224,7 +217,6 @@ class PerformanceAuditor {
   }
 
   async checkOptimizations() {
-    console.log('⚡ Checking optimization opportunities...');
     
     const optimizations = [];
     
@@ -259,7 +251,6 @@ class PerformanceAuditor {
     }
 
     this.results.optimizations = optimizations;
-    console.log(`✅ Found ${optimizations.length} optimization opportunities.`);
   }
 
   checkForPattern(pattern) {
@@ -313,47 +304,29 @@ class PerformanceAuditor {
   async generateReport() {
     this.results.score = this.calculateScore();
     
-    console.log('\n📊 PERFORMANCE AUDIT REPORT');
-    console.log('='.repeat(50));
     
-    console.log(`\n🎯 Overall Score: ${this.results.score}/100`);
     
-    console.log('\n📦 Bundle Analysis:');
-    console.log(`   Total Size: ${this.formatBytes(this.results.bundleAnalysis.totalSize)}`);
-    console.log(`   Number of Assets: ${this.results.bundleAnalysis.assets.length}`);
     
     if (this.results.bundleAnalysis.recommendations.length > 0) {
-      console.log('\n   Recommendations:');
       this.results.bundleAnalysis.recommendations.forEach(rec => {
-        console.log(`   ${rec.type === 'warning' ? '⚠️' : 'ℹ️'}  ${rec.message}`);
       });
     }
     
-    console.log('\n🧩 Component Analysis:');
-    console.log(`   Total Components: ${this.results.componentAnalysis.totalComponents}`);
-    console.log(`   Large Components (>200 lines): ${this.results.componentAnalysis.largeComponents.length}`);
-    console.log(`   Complex Components: ${this.results.componentAnalysis.complexComponents.length}`);
     
     if (this.results.componentAnalysis.recommendations.length > 0) {
-      console.log('\n   Component Recommendations:');
       this.results.componentAnalysis.recommendations.slice(0, 5).forEach(rec => {
-        console.log(`   ${rec.type === 'warning' ? '⚠️' : 'ℹ️'}  ${rec.component}: ${rec.message}`);
       });
     }
     
     if (this.results.optimizations.length > 0) {
-      console.log('\n⚡ Optimization Opportunities:');
       this.results.optimizations.forEach(opt => {
-        console.log(`   💡 ${opt.title}: ${opt.description}`);
       });
     }
     
     // Save detailed report
     const reportPath = path.join(this.projectRoot, 'performance-report.json');
     fs.writeFileSync(reportPath, JSON.stringify(this.results, null, 2));
-    console.log(`\n📄 Detailed report saved to: ${reportPath}`);
     
-    console.log('\n✅ Performance audit complete!');
   }
 
   formatBytes(bytes) {
@@ -368,7 +341,6 @@ class PerformanceAuditor {
 // Run audit if called directly
 if (require.main === module) {
   const auditor = new PerformanceAuditor();
-  auditor.runAudit().catch(console.error);
 }
 
 module.exports = PerformanceAuditor;

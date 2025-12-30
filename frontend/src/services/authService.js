@@ -30,7 +30,7 @@ export const authService = {
     }
   },
 
-  // créer un compte
+  // Create un compte
   register: async (userData) => {
     try {
       const response = await authAPI.post('/register', userData);
@@ -54,24 +54,24 @@ export const authService = {
     window.location.href = '/';
   },
 
-  // récupérer l'utilisateur actuel
+  // get l'user actuel
   getCurrentUser: () => {
     return safeGetItem(STORAGE_KEYS.USER);
   },
 
-  // récupérer le token
+  // get le token
   getToken: () => {
     return safeGetItem(STORAGE_KEYS.TOKEN);
   },
 
-  // vérifier si connecté
+  // Verify si connecté
   isAuthenticated: () => {
     const user = safeGetItem(STORAGE_KEYS.USER);
     const token = safeGetItem(STORAGE_KEYS.TOKEN);
     return !!(user && token);
   },
 
-  // récupérer le profil
+  // get le profil
   getProfile: async () => {
     try {
       const token = safeGetItem(STORAGE_KEYS.TOKEN);
@@ -84,7 +84,7 @@ export const authService = {
     }
   },
 
-  // mettre à jour le profil
+  // Update le profil
   updateProfile: async (profileData) => {
     try {
       const token = safeGetItem(STORAGE_KEYS.TOKEN);

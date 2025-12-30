@@ -1,8 +1,8 @@
-// Système de gestion des utilisateurs avec localStorage
+// Système de gestion des users avec localStorage
 const USERS_KEY = 'futuristcards_users';
 const CURRENT_USER_KEY = 'futuristcards_current_user';
 
-// Utilisateurs de test pré-enregistrés
+// Users de test pré-enregistrés
 const TEST_USERS = [
   {
     id: 'test-1',
@@ -71,7 +71,7 @@ export const initializeTestUsers = () => {
   }
 };
 
-// Récupérer tous les utilisateurs stockés
+// Récupérer tous les users stockés
 export const getStoredUsers = () => {
   try {
     const users = localStorage.getItem(USERS_KEY);
@@ -81,7 +81,7 @@ export const getStoredUsers = () => {
   }
 };
 
-// Sauvegarder un nouvel utilisateur
+// Sauvegarder un nouvel user
 export const saveUser = (userData) => {
   const users = getStoredUsers();
   const newUser = {
@@ -100,13 +100,13 @@ export const saveUser = (userData) => {
   return newUser;
 };
 
-// Trouver un utilisateur par email
+// Trouver un user par email
 export const findUserByEmail = (email) => {
   const users = getStoredUsers();
   return users.find(user => user.email === email);
 };
 
-// Connecter un utilisateur
+// Connecter un user
 export const loginUser = (email, password) => {
   const user = findUserByEmail(email);
   
@@ -131,7 +131,7 @@ export const loginUser = (email, password) => {
   return null;
 };
 
-// Récupérer l'utilisateur connecté
+// Récupérer l'user connecté
 export const getCurrentUser = () => {
   try {
     const user = localStorage.getItem(CURRENT_USER_KEY);
@@ -141,13 +141,13 @@ export const getCurrentUser = () => {
   }
 };
 
-// Déconnecter l'utilisateur
+// Déconnecter l'user
 export const logoutUser = () => {
   localStorage.removeItem(CURRENT_USER_KEY);
   window.location.href = '/login';
 };
 
-// Supprimer l'utilisateur du localStorage
+// Supprimer l'user du localStorage
 export const removeUser = () => {
   localStorage.removeItem(CURRENT_USER_KEY);
 };
@@ -171,12 +171,12 @@ export const setupNavigationProtection = () => {
   };
 };
 
-// Vérifier si un email existe déjà
+// Verify si un email existe déjà
 export const emailExists = (email) => {
   return findUserByEmail(email) !== undefined;
 };
 
-// Mettre à jour le profil utilisateur
+// Mettre à jour le profil user
 export const updateUserProfile = (profileData) => {
   const currentUser = getCurrentUser();
   if (!currentUser) return null;
@@ -185,7 +185,7 @@ export const updateUserProfile = (profileData) => {
   const userIndex = users.findIndex(user => user.id === currentUser.id);
   
   if (userIndex !== -1) {
-    // Mettre à jour l'utilisateur dans la liste complète
+    // Mettre à jour l'user dans la liste complète
     users[userIndex] = { ...users[userIndex], ...profileData };
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     
@@ -199,7 +199,7 @@ export const updateUserProfile = (profileData) => {
   return null;
 };
 
-// Obtenir les statistiques des utilisateurs
+// Obtenir les statistiques des users
 export const getUserStats = () => {
   const users = getStoredUsers();
   return {

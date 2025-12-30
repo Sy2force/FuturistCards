@@ -7,7 +7,7 @@ export const AUTH_CONFIG = {
 export const createUserData = (responseUser, fallbackData = {}) => ({
   id: responseUser?.id || 'user-id',
   email: responseUser?.email || fallbackData.email,
-  firstName: responseUser?.firstName || fallbackData.firstName || 'Utilisateur',
+  firstName: responseUser?.firstName || fallbackData.firstName || 'User',
   lastName: responseUser?.lastName || fallbackData.lastName || 'Test',
   role: responseUser?.role || fallbackData.role || 'user',
   token: responseUser?.token || fallbackData.token

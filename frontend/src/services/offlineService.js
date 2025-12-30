@@ -14,7 +14,7 @@ class OfflineService {
   }
 
   init() {
-    // Simuler une connexion utilisateur par défaut
+    // Simuler une connexion user par défaut
     const savedUser = localStorage.getItem('offline_user');
     if (savedUser) {
       this.currentUser = JSON.parse(savedUser);
@@ -176,7 +176,7 @@ class OfflineService {
         if (cardIndex !== -1) {
           const card = offlineCards[cardIndex];
           
-          // Vérifier les permissions
+          // Verify les permissions
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
@@ -213,7 +213,7 @@ class OfflineService {
         if (cardIndex !== -1) {
           const card = offlineCards[cardIndex];
           
-          // Vérifier les permissions
+          // Verify les permissions
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
@@ -300,7 +300,7 @@ class OfflineService {
     });
   }
 
-  // Gestion des utilisateurs (Admin)
+  // Gestion des users (Admin)
   async getUsers() {
     return new Promise((resolve) => {
       setTimeout(() => {

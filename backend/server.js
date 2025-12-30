@@ -42,7 +42,7 @@ const corsOptions = {
     // pas d'origin = ok (Postman etc)
     if (!origin) return callback(null, true);
     
-    // vérifier si l'origin est autorisée
+    // Verify si l'origin est autorisée
     const isAllowed = allowedOrigins.some(allowedOrigin => {
       if (typeof allowedOrigin === 'string') {
         return allowedOrigin === origin;
@@ -107,13 +107,14 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use(errorHandler);
 
 async function startServer() {
-  // Connexion MongoDB avec gestion d'erreur robuste
+  // MongoDB connection with graceful fallback
   const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI;
+  
   if (mongoURI) {
     try {
       console.log('🔄 Connecting to MongoDB...');
       const mongoOptions = {
-        serverSelectionTimeoutMS: 5000,
+        serverSelectionTimeoutMS: 10000,
         socketTimeoutMS: 45000,
         family: 4,
         retryWrites: true,
@@ -121,24 +122,20 @@ async function startServer() {
       };
 
       await mongoose.connect(mongoURI, mongoOptions);
-      console.log('✅ MongoDB Connected Successfully');
+      console.log('✅ MongoDB connected successfully');
     } catch (err) {
-      console.error('❌ MongoDB Connection Error:', err.message);
-      if (process.env.NODE_ENV === 'production') {
-        process.exit(1);
-      }
+      console.log('❌ MongoDB Connection Error:', err.message);
+      console.log('⚠️  Server will continue in fallback mode');
+      // Don't exit - continue without MongoDB
     }
   } else {
-    console.error('❌ MONGODB_URI environment variable not found');
-    if (process.env.NODE_ENV === 'production') {
-      process.exit(1);
-    }
+    console.log('⚠️  No MongoDB URI provided - running in fallback mode');
   }
 
+  // Start server regardless of MongoDB connection
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 }
 

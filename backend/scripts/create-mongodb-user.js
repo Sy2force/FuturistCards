@@ -1,4 +1,4 @@
-// Script pour créer automatiquement un utilisateur MongoDB Atlas
+// Script pour create automatiquement un user MongoDB Atlas
 require('dotenv').config();
 
 // Guide de configuration MongoDB Atlas

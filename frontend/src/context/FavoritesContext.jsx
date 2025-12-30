@@ -71,7 +71,7 @@ export const FavoritesProvider = ({ children }) => {
     }
   };
 
-  // Vérifier si une carte est en favori
+  // Verify si une carte est en favori
   const isFavorite = (cardId) => {
     return user ? favorites.includes(cardId) : false;
   };

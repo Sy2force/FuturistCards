@@ -1,108 +1,108 @@
-# 🚀 FuturistCards - Plateforme de Cartes de Visite Numériques
+# 🚀 FuturistCards - Digital Business Card Platform
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/shayacoca/FuturistCards)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Sy2force/FuturistCards)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/react-18.2.0-blue.svg)](https://reactjs.org/)
 [![Production Ready](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)]()
 
-> Plateforme moderne full-stack pour créer et gérer des cartes de visite numériques avec design glassmorphism Tesla/Apple/Iron Man et support multilingue complet (FR/EN/HE).
+> Modern full-stack platform for creating and managing digital business cards with glassmorphism design and complete multilingual support (FR/EN/HE).
 
-## 📋 Table des Matières
+## 📋 Table of Contents
 
-- [🎯 Aperçu](#-aperçu)
-- [✨ Fonctionnalités](#-fonctionnalités)
+- [🎯 Overview](#-overview)
+- [✨ Features](#-features)
 - [🛠️ Technologies](#️-technologies)
 - [🚀 Installation](#-installation)
-- [📁 Structure](#-structure-du-projet)
+- [📁 Structure](#-project-structure)
 - [🔧 Scripts](#-scripts)
-- [🧪 Tests](#-tests)
-- [🌐 Déploiement](#-déploiement)
-- [👥 Comptes Test](#-comptes-de-test)
+- [🧪 Testing](#-testing)
+- [🌐 Deployment](#-deployment)
+- [👥 Test Accounts](#-test-accounts)
 - [📚 API](#-api-endpoints)
-- [📄 Licence](#-licence)
+- [📄 License](#-license)
 
-## 🎯 Aperçu
+## 🎯 Overview
 
-Application full-stack moderne permettant de créer, gérer et partager des cartes de visite numériques avec :
-- Design glassmorphism inspiré de Booking.com
-- Support multilingue (FR/EN/HE) avec RTL
-- Authentification JWT sécurisée
-- Interface responsive et accessible
+Modern full-stack application for creating, managing and sharing digital business cards featuring:
+- Glassmorphism design inspired by modern UI trends
+- Multilingual support (FR/EN/HE) with RTL
+- Secure JWT authentication
+- Responsive and accessible interface
 
-## ✨ Fonctionnalités
+## ✨ Features
 
-### 🔐 Authentification
-- Inscription/Connexion JWT sécurisée
-- Rôles utilisateur (User, Business, Admin)
-- Gestion de profil et mots de passe
+### 🔐 Authentication
+- Secure JWT registration and login
+- User roles (User, Business, Admin)
+- Profile and password management
 
-### 💼 Cartes de Visite
-- Création/modification (Business uniquement)
-- Système de favoris
-- Recherche et filtrage
-- Prévisualisation temps réel
+### 💼 Business Cards
+- Create and edit cards (Business users only)
+- Favorites system
+- Search and filtering
+- Real-time preview
 
 ### 👨‍💼 Administration
-- Gestion utilisateurs
-- Modération contenu
-- Statistiques système
+- User management
+- Content moderation
+- System statistics
 
-### 🌍 Multilingue
-- Français, Anglais, Hébreu
-- Interface RTL pour l'hébreu
-- Détection automatique langue
+### 🌍 Multilingual
+- French, English, Hebrew
+- RTL interface for Hebrew
+- Automatic language detection
 
 ## 🛠️ Technologies
 
 ### Frontend
-- **React 18** + **Vite** - Interface moderne
-- **Tailwind CSS** - Styling utility-first
-- **Framer Motion** - Animations fluides
-- **React Router v6** - Navigation SPA
-- **Axios** - Client HTTP
-- **React i18next** - Internationalisation
+- **React 18** + **Vite** - Modern interface
+- **Tailwind CSS** - Utility-first styling
+- **Framer Motion** - Smooth animations
+- **React Router v6** - SPA navigation
+- **Axios** - HTTP client
+- **React i18next** - Internationalization
 
 ### Backend
-- **Node.js** + **Express** - API REST
-- **MongoDB** + **Mongoose** - Base de données
-- **JWT** - Authentification
-- **bcryptjs** - Sécurité mots de passe
-- **Helmet** + **CORS** - Sécurité HTTP
+- **Node.js** + **Express** - REST API
+- **MongoDB** + **Mongoose** - Database
+- **JWT** - Authentication
+- **bcryptjs** - Password security
+- **Helmet** + **CORS** - HTTP security
 
 ### DevOps
-- **Playwright** - Tests E2E
-- **ESLint** - Qualité code
+- **Playwright** - E2E testing
+- **ESLint** - Code quality
 - **Render** - Backend hosting
 - **Vercel** - Frontend hosting
 
 ## 🚀 Installation
 
-### Prérequis
+### Prerequisites
 - Node.js >= 16.0.0
-- MongoDB (local ou Atlas)
+- MongoDB (local or Atlas)
 
-### Setup Rapide
+### Quick Setup
 
 ```bash
-# Cloner le projet
-git clone https://github.com/shayacoca/FuturistCards.git
+# Clone the project
+git clone https://github.com/Sy2force/FuturistCards.git
 cd FuturistCards
 
 # Backend
 cd backend
 npm install
-cp .env.example .env  # Configurer les variables
+cp .env.example .env  # Configure variables
 npm run dev
 
-# Frontend (nouveau terminal)
+# Frontend (new terminal)
 cd ../frontend
 npm install
-cp .env.example .env  # Configurer les variables
+cp .env.example .env  # Configure variables
 npm run dev
 ```
 
-### Variables d'Environnement
+### Environment Variables
 
 **Backend (.env)**
 ```env
@@ -119,26 +119,26 @@ VITE_API_BASE_URL=http://localhost:5001/api
 VITE_APP_NAME=FuturistCards
 ```
 
-## 📁 Structure du Projet
+## 📁 Project Structure
 
 ```
 FuturistCards/
-├── backend/                 # API Node.js/Express
-│   ├── controllers/        # Logique métier
-│   ├── models/            # Modèles MongoDB
-│   ├── routes/            # Routes API
+├── backend/                 # Node.js/Express API
+│   ├── controllers/        # Business logic
+│   ├── models/            # MongoDB models
+│   ├── routes/            # API routes
 │   ├── middleware/        # Middlewares
-│   └── server.js          # Point d'entrée
-├── frontend/               # Application React
+│   └── server.js          # Entry point
+├── frontend/               # React application
 │   ├── src/
-│   │   ├── components/    # Composants React
-│   │   ├── pages/         # Pages application
-│   │   ├── context/       # Contextes React
-│   │   ├── hooks/         # Hooks personnalisés
-│   │   └── services/      # Services API
-│   └── tests/             # Tests Playwright
-├── render.yaml           # Config Render
-├── vercel.json           # Config Vercel
+│   │   ├── components/    # React components
+│   │   ├── pages/         # Application pages
+│   │   ├── context/       # React contexts
+│   │   ├── hooks/         # Custom hooks
+│   │   └── services/      # API services
+│   └── tests/             # Playwright tests
+├── render.yaml           # Render config
+├── vercel.json           # Vercel config
 └── README.md
 ```
 
@@ -147,93 +147,93 @@ FuturistCards/
 ### Backend
 ```bash
 npm start          # Production
-npm run dev        # Développement
+npm run dev        # Development
 npm test           # Tests
 ```
 
 ### Frontend
 ```bash
-npm run dev        # Développement
-npm run build      # Build production
-npm test           # Tests Playwright
-npm run test:headed # Tests avec UI
+npm run dev        # Development
+npm run build      # Production build
+npm test           # Playwright tests
+npm run test:headed # Tests with UI
 npm run lint       # Linting
 ```
 
-## 🧪 Tests
+## 🧪 Testing
 
-Tests E2E avec Playwright couvrant :
-- Authentification complète
-- Navigation et routing
-- CRUD des cartes
-- Système de favoris
-- Interface responsive
+E2E tests with Playwright covering:
+- Complete authentication
+- Navigation and routing
+- Card CRUD operations
+- Favorites system
+- Responsive interface
 
 ```bash
 cd frontend
-npm test                    # Tests headless
-npm run test:headed        # Tests avec navigateur
-npm run test:ui            # Interface graphique
+npm test                    # Headless tests
+npm run test:headed        # Tests with browser
+npm run test:ui            # Graphical interface
 ```
 
-## 🌐 Déploiement
+## 🌐 Deployment
 
 ### Production
-- **Backend** : Render (render.yaml)
-- **Frontend** : Vercel (vercel.json)
-- Déploiement automatique sur push GitHub
+- **Backend**: Render (render.yaml)
+- **Frontend**: Vercel (vercel.json)
+- Automatic deployment on GitHub push
 
-### URLs Production
-- Frontend : https://futuristcards.vercel.app
-- Backend : https://futuristcards-backend.onrender.com
+### Production URLs
+- Frontend: https://futuristcards.vercel.app
+- Backend: https://futuristcards-backend.onrender.com
 
-## 👥 Comptes de Test
+## 👥 Test Accounts
 
 ```
-Utilisateur : user@test.com / Test123!
-Business   : business@test.com / Test123!
-Admin      : admin@test.com / Test123!
+User     : user@test.com / Test123!
+Business : business@test.com / Test123!
+Admin    : admin@test.com / Test123!
 ```
 
 ## 📚 API Endpoints
 
 ### Auth
 ```
-POST /api/auth/register     # Inscription
-POST /api/auth/login        # Connexion
-GET  /api/auth/profile      # Profil
+POST /api/auth/register     # Registration
+POST /api/auth/login        # Login
+GET  /api/auth/profile      # Profile
 ```
 
 ### Cards
 ```
-GET    /api/cards           # Liste cartes
-POST   /api/cards           # Créer (Business)
-PUT    /api/cards/:id       # Modifier
-DELETE /api/cards/:id       # Supprimer
+GET    /api/cards           # List cards
+POST   /api/cards           # Create (Business)
+PUT    /api/cards/:id       # Update
+DELETE /api/cards/:id       # Delete
 ```
 
 ### Favorites
 ```
-GET    /api/favorites       # Mes favoris
-POST   /api/favorites/:id   # Ajouter
-DELETE /api/favorites/:id   # Retirer
+GET    /api/favorites       # My favorites
+POST   /api/favorites/:id   # Add
+DELETE /api/favorites/:id   # Remove
 ```
 
 ### Admin
 ```
-GET /api/admin/users        # Gestion utilisateurs
-GET /api/admin/stats        # Statistiques
+GET /api/admin/users        # User management
+GET /api/admin/stats        # Statistics
 ```
 
-## 📄 Licence
+## 📄 License
 
-MIT License - voir [LICENSE](LICENSE)
+MIT License - see [LICENSE](LICENSE)
 
 ---
 
-**Auteur** : Shaï Acoca (contact@shayacoca.dev)  
-**GitHub** : [@shayacoca](https://github.com/shayacoca)
+**Author**: Professional Developer  
+**GitHub**: [@Sy2force](https://github.com/Sy2force)
 
 <div align="center">
-  <p>Fait avec ❤️ - © 2024 FuturistCards</p>
+  <p>Made with ❤️ - © 2024 FuturistCards</p>
 </div>

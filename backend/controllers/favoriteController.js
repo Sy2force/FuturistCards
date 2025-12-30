@@ -3,7 +3,7 @@ const Card = require('../models/Card');
 const { mockFavorites, mockCards } = require('../data/mockData');
 const { t } = require('../utils/i18n');
 
-// récupérer les favoris de l'utilisateur
+// get les favoris de l'user
 const getFavorites = async (req, res) => {
   try {
     let favorites;
@@ -38,7 +38,7 @@ const addToFavorites = async (req, res) => {
   try {
     const { cardId } = req.params;
     
-    // vérifier si la carte existe
+    // Verify si la carte existe
     const card = await Card.findById(cardId);
     if (!card) {
       return res.status(404).json({
@@ -47,7 +47,7 @@ const addToFavorites = async (req, res) => {
       });
     }
     
-    // vérifier si déjà en favoris
+    // Verify si déjà en favoris
     const existingFavorite = await Favorite.findOne({
       user: req.user.id,
       card: cardId
@@ -106,7 +106,7 @@ const removeFromFavorites = async (req, res) => {
   }
 };
 
-// vérifier si en favoris
+// Verify si en favoris
 const checkFavorite = async (req, res) => {
   try {
     const { cardId } = req.params;

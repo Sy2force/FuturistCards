@@ -168,7 +168,6 @@ const AdminPage = () => {
                 description: t('admin.actions.manageUsersDesc'),
                 action: () => {
                   // Navigate to user management (placeholder for future implementation)
-                  console.log('Navigate to user management');
                 }
               },
               {
@@ -176,7 +175,6 @@ const AdminPage = () => {
                 description: t('admin.actions.moderateCardsDesc'),
                 action: () => {
                   // Navigate to card moderation (placeholder for future implementation)
-                  console.log('Navigate to card moderation');
                 }
               },
               {
@@ -184,7 +182,6 @@ const AdminPage = () => {
                 description: t('admin.actions.systemSettingsDesc'),
                 action: () => {
                   // Navigate to system settings (placeholder for future implementation)
-                  console.log('Navigate to system settings');
                 }
               }
             ].map((action, index) => (

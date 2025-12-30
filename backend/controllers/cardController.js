@@ -3,7 +3,7 @@ const User = require('../models/User');
 const { mockCards, mockUsers } = require('../data/mockData');
 const { t } = require('../utils/i18n');
 
-// récupérer toutes les cartes publiques
+// get toutes les cartes publiques
 const getAllCards = async (req, res) => {
   try {
     let cards;
@@ -28,7 +28,7 @@ const getAllCards = async (req, res) => {
   }
 };
 
-// récupérer une carte par ID
+// get une carte par ID
 const getCardById = async (req, res) => {
   try {
     const card = await Card.findById(req.params.id)
@@ -47,12 +47,12 @@ const getCardById = async (req, res) => {
   }
 };
 
-// créer une nouvelle carte (business seulement ou anonyme)
+// Create une nouvelle carte (business seulement ou anonyme)
 const createCard = async (req, res) => {
   try {
     const { title, description, phone, email, website, address, company } = req.body;
 
-    // Si utilisateur connecté, vérifier le rôle
+    // If user is connected, check role
     if (req.user) {
       const user = await User.findById(req.user.id);
       if (user.role !== 'business' && user.role !== 'admin') {
@@ -107,7 +107,7 @@ const createCard = async (req, res) => {
   }
 };
 
-// mettre à jour une carte (propriétaire seulement)
+// Update une carte (propriétaire seulement)
 const updateCard = async (req, res) => {
   try {
     const card = await Card.findById(req.params.id);
@@ -116,7 +116,7 @@ const updateCard = async (req, res) => {
       return res.status(404).json({ message: 'Carte non trouvée' });
     }
 
-    // vérifier que c'est bien le propriétaire
+    // Verify que c'est bien le propriétaire
     if (card.user.toString() !== req.user.id) {
       return res.status(403).json({ message: t('cards.unauthorized') });
     }
@@ -146,7 +146,7 @@ const deleteCard = async (req, res) => {
       return res.status(404).json({ message: 'Carte non trouvée' });
     }
 
-    // vérifier les permissions (propriétaire ou admin)
+    // Verify les permissions (propriétaire ou admin)
     const user = await User.findById(req.user.id);
     if (card.user.toString() !== req.user.id && user.role !== 'admin') {
       return res.status(403).json({ message: t('cards.unauthorized') });
@@ -163,7 +163,7 @@ const deleteCard = async (req, res) => {
   }
 };
 
-// récupérer mes cartes
+// get mes cartes
 const getMyCards = async (req, res) => {
   try {
     // données mock pour les tests

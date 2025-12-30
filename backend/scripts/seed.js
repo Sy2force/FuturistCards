@@ -13,12 +13,12 @@ const seedData = async () => {
     await User.deleteMany({});
     await Card.deleteMany({});
 
-    // Créer des utilisateurs de test
+    // Create des users de test
     const hashedPassword = await bcrypt.hash('TestPass123!', 12);
     
     const users = await User.create([
       {
-        name: 'Utilisateur Test',
+        name: 'User Test',
         email: 'testnormal@example.com',
         password: hashedPassword,
         role: 'user'
@@ -43,9 +43,9 @@ const seedData = async () => {
       }
     ]);
 
-    // Utilisateurs créés avec succès
+    // Users créés avec succès
 
-    // Créer des cartes de démonstration
+    // Create des cartes de démonstration
     const businessUser = users.find(u => u.email === 'testpro@example.com');
     const devUser = users.find(u => u.email === 'shay@futuristcards.com');
     
@@ -81,7 +81,7 @@ const seedData = async () => {
         email: 'marie@creative.com',
         phone: '+33 1 98 76 54 32',
         website: 'https://mariedupont.design',
-        description: 'Créatrice d\'expériences utilisateur exceptionnelles.',
+        description: 'Créatrice d\'expériences user exceptionnelles.',
         userId: businessUser._id,
         isPublic: true,
         tags: ['design', 'ux', 'ui', 'creative']
@@ -120,7 +120,6 @@ const seedData = async () => {
     
     process.exit(0);
   } catch (error) {
-    console.error('❌ Erreur during seed:', error);
     process.exit(1);
   }
 };

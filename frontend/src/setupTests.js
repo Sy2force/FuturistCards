@@ -81,7 +81,6 @@ Object.defineProperty(window, 'sessionStorage', {
 });
 
 // Suppress console warnings during tests
-const originalWarn = console.warn;
 beforeAll(() => {
   // Suppress specific React warnings during tests
   const suppressedWarnings = [
@@ -90,6 +89,7 @@ beforeAll(() => {
     'Warning: componentWillReceiveProps has been renamed'
   ];
   
+  const originalWarn = console.warn;
   console.warn = (...args) => {
     const message = typeof args[0] === 'string' ? args[0] : '';
     const shouldSuppress = suppressedWarnings.some(warning => message.includes(warning));
@@ -101,5 +101,4 @@ beforeAll(() => {
 });
 
 afterAll(() => {
-  console.warn = originalWarn;
 });

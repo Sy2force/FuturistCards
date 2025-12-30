@@ -6,34 +6,34 @@ const mongoose = require('mongoose');
 const { mockUsers } = require('../data/mockData');
 const { t } = require('../utils/i18n');
 
-// créer un token JWT
+// Generate JWT token
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// inscription
+// User registration
 const register = async (req, res) => {
   try {
     const { firstName, lastName, name, email, password, role } = req.body;
 
-    // Combiner firstName et lastName ou utiliser name
+    // Combine firstName and lastName or use name
     const fullName = name || `${firstName} ${lastName}`.trim();
     
     if (!fullName || fullName.length < 2) {
       return res.status(400).json({ message: t('auth.nameRequired') });
     }
 
-    // vérifier si l'email existe déjà
+    // Check if email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: t('auth.emailExists') });
     }
 
-    // hasher le mot de passe
+    // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // créer l'utilisateur
+    // Create the user
     const user = await User.create({
       name: fullName,
       email,
@@ -59,14 +59,14 @@ const register = async (req, res) => {
   }
 };
 
-// connexion
+// User login
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     let user;
     try {
-      // trouver l'utilisateur dans MongoDB
+      // Check if user already exists in MongoDB
       user = await User.findOne({ email });
     } catch (dbError) {
       // Fallback to mock users if MongoDB is unavailable
@@ -77,7 +77,7 @@ const login = async (req, res) => {
       return res.status(401).json({ message: t('auth.invalidCredentials') });
     }
 
-    // vérifier le mot de passe
+    // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({ message: t('auth.invalidCredentials') });
@@ -101,7 +101,7 @@ const login = async (req, res) => {
   }
 };
 
-// récupérer le profil
+// get le profil
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
@@ -111,13 +111,14 @@ const getProfile = async (req, res) => {
   }
 };
 
-// mettre à jour le profil
+// Update le profil
 const updateProfile = async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const { name, email, password } = req.body;
     
     const user = await User.findByIdAndUpdate(
       req.user.id,
+      { name, email, password },
       { name, email },
       { new: true }
     ).select('-password');
@@ -132,20 +133,27 @@ const updateProfile = async (req, res) => {
   }
 };
 
-// changer le mot de passe
+// Change password
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     
-    const user = await User.findById(req.user.id);
+    let user;
+    try {
+      // Check if user already exists in MongoDB
+      user = await User.findOne({ email: req.user.email });
+    } catch (dbError) {
+      // Fallback to mock users if MongoDB is unavailable
+      user = mockUsers.find(u => u.email === req.user.email);
+    }
     
-    // vérifier l'ancien mot de passe
+    // Verify current password
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: t('auth.wrongCurrentPassword') });
     }
 
-    // hasher le nouveau mot de passe
+    // Hash new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 

@@ -4,20 +4,22 @@ let isConnected = false;
 
 const connectDB = async () => {
   try {
-    // Try local MongoDB first
-    const mongoURI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/futuristcards';
+    // Try MongoDB Atlas first, then local fallback
+    const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/futuristcards';
     
-    // Attempting MongoDB connection
+    console.log('🔄 Connecting to MongoDB...');
     
     const conn = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 5000, // 5 second timeout
-      connectTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000, // 10 second timeout
+      connectTimeoutMS: 10000,
+      maxPoolSize: 10,
+      bufferCommands: false,
     });
     
     isConnected = true;
-    // MongoDB connected successfully
+    console.log('✅ MongoDB connected successfully:', conn.connection.host);
     
     // Connection event handlers
     mongoose.connection.on('error', (err) => {
@@ -37,7 +39,8 @@ const connectDB = async () => {
 
     return conn;
   } catch (error) {
-    // MongoDB unavailable - server will continue in fallback mode
+    console.log('❌ MongoDB Connection Error:', error.message);
+    console.log('⚠️  Server will continue in fallback mode');
     isConnected = false;
     return null;
   }

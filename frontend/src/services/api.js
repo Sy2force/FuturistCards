@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 
-// Créer une instance axios centralisée pour tous les appels API
+// Create une instance axios centralisée pour tous les appels API
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: true,

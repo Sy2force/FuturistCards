@@ -133,7 +133,7 @@ export const AuthProvider = ({ children }) => {
     window.dispatchEvent(new Event('userChanged'));
   };
 
-  // Fonctions utilitaires pour vérifier les permissions
+  // Utility functions to check permissions
   const hasRole = (requiredRole) => user?.role === requiredRole;
   const hasAnyRole = (roles) => roles.includes(user?.role);
   const canCreateCards = () => hasAnyRole(['business', 'admin']);
