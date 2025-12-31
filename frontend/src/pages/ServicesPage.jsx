@@ -127,7 +127,7 @@ const ServicesPage = () => {
         <meta name="description" content={t('services.hero.subtitle')} />
       </Helmet>
       
-    <div className="min-h-screen w-full" style={{ backgroundColor: currentTheme.colors.background }} dir="rtl">
+    <div className="min-h-screen w-full" style={{ backgroundColor: currentTheme.colors.background }} dir="rtl" lang="he">
       {/* Hero Section */}
       <section className="relative py-20 w-full">
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 text-center">
