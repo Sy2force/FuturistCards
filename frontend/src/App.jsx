@@ -74,6 +74,8 @@ function App() {
     <div 
       className="min-h-screen flex flex-col"
       style={{ backgroundColor: currentTheme.colors.background }}
+      dir="rtl"
+      lang="he"
     >
       <Helmet>
         <title>{t('common.title')}</title>
