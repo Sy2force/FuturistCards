@@ -940,6 +940,7 @@ export const translations = {
     },
     features: 'תכונות',
     popular: 'פופולרי',
+    rating: '5.0',
     cta: {
       getQuote: 'קבל הצעת מחיר',
       viewPortfolio: 'צפה בפורטפוליו',

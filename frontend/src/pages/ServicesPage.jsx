@@ -301,7 +301,7 @@ const ServicesPage = () => {
                           {[...Array(5)].map((_, i) => (
                             <StarIcon key={i} className="w-4 h-4" style={{ color: currentTheme.colors.warning }} fill="currentColor" />
                           ))}
-                          <span className="ml-2 text-sm" style={{ color: currentTheme.colors.text.secondary }}>5.0</span>
+                          <span className="ml-2 text-sm" style={{ color: currentTheme.colors.text.secondary }}>{t('services.rating')}</span>
                         </div>
                       </div>
                     </div>
