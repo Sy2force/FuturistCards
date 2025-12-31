@@ -4,10 +4,11 @@ services:
     env: node
     plan: free
     region: frankfurt
-    buildCommand: cd backend && npm ci --only=production
-    startCommand: cd backend && node server.js
+    buildCommand: cd backend && npm ci --only=production && npm run build
+    startCommand: cd backend && npm start
     healthCheckPath: /api/health
     autoDeploy: true
+    rootDir: ./
     disk:
       name: futuristcards-disk
       mountPath: /opt/render/project/backend/uploads
@@ -19,18 +20,32 @@ services:
         value: 10000
       - key: CLIENT_URL
         value: https://futuristcards.vercel.app
+      - key: CLIENT_URL_PROD
+        value: https://futuristcards.vercel.app
       - key: MONGODB_URI
-        sync: false
+        value: mongodb+srv://Futuristecard:Qwerty21@cluster0.lhvxveo.mongodb.net/futuristcards?retryWrites=true&w=majority&appName=Cluster0
       - key: JWT_SECRET
         generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
       - key: JWT_REFRESH_SECRET
         generateValue: true
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 30d
       - key: CORS_ORIGIN
+        value: https://futuristcards.vercel.app
+      - key: CORS_ORIGIN_PROD
         value: https://futuristcards.vercel.app
       - key: RATE_LIMIT_WINDOW_MS
         value: 900000
       - key: RATE_LIMIT_MAX_REQUESTS
         value: 100
+      - key: ENABLE_REGISTRATION
+        value: true
+      - key: ENABLE_RATE_LIMITING
+        value: true
+      - key: LOG_LEVEL
+        value: info
     scaling:
       minInstances: 1
       maxInstances: 3
@@ -41,6 +56,8 @@ services:
         value: nosniff
       - key: Referrer-Policy
         value: strict-origin-when-cross-origin
+      - key: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
 
 databases:
   - name: futuristcards-db

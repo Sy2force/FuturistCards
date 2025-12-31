@@ -107,24 +107,31 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use(errorHandler);
 
 async function startServer() {
-  // MongoDB connection with graceful fallback
+  // MongoDB connection with enhanced error handling
   const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI;
   
   if (mongoURI) {
     try {
       console.log('🔄 Connecting to MongoDB...');
+      console.log('📍 MongoDB URI:', mongoURI.replace(/\/\/.*@/, '//***:***@'));
+      
       const mongoOptions = {
-        serverSelectionTimeoutMS: 10000,
+        serverSelectionTimeoutMS: 30000,
         socketTimeoutMS: 45000,
-        family: 4,
+        connectTimeoutMS: 30000,
+        maxPoolSize: 10,
         retryWrites: true,
-        w: 'majority'
+        w: 'majority',
+        authSource: 'admin'
       };
 
       await mongoose.connect(mongoURI, mongoOptions);
       console.log('✅ MongoDB connected successfully');
+      console.log('📊 Database:', mongoose.connection.name);
+      console.log('🔗 Connection state:', mongoose.connection.readyState);
     } catch (err) {
-      console.log('❌ MongoDB Connection Error:', err.message);
+      console.error('❌ MongoDB Connection Error:', err.message);
+      console.error('🔍 Error details:', err);
       console.log('⚠️  Server will continue in fallback mode');
       // Don't exit - continue without MongoDB
     }
@@ -136,6 +143,7 @@ async function startServer() {
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
     console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
   });
 }
 

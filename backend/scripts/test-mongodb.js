@@ -2,42 +2,60 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 
 async function testMongoConnection() {
-  if (!process.env.MONGO_URI) {
+  const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI;
+  
+  if (!mongoURI) {
+    console.log('❌ No MongoDB URI found in environment variables');
+    console.log('💡 Add MONGODB_URI to your .env file');
     return;
   }
 
+  console.log('🔄 Testing MongoDB connection...');
+  console.log('📍 URI format check:', mongoURI.startsWith('mongodb+srv://') ? '✅ Atlas URI' : '⚠️  Local URI');
+
   try {
     const mongoOptions = {
-      serverSelectionTimeoutMS: 5000,
+      serverSelectionTimeoutMS: 10000,
       socketTimeoutMS: 45000,
       family: 4,
       retryWrites: true,
       w: 'majority'
     };
 
-    await mongoose.connect(process.env.MONGO_URI, mongoOptions);
+    await mongoose.connect(mongoURI, mongoOptions);
+    console.log('✅ MongoDB connection successful!');
     
-    // Test d'écriture simple
+    // Test database operations
+    console.log('🧪 Testing database operations...');
     const testCollection = mongoose.connection.db.collection('test');
     await testCollection.insertOne({ test: true, timestamp: new Date() });
+    console.log('✅ Write operation successful');
     
-    // Nettoyer le test
+    // Clean up test
     await testCollection.deleteOne({ test: true });
+    console.log('✅ Delete operation successful');
     
     await mongoose.disconnect();
+    console.log('🎉 MongoDB test completed successfully!');
     
   } catch (error) {
-    // Erreur de connexion MongoDB
+    console.log('❌ MongoDB Connection Error:', error.message);
+    
     if (error.code === 8000) {
-      // Vérifiez les identifiants MongoDB Atlas
+      console.log('💡 Solution: Check MongoDB Atlas credentials (username/password)');
     }
     
-    if (error.message.includes('IP')) {
-      // Ajouter 0.0.0.0/0 dans Network Access sur MongoDB Atlas
+    if (error.message.includes('IP') || error.message.includes('not authorized')) {
+      console.log('💡 Solution: Add 0.0.0.0/0 to Network Access in MongoDB Atlas');
     }
     
     if (error.message.includes('ENOTFOUND') || error.message.includes('timeout')) {
-      // Vérifiez la connection internet et l'URI MongoDB Atlas
+      console.log('💡 Solution: Check internet connection and MongoDB Atlas URI format');
+      console.log('📋 Expected format: mongodb+srv://username:password@cluster.mongodb.net/database');
+    }
+    
+    if (error.message.includes('querySrv')) {
+      console.log('💡 Solution: Verify cluster name and region in MongoDB Atlas');
     }
     
     process.exit(1);

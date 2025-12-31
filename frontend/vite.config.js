@@ -4,8 +4,8 @@ import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'url'
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: './',
+export default defineConfig(({ command, mode }) => ({
+  base: mode === 'production' ? '/' : './',
   plugins: [react()],
   resolve: {
     alias: {
@@ -16,7 +16,7 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3010, // Frontend sur 3010, backend sur 3002
+    port: 3010,
     strictPort: true,
     host: '0.0.0.0',
     open: false,
@@ -28,21 +28,26 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: false, 
-    minify: 'esbuild',
+    sourcemap: mode === 'development',
+    minify: mode === 'production' ? 'terser' : false,
     rollupOptions: {
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
-          utils: ['axios']
-        }
+          ui: ['framer-motion', 'react-hot-toast'],
+          utils: ['axios', 'yup']
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     },
     chunkSizeWarningLimit: 1000,
-    target: 'es2015',
+    target: 'es2020',
     reportCompressedSize: false,
-    cssCodeSplit: true
+    cssCodeSplit: true,
+    assetsInlineLimit: 4096
   },
   define: {
     __APP_VERSION__: JSON.stringify('1.0.0'),
@@ -69,4 +74,4 @@ export default defineConfig({
       ]
     }
   }
-})
+}))

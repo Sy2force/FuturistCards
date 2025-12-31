@@ -15,6 +15,7 @@
     "lint": "echo 'ESLint check passed - no linting configured'",
     "seed": "node scripts/seedTestUsers.js",
     "seed:reset": "node scripts/seedTestUsers.js",
+    "init-db": "node scripts/initDatabase.js",
     "health": "curl -f http://localhost:$PORT/api/health || exit 1"
   },
   "keywords": [
