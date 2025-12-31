@@ -439,7 +439,8 @@ export const translations = {
     remove: 'הסר מהמועדפים',
     added: 'נוסף למועדפים',
     removed: 'הוסר מהמועדפים',
-    loadError: 'שגיאה בטעינת המועדפים'
+    loadError: 'שגיאה בטעינת המועדפים',
+    loginRequired: 'יש להתחבר כדי להוסיף למועדפים'
   },
   
   // Mock Data
