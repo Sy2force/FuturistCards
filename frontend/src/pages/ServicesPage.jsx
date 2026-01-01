@@ -8,14 +8,14 @@ import {
   CodeBracketIcon, 
   DevicePhoneMobileIcon, 
   GlobeAltIcon,
-  PaintBrushIcon,
   ChartBarIcon,
   ShieldCheckIcon,
   RocketLaunchIcon,
   CogIcon,
   StarIcon,
   CheckCircleIcon,
-  ArrowRightIcon
+  ArrowRightIcon,
+  SwatchIcon
 } from '@heroicons/react/24/outline';
 import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
@@ -49,7 +49,7 @@ const ServicesPage = () => {
     {
       id: 3,
       category: 'design',
-      icon: PaintBrushIcon,
+      icon: SwatchIcon,
       title: t('services.uiuxDesign.title'),
       description: t('services.uiuxDesign.description'),
       features: [t('services.uiuxDesign.features.figma'), t('services.uiuxDesign.features.prototyping'), t('services.uiuxDesign.features.designSystem'), t('services.uiuxDesign.features.userTesting')],
@@ -92,7 +92,7 @@ const ServicesPage = () => {
     { id: 'all', name: t('services.categories.all'), icon: CogIcon },
     { id: 'development', name: t('services.categories.development'), icon: CodeBracketIcon },
     { id: 'mobile', name: t('services.categories.mobile'), icon: DevicePhoneMobileIcon },
-    { id: 'design', name: t('services.categories.design'), icon: PaintBrushIcon },
+    { id: 'design', name: t('services.categories.design'), icon: SwatchIcon },
     { id: 'ecommerce', name: t('services.categories.ecommerce'), icon: GlobeAltIcon },
     { id: 'marketing', name: t('services.categories.marketing'), icon: ChartBarIcon },
     { id: 'security', name: t('services.categories.security'), icon: ShieldCheckIcon }

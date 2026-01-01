@@ -72,7 +72,7 @@ const SimpleHomePage = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center space-y-4 sm:space-y-0 sm:space-x-6 sm:flex sm:justify-center"
+          className="text-center space-y-4 sm:space-y-0 sm:space-x-6 sm:flex sm:justify-center gap-4"
         >
           <Link
             to="/register"

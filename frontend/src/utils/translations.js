@@ -167,31 +167,28 @@ export const translations = {
     packs: 'חבילות',
     contact: 'צור קשר',
     privacy: 'מדיניות פרטיות',
-    terms: 'תנאי שירות',
-    cookies: 'עוגיות',
-    quickLinks: 'קישורים מהירים',
-    connect: 'התחברו אלינו',
-    newsletter: 'הירשמו לעדכונים',
-    newsletterDesc: 'קבלו עדכונים על תכונות חדשות וטיפים לניהול כרטיסי הביקור שלכם',
-    emailPlaceholder: 'הכנסו את כתובת האימייל שלכם',
-    allRightsReserved: 'כל הזכויות שמורות',
-    social: {
-      whatsapp: 'WhatsApp',
-      linkedin: 'LinkedIn', 
-      github: 'GitHub',
-      email: 'אימייל'
-    },
-    madeWith: 'נוצר באהבה',
-    inFrance: 'בישראל',
-    features: {
-      title: 'תכונות מתקדמות',
-      digital: 'כרטיסים דיגיטליים',
-      digitalDesc: 'כרטיסי ביקור דיגיטליים מתקדמים וחדשניים',
-      favorites: 'מועדפים',
-      favoritesDesc: 'שמרו את הכרטיסים הטובים ביותר במקום אחד',
-      global: 'נגישות עולמית',
-      globalDesc: 'שתפו את הכרטיסים שלכם בכל רחבי העולם'
-    }
+    terms: 'תנאי שימוש',
+    copyright: ' 2024 FuturistCards. כל הזכויות שמורות.',
+    followUs: 'עקבו אחרינו',
+    newsletter: 'הירשמו לניוזלטר',
+    newsletterPlaceholder: 'הכניסו את כתובת האימייל שלכם',
+    subscribe: 'הירשמו',
+    facebook: 'פייסבוק',
+    twitter: 'טוויטר',
+    instagram: 'אינסטגרם',
+    linkedin: 'לינקדאין',
+    github: 'גיטהאב'
+  },
+
+  // Social Networks
+  social: {
+    facebook: 'פייסבוק',
+    twitter: 'טוויטר',
+    instagram: 'אינסטגרם',
+    linkedin: 'לינקדאין',
+    github: 'גיטהאב',
+    youtube: 'יוטיוב',
+    tiktok: 'טיקטוק'
   },
   
   // Error Pages
@@ -382,16 +379,15 @@ export const translations = {
   // Favorites
   favorites: {
     title: 'המועדפים שלי',
-    noCards: 'אין כרטיסים מועדפים',
-    noFavorites: 'אין מועדפים',
-    noFavoritesDescription: 'התחל לחקור כרטיסים והוסף את המועדפים שלך',
-    exploreCards: 'חקור כרטיסים',
+    subtitle: 'כל הכרטיסים שאהבת במקום אחד',
+    empty: 'אין לך כרטיסים מועדפים עדיין',
+    emptyDescription: 'התחל לחקור כרטיסים ולהוסיף אותם למועדפים',
     add: 'הוסף למועדפים',
-    remove: 'הסר מהמועדפים',
+    remove: 'הסר ממועדפים',
     added: 'נוסף למועדפים',
-    removed: 'הוסר מהמועדפים',
-    loadError: 'שגיאה בטעינת המועדפים',
-    loginRequired: 'יש להתחבר כדי להוסיף למועדפים'
+    removed: 'הוסר ממועדפים',
+    manageError: 'שגיאה בניהול מועדפים',
+    loginRequired: 'נדרשת התחברות כדי לנהל מועדפים'
   },
   
   // Mock Data
@@ -788,7 +784,7 @@ export const translations = {
   services: {
     badge: 'שירותים מתקדמים',
     hero: {
-      title: 'השירותים ',
+      title: 'השירותים',
       highlight: 'שלנו',
       subtitle: 'פתרונות דיגיטליים מתקדמים וחדשניים לעסק שלך'
     },
@@ -970,7 +966,28 @@ export const translations = {
     shareCard: 'שתף כרטיס',
     downloadCard: 'הורד כרטיס',
     linkCopied: 'הקישור הועתק ללוח',
-    loginRequired: 'נדרשת התחברות'
+    loginRequired: 'נדרשת התחברות',
+    loading: 'טוען כרטיס...',
+    cardNotFound: 'כרטיס לא נמצא',
+    cardNotFoundMessage: 'הכרטיס שחיפשת לא קיים או הוסר',
+    loadError: 'שגיאה בטעינת הכרטיס',
+    shareText: 'בדוק את הכרטיס של {name}',
+    contactInfo: 'פרטי התקשרות',
+    about: 'אודות',
+    noDescription: 'לא הוזן תיאור',
+    statistics: 'סטטיסטיקות',
+    memberSince: 'חבר מאז',
+    share: 'שתף',
+    sendEmail: 'שלח אימייל',
+    call: 'התקשר',
+    metaDescription: 'כרטיס הביקור הדיגיטלי של {name} - {subtitle} ב{company}',
+    rating: 'דירוג ומליצות',
+    reviews: 'ביקורות',
+    skills: 'מיומנויות',
+    services: 'שירותים',
+    portfolio: 'תיק עבודות',
+    socialNetworks: 'רשתות חברתיות',
+    viewProject: 'צפה בפרויקט'
   },
 
 

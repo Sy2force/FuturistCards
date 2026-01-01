@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
     }
   });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     const handleUserChanged = () => {
@@ -37,8 +38,13 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
 
+  const clearError = () => {
+    setError('');
+  };
+
   const login = async (email, password) => {
     setLoading(true);
+    setError('');
     try {
       if (!email || !password) {
         throw new Error(t('auth.emailPasswordRequired'));
@@ -77,6 +83,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Login failed');
       }
     } catch (error) {
+      setError(error.message || 'Login failed');
       throw error;
     } finally {
       setLoading(false);
@@ -85,6 +92,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     setLoading(true);
+    setError('');
     try {
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/register`, {
         method: 'POST',
@@ -119,6 +127,7 @@ export const AuthProvider = ({ children }) => {
         throw new Error(data.message || 'Registration failed');
       }
     } catch (error) {
+      setError(error.message || 'Registration failed');
       throw error;
     } finally {
       setLoading(false);
@@ -161,6 +170,8 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
+    error,
+    clearError,
     login,
     register,
     logout,

@@ -231,7 +231,7 @@ const Footer = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="border-t border-white/20 pt-8"
         >
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 gap-4">
             <div className="text-white/60 text-sm text-center md:text-left">
               © {new Date().getFullYear()} {t('common.siteName')}. {t('footer.allRightsReserved')}
             </div>

@@ -477,21 +477,21 @@ export const userService = {
     const errors = {};
     
     if (!userData.firstName?.trim()) {
-      errors.firstName = 'First name is required';
+      errors.firstName = 'שם פרטי נדרש';
     }
     
     if (!userData.lastName?.trim()) {
-      errors.lastName = 'Last name is required';
+      errors.lastName = 'שם משפחה נדרש';
     }
     
     if (!userData.email?.trim()) {
-      errors.email = 'Email is required';
+      errors.email = 'אימייל נדרש';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
-      errors.email = 'Invalid email format';
+      errors.email = 'פורמט אימייל לא תקין';
     }
     
-    if (userData.phone && !/^[\d\s\-\+\(\)]+$/.test(userData.phone)) {
-      errors.phone = 'Invalid phone format';
+    if (userData.phone && !/^[\d\s\-+()]+$/.test(userData.phone)) {
+      errors.phone = 'פורמט טלפון לא תקין';
     }
     
     return {
