@@ -80,7 +80,7 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900" dir="rtl">
+    <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900" dir="rtl" lang="he">
       {/* Hero Section */}
       <div className="relative overflow-hidden w-full">
         <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-20">

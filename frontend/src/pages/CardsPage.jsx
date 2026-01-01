@@ -77,7 +77,7 @@ const CardsPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full" style={{ backgroundColor: currentTheme.colors.background }} dir="rtl">
+    <div className="min-h-screen w-full" style={{ backgroundColor: currentTheme.colors.background }} dir="rtl" lang="he">
       <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-8">
         {/* Header */}
         <motion.div 

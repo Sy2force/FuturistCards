@@ -9,7 +9,7 @@ const NotFound = () => {
   const { currentTheme } = useRoleTheme();
   
   return (
-    <div className="min-h-screen glass-gradient flex items-center justify-center px-4" dir="rtl">
+    <div className="min-h-screen glass-gradient flex items-center justify-center px-4" dir="rtl" lang="he">
       <motion.div 
         className="text-center max-w-md mx-auto"
         initial={{ opacity: 0, y: 50 }}

@@ -110,7 +110,7 @@ const ContactPage = () => {
         <meta name="description" content={t('contact.hero.subtitle')} />
       </Helmet>
       
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:to-gray-800 py-12" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:to-gray-800 py-12" dir="rtl" lang="he">
       {/* Hero Section */}
       <section className={`relative py-16 px-4 sm:px-6 lg:px-8 ${isDark ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'}`}>
         <div className="max-w-6xl mx-auto text-center">

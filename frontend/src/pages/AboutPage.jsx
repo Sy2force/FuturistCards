@@ -57,7 +57,7 @@ const AboutPage = () => {
         <title>{t('about.title')} - {t('common.siteName')}</title>
         <meta name="description" content={t('about.description')} />
       </Helmet>
-      <div className="min-h-screen" style={{ backgroundColor: currentTheme.colors.background }} data-testid="about-page" dir="rtl">
+      <div className="min-h-screen" style={{ backgroundColor: currentTheme.colors.background }} data-testid="about-page" dir="rtl" lang="he">
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">

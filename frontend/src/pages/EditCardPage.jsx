@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { useTranslation } from "../hooks/useTranslation";
 import { toast } from 'react-hot-toast';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { api } from '../services/api';
 import { UserIcon, EnvelopeIcon, PhoneIcon, GlobeAltIcon, MapPinIcon, PhotoIcon, DocumentCheckIcon, ArrowLeftIcon, XMarkIcon, PencilIcon } from '@heroicons/react/24/outline';
@@ -219,6 +219,7 @@ const EditCardPage = () => {
       <motion.div 
         className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12"
         dir="rtl"
+        lang="he"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -301,7 +302,7 @@ const EditCardPage = () => {
                   {/* Image Upload */}
                   <div className="text-center">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                      Photo de profil
+{t('createCard.profilePhoto')}
                     </label>
                     <div className="relative inline-block">
                       <input

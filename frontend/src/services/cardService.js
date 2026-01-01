@@ -32,7 +32,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת כרטיסים'
+        error: error.response?.data?.message || 'Failed to load cards'
       };
     }
   },
@@ -49,7 +49,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת כרטיס'
+        error: error.response?.data?.message || 'Failed to load card'
       };
     }
   },
@@ -66,7 +66,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת הכרטיסים שלך'
+        error: error.response?.data?.message || 'Failed to load your cards'
       };
     }
   },
@@ -84,7 +84,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל ביצירת כרטיס'
+        error: error.response?.data?.message || 'Failed to create card'
       };
     }
   },
@@ -102,7 +102,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בעדכון כרטיס'
+        error: error.response?.data?.message || 'Failed to update card'
       };
     }
   },
@@ -113,13 +113,13 @@ export const cardService = {
       const response = await cardsAPI.delete(`/${cardId}`);
       return {
         success: true,
-        message: response.data.message || 'כרטיס נמחק בהצלחה'
+        message: response.data.message || 'Card deleted successfully'
       };
     } catch (error) {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל במחיקת כרטיס'
+        error: error.response?.data?.message || 'Failed to delete card'
       };
     }
   },
@@ -159,7 +159,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בחיפוש כרטיסים'
+        error: error.response?.data?.message || 'Failed to search cards'
       };
     }
   },
@@ -176,7 +176,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת כרטיסים פופולריים'
+        error: error.response?.data?.message || 'Failed to load popular cards'
       };
     }
   },
@@ -194,7 +194,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בהחלפת מצב מועדפים'
+        error: error.response?.data?.message || 'Failed to toggle favorite'
       };
     }
   },
@@ -211,9 +211,151 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת מועדפים'
+        error: error.response?.data?.message || 'Failed to load favorites'
       };
     }
+  },
+
+  // Get card statistics
+  getCardStats: async (cardId) => {
+    try {
+      const response = await cardsAPI.get(`/${cardId}/stats`);
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to load card statistics'
+      };
+    }
+  },
+
+  // Get cards by category
+  getCardsByCategory: async (category, limit = 20) => {
+    try {
+      const response = await cardsAPI.get('/category', { params: { category, limit } });
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to load cards by category'
+      };
+    }
+  },
+
+  // Get recent cards
+  getRecentCards: async (limit = 10) => {
+    try {
+      const response = await cardsAPI.get('/recent', { params: { limit } });
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to load recent cards'
+      };
+    }
+  },
+
+  // Validate card data
+  validateCardData: (cardData) => {
+    const errors = {};
+    
+    if (!cardData.title?.trim()) {
+      errors.title = 'Title is required';
+    }
+    
+    if (!cardData.subtitle?.trim()) {
+      errors.subtitle = 'Subtitle is required';
+    }
+    
+    if (!cardData.description?.trim()) {
+      errors.description = 'Description is required';
+    }
+    
+    if (!cardData.email?.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cardData.email)) {
+      errors.email = 'Invalid email format';
+    }
+    
+    if (!cardData.phone?.trim()) {
+      errors.phone = 'Phone is required';
+    } else if (!/^[\d\s\-\+\(\)]+$/.test(cardData.phone)) {
+      errors.phone = 'Invalid phone format';
+    }
+    
+    if (!cardData.address?.country?.trim()) {
+      errors.country = 'Country is required';
+    }
+    
+    if (!cardData.address?.city?.trim()) {
+      errors.city = 'City is required';
+    }
+    
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors
+    };
+  },
+
+  // Format card data for display
+  formatCardData: (card) => {
+    if (!card) return null;
+    
+    return {
+      ...card,
+      displayName: card.title || 'Untitled Card',
+      fullAddress: [
+        card.address?.street,
+        card.address?.city,
+        card.address?.state,
+        card.address?.country
+      ].filter(Boolean).join(', '),
+      formattedPhone: card.phone?.replace(/^(\+972|0)/, '0'),
+      shortDescription: card.description?.length > 100 
+        ? card.description.substring(0, 100) + '...'
+        : card.description
+    };
+  },
+
+  // Get card share URL
+  getShareUrl: (cardId) => {
+    const baseUrl = window.location.origin;
+    return `${baseUrl}/cards/${cardId}`;
+  },
+
+  // Export card data
+  exportCard: (card) => {
+    const exportData = {
+      title: card.title,
+      subtitle: card.subtitle,
+      description: card.description,
+      email: card.email,
+      phone: card.phone,
+      website: card.web,
+      address: card.address,
+      image: card.image,
+      createdAt: card.createdAt
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${card.title || 'card'}.json`;
+    link.click();
+    
+    URL.revokeObjectURL(url);
   }
 };
 

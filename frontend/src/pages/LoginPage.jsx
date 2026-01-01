@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from "../hooks/useTranslation";
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
 
 const LoginPage = () => {
@@ -64,16 +64,16 @@ const LoginPage = () => {
   const displayError = validationError || error;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex rtl pt-16" data-testid="login-page" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex rtl pt-16" data-testid="login-page" dir="rtl" lang="he">
       {/* Left side - Form */}
       <div className="w-full lg:w-3/4 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 xl:px-20">
         <div className="mx-auto w-full max-w-md lg:max-w-lg xl:max-w-xl">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-white mb-4 animate-float">
-              {t('navbar.login')}
+              התחברות
             </h2>
             <p className="text-lg text-indigo-200">
-              {t('auth.login')}
+              התחבר לחשבון שלך
             </p>
           </div>
 
@@ -93,7 +93,7 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                  {t('auth.email')}
+                  אימייל
                 </label>
                 <input
                   type="email"
@@ -102,7 +102,7 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
-                  placeholder={t('auth.emailPlaceholder')}
+                  placeholder="הכנס את כתובת האימייל שלך"
                   required
                   data-testid="login-email"
                 />
@@ -110,7 +110,7 @@ const LoginPage = () => {
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                  {t('auth.password')}
+                  סיסמה
                 </label>
                 <input
                   type="password"
@@ -119,7 +119,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
-                  placeholder={t('auth.passwordPlaceholder')}
+                  placeholder="הכנס את הסיסמה שלך"
                   required
                   data-testid="login-password"
                 />
@@ -135,7 +135,7 @@ const LoginPage = () => {
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                   ) : (
-                    t('auth.loginButton')
+                    "התחבר"
                   )}
                 </button>
               </div>
@@ -143,13 +143,13 @@ const LoginPage = () => {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-white/80">
-                {t('validation.noAccount')} {' '}
+                אין לך חשבון? {' '}
                 <Link 
                   to="/register" 
                   className="font-medium text-blue-300 hover:text-blue-200 transition-colors"
                   data-testid="register-link"
                 >
-                  {t('auth.registerButton')}
+                  הירשם
                 </Link>
               </p>
             </div>
@@ -164,11 +164,19 @@ const LoginPage = () => {
         
         {/* Main image with enhanced effects */}
         <div className="absolute inset-0 transform hover:scale-105 transition-all duration-700 ease-out">
-          <img
-            className="h-full w-full object-cover filter brightness-120 contrast-110 saturate-120"
-            src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80"
-            alt={t('auth.loginImageAlt')}
+          <img 
+            src="/images/login-hero.jpg" 
+            alt="תמונה מעוררת השראה להתחברות"
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              e.target.style.display = 'none';
+              e.target.nextSibling.style.display = 'block';
+            }}
           />
+          <div className="h-full w-full bg-gradient-to-br from-blue-600 via-purple-600 to-cyan-600 opacity-90" style={{display: 'none'}}></div>
+          <div className="absolute inset-0 opacity-30" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
         </div>
         
         {/* Enhanced gradient overlays for depth */}
@@ -186,10 +194,10 @@ const LoginPage = () => {
         <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
           <div className="text-white transform hover:translate-y-[-2px] transition-all duration-300">
             <h3 className="text-xl lg:text-2xl font-bold mb-3 text-white drop-shadow-lg">
-              {t('auth.loginInspiration')}
+              ברוכים השבים לעתיד
             </h3>
             <p className="text-sm lg:text-base text-white/95 leading-relaxed backdrop-blur-sm bg-black/20 rounded-lg p-3 border border-white/20">
-              {t('auth.loginMotivation')}
+              התחברו למערכת וגלו את כוח הרשתות הדיגיטליות. נהלו את כרטיסי הביקור שלכם, התחברו לאנשים חדשים והרחיבו את הרשת המקצועית שלכם.
             </p>
           </div>
         </div>

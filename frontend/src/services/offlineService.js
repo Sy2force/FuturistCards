@@ -5,6 +5,17 @@ import {
   offlineStats, 
   offlineConfig 
 } from '../data/offlineData';
+import { translations } from '../utils/translations';
+
+// Helper function to get translation
+const t = (key) => {
+  const keys = key.split('.');
+  let value = translations;
+  for (const k of keys) {
+    value = value?.[k];
+  }
+  return value || key;
+};
 
 class OfflineService {
   constructor() {
@@ -130,7 +141,7 @@ class OfflineService {
         } else {
           resolve({
             success: false,
-            message: 'כרטיס לא נמצא'
+            message: t('cards.notFound')
           });
         }
       }, 200);
@@ -143,7 +154,7 @@ class OfflineService {
         if (!this.currentUser || (this.currentUser.role !== 'business' && this.currentUser.role !== 'admin')) {
           resolve({
             success: false,
-            message: 'גישה לא מורשית'
+            message: t('common.accessDenied')
           });
           return;
         }
@@ -180,7 +191,7 @@ class OfflineService {
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
-              message: 'גישה לא מורשית'
+              message: t('common.accessDenied')
             });
             return;
           }
@@ -193,13 +204,13 @@ class OfflineService {
           
           resolve({
             success: true,
-            message: 'כרטיס עודכן (מצב דמו)',
+            message: t('cards.updatedDemo'),
             card: offlineCards[cardIndex]
           });
         } else {
           resolve({
             success: false,
-            message: 'כרטיס לא נמצא'
+            message: t('cards.notFound')
           });
         }
       }, 400);
@@ -217,7 +228,7 @@ class OfflineService {
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
-              message: 'גישה לא מורשית'
+              message: t('common.accessDenied')
             });
             return;
           }
@@ -226,12 +237,12 @@ class OfflineService {
           
           resolve({
             success: true,
-            message: 'כרטיס נמחק (מצב דמו)'
+            message: t('cards.deletedDemo')
           });
         } else {
           resolve({
             success: false,
-            message: 'כרטיס לא נמצא'
+            message: t('cards.notFound')
           });
         }
       }, 300);
@@ -243,7 +254,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser) {
-          resolve({ success: false, message: 'לא מחובר' });
+          resolve({ success: false, message: t('common.notLoggedIn') });
           return;
         }
         
@@ -265,7 +276,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser) {
-          resolve({ success: false, message: 'לא מחובר' });
+          resolve({ success: false, message: t('common.notLoggedIn') });
           return;
         }
         
@@ -280,7 +291,7 @@ class OfflineService {
           resolve({
             success: true,
             action: 'removed',
-            message: 'הוסר מהמועדפים'
+            message: t('favorites.removed')
           });
         } else {
           // Ajouter aux favoris
@@ -293,7 +304,7 @@ class OfflineService {
           resolve({
             success: true,
             action: 'added',
-            message: 'נוסף למועדפים'
+            message: t('favorites.added')
           });
         }
       }, 200);

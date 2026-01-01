@@ -7,12 +7,12 @@ export const AUTH_CONFIG = {
 export const createUserData = (responseUser, fallbackData = {}) => ({
   id: responseUser?.id || 'user-id',
   email: responseUser?.email || fallbackData.email,
-  firstName: responseUser?.firstName || fallbackData.firstName || 'User',
-  lastName: responseUser?.lastName || fallbackData.lastName || 'Test',
+  firstName: responseUser?.firstName || fallbackData.firstName || 'משתמש',
+  lastName: responseUser?.lastName || fallbackData.lastName || 'בדיקה',
   role: responseUser?.role || fallbackData.role || 'user',
   token: responseUser?.token || fallbackData.token
 });
 
 export const handleAuthError = (error) => {
-  return error.response?.data?.message || error.message || 'Erreur d\'authentification';
+  return error.response?.data?.message || error.message || 'שגיאת אימות';
 };

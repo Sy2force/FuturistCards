@@ -147,7 +147,11 @@ async function startServer() {
   });
 }
 
-if (require.main === module) {
+// For Vercel serverless deployment
+if (process.env.VERCEL) {
+  // Don't start server in Vercel environment
+  module.exports = app;
+} else if (require.main === module) {
   startServer();
 }
 

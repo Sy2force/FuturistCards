@@ -135,7 +135,10 @@ export const translations = {
     refreshPage: 'רענן דף',
     goBack: 'חזור',
     gridView: 'תצוגת רשת',
-    listView: 'תצוגת רשימה'
+    listView: 'תצוגת רשימה',
+    accessDenied: 'גישה נדחתה',
+    loginRequired: 'יש להתחבר כדי לגשת לדף זה',
+    user: 'משתמש'
   },
   
   // Navbar
@@ -330,58 +333,6 @@ export const translations = {
       popular: 'פופולריים'
     },
     activeFilters: 'מסננים פעילים'
-  },
-  
-  
-  // Create Card
-  createCard: {
-    title: 'יצירת כרטיס',
-    subtitle: 'צור כרטיס ביקור דיגיטלי מקצועי',
-    description: 'יצירת כרטיס ביקור דיגיטלי חדש',
-    error: 'שגיאה ביצירת הכרטיס',
-    generalError: 'שגיאה כללית ביצירת הכרטיס',
-    success: 'הכרטיס נוצר בהצלחה!',
-    preview: 'תצוגה מקדימה',
-    profilePhoto: 'תמונת פרופיל',
-    addPhoto: 'הוסף תמונה',
-    fileFormats: 'PNG, JPG עד 5MB',
-    unlimitedCreation: 'יצירה ללא הגבלה',
-    instantPublication: 'פרסום מיידי',
-    titlePosition: 'כותרת/תפקיד',
-    position: 'תפקיד',
-    email: 'אימייל',
-    phone: 'טלפון',
-    website: 'אתר אינטרנט',
-    address: 'כתובת',
-    category: 'קטגוריה',
-    professionalDetails: 'פרטים מקצועיים',
-    company: 'חברה',
-    namePlaceholder: 'הכנס את שמך המלא',
-    rolePlaceholder: 'למשל: מפתח תוכנה',
-    companyPlaceholder: 'שם החברה',
-    positionPlaceholder: 'התפקיד שלך',
-    descriptionPlaceholder: 'ספר על עצמך ועל מה שאתה עושה...',
-    emailPlaceholder: 'your@email.com',
-    phonePlaceholder: '050-123-4567',
-    websitePlaceholder: 'https://yourwebsite.com',
-    addressPlaceholder: 'העיר, המדינה',
-    creatingInProgress: 'יוצר כרטיס...',
-    placeholders: {
-      name: 'השם שלך',
-      position: 'התפקיד שלך',
-      description: 'תיאור קצר על עצמך'
-    },
-    fields: {
-      fullName: 'שם מלא',
-      email: 'אימייל',
-      phone: 'טלפון',
-      position: 'תפקיד',
-      company: 'חברה',
-      website: 'אתר',
-      description: 'תיאור',
-      address: 'כתובת',
-      category: 'קטגוריה'
-    }
   },
   
   // Edit Card

@@ -61,7 +61,7 @@ const MyCardsPage = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 py-8" dir="rtl">
+    <div className="min-h-screen w-full bg-gray-50 dark:bg-gray-900 py-8" dir="rtl" lang="he">
         <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">

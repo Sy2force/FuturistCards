@@ -28,7 +28,7 @@ const useApi = (apiCall, dependencies = [], immediate = true) => {
         logout();
       }
       
-      setError(err.response?.data?.message || err.message || 'Une erreur est survenue');
+      setError(err.response?.data?.message || err.message || 'An error occurred');
       throw err;
     } finally {
       setLoading(false);

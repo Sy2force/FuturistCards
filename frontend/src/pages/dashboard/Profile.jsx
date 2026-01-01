@@ -49,13 +49,13 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center" dir="rtl" lang="he">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            Accès refusé
+            {t('common.accessDenied')}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            Vous devez être connecté pour accéder à cette page.
+            {t('common.loginRequired')}
           </p>
         </div>
       </div>
@@ -139,7 +139,7 @@ const Profile = () => {
   };
 
   return (
-    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="profile-page" dir="rtl">
+    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="profile-page" dir="rtl" lang="he">
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-8">

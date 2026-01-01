@@ -54,7 +54,7 @@ const CardDetailsPage = () => {
       const favoriteCard = response.data.find(fav => fav.card._id === id);
       setIsFavorite(!!favoriteCard);
     } catch (error) {
-      // Erreur favoris - continue sans favoris
+      // שגיאה במועדפים - ממשיך ללא מועדפים
     }
   }, [id]);
 
@@ -95,10 +95,10 @@ const CardDetailsPage = () => {
           url: window.location.href,
         });
       } catch (error) {
-        // Erreur partage - continue
+        // שגיאה בשיתוף - ממשיך
       }
     } else {
-      // Fallback: copier l'URL
+      // גיבוי: העתק את הקישור
       navigator.clipboard.writeText(window.location.href);
       toast.success(t('cardDetails.linkCopied'));
     }
@@ -109,7 +109,7 @@ const CardDetailsPage = () => {
 
   if (loading) {
     return (
-      <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`} dir="rtl">
+      <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`} dir="rtl" lang="he">
         <motion.div 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -129,7 +129,7 @@ const CardDetailsPage = () => {
 
   if (!card) {
     return (
-      <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`} dir="rtl">
+      <div className={`min-h-screen flex items-center justify-center transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`} dir="rtl" lang="he">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -164,7 +164,7 @@ const CardDetailsPage = () => {
         })} />
       </Helmet>
 
-      <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'}`} dir="rtl">
+      <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'}`} dir="rtl" lang="he">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header avec navigation */}
           <motion.div 

@@ -33,7 +33,7 @@ const CreateCardPage = () => {
   const { user } = useAuth();
   const { isDark } = useRoleTheme();
 
-  // remplir automatiquement avec les infos du user
+  // Auto-fill with user information
   useEffect(() => {
     if (user) {
       setFormData(prev => ({
@@ -58,7 +58,7 @@ const CreateCardPage = () => {
     { value: 'other', label: t('categories.other') }
   ];
 
-  // validation simple
+  // Simple validation
   const validateField = (name, value) => {
     const errors = { ...validationErrors };
     
@@ -93,7 +93,7 @@ const CreateCardPage = () => {
     }));
     setError('');
     
-    // Validation en temps réel
+    // Real-time validation
     validateField(name, value);
   };
 
@@ -133,10 +133,10 @@ const CreateCardPage = () => {
     setLoading(true);
     setError('');
 
-    // Validation simplifiée: seuls nom et prénom obligatoires
+    // Simplified validation: only name and basic fields required
     const errors = {};
     
-    // Seul champ obligatoire: nom complet
+    // Required field: full name
     if (!formData.title?.trim()) {
       errors.title = t('validation.nameRequired');
     }
@@ -147,7 +147,7 @@ const CreateCardPage = () => {
       errors.description = t('validation.descriptionMinLength');
     }
     
-    // Si erreurs, les afficher et arrêter
+    // If errors, display them and stop
     if (Object.keys(errors).length > 0) {
       setValidationErrors(errors);
       const firstError = Object.values(errors)[0];
@@ -156,15 +156,15 @@ const CreateCardPage = () => {
       return;
     }
     
-    // Réinitialiser les erreurs si tout est valide
+    // Reset errors if everything is valid
     setValidationErrors({});
 
     try {
-      // Préparer les données de la carte selon le schéma backend
+      // Prepare card data according to backend schema
       const cardData = {
         title: formData.title,
         subtitle: formData.subtitle || formData.position || '',
-        description: formData.description || `Carte professionnelle de ${formData.title}${formData.company ? ' chez ' + formData.company : ''}`,
+        description: formData.description || t('createCard.defaultDescription', { name: formData.title, company: formData.company }),
         email: formData.email,
         phone: formData.phone || '',
         website: formData.website || '',
@@ -199,7 +199,7 @@ const CreateCardPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 py-12" dir="rtl" lang="he">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">

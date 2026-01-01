@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useTranslation } from "../hooks/useTranslation";
 import { useFavorites } from '../context/FavoritesContext';
@@ -106,6 +106,7 @@ const FavoritesPage = () => {
         </Helmet>
         <motion.div 
           className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4"
+          dir="rtl" lang="he"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -157,6 +158,7 @@ const FavoritesPage = () => {
 
       <motion.div 
         className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-12"
+        dir="rtl" lang="he"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -173,10 +175,10 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-4">
-              Mes Favoris
+              {t('favorites.title')}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Retrouvez et gérez toutes vos cartes de visite préférées en un seul endroit.
+              {t('favorites.noFavoritesDescription')}
             </p>
           </motion.div>
 
@@ -194,7 +196,7 @@ const FavoritesPage = () => {
               whileTap={{ scale: 0.95 }}
             >
               <ArrowLeftIcon className="w-5 h-5 mr-2" />
-              Retour aux cartes
+              {t('navigation.backToMyCards')}
             </motion.button>
           </motion.div>
 

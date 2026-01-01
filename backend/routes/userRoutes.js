@@ -262,4 +262,423 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
   }
 });
 
+// GET /api/users/me - Profil utilisateur actuel
+router.get('/me', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    res.json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.profileError'),
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/users/me - Mettre à jour le profil utilisateur
+router.put('/me', protect, async (req, res) => {
+  try {
+    const { firstName, lastName, phone, address } = req.body;
+    
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { firstName, lastName, phone, address },
+      { new: true, runValidators: true }
+    ).select('-password');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: t('users.profileUpdated'),
+      user
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: t('auth.updateError'),
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/users/me/password - Changer le mot de passe
+router.put('/me/password', protect, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    // Vérifier le mot de passe actuel
+    const bcrypt = require('bcryptjs');
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: t('auth.invalidPassword')
+      });
+    }
+    
+    // Hasher le nouveau mot de passe
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    
+    await User.findByIdAndUpdate(req.user.id, { password: hashedPassword });
+    
+    res.json({
+      success: true,
+      message: t('users.passwordChanged')
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('auth.updateError'),
+      error: error.message
+    });
+  }
+});
+
+// GET /api/users/me/activity - Historique d'activité
+router.get('/me/activity', protect, async (req, res) => {
+  try {
+    const { limit = 20, offset = 0 } = req.query;
+    
+    // Pour l'instant, retourner des données mock
+    // Dans une vraie application, on aurait une collection ActivityLog
+    const mockActivity = [
+      {
+        id: '1',
+        type: 'login',
+        description: t('users.activity.login'),
+        timestamp: new Date(),
+        ip: req.ip
+      },
+      {
+        id: '2',
+        type: 'profile_update',
+        description: t('users.activity.profileUpdate'),
+        timestamp: new Date(Date.now() - 86400000), // 1 day ago
+        ip: req.ip
+      }
+    ];
+    
+    res.json({
+      success: true,
+      activity: mockActivity.slice(offset, offset + parseInt(limit)),
+      total: mockActivity.length
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.activityError'),
+      error: error.message
+    });
+  }
+});
+
+// GET /api/users/me/preferences - Préférences utilisateur
+router.get('/me/preferences', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('preferences');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    const defaultPreferences = {
+      theme: 'light',
+      language: 'fr',
+      notifications: {
+        email: true,
+        push: false,
+        marketing: false
+      },
+      privacy: {
+        profileVisible: true,
+        showEmail: false,
+        showPhone: false
+      }
+    };
+    
+    res.json({
+      success: true,
+      preferences: { ...defaultPreferences, ...user.preferences }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.preferencesError'),
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/users/me/preferences - Mettre à jour les préférences
+router.put('/me/preferences', protect, async (req, res) => {
+  try {
+    const preferences = req.body;
+    
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { preferences },
+      { new: true, runValidators: true }
+    ).select('preferences');
+    
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    res.json({
+      success: true,
+      message: t('users.preferencesUpdated'),
+      preferences: user.preferences
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: t('users.preferencesError'),
+      error: error.message
+    });
+  }
+});
+
+// GET /api/users/me/notifications - Notifications utilisateur
+router.get('/me/notifications', protect, async (req, res) => {
+  try {
+    const { limit = 10, unread } = req.query;
+    
+    // Mock notifications pour l'instant
+    const mockNotifications = [
+      {
+        id: '1',
+        type: 'like',
+        title: t('notifications.cardLiked'),
+        message: t('notifications.cardLikedMessage'),
+        read: false,
+        createdAt: new Date()
+      },
+      {
+        id: '2',
+        type: 'system',
+        title: t('notifications.welcome'),
+        message: t('notifications.welcomeMessage'),
+        read: true,
+        createdAt: new Date(Date.now() - 86400000)
+      }
+    ];
+    
+    let filteredNotifications = mockNotifications;
+    if (unread === 'true') {
+      filteredNotifications = mockNotifications.filter(n => !n.read);
+    }
+    
+    res.json({
+      success: true,
+      notifications: filteredNotifications.slice(0, parseInt(limit)),
+      unreadCount: mockNotifications.filter(n => !n.read).length
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.notificationsError'),
+      error: error.message
+    });
+  }
+});
+
+// PUT /api/users/me/notifications/:id/read - Marquer notification comme lue
+router.put('/me/notifications/:id/read', protect, async (req, res) => {
+  try {
+    // Dans une vraie app, on mettrait à jour la notification en DB
+    res.json({
+      success: true,
+      message: t('notifications.marked')
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.notificationsError'),
+      error: error.message
+    });
+  }
+});
+
+// DELETE /api/users/me - Supprimer son propre compte
+router.delete('/me', protect, async (req, res) => {
+  try {
+    const { password } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    // Vérifier le mot de passe
+    const bcrypt = require('bcryptjs');
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: t('auth.invalidPassword')
+      });
+    }
+    
+    await User.findByIdAndDelete(req.user.id);
+    
+    res.json({
+      success: true,
+      message: t('users.accountDeleted')
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.deleteError'),
+      error: error.message
+    });
+  }
+});
+
+// GET /api/users/me/export - Exporter les données utilisateur
+router.get('/me/export', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    // Dans une vraie app, on inclurait aussi les cartes, favoris, etc.
+    const exportData = {
+      profile: user,
+      exportDate: new Date(),
+      version: '1.0'
+    };
+    
+    res.json({
+      success: true,
+      data: exportData
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.exportError'),
+      error: error.message
+    });
+  }
+});
+
+// POST /api/users/verify-email - Vérifier l'email
+router.post('/verify-email', async (req, res) => {
+  try {
+    const { token } = req.body;
+    
+    // Dans une vraie app, on vérifierait le token et mettrait à jour emailVerified
+    res.json({
+      success: true,
+      message: t('users.emailVerified')
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: t('users.verificationError'),
+      error: error.message
+    });
+  }
+});
+
+// POST /api/users/resend-verification - Renvoyer l'email de vérification
+router.post('/resend-verification', protect, async (req, res) => {
+  try {
+    // Dans une vraie app, on enverrait un nouvel email de vérification
+    res.json({
+      success: true,
+      message: t('users.verificationSent')
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.verificationError'),
+      error: error.message
+    });
+  }
+});
+
+// GET /api/users/search - Rechercher des utilisateurs (admin seulement)
+router.get('/search', protect, adminOnly, async (req, res) => {
+  try {
+    const { q, role, isActive, limit = 20, offset = 0 } = req.query;
+    
+    let query = {};
+    
+    if (q) {
+      query.$or = [
+        { firstName: { $regex: q, $options: 'i' } },
+        { lastName: { $regex: q, $options: 'i' } },
+        { email: { $regex: q, $options: 'i' } }
+      ];
+    }
+    
+    if (role) {
+      query.role = role;
+    }
+    
+    if (isActive !== undefined) {
+      query.isActive = isActive === 'true';
+    }
+    
+    const users = await User.find(query)
+      .select('-password')
+      .limit(parseInt(limit))
+      .skip(parseInt(offset))
+      .sort({ createdAt: -1 });
+    
+    const total = await User.countDocuments(query);
+    
+    res.json({
+      success: true,
+      users,
+      total,
+      hasMore: (parseInt(offset) + parseInt(limit)) < total
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.searchError'),
+      error: error.message
+    });
+  }
+});
+
 module.exports = router;

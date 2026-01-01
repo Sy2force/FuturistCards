@@ -36,7 +36,7 @@ const AdminPanel = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen flex items-center justify-center" dir="rtl" lang="he">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">
             {t('admin.accessDenied.title')}
@@ -50,7 +50,7 @@ const AdminPanel = () => {
   }
 
   return (
-    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="admin-page" dir="rtl">
+    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="admin-page" dir="rtl" lang="he">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-8">

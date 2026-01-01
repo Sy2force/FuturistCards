@@ -42,7 +42,7 @@ export const useLikes = (cardId = null) => {
   // Toggle like for a card
   const toggleLike = useCallback(async (id) => {
     if (!user) {
-      setError('You must be logged in to like cards');
+      setError('Authentication required');
       return { success: false, error: 'Authentication required' };
     }
 
@@ -99,7 +99,7 @@ export const useLikes = (cardId = null) => {
         }
       }));
       
-      const errorMsg = 'Failed to toggle like';
+      const errorMsg = 'Like operation failed';
       setError(errorMsg);
       return { success: false, error: errorMsg };
     }

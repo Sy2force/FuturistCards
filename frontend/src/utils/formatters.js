@@ -185,7 +185,7 @@ export const formatUserName = (firstName, lastName) => {
     return capitalizeWords(last);
   }
   
-  return 'Anonymous User';
+  return 'משתמש אנונימי';
 };
 
 /**
@@ -242,9 +242,9 @@ export const formatRole = (role) => {
   if (!role) return '';
   
   const roleMap = {
-    'user': 'User',
-    'business': 'Business',
-    'admin': 'Administrator'
+    'user': 'משתמש',
+    'business': 'עסקי',
+    'admin': 'מנהל'
   };
   
   return roleMap[role.toLowerCase()] || capitalizeWords(role);

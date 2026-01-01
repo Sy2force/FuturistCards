@@ -1,12 +1,13 @@
-// Hook de traduction simplifié - Hébreu uniquement
+// Translation hook using static translations
 import { t } from '../utils/translations';
 
 export const useTranslation = () => {
   return {
-    t: t,
+    t,
     i18n: {
       language: 'he',
-      dir: () => 'rtl'
+      dir: () => 'rtl',
+      changeLanguage: () => Promise.resolve()
     }
   };
 };

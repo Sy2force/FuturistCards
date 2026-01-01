@@ -33,7 +33,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת פרופיל'
+        error: error.response?.data?.message || 'Failed to load profile'
       };
     }
   },
@@ -58,7 +58,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בעדכון פרופיל'
+        error: error.response?.data?.message || 'Failed to update profile'
       };
     }
   },
@@ -74,7 +74,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בשינוי סיסמה'
+        error: error.response?.data?.message || 'Failed to change password'
       };
     }
   },
@@ -90,7 +90,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת משתמשים'
+        error: error.response?.data?.message || 'Failed to load users'
       };
     }
   },
@@ -107,7 +107,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בעדכון תפקיד משתמש'
+        error: error.response?.data?.message || 'Failed to update user role'
       };
     }
   },
@@ -123,7 +123,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל במחיקת משתמש'
+        error: error.response?.data?.message || 'Failed to delete user'
       };
     }
   },
@@ -139,7 +139,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת סטטיסטיקות משתמש'
+        error: error.response?.data?.message || 'Failed to load user statistics'
       };
     }
   },
@@ -156,7 +156,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בחיפוש משתמשים'
+        error: error.response?.data?.message || 'Failed to search users'
       };
     }
   },
@@ -188,7 +188,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בהעלאת תמונת פרופיל'
+        error: error.response?.data?.message || 'Failed to upload profile picture'
       };
     }
   },
@@ -204,7 +204,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בטעינת העדפות'
+        error: error.response?.data?.message || 'Failed to load preferences'
       };
     }
   },
@@ -221,7 +221,7 @@ export const userService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'נכשל בעדכון העדפות'
+        error: error.response?.data?.message || 'Failed to update preferences'
       };
     }
   },
@@ -242,7 +242,7 @@ export const userService = {
 
   // Get user display name
   getDisplayName: (user) => {
-    if (!user) return 'Anonymous';
+    if (!user) return 'Anonymous User';
     
     const firstName = user.firstName?.trim() || '';
     const lastName = user.lastName?.trim() || '';
@@ -257,7 +257,7 @@ export const userService = {
       return user.email.split('@')[0];
     }
     
-    return 'Anonymous';
+    return 'Anonymous User';
   },
 
   // Get user initials for avatar
@@ -285,6 +285,219 @@ export const userService = {
     safeRemoveItem(STORAGE_KEYS.USER);
     safeRemoveItem(STORAGE_KEYS.TOKEN);
     safeRemoveItem(STORAGE_KEYS.FAVORITES);
+  },
+
+  // Get user activity log
+  getActivityLog: async (limit = 20, offset = 0) => {
+    try {
+      const response = await usersAPI.get(`/me/activity?limit=${limit}&offset=${offset}`);
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to load activity log'
+      };
+    }
+  },
+
+  // Update user settings
+  updateSettings: async (settings) => {
+    try {
+      const response = await usersAPI.put('/me/settings', settings);
+      return {
+        success: true,
+        data: response.data.settings,
+        message: response.data.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to update settings'
+      };
+    }
+  },
+
+  // Get user notifications
+  getNotifications: async (limit = 10, unreadOnly = false) => {
+    try {
+      const params = { limit };
+      if (unreadOnly) params.unread = true;
+      
+      const response = await usersAPI.get('/me/notifications', { params });
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to load notifications'
+      };
+    }
+  },
+
+  // Mark notification as read
+  markNotificationRead: async (notificationId) => {
+    try {
+      const response = await usersAPI.put(`/me/notifications/${notificationId}/read`);
+      return {
+        success: true,
+        message: response.data.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to mark notification as read'
+      };
+    }
+  },
+
+  // Delete user account
+  deleteAccount: async (password) => {
+    try {
+      const response = await usersAPI.delete('/me', { data: { password } });
+      
+      // Clear all user data
+      userService.clearUserData();
+      
+      return {
+        success: true,
+        message: response.data.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to delete account'
+      };
+    }
+  },
+
+  // Export user data
+  exportUserData: async () => {
+    try {
+      const response = await usersAPI.get('/me/export');
+      return {
+        success: true,
+        data: response.data
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to export user data'
+      };
+    }
+  },
+
+  // Verify email
+  verifyEmail: async (token) => {
+    try {
+      const response = await usersAPI.post('/verify-email', { token });
+      return {
+        success: true,
+        message: response.data.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to verify email'
+      };
+    }
+  },
+
+  // Resend verification email
+  resendVerification: async () => {
+    try {
+      const response = await usersAPI.post('/resend-verification');
+      return {
+        success: true,
+        message: response.data.message
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Failed to send verification email'
+      };
+    }
+  },
+
+  // Get user role permissions
+  getRolePermissions: (role) => {
+    const permissions = {
+      user: {
+        cards: ['view', 'like', 'favorite'],
+        profile: ['view', 'edit'],
+        admin: []
+      },
+      business: {
+        cards: ['view', 'create', 'edit', 'delete', 'like', 'favorite'],
+        profile: ['view', 'edit'],
+        admin: []
+      },
+      admin: {
+        cards: ['view', 'create', 'edit', 'delete', 'like', 'favorite', 'moderate'],
+        profile: ['view', 'edit'],
+        admin: ['users', 'analytics', 'settings', 'moderate']
+      }
+    };
+    
+    return permissions[role] || permissions.user;
+  },
+
+  // Check if user has permission
+  hasPermission: (user, resource, action) => {
+    if (!user || !resource || !action) return false;
+    
+    const permissions = userService.getRolePermissions(user.role);
+    return permissions[resource]?.includes(action) || false;
+  },
+
+  // Format user for display
+  formatUserForDisplay: (user) => {
+    if (!user) return null;
+    
+    return {
+      ...user,
+      displayName: userService.getDisplayName(user),
+      initials: userService.getUserInitials(user),
+      roleLabel: {
+        user: 'User',
+        business: 'Business',
+        admin: 'Admin'
+      }[user.role] || 'משתמש',
+      isVerified: user.emailVerified || false,
+      memberSince: user.createdAt ? new Date(user.createdAt).getFullYear() : null
+    };
+  },
+
+  // Validate user data
+  validateUserData: (userData) => {
+    const errors = {};
+    
+    if (!userData.firstName?.trim()) {
+      errors.firstName = 'First name is required';
+    }
+    
+    if (!userData.lastName?.trim()) {
+      errors.lastName = 'Last name is required';
+    }
+    
+    if (!userData.email?.trim()) {
+      errors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
+      errors.email = 'Invalid email format';
+    }
+    
+    if (userData.phone && !/^[\d\s\-\+\(\)]+$/.test(userData.phone)) {
+      errors.phone = 'Invalid phone format';
+    }
+    
+    return {
+      isValid: Object.keys(errors).length === 0,
+      errors
+    };
   }
 };
 

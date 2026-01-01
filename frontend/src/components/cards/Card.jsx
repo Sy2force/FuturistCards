@@ -25,7 +25,7 @@ const Card = ({
               src={card.image?.url || card.image} 
               alt={card.image?.alt || card.title}
               className="w-full h-48 object-cover transition-transform duration-300 hover:scale-110 cursor-pointer"
-              onClick={() => {/* Preview functionality */}}
+              onClick={() => {/* Image preview */}}
               onError={(e) => {
                 e.target.style.display = 'none';
                 e.target.nextSibling.style.display = 'flex';
@@ -34,7 +34,7 @@ const Card = ({
           ) : null}
           <div 
             className={`absolute inset-0 flex items-center justify-center cursor-pointer ${(card.image?.url || card.image) ? 'hidden' : 'flex'}`}
-            onClick={() => {/* Preview functionality */}}
+            onClick={() => {/* Image preview */}}
           >
             <div className="text-center">
               <div className="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center mx-auto mb-3">

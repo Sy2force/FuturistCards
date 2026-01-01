@@ -31,7 +31,7 @@ const SimpleHomePage = () => {
   ];
 
   return (
-    <div data-testid="home-page" className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" dir="rtl">
+    <div data-testid="home-page" className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" dir="rtl" lang="he">
       <div className="max-w-6xl mx-auto px-4 py-20">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

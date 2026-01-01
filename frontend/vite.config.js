@@ -1,4 +1,3 @@
-/// <reference types="vitest" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { fileURLToPath, URL } from 'url'
@@ -31,6 +30,7 @@ export default defineConfig(({ mode }) => ({
     sourcemap: mode === 'development',
     minify: mode === 'production' ? 'terser' : false,
     rollupOptions: {
+      external: [],
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
@@ -47,7 +47,11 @@ export default defineConfig(({ mode }) => ({
     target: 'es2020',
     reportCompressedSize: false,
     cssCodeSplit: true,
-    assetsInlineLimit: 4096
+    assetsInlineLimit: 4096,
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
+    }
   },
   define: {
     __APP_VERSION__: JSON.stringify('1.0.0'),
