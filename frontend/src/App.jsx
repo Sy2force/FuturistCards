@@ -6,12 +6,12 @@ import { useRoleTheme } from './context/ThemeProvider';
 import { motion } from 'framer-motion';
 import { useTranslation } from "./hooks/useTranslation";
 
-// Layout Components
+// רכיבי פריסה
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
-// Lazy load pages for better performance
+// טעינה עצלה של דפים לביצועים טובים יותר
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
@@ -26,10 +26,12 @@ const PacksPage = lazy(() => import('./pages/PacksPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
+const MyCardsPage = lazy(() => import('./pages/dashboard/MyCards'));
+const CreateCardPage = lazy(() => import('./pages/CreateCardPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const UnauthorizedPage = lazy(() => import('./pages/UnauthorizedPage'));
 
-// Loading component
+// רכיב טעינה
 const LoadingSpinner = () => {
   const { currentTheme } = useRoleTheme();
   const { t } = useTranslation();
@@ -120,14 +122,24 @@ function App() {
             } />
             
             {/* Protected Routes - Business/Admin */}
+            <Route path="/my-cards" element={
+              <ProtectedRoute requiredRoles={['business', 'admin']}>
+                <MyCardsPage />
+              </ProtectedRoute>
+            } />
             <Route path="/cards/new" element={
               <ProtectedRoute requiredRoles={['business', 'admin']}>
-                <EditCardPage />
+                <CreateCardPage />
               </ProtectedRoute>
             } />
             <Route path="/create-card" element={
               <ProtectedRoute requiredRoles={['business', 'admin']}>
-                <EditCardPage />
+                <CreateCardPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/dashboard/my-cards" element={
+              <ProtectedRoute requiredRoles={['business', 'admin']}>
+                <MyCardsPage />
               </ProtectedRoute>
             } />
             <Route path="/cards/:id/edit" element={

@@ -44,12 +44,12 @@ const ProtectedRoute = ({ children, requiredRole = null, requiredRoles = null })
     return <Navigate to="/login" replace />;
   }
 
-  // Check single role
+  // בדיקת תפקיד יחיד
   if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // Check multiple roles
+  // בדיקת תפקידים מרובים
   if (requiredRoles && !requiredRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }

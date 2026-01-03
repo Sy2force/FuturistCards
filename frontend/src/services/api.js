@@ -82,6 +82,7 @@ const apiService = {
   getCards: () => api.get('/cards'),
   getCard: (id) => api.get(`/cards/${id}`),
   getUserCards: () => api.get('/cards/user'),
+  getMyCards: () => api.get('/cards/my-cards'),
   createCard: (cardData) => api.post('/cards', cardData),
   updateCard: (id, cardData) => api.put(`/cards/${id}`, cardData),
   deleteCard: (id) => api.delete(`/cards/${id}`),
@@ -105,4 +106,4 @@ const apiService = {
 };
 
 export default apiService;
-export { api };
+export { api, apiService };

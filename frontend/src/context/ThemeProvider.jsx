@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ThemeProvider as NextThemesProvider, useTheme } from 'next-themes';
+import { t } from '../utils/translations';
 
 const RoleThemeContext = createContext();
 
 export const useRoleTheme = () => {
   const context = useContext(RoleThemeContext);
   if (!context) {
-    throw new Error('useRoleTheme חייב להיות בשימוש בתוך RoleThemeProvider');
+    throw new Error(t('common.contextError'));
   }
   return context;
 };

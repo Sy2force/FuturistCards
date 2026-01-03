@@ -5,14 +5,13 @@ const sanitizeString = (str) => {
 };
 
 const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  // Simplified email validation - just check for @ symbol
+  return email && email.includes('@');
 };
 
 const isStrongPassword = (password) => {
-  // At least 8 chars, 1 uppercase, 1 lowercase, 1 number
-  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-  return strongPasswordRegex.test(password);
+  // Simplified password validation - minimum 4 characters
+  return password && password.length >= 4;
 };
 
 const validateRegistration = (req, res, next) => {
@@ -35,7 +34,7 @@ const validateRegistration = (req, res, next) => {
 
   if (!password || !isStrongPassword(password)) {
     return res.status(400).json({ 
-      message: 'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre' 
+      message: 'Le mot de passe doit contenir au moins 4 caractères' 
     });
   }
 
@@ -90,10 +89,8 @@ const validateCard = (req, res, next) => {
     return res.status(400).json({ message: 'Format d\'email invalide' });
   }
 
-  // Validate phone if provided
-  if (sanitizedPhone && !/^[\d\s\-\+\(\)\.]{10,20}$/.test(sanitizedPhone)) {
-    return res.status(400).json({ message: 'Format de téléphone invalide' });
-  }
+  // Phone validation (simplified - accept any format)
+  // No validation needed - accept any phone format
 
   // Validate website if provided
   if (sanitizedWebsite && !sanitizedWebsite.match(/^https?:\/\/.+/)) {

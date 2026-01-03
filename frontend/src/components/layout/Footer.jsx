@@ -13,7 +13,7 @@ import {
 import GlassCard from '../ui/GlassCard';
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { currentTheme } = useRoleTheme();
 
   const footerLinks = [
@@ -71,13 +71,13 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white py-16" data-testid="footer">
+    <footer className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white py-16" data-testid="footer" dir={language === 'he' ? 'rtl' : 'ltr'}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className={`relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${language === 'he' ? 'font-hebrew' : ''}`}>
         {/* Main Footer Content */}
         <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8 mb-12">
           {/* Brand Section */}
@@ -87,7 +87,7 @@ const Footer = () => {
             transition={{ duration: 0.6 }}
             className="lg:col-span-1"
           >
-            <div className="flex items-center space-x-2 mb-4">
+            <div className={`flex items-center mb-4 ${language === 'he' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
                 <SparklesIcon className="w-5 h-5 text-white" />
               </div>
@@ -101,11 +101,11 @@ const Footer = () => {
             
             {/* Contact Info */}
             <div className="space-y-2">
-              <div className="flex items-center space-x-2 text-white/60 text-sm">
+              <div className={`flex items-center text-white/60 text-sm ${language === 'he' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                 <EnvelopeIcon className="w-4 h-4" />
                 <span>contact@futuristcards.com</span>
               </div>
-              <div className="flex items-center space-x-2 text-white/60 text-sm">
+              <div className={`flex items-center text-white/60 text-sm ${language === 'he' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
                 <PhoneIcon className="w-4 h-4" />
                 <span>+1 (555) 123-4567</span>
               </div>
@@ -144,7 +144,7 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-6 text-white">{t('footer.features.title')}</h4>
             <div className="space-y-4">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-start space-x-3">
+                <div key={index} className={`flex items-start ${language === 'he' ? 'space-x-reverse space-x-3' : 'space-x-3'}`}>
                   <div className="w-8 h-8 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
                     <feature.icon className="w-4 h-4 text-blue-400" />
                   </div>
@@ -191,8 +191,8 @@ const Footer = () => {
             <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-pink-600/20 backdrop-blur-md border border-white/10 p-6">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10"></div>
               <div className="relative z-10">
-                <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
+                <div className={`flex items-center mb-3 ${language === 'he' ? 'space-x-reverse space-x-3' : ''}`}>
+                  <div className={`w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center ${language === 'he' ? 'ml-3' : 'mr-3'}`}>
                     <EnvelopeIcon className="w-4 h-4 text-white" />
                   </div>
                   <h5 className="text-white font-semibold text-lg">{t('footer.newsletter')}</h5>
@@ -210,7 +210,7 @@ const Footer = () => {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center space-x-2"
+                    className={`w-full px-6 py-3 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-xl text-white text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center ${language === 'he' ? 'space-x-reverse space-x-2' : 'space-x-2'}`}
                     data-testid="footer-newsletter-btn"
                   >
                     <span>{t('footer.newsletter')}</span>

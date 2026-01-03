@@ -5,17 +5,7 @@ import {
   offlineStats, 
   offlineConfig 
 } from '../data/offlineData';
-import { translations } from '../utils/translations';
-
-// Helper function to get translation
-const t = (key) => {
-  const keys = key.split('.');
-  let value = translations;
-  for (const k of keys) {
-    value = value?.[k];
-  }
-  return value || key;
-};
+import { t } from '../utils/translations';
 
 class OfflineService {
   constructor() {

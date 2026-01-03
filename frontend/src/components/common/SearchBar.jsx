@@ -23,7 +23,7 @@ const SearchBar = ({
   
   const defaultPlaceholder = placeholder || t('search.placeholder');
 
-  // Debounced search
+  // חיפוש עם השהיה
   useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -40,7 +40,7 @@ const SearchBar = ({
     };
   }, [searchTerm, onSearch, debounceMs]);
 
-  // Handle click outside to close suggestions
+  // טיפול בלחיצה מחוץ לסגירת הצעות
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (suggestionRef.current && !suggestionRef.current.contains(event.target) &&
@@ -118,7 +118,7 @@ const SearchBar = ({
           }}
           onBlur={() => {
             setIsFocused(false);
-            // Delay hiding suggestions to allow for clicks
+            // השהיית הסתרת הצעות לאפשר לחיצות
             setTimeout(() => setShowSuggestionsList(false), 150);
           }}
           onKeyDown={handleKeyDown}

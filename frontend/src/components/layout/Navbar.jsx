@@ -89,21 +89,33 @@ const Navbar = ({ onCreateCard }) => {
     navigate('/login');
   };
 
-  // Navigation links configuration
-  const navigationLinks = [
-    { path: '/', key: 'home', label: t('navbar.home'), public: true },
-    { path: '/cards', key: 'cards', label: t('navbar.cards'), public: true },
-    { path: '/services', key: 'services', label: t('navbar.services'), public: true },
-    { path: '/packs', key: 'packs', label: t('navbar.packs'), public: true },
-    { path: '/contact', key: 'contact', label: t('navbar.contact'), public: true },
+  // Navigation links configuration - different for logged in vs logged out users
+  const publicLinks = [
+    { path: '/', key: 'home', label: t('navbar.home') },
+    { path: '/about', key: 'about', label: t('navbar.about') },
+    { path: '/services', key: 'services', label: t('navbar.services') },
+    { path: '/contact', key: 'contact', label: t('navbar.contact') },
   ];
 
-  const userLinks = [
-    { path: '/dashboard', key: 'dashboard', label: t('navbar.dashboard'), roles: ['user', 'business', 'admin'] },
-    { path: '/favorites', key: 'favorites', label: t('navbar.favorites'), roles: ['user'] },
+  const authenticatedLinks = [
+    { path: '/', key: 'home', label: t('navbar.home') },
+    { path: '/cards', key: 'cards', label: t('navbar.cards') },
     { path: '/my-cards', key: 'my-cards', label: t('navbar.myCards'), roles: ['business', 'admin'] },
+    { path: '/create-card', key: 'create-card', label: 'צור כרטיס', roles: ['business', 'admin'] },
+    { path: '/favorites', key: 'favorites', label: t('navbar.favorites') },
+    { path: '/dashboard', key: 'dashboard', label: t('navbar.dashboard') },
     { path: '/admin', key: 'admin', label: t('navbar.admin'), roles: ['admin'] },
   ];
+
+  // Get appropriate links based on authentication status
+  const getNavigationLinks = () => {
+    if (!user) {
+      return publicLinks;
+    }
+    return authenticatedLinks.filter(link => 
+      !link.roles || link.roles.includes(user.role)
+    );
+  };
 
   const getNavbarTestId = () => {
     if (!user) {
@@ -129,15 +141,16 @@ const Navbar = ({ onCreateCard }) => {
       data-testid={getNavbarTestId()}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16 flex-row-reverse">
+        <div className="flex items-center h-16 flex-row-reverse gap-4">
           {/* Logo */}
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="flex-shrink-0"
           >
             <Link 
               to="/" 
-              className="flex items-center gap-3 transition-colors duration-200"
+              className="flex items-center gap-2 transition-colors duration-200"
               style={{ color: currentTheme.colors.text.primary }}
               aria-label={t('navbar.home')}
               data-testid="navbar-logo"
@@ -145,14 +158,14 @@ const Navbar = ({ onCreateCard }) => {
               {/* Logo Icon */}
               <div className="relative">
                 <div 
-                  className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg"
                   style={{
                     background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.accent})`,
                   }}
                 >
                   {/* Futuristic Card Icon */}
                   <svg 
-                    className="w-6 h-6 text-white" 
+                    className="w-5 h-5 text-white" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -165,74 +178,54 @@ const Navbar = ({ onCreateCard }) => {
                     />
                   </svg>
                 </div>
-                {/* Glow effect */}
-                <div 
-                  className="absolute inset-0 rounded-xl blur-md opacity-50 -z-10"
-                  style={{
-                    background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.accent})`,
-                  }}
-                />
               </div>
               
-              {/* Site Title in English */}
+              {/* Site Title */}
               <div className="flex flex-col">
                 <span 
-                  className="text-xl sm:text-2xl font-bold leading-tight"
+                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wide"
                   style={{ 
                     background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.accent})`,
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
-                    color: currentTheme.colors.primary
+                    color: currentTheme.colors.primary,
+                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
                   }}
+                  data-testid="site-title"
                 >
-                  {t('common.siteName')}
+                  FuturistCards
                 </span>
                 <span 
-                  className="text-xs font-medium opacity-70 hidden sm:block"
+                  className="text-xs opacity-75 text-center"
                   style={{ color: currentTheme.colors.text.secondary }}
                 >
-                  {t('common.title')}
+                  כרטיסי ביקור דיגיטליים
                 </span>
               </div>
             </Link>
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {/* Navigation Links */}
-            {navigationLinks.map((link) => (
-              <motion.div key={link.key} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  to={link.path}
-                  className="glass-button px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
-                  style={{
-                    backgroundColor: isActive(link.path) ? currentTheme.colors.primary : 'transparent',
-                    color: isActive(link.path) ? '#ffffff' : currentTheme.colors.text.primary
-                  }}
-                  data-testid={`link-${link.key}`}
-                >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
-
-            {/* User-specific Links */}
-            {user && userLinks.filter(shouldShowLink).map((link) => (
-              <motion.div key={link.key} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Link
-                  to={link.path}
-                  className="glass-button px-3 py-2 rounded-md text-sm font-medium transition-all duration-200"
-                  style={{
-                    backgroundColor: isActive(link.path) ? currentTheme.colors.primary : 'transparent',
-                    color: isActive(link.path) ? '#ffffff' : currentTheme.colors.text.primary
-                  }}
-                  data-testid={`link-${link.key}`}
-                >
-                  {link.label}
-                </Link>
-              </motion.div>
-            ))}
+          <div className="hidden md:flex items-center flex-1 justify-center">
+            <div className="flex items-center w-full max-w-5xl gap-1">
+              {/* Navigation Links */}
+              {getNavigationLinks().map((link) => (
+                <motion.div key={link.key} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
+                  <Link
+                    to={link.path}
+                    className="glass-button px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 w-full text-center block whitespace-nowrap"
+                    style={{
+                      backgroundColor: isActive(link.path) ? currentTheme.colors.primary : 'transparent',
+                      color: isActive(link.path) ? '#ffffff' : currentTheme.colors.text.primary
+                    }}
+                    data-testid={`link-${link.key}`}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
           </div>
 
           {/* Right Side Controls */}
@@ -244,8 +237,12 @@ const Navbar = ({ onCreateCard }) => {
             {/* Auth Section */}
             {user ? (
               <div className="flex items-center space-x-3">
-                {/* User Badge */}
+                {/* מחוון סטטוס משתמש */}
                 <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-1">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-xs text-green-400 font-medium">{t('home.status.connected')}</span>
+                  </div>
                   <span 
                     className="px-2 py-1 text-xs font-semibold rounded-full"
                     style={{
@@ -340,23 +337,7 @@ const Navbar = ({ onCreateCard }) => {
             >
               <div className="px-2 pt-2 pb-3 space-y-1">
                 {/* Mobile Navigation Links */}
-                {navigationLinks.map((link) => (
-                  <Link
-                    key={link.key}
-                    to={link.path}
-                    className="block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
-                    style={{
-                      backgroundColor: isActive(link.path) ? currentTheme.colors.primary : 'transparent',
-                      color: isActive(link.path) ? '#ffffff' : currentTheme.colors.text.primary
-                    }}
-                    data-testid={`mobile-link-${link.key}`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-
-                {/* Mobile User Links */}
-                {user && userLinks.filter(shouldShowLink).map((link) => (
+                {getNavigationLinks().map((link) => (
                   <Link
                     key={link.key}
                     to={link.path}

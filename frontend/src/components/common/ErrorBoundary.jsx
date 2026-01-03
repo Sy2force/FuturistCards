@@ -1,5 +1,5 @@
 import { Component } from 'react';
-import { translations } from '../../utils/translations';
+import translations, { t } from '../../utils/translations';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 class ErrorBoundary extends Component {

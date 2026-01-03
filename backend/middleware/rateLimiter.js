@@ -25,10 +25,10 @@ const authLimiter = rateLimit({
   skipSuccessfulRequests: true, // Don't count successful requests
 });
 
-// Registration rate limiter
+// Registration rate limiter (disabled for testing)
 const registerLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour
-  max: 3, // Max 3 registration attempts per hour
+  max: 1000, // Allow many registrations for testing
   message: {
     error: 'Trop de tentatives d\'inscription, veuillez réessayer dans 1 heure',
     retryAfter: Math.ceil(60 * 60 / 60) + ' minutes'

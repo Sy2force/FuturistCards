@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { useTranslation } from "../hooks/useTranslation";
 import {
   CheckIcon,
@@ -11,7 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 const PacksPage = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const [billingCycle, setBillingCycle] = useState('monthly');
 
   const packs = [
@@ -83,6 +84,12 @@ const PacksPage = () => {
     }
   ];
 
+  const handleSelectPack = (packId) => {
+    // Handle pack selection logic here
+    // In production, redirect to payment or registration
+    window.location.href = `/register?pack=${packId}`;
+  };
+
   const getPrice = (pack) => {
     const price = pack.prices[billingCycle];
     const monthlyPrice = billingCycle === 'yearly' ? Math.round(price / 12) : price;
@@ -97,7 +104,12 @@ const PacksPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" dir="rtl" lang="he">
+    <>
+      <Helmet>
+        <title>{t('packs.pageTitle')} - FuturistCards</title>
+        <meta name="description" content={t('packs.pageDescription')} />
+      </Helmet>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir={language === 'he' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -182,13 +194,13 @@ const PacksPage = () => {
 
                   <div className="text-center mb-8">
                     <div className="flex items-baseline justify-center">
-                      <span className="text-4xl font-bold text-white">{price.monthly}€</span>
+                      <span className="text-4xl font-bold text-white">{price.monthly * 4}₪</span>
                       <span className="text-gray-400 ml-1">{t('packs.perMonth')}</span>
                     </div>
                     {billingCycle === 'yearly' && (
                       <div className="mt-2">
                         <p className="text-sm text-gray-400">
-                          {t('packs.billing.billedYearly')}: {price.total}€
+                          {t('packs.billing.billedYearly')}: {price.total * 4}₪
                         </p>
                         {savings > 0 && (
                           <p className="text-sm text-green-400 font-medium">
@@ -380,6 +392,7 @@ const PacksPage = () => {
         </div>
       </section>
     </div>
+    </>
   );
 };
 

@@ -138,7 +138,7 @@ const CreateCardPage = () => {
     
     // Required field: full name
     if (!formData.title?.trim()) {
-      errors.title = t('validation.nameRequired');
+      errors.title = t('validation.fullNameRequired');
     }
     if (!formData.phone?.trim() || formData.phone.trim().length < 8) {
       errors.phone = t('validation.phoneMinLength');
@@ -164,7 +164,7 @@ const CreateCardPage = () => {
       const cardData = {
         title: formData.title,
         subtitle: formData.subtitle || formData.position || '',
-        description: formData.description || t('createCard.defaultDescription', { name: formData.title, company: formData.company }),
+        description: formData.description || t('createCard.defaultDescription', { company: formData.company || t('createCard.defaultCompany') }),
         email: formData.email,
         phone: formData.phone || '',
         website: formData.website || '',
@@ -177,10 +177,10 @@ const CreateCardPage = () => {
       const response = await apiService.createCard(cardData);
       
       if (response.success) {
-        toast.success(t('cardCreatedSuccess'));
+        toast.success(t('createCard.successMessage'));
         navigate('/my-cards');
       } else {
-        throw new Error(response.message || t('createCard.error'));
+        throw new Error(response.message || t('createCard.errorMessage'));
       }
     } catch (error) {
       let errorMessage = t('createCard.generalError');
@@ -571,7 +571,7 @@ const CreateCardPage = () => {
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     >
-                      {categories.map(category => (
+                      {categoryOptions.map(category => (
                         <option key={category.value} value={category.value}>
                           {category.label}
                         </option>

@@ -15,6 +15,7 @@ import { useFavorites } from '../context/FavoritesContext';
 import { useAuth } from '../context/AuthContext';
 import { api } from '../services/api';
 import { mockCards } from '../data/mockCards';
+import LikeButton from '../components/ui/LikeButton';
 
 const CardDetailsPage = () => {
   const { id } = useParams();
@@ -54,7 +55,7 @@ const CardDetailsPage = () => {
       const favoriteCard = response.data.find(fav => fav.card._id === id);
       setIsFavorite(!!favoriteCard);
     } catch (error) {
-      // שגיאה במועדפים - ממשיך ללא מועדפים
+      // Error loading favorites - continue without favorites
     }
   }, [id]);
 
@@ -95,10 +96,10 @@ const CardDetailsPage = () => {
           url: window.location.href,
         });
       } catch (error) {
-        // שגיאה בשיתוף - ממשיך
+        // Error sharing - continue
       }
     } else {
-      // גיבוי: העתק את הקישור
+      // Fallback: copy link
       navigator.clipboard.writeText(window.location.href);
       toast.success(t('cardDetails.linkCopied'));
     }
@@ -187,23 +188,18 @@ const CardDetailsPage = () => {
             </motion.button>
 
             <div className="flex items-center space-x-3">
-              <motion.button
-                onClick={handleToggleFavorite}
-                className={`flex items-center px-4 py-2 rounded-xl transition-all duration-200 ${
-                  isFavorite 
-                    ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20 border border-red-500/20' 
-                    : `${isDarkMode ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'} border border-transparent`
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {isFavorite ? (
-                  <HeartIconSolid className="w-5 h-5 mr-2" />
-                ) : (
-                  <HeartIcon className="w-5 h-5 mr-2" />
-                )}
-                {isFavorite ? t('favorites.remove') : t('favorites.add')}
-              </motion.button>
+              <LikeButton 
+                cardId={id}
+                size="lg"
+                showCount={true}
+                className="px-4 py-2"
+                onLikeChange={(data) => {
+                  // Update card likes count if needed
+                  if (card) {
+                    setCard(prev => ({ ...prev, likes: data.likesCount }));
+                  }
+                }}
+              />
 
               <motion.button
                 onClick={handleShare}

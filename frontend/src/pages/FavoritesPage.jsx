@@ -14,7 +14,7 @@ const FavoritesPage = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const { isDark } = useRoleTheme();
-  const { favorites } = useFavorites();
+  const { favorites, getFavoriteCards } = useFavorites();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,7 +30,7 @@ const FavoritesPage = () => {
 
   // Fetch cards data for favorites
   const fetchCards = useCallback(async () => {
-    if (!user || favorites.length === 0) {
+    if (!user) {
       setCards([]);
       setLoading(false);
       return;
@@ -40,39 +40,110 @@ const FavoritesPage = () => {
       setLoading(true);
       setError(null);
       
-      // Mock data for favorites
+      // Get all available cards (from localStorage and mock data)
+      const localCards = JSON.parse(localStorage.getItem('userCards') || '[]');
+      
+      // Get cards from CardsPage localStorage (where all public cards are stored)
+      const publicCards = JSON.parse(localStorage.getItem('publicCards') || '[]');
+      
       const mockCards = [
         {
+          id: '1',
           _id: '1',
           title: t('mockData.favorites.card1.title'),
+          subtitle: t('mockData.favorites.card1.subtitle'),
           description: t('mockData.favorites.card1.description'),
-          image: { url: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop', alt: t('mockData.favorites.card1.imageAlt') },
-          likes: 45,
-          views: 234,
-          category: t('categories.technology')
+          image: null,
+          views: 245,
+          likes: parseInt(localStorage.getItem('card_likes_1') || '18'),
+          createdAt: '2024-01-15T10:30:00Z',
+          backgroundColor: '#1e293b',
+          textColor: '#ffffff',
+          accentColor: '#3b82f6',
+          category: 'technology',
+          author: {
+            name: t('mockData.favorites.card1.author'),
+            avatar: null
+          }
         },
         {
-          _id: '2', 
+          id: '2',
+          _id: '2',
           title: t('mockData.favorites.card2.title'),
+          subtitle: t('mockData.favorites.card2.subtitle'),
           description: t('mockData.favorites.card2.description'),
-          image: { url: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop', alt: t('mockData.favorites.card2.imageAlt') },
-          likes: 32,
+          image: null,
+          views: 189,
+          likes: parseInt(localStorage.getItem('card_likes_2') || '24'),
+          createdAt: '2024-01-10T14:20:00Z',
+          backgroundColor: '#7c3aed',
+          textColor: '#ffffff',
+          accentColor: '#f59e0b',
+          category: 'design',
+          author: {
+            name: t('mockData.favorites.card2.author'),
+            avatar: null
+          }
+        },
+        {
+          id: '3',
+          _id: '3',
+          title: t('mockData.favorites.card3.title'),
+          subtitle: t('mockData.favorites.card3.subtitle'),
+          description: t('mockData.favorites.card3.description'),
+          image: null,
           views: 156,
-          category: t('categories.creative')
+          likes: parseInt(localStorage.getItem('card_likes_3') || '31'),
+          createdAt: '2024-01-05T09:15:00Z',
+          backgroundColor: '#059669',
+          textColor: '#ffffff',
+          accentColor: '#fbbf24',
+          category: 'business',
+          author: {
+            name: t('mockData.favorites.card3.author'),
+            avatar: null
+          }
         }
       ];
       
-      setCards(mockCards);
+      // Combine all cards
+      const allCards = [...localCards, ...publicCards, ...mockCards];
+      
+      // Filter only favorited cards using the context function
+      const favoriteCards = getFavoriteCards(allCards);
+      
+      setCards(favoriteCards);
     } catch (error) {
-      // Error fetching favorites - handled by UI
       setError(t('favorites.loadError'));
     } finally {
       setLoading(false);
     }
-  }, [user, favorites]);
+  }, [user, t, getFavoriteCards]);
 
   useEffect(() => {
     fetchCards();
+  }, [fetchCards]);
+
+  // Listen for favorites changes to refresh the list
+  useEffect(() => {
+    const handleFavoritesChange = () => {
+      fetchCards();
+    };
+
+    window.addEventListener('favoritesChanged', handleFavoritesChange);
+    return () => window.removeEventListener('favoritesChanged', handleFavoritesChange);
+  }, [fetchCards]);
+
+  // Also listen for storage changes to update when favorites are modified in other tabs
+  useEffect(() => {
+    const handleStorageChange = (e) => {
+      if (e.key === 'allFavorites' || e.key?.startsWith('card_likes_')) {
+        fetchCards();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, [fetchCards]);
 
   // Filter and sort cards
@@ -210,7 +281,7 @@ const FavoritesPage = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
               <span className="ml-3 text-gray-600 dark:text-gray-400">{t('favorites.loading')}</span>
             </motion.div>
-          ) : favorites.length === 0 ? (
+          ) : cards.length === 0 ? (
             <motion.div 
               className="bg-white dark:bg-gray-800 rounded-2xl p-12 shadow-xl border border-gray-200 dark:border-gray-700 text-center"
               initial={{ scale: 0.95, opacity: 0 }}
@@ -249,7 +320,7 @@ const FavoritesPage = () => {
               >
                 <div className="mb-6">
                   <p className="text-gray-600 dark:text-gray-400">
-                    <span className="font-medium text-blue-600 dark:text-blue-400">{favorites.length}</span> {favorites.length === 1 ? 'carte favorite' : 'cartes favorites'}
+                    <span className="font-medium text-blue-600 dark:text-blue-400">{cards.length}</span> {t('favorites.cardCount', { count: cards.length })}
                   </p>
                 </div>
                 
@@ -270,7 +341,7 @@ const FavoritesPage = () => {
                 {searchTerm && (
                   <div className="mt-4 text-center">
                     <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                      {filteredCards.length} résultats trouvés pour &ldquo;{searchTerm}&rdquo;
+                      {t('favorites.searchResults', { count: filteredCards.length, term: searchTerm })}
                     </span>
                   </div>
                 )}
@@ -320,7 +391,7 @@ const FavoritesPage = () => {
                       />
                       <span className="flex items-center">
                         <EyeIcon className="w-4 h-4 mr-1" />
-                        {getCardStats(card._id).views || 0} vues
+                        {getCardStats(card._id).views || 0} {t('favorites.views')}
                       </span>
                     </div>
 
@@ -330,7 +401,7 @@ const FavoritesPage = () => {
                         to={`/cards/${card._id}`}
                         className="btn-primary flex-1 text-sm text-center"
                       >
-                        Voir détails
+                        {t('favorites.viewDetails')}
                       </Link>
                       <LikeButton 
                         cardId={card._id}

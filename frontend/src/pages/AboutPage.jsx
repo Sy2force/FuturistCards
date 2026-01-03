@@ -4,7 +4,6 @@ import { useTranslation } from "../hooks/useTranslation";
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
-import { useRoleTheme } from '../context/ThemeProvider';
 import {
   SparklesIcon,
   ShareIcon,
@@ -19,27 +18,26 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 
 const AboutPage = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
   const { user } = useAuth();
-  const { currentTheme } = useRoleTheme();
   
   const features = [
     {
       icon: SparklesIcon,
-      title: t('about.quickCreation'),
-      description: t('about.quickCreationDesc'),
+      title: t('about.features.fast.title'),
+      description: t('about.features.fast.description'),
       color: 'from-blue-500 to-cyan-500'
     },
     {
       icon: ShareIcon,
-      title: t('about.easySharing'),
-      description: t('about.easySharingDesc'),
+      title: t('about.features.share.title'),
+      description: t('about.features.share.description'),
       color: 'from-purple-500 to-pink-500'
     },
     {
       icon: ShieldCheckIcon,
-      title: t('about.secure'),
-      description: t('about.secureDesc'),
+      title: t('about.features.secure.title'),
+      description: t('about.features.secure.description'),
       color: 'from-green-500 to-emerald-500'
     }
   ];
@@ -54,10 +52,10 @@ const AboutPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('about.title')} - {t('common.siteName')}</title>
+        <title>{t('about.title')} - FuturistCards</title>
         <meta name="description" content={t('about.description')} />
       </Helmet>
-      <div className="min-h-screen" style={{ backgroundColor: currentTheme.colors.background }} data-testid="about-page" dir="rtl" lang="he">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" data-testid="about-page" dir={language === 'he' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -72,27 +70,21 @@ const AboutPage = () => {
               transition={{ duration: 1, delay: 0.2 }}
               className="mb-6"
             >
-              <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4"
-                    style={{ 
-                      backgroundColor: currentTheme.colors.primary + '20',
-                      color: currentTheme.colors.primary 
-                    }}>
-                <svg className="w-5 h-5 inline mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+              <span className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 bg-blue-500/20 text-blue-400">
+                <svg className="w-5 h-5 inline ml-2 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
-                {t('about.badge')}
+                {t('about.leadingPlatform')}
               </span>
             </motion.div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
-                style={{ color: currentTheme.colors.text.primary }}>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                 {t('about.title')}
               </span>
             </h1>
             
-            <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed"
-               style={{ color: currentTheme.colors.text.secondary }}>
+            <p className="text-xl mb-12 max-w-3xl mx-auto leading-relaxed text-gray-300">
               {t('about.description')}
             </p>
           </motion.div>
@@ -109,21 +101,21 @@ const AboutPage = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold mb-6" style={{ color: currentTheme.colors.text.primary }}>
-              {t('about.mission.title')}
+            <h2 className="text-4xl font-bold mb-6 text-white">
+              {t('about.ourMission')}
             </h2>
-            <p className="text-xl max-w-4xl mx-auto" style={{ color: currentTheme.colors.text.secondary }}>
-              {t('about.mission.description')}
+            <p className="text-xl max-w-4xl mx-auto text-gray-300">
+              {t('about.missionDescription')}
             </p>
           </motion.div>
 
-          <GlassCard className="p-8 md:p-12 mb-16">
+          <div className="p-8 md:p-12 mb-16 rounded-2xl bg-black/20 border border-white/20 backdrop-blur-sm">
             <div className="prose max-w-none">
-              <p className="text-lg mb-8 leading-relaxed" style={{ color: currentTheme.colors.text.secondary }}>
-                {t('about.platform')}
+              <p className="text-lg mb-8 leading-relaxed text-gray-300">
+                {t('about.platformDescription')}
               </p>
             </div>
-          </GlassCard>
+          </div>
 
           {/* Stats Section */}
           <motion.div 
@@ -142,15 +134,15 @@ const AboutPage = () => {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <GlassCard className="p-6 hover:scale-105 transition-transform duration-300">
-                  <stat.icon className="w-8 h-8 mx-auto mb-3" style={{ color: currentTheme.colors.primary }} />
-                  <div className="text-3xl font-bold mb-2" style={{ color: currentTheme.colors.text.primary }}>
+                <div className="p-6 hover:scale-105 transition-transform duration-300 rounded-2xl bg-black/20 border border-white/20 backdrop-blur-sm">
+                  <stat.icon className="w-8 h-8 mx-auto mb-3 text-blue-400" />
+                  <div className="text-3xl font-bold mb-2 text-white">
                     {stat.number}
                   </div>
-                  <div className="text-sm" style={{ color: currentTheme.colors.text.secondary }}>
+                  <div className="text-sm text-gray-400">
                     {stat.label}
                   </div>
-                </GlassCard>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -173,17 +165,17 @@ const AboutPage = () => {
                 viewport={{ once: true }}
                 whileHover={{ y: -10 }}
               >
-                <GlassCard className="p-8 text-center h-full hover:shadow-2xl transition-all duration-300">
+                <div className="p-8 text-center h-full hover:shadow-2xl transition-all duration-300 rounded-2xl bg-black/20 border border-white/20 backdrop-blur-sm">
                   <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg`}>
                     <feature.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-4" style={{ color: currentTheme.colors.text.primary }}>
+                  <h3 className="text-xl font-bold mb-4 text-white">
                     {feature.title}
                   </h3>
-                  <p className="leading-relaxed" style={{ color: currentTheme.colors.text.secondary }}>
+                  <p className="leading-relaxed text-gray-300">
                     {feature.description}
                   </p>
-                </GlassCard>
+                </div>
               </motion.div>
             ))}
           </motion.div>
@@ -196,14 +188,14 @@ const AboutPage = () => {
             viewport={{ once: true }}
             className="text-center mb-20"
           >
-            <GlassCard className="p-8 md:p-12">
-              <h3 className="text-3xl font-bold mb-6" style={{ color: currentTheme.colors.text.primary }}>
-                {t('about.vision.title')}
+            <div className="p-8 md:p-12 rounded-2xl bg-black/20 border border-white/20 backdrop-blur-sm">
+              <h3 className="text-3xl font-bold mb-6 text-white">
+                {t('about.ourVision')}
               </h3>
-              <p className="text-lg leading-relaxed max-w-4xl mx-auto" style={{ color: currentTheme.colors.text.secondary }}>
-                {t('about.conclusion')}
+              <p className="text-lg leading-relaxed max-w-4xl mx-auto text-gray-300">
+                {t('about.visionDescription')}
               </p>
-            </GlassCard>
+            </div>
           </motion.div>
         </div>
       </section>
@@ -240,8 +232,8 @@ const AboutPage = () => {
                       data-testid="about-cta-button"
                       className="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-xl hover:bg-gray-100 transition-all duration-300 font-semibold text-lg shadow-lg"
                     >
-                      <RocketLaunchIcon className="w-6 h-6 mr-2" />
-                      {user ? t('about.createMyCard') : t('about.createMyAccount')}
+                      <RocketLaunchIcon className="w-6 h-6 ml-2" />
+                      {user ? t('about.createMyCard') : t('about.createAccount')}
                     </Link>
                   </motion.div>
                   
@@ -254,8 +246,8 @@ const AboutPage = () => {
                       className="inline-flex items-center border-2 border-white text-white px-8 py-4 rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-300 font-semibold text-lg"
                       data-testid="about-explore-button"
                     >
-                      <HeartIcon className="w-6 h-6 mr-2" />
-                      {t('about.exploreCards')}
+                      <HeartIcon className="w-6 h-6 ml-2" />
+                      {t('about.discoverCards')}
                     </Link>
                   </motion.div>
                 </div>
@@ -263,15 +255,15 @@ const AboutPage = () => {
                 <div className="flex justify-center items-center gap-8 text-sm opacity-80">
                   <div className="flex items-center gap-2">
                     <CheckCircleIcon className="w-4 h-4" />
-                    {t('about.cta.free')}
+                    {t('about.completelyFree')}
                   </div>
                   <div className="flex items-center gap-2">
                     <ShieldCheckIcon className="w-4 h-4" />
-                    {t('about.cta.secure')}
+                    {t('about.secureAndSafe')}
                   </div>
                   <div className="flex items-center gap-2">
                     <StarIcon className="w-4 h-4" fill="currentColor" />
-                    {t('about.cta.rated')}
+                    {t('about.fiveStarRating')}
                   </div>
                 </div>
               </motion.div>

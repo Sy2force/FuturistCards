@@ -17,7 +17,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
   });
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Debounced search
+  // חיפוש עם השהיה
   const debouncedSearch = useCallback((searchQuery, searchFilters) => {
     const timeoutId = setTimeout(() => {
       onSearch?.(searchQuery, searchFilters);

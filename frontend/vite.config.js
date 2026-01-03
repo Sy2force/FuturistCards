@@ -1,81 +1,23 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { fileURLToPath, URL } from 'url'
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/' : './',
+export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@components': fileURLToPath(new URL('./src/components', import.meta.url)),
-      '@pages': fileURLToPath(new URL('./src/pages', import.meta.url)),
-      '@assets': fileURLToPath(new URL('./src/assets', import.meta.url)),
-    }
-  },
   server: {
     port: 3010,
-    strictPort: true,
-    host: '0.0.0.0',
+    host: true,
     open: false,
-    cors: true,
-  },
-  preview: {
-    port: 4173,
-    host: true
+    strictPort: true
   },
   build: {
     outDir: 'dist',
-    sourcemap: mode === 'development',
-    minify: mode === 'production' ? 'terser' : false,
+    sourcemap: false,
+    minify: 'terser',
     rollupOptions: {
-      external: [],
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          router: ['react-router-dom'],
-          ui: ['framer-motion', 'react-hot-toast'],
-          utils: ['axios', 'yup']
-        },
-        chunkFileNames: 'assets/[name]-[hash].js',
-        entryFileNames: 'assets/[name]-[hash].js',
-        assetFileNames: 'assets/[name]-[hash].[ext]'
+        manualChunks: undefined
       }
-    },
-    chunkSizeWarningLimit: 1000,
-    target: 'es2020',
-    reportCompressedSize: false,
-    cssCodeSplit: true,
-    assetsInlineLimit: 4096,
-    commonjsOptions: {
-      include: [/node_modules/],
-      transformMixedEsModules: true
-    }
-  },
-  define: {
-    __APP_VERSION__: JSON.stringify('1.0.0'),
-  },
-  optimizeDeps: {
-    external: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-      'axios'
-    ],
-  },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: ['./src/setupTests.js'],
-    css: true,
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'src/setupTests.js',
-      ]
     }
   }
-}))
+});

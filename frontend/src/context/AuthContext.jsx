@@ -6,7 +6,7 @@ const AuthContext = createContext();
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth חייב להיות בשימוש בתוך AuthProvider');
+    throw new Error(t('common.contextError'));
   }
   return context;
 };
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || t('auth.loginError'));
       }
 
       if (data.success && data.user && data.token) {
@@ -80,10 +80,10 @@ export const AuthProvider = ({ children }) => {
         
         return { success: true, user: transformedUser };
       } else {
-        throw new Error(data.message || 'Login failed');
+        throw new Error(data.message || t('auth.loginError'));
       }
     } catch (error) {
-      setError(error.message || 'Login failed');
+      setError(error.message || t('auth.loginError'));
       throw error;
     } finally {
       setLoading(false);
@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
+        throw new Error(data.message || t('auth.registerError'));
       }
 
       if (data.success && data.user && data.token) {
@@ -124,10 +124,10 @@ export const AuthProvider = ({ children }) => {
         
         return { success: true, user: transformedUser };
       } else {
-        throw new Error(data.message || 'Registration failed');
+        throw new Error(data.message || t('auth.registerError'));
       }
     } catch (error) {
-      setError(error.message || 'Registration failed');
+      setError(error.message || t('auth.registerError'));
       throw error;
     } finally {
       setLoading(false);

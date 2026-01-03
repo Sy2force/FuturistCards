@@ -70,10 +70,10 @@ const LoginPage = () => {
         <div className="mx-auto w-full max-w-md lg:max-w-lg xl:max-w-xl">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-white mb-4 animate-float">
-              התחברות
+              {t('auth.login')}
             </h2>
             <p className="text-lg text-indigo-200">
-              התחבר לחשבון שלך
+              {t('auth.loginToAccount')}
             </p>
           </div>
 
@@ -93,7 +93,7 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                  אימייל
+                  {t('auth.email')}
                 </label>
                 <input
                   type="email"
@@ -102,7 +102,7 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
-                  placeholder="הכנס את כתובת האימייל שלך"
+                  placeholder={t('auth.emailPlaceholder')}
                   required
                   data-testid="login-email"
                 />
@@ -110,7 +110,7 @@ const LoginPage = () => {
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                  סיסמה
+                  {t('auth.password')}
                 </label>
                 <input
                   type="password"
@@ -119,7 +119,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
-                  placeholder="הכנס את הסיסמה שלך"
+                  placeholder={t('auth.passwordPlaceholder')}
                   required
                   data-testid="login-password"
                 />
@@ -135,7 +135,7 @@ const LoginPage = () => {
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                   ) : (
-                    "התחבר"
+                    t('auth.signIn')
                   )}
                 </button>
               </div>
@@ -143,13 +143,13 @@ const LoginPage = () => {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-white/80">
-                אין לך חשבון? {' '}
+                {t('auth.noAccount')} {' '}
                 <Link 
                   to="/register" 
                   className="font-medium text-blue-300 hover:text-blue-200 transition-colors"
                   data-testid="register-link"
                 >
-                  הירשם
+                  {t('auth.signUp')}
                 </Link>
               </p>
             </div>
@@ -166,7 +166,7 @@ const LoginPage = () => {
         <div className="absolute inset-0 transform hover:scale-105 transition-all duration-700 ease-out">
           <img 
             src="/images/login-hero.jpg" 
-            alt="תמונה מעוררת השראה להתחברות"
+            alt={t('auth.loginImageAlt')}
             className="h-full w-full object-cover"
             onError={(e) => {
               e.target.style.display = 'none';
@@ -194,10 +194,10 @@ const LoginPage = () => {
         <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
           <div className="text-white transform hover:translate-y-[-2px] transition-all duration-300">
             <h3 className="text-xl lg:text-2xl font-bold mb-3 text-white drop-shadow-lg">
-              ברוכים השבים לעתיד
+              {t('auth.welcomeBackFuture')}
             </h3>
             <p className="text-sm lg:text-base text-white/95 leading-relaxed backdrop-blur-sm bg-black/20 rounded-lg p-3 border border-white/20">
-              התחברו למערכת וגלו את כוח הרשתות הדיגיטליות. נהלו את כרטיסי הביקור שלכם, התחברו לאנשים חדשים והרחיבו את הרשת המקצועית שלכם.
+              {t('auth.loginDescription')}
             </p>
           </div>
         </div>

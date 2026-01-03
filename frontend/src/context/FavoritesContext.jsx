@@ -1,85 +1,98 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
+import { t } from '../utils/translations';
 
 const FavoritesContext = createContext();
 
 export const useFavorites = () => {
   const context = useContext(FavoritesContext);
   if (!context) {
-    throw new Error('useFavorites חייב להיות בשימוש בתוך FavoritesProvider');
+    throw new Error(t('common.contextError'));
   }
   return context;
 };
 
 export const FavoritesProvider = ({ children }) => {
   const { user } = useAuth();
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState({});
 
   // Charger les favoris depuis localStorage au démarrage
   useEffect(() => {
-    if (user) {
-      const savedFavorites = localStorage.getItem(`favorites_${user.id}`);
-      if (savedFavorites) {
-        try {
-          setFavorites(JSON.parse(savedFavorites));
-        } catch (error) {
-          setFavorites([]);
-        }
+    const savedFavorites = localStorage.getItem('allFavorites');
+    if (savedFavorites) {
+      try {
+        setFavorites(JSON.parse(savedFavorites));
+      } catch (error) {
+        setFavorites({});
       }
-    } else {
-      setFavorites([]);
     }
-  }, [user]);
+  }, []);
 
   // Sauvegarder les favoris dans localStorage
   const saveFavorites = (newFavorites) => {
-    if (user) {
-      localStorage.setItem(`favorites_${user.id}`, JSON.stringify(newFavorites));
-      setFavorites(newFavorites);
-    }
+    localStorage.setItem('allFavorites', JSON.stringify(newFavorites));
+    setFavorites(newFavorites);
   };
+
+  const toggleFavorite = useCallback((cardId) => {
+    setFavorites(prev => {
+      const userId = user?.id || user?.email || 'anonymous';
+      const userFavorites = prev[userId] || [];
+      
+      let newUserFavorites;
+      const isLiked = userFavorites.includes(cardId);
+      
+      if (isLiked) {
+        newUserFavorites = userFavorites.filter(id => id !== cardId);
+      } else {
+        newUserFavorites = [...userFavorites, cardId];
+      }
+      
+      const newFavorites = {
+        ...prev,
+        [userId]: newUserFavorites
+      };
+      
+      // Sauvegarder dans localStorage
+      localStorage.setItem('allFavorites', JSON.stringify(newFavorites));
+      
+      // Déclencher un événement personnalisé pour les mises à jour temps réel
+      window.dispatchEvent(new CustomEvent('favoriteToggled', {
+        detail: { cardId, userId, isLiked: !isLiked, timestamp: new Date() }
+      }));
+      
+      return newFavorites;
+    });
+  }, [user]);
 
   // Ajouter une carte aux favoris
   const addToFavorites = (cardId) => {
     if (!user) return false;
-    
-    if (!favorites.includes(cardId)) {
-      const newFavorites = [...favorites, cardId];
-      saveFavorites(newFavorites);
-      return true;
-    }
-    return false;
+    toggleFavorite(cardId);
+    return true;
   };
 
   // Retirer une carte des favoris
   const removeFromFavorites = (cardId) => {
     if (!user) return false;
-    
-    const newFavorites = favorites.filter(id => id !== cardId);
-    saveFavorites(newFavorites);
+    toggleFavorite(cardId);
     return true;
-  };
-
-  // Basculer le statut favori d'une carte
-  const toggleFavorite = (cardId) => {
-    if (!user) return false;
-    
-    if (favorites.includes(cardId)) {
-      return removeFromFavorites(cardId);
-    } else {
-      return addToFavorites(cardId);
-    }
   };
 
   // Verify si une carte est en favori
   const isFavorite = (cardId) => {
-    return user ? favorites.includes(cardId) : false;
+    if (!user) return false;
+    const userId = user?.id || user?.email || 'anonymous';
+    const userFavorites = favorites[userId] || [];
+    return userFavorites.includes(cardId);
   };
 
   // Obtenir toutes les cartes favorites
   const getFavoriteCards = (allCards) => {
     if (!user || !allCards) return [];
-    return allCards.filter(card => favorites.includes(card.id || card._id));
+    const userId = user?.id || user?.email || 'anonymous';
+    const userFavorites = favorites[userId] || [];
+    return allCards.filter(card => userFavorites.includes(card.id || card._id));
   };
 
   const value = {
@@ -89,7 +102,7 @@ export const FavoritesProvider = ({ children }) => {
     toggleFavorite,
     isFavorite,
     getFavoriteCards,
-    favoritesCount: favorites.length
+    favoritesCount: user ? (favorites[user?.id || user?.email || 'anonymous'] || []).length : 0
   };
 
   return (

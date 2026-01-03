@@ -16,13 +16,16 @@ const LikeButton = ({
   const { user } = useAuth();
   const { t } = useTranslation();
   const { toggleFavorite, isFavorite } = useFavorites();
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(Math.floor(Math.random() * 50));
+  const [likeCount, setLikeCount] = useState(() => {
+    // Get initial like count from localStorage or generate random
+    const savedLikes = localStorage.getItem(`card_likes_${cardId}`);
+    return savedLikes ? parseInt(savedLikes) : Math.floor(Math.random() * 50);
+  });
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  // Check if card is favorited
-  const isCardFavorite = isFavorite(cardId);
+  // Use favorites context to determine if card is liked
+  const isLiked = isFavorite(cardId);
 
   const handleLikeClick = async (e) => {
     e.preventDefault();
@@ -37,14 +40,18 @@ const LikeButton = ({
     setLoading(true);
     try {
       const willBeLiked = !isLiked;
-      setIsLiked(willBeLiked);
-      setLikeCount(prev => willBeLiked ? prev + 1 : prev - 1);
+      const newLikeCount = willBeLiked ? likeCount + 1 : likeCount - 1;
       
-      // Toggle favorite
-      await toggleFavorite(cardId);
+      setLikeCount(newLikeCount);
+      
+      // Save like count to localStorage
+      localStorage.setItem(`card_likes_${cardId}`, newLikeCount.toString());
+      
+      // Toggle favorite in context
+      toggleFavorite(cardId);
       
       if (onLikeChange) {
-        onLikeChange({ isLiked: willBeLiked, likesCount: likeCount });
+        onLikeChange({ isLiked: willBeLiked, likesCount: newLikeCount });
       }
     } catch (error) {
       setShowError(true);

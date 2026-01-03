@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useTranslation } from "../hooks/useTranslation";
-import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
+import { motion } from 'framer-motion';
 import { 
   SparklesIcon, 
   CreditCardIcon, 
   HeartIcon, 
   GlobeAltIcon,
+  BoltIcon,
   StarIcon,
   ShieldCheckIcon,
-  BoltIcon,
-  UserGroupIcon,
   ChartBarIcon,
+  UserGroupIcon,
   DevicePhoneMobileIcon
 } from '@heroicons/react/24/outline';
 import GlassCard from '../components/ui/GlassCard';
@@ -20,7 +22,8 @@ import GlassButton from '../components/ui/GlassButton';
 import MiniCardForm from '../components/forms/MiniCardForm';
 
 const HomePage = () => {
-  const { t } = useTranslation();
+  const { t, language } = useTranslation();
+  const { user } = useAuth();
   const { currentTheme } = useRoleTheme();
   const [showMiniCardForm, setShowMiniCardForm] = useState(false);
 
@@ -80,10 +83,16 @@ const HomePage = () => {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900" dir="rtl" lang="he">
+    <>
+      <Helmet>
+        <title>{t('home.title')} - FuturistCards</title>
+        <meta name="description" content={t('home.subtitle')} />
+      </Helmet>
+      
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" dir={language === 'he' ? 'rtl' : 'ltr'}>
       {/* Hero Section */}
-      <div className="relative overflow-hidden w-full">
-        <div className="relative w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 py-20">
+      <div className="relative overflow-hidden w-full pt-20">
+        <div className="container mx-auto px-4 py-20">
           <motion.div 
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
@@ -108,91 +117,171 @@ const HomePage = () => {
               </span>
             </motion.div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
-                style={{ color: currentTheme.colors.text.primary }}>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                {t('home.title')}
+                {user ? `${t('home.welcomeBack')}, ${user.name}!` : t('home.title')}
               </span>
             </h1>
             
-            <p className="text-xl mb-12 max-w-4xl mx-auto leading-relaxed"
-               style={{ color: currentTheme.colors.text.secondary }}>
-              {t('home.subtitle')}
+            <p className="text-xl mb-12 max-w-4xl mx-auto leading-relaxed text-gray-300">
+              {user ? 
+                t('home.loggedInSubtitle') : 
+                t('home.subtitle')
+              }
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <GlassButton
-                  size="lg"
-                  onClick={() => setShowMiniCardForm(true)}
-                  data-testid="mini-card-cta"
-                  className="px-8 py-4 text-lg font-semibold"
-                >
-                  <SparklesIcon className="w-6 h-6 mr-3" />
-                  {t('home.createCard')}
-                </GlassButton>
-              </motion.div>
+              {user ? (
+                // Boutons pour utilisateurs connectés
+                <>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <GlassButton
+                      size="lg"
+                      as={Link}
+                      to="/create-card"
+                      data-testid="create-advanced-card-button"
+                      className="px-8 py-4 text-lg font-semibold"
+                    >
+                      <SparklesIcon className="w-6 h-6 ml-3" />
+                      {t('home.buttons.createAdvanced')}
+                    </GlassButton>
+                  </motion.div>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <GlassButton
+                      variant="secondary"
+                      size="lg"
+                      as={Link}
+                      to="/dashboard"
+                      data-testid="dashboard-button"
+                      className="px-8 py-4 text-lg font-semibold"
+                    >
+                      <ChartBarIcon className="w-6 h-6 ml-3" />
+                      {t('home.buttons.dashboard')}
+                    </GlassButton>
+                  </motion.div>
+                </>
+              ) : (
+                // Boutons pour visiteurs non connectés
+                <>
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <GlassButton
+                      size="lg"
+                      onClick={() => setShowMiniCardForm(true)}
+                      data-testid="create-card-button"
+                      className="px-8 py-4 text-lg font-semibold"
+                    >
+                      <SparklesIcon className="w-6 h-6 ml-3" />
+                      {t('home.buttons.createCard')}
+                    </GlassButton>
+                  </motion.div>
+                  
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <GlassButton
+                      variant="secondary"
+                      size="lg"
+                      as={Link}
+                      to="/register"
+                      data-testid="register-button"
+                      className="px-8 py-4 text-lg font-semibold"
+                    >
+                      <UserGroupIcon className="w-6 h-6 ml-3" />
+                      {t('home.buttons.register')}
+                    </GlassButton>
+                  </motion.div>
+                </>
+              )}
               
+              {/* Bouton commun pour tous */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <GlassButton
-                  variant="secondary"
+                  variant="outline"
                   size="lg"
                   as={Link}
                   to="/cards"
                   data-testid="browse-cards-button"
                   className="px-8 py-4 text-lg font-semibold"
                 >
-                  <CreditCardIcon className="w-6 h-6 mr-3" />
-                  {t('home.browseCards')}
+                  <CreditCardIcon className="w-6 h-6 ml-3" />
+                  {t('home.buttons.browse')}
                 </GlassButton>
               </motion.div>
             </div>
             
-            {/* Trust Indicators */}
+            {/* Trust Indicators / User Status */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="flex flex-wrap justify-center items-center gap-8 text-sm"
-              style={{ color: currentTheme.colors.text.secondary }}
+              className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-300"
             >
-              <div className="flex items-center gap-2">
-                <ShieldCheckIcon className="w-5 h-5" style={{ color: currentTheme.colors.success }} />
-                {t('home.trust.secure')}
-              </div>
-              <div className="flex items-center gap-2">
-                <BoltIcon className="w-5 h-5" style={{ color: currentTheme.colors.warning }} />
-                {t('home.trust.fast')}
-              </div>
-              <div className="flex items-center gap-2">
-                <StarIcon className="w-5 h-5" style={{ color: currentTheme.colors.primary }} />
-                {t('home.trust.rated')}
-              </div>
+              {user ? (
+                // Indicateurs pour utilisateurs connectés
+                <>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-green-400 font-medium">{t('home.status.connectedAs')}{user.role === 'admin' ? t('roles.admin') : user.role === 'business' ? t('roles.business') : t('roles.user')}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <CreditCardIcon className="w-5 h-5 text-blue-400" />
+                    {t('home.status.advancedTools')}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <ChartBarIcon className="w-5 h-5 text-purple-400" />
+                    {t('home.status.fullAnalytics')}
+                  </div>
+                </>
+              ) : (
+                // Indicateurs pour visiteurs
+                <>
+                  <div className="flex items-center gap-2">
+                    <ShieldCheckIcon className="w-5 h-5 text-green-400" />
+                    {t('home.status.secure')}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <BoltIcon className="w-5 h-5 text-yellow-400" />
+                    {t('home.status.fast')}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <StarIcon className="w-5 h-5 text-blue-400" />
+                    {t('home.status.rating')}
+                  </div>
+                </>
+              )}
             </motion.div>
           </motion.div>
         </div>
       </div>
 
       {/* Features Section */}
-      <div className="py-24 bg-gradient-to-b from-transparent to-blue-50/50 dark:to-gray-800/50 w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="py-24 w-full">
+        <div className="container mx-auto px-4">
           <motion.div 
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h2 className="text-4xl font-bold mb-4" style={{ color: currentTheme.colors.text.primary }}>
-              {t('home.features.title')}
+            <h2 className="text-4xl font-bold mb-4 text-white">
+              {t('home.features.whyChooseUs')}
             </h2>
-            <p className="text-lg" style={{ color: currentTheme.colors.text.secondary }}>
-              {t('home.features.subtitle')}
+            <p className="text-lg text-gray-300">
+              {t('home.features.uniqueAdvantages')}
             </p>
           </motion.div>
 
@@ -209,10 +298,10 @@ const HomePage = () => {
                   <div className={`w-16 h-16 bg-gradient-to-r ${feature.color} rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg`}>
                     <feature.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-semibold mb-3" style={{ color: currentTheme.colors.text.primary }}>
+                  <h3 className="text-xl font-semibold mb-3 text-white">
                     {feature.title}
                   </h3>
-                  <p className="leading-relaxed" style={{ color: currentTheme.colors.text.secondary }}>
+                  <p className="leading-relaxed text-gray-300">
                     {feature.description}
                   </p>
                 </GlassCard>
@@ -223,8 +312,8 @@ const HomePage = () => {
       </div>
 
       {/* Stats Section */}
-      <div className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-700 dark:to-purple-700 w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 w-full">
+        <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 lg:gap-8 xl:gap-12 text-center text-white">
             {stats.map((stat, index) => (
               <motion.div
@@ -244,8 +333,8 @@ const HomePage = () => {
       </div>
 
       {/* Testimonials Section */}
-      <div className="py-24 bg-gray-50 dark:bg-gray-800/50 w-full">
-        <div className="w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="py-24 bg-black/20 w-full">
+        <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -253,10 +342,10 @@ const HomePage = () => {
             className="mb-20"
           >
             <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4" style={{ color: currentTheme.colors.text.primary }}>
+              <h2 className="text-4xl font-bold mb-4 text-white">
                 {t('home.testimonials.title')}
               </h2>
-              <p className="text-xl" style={{ color: currentTheme.colors.text.secondary }}>
+              <p className="text-xl text-gray-300">
                 {t('home.testimonials.subtitle')}
               </p>
             </div>
@@ -274,20 +363,20 @@ const HomePage = () => {
                     <div className="flex items-center mb-4">
                       <div className="text-3xl mr-3">{testimonial.avatar}</div>
                       <div>
-                        <div className="font-semibold" style={{ color: currentTheme.colors.text.primary }}>
+                        <div className="font-semibold text-white">
                           {testimonial.name}
                         </div>
-                        <div className="text-sm" style={{ color: currentTheme.colors.text.secondary }}>
+                        <div className="text-sm text-gray-300">
                           {testimonial.role}
                         </div>
                       </div>
                     </div>
-                    <p className="italic" style={{ color: currentTheme.colors.text.secondary }}>
+                    <p className="italic text-gray-300">
                       "{testimonial.content}"
                     </p>
                     <div className="flex mt-4">
                       {[...Array(5)].map((_, i) => (
-                        <StarIcon key={i} className="w-4 h-4" style={{ color: currentTheme.colors.warning }} fill="currentColor" />
+                        <StarIcon key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" />
                       ))}
                     </div>
                   </GlassCard>
@@ -299,8 +388,8 @@ const HomePage = () => {
       </div>
 
       {/* CTA Section */}
-      <div className="py-20 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-700 dark:to-blue-700 w-full">
-        <div className="w-full text-center px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="py-20 bg-gradient-to-r from-purple-600 to-blue-600 w-full">
+        <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -312,9 +401,9 @@ const HomePage = () => {
               transition={{ duration: 0.6, delay: 1.2 }}
               className="text-white"
             >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">{t('home.readyToStart')}</h2>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">{t('home.cta.title')}</h2>
               <p className="text-xl md:text-2xl mb-10 opacity-90 max-w-2xl mx-auto">
-                {t('home.joinProfessionals')}
+                {t('home.cta.subtitle')}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -327,8 +416,8 @@ const HomePage = () => {
                     className="inline-flex items-center bg-white text-blue-600 px-8 py-4 rounded-xl hover:bg-gray-100 transition-all duration-300 font-semibold text-lg shadow-lg"
                     data-testid="cta-register"
                   >
-                    <UserGroupIcon className="w-6 h-6 mr-2" />
-                    {t('home.createAccount')}
+                    <UserGroupIcon className="w-6 h-6 ml-2" />
+                    {t('home.cta.createAccount')}
                   </Link>
                 </motion.div>
                 
@@ -341,8 +430,8 @@ const HomePage = () => {
                     className="inline-flex items-center border-2 border-white text-white px-8 py-4 rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-300 font-semibold text-lg"
                     data-testid="cta-browse"
                   >
-                    <CreditCardIcon className="w-6 h-6 mr-2" />
-                    {t('home.browseCards')}
+                    <CreditCardIcon className="w-6 h-6 ml-2" />
+                    {t('home.cta.browseCards')}
                   </Link>
                 </motion.div>
               </div>
@@ -354,11 +443,11 @@ const HomePage = () => {
                 </div>
                 <div className="flex items-center gap-2">
                   <DevicePhoneMobileIcon className="w-4 h-4" />
-                  {t('home.cta.mobile')}
+                  {t('home.cta.mobileCompatible')}
                 </div>
                 <div className="flex items-center gap-2">
                   <BoltIcon className="w-4 h-4" />
-                  {t('home.cta.instant')}
+                  {t('home.cta.instantFast')}
                 </div>
               </div>
             </motion.div>
@@ -372,6 +461,7 @@ const HomePage = () => {
         onClose={() => setShowMiniCardForm(false)}
       />
     </div>
+    </>
   );
 };
 

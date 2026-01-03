@@ -137,7 +137,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <p className="text-green-400 font-medium">
-                Card created successfully!
+                {t('miniCardForm.successMessage')}
               </p>
             </div>
           </motion.div>
