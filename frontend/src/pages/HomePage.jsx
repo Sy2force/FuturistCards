@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { useTranslation } from '../hooks/useTranslation';
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useAuth } from '../context/AuthContext';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { 
   SparklesIcon, 
@@ -21,12 +23,12 @@ import GlassButton from '../components/ui/GlassButton';
 import MiniCardForm from '../components/forms/MiniCardForm';
 
 const HomePage = () => {
-  const { t } = useTranslation();
-  const { isDark } = useRoleTheme();
+  const { t, language } = useTranslation();
+  const { isDark, currentTheme } = useRoleTheme();
+  const { user } = useAuth();
   
   // Set document title
   useDocumentTitle(t('nav.home'));
-  const { currentTheme } = useRoleTheme();
   const [showMiniCardForm, setShowMiniCardForm] = useState(false);
 
   const features = [
