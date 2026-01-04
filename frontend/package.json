@@ -4,8 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3010",
-    "build": "vite build",
-    "vercel-build": "vite build",
+    "build": "npx vite build",
+    "vercel-build": "npx vite build",
     "preview": "vite preview --port 3010",
     "start": "vite --port 3010"
   },
