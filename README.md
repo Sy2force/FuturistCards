@@ -1,17 +1,27 @@
-# 🚀 FuturistCards - Digital Business Cards Platform
+# 🎴 FuturistCards - Projet de Cours React
 
-[![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://futuristcards.vercel.app)
-[![Render](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://futuristcards.onrender.com)
 [![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react)](https://reactjs.org/)
+[![Vite](https://img.shields.io/badge/Vite-4.5.0-646CFF?logo=vite)](https://vitejs.dev/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-3.4.0-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)](https://www.mongodb.com/atlas)
 
-## 📋 Overview
+## 🎯 Description
 
-**FuturistCards** is a modern, full-stack web application for creating, managing, and sharing digital business cards. Built with React 18, Node.js, and MongoDB, it offers a seamless experience for professionals and businesses to digitize their networking.
+**FuturistCards** est un projet de cours démontrant une application React moderne avec backend Node.js. Interface élégante, gestion d'utilisateurs et système de cartes interactives.
 
-🌐 **Live Demo**: [https://futuristcards.vercel.app](https://futuristcards.vercel.app)  
-📚 **API Health**: [https://futuristcards.onrender.com/api/health](https://futuristcards.onrender.com/api/health)
+## 🚀 Installation Rapide
+
+```bash
+# Frontend
+cd frontend
+npm install
+npm run build
+
+# Backend  
+cd backend
+npm install
+npm start
+```
 
 ## ✨ Key Features
 
