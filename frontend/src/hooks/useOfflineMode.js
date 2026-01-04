@@ -1,12 +1,13 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import offlineService from '../services/offlineService';
+import { t } from '../utils/translations';
 
 const OfflineModeContext = createContext();
 
 export const useOfflineMode = () => {
   const context = useContext(OfflineModeContext);
   if (!context) {
-    throw new Error('useOfflineMode must be used within OfflineModeProvider');
+    throw new Error(t('common.contextError'));
   }
   return context;
 };

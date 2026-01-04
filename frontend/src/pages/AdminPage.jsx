@@ -80,7 +80,7 @@ const AdminPage = () => {
       setCards(realCards);
       setReports(mockReports);
     } catch (error) {
-      console.error('Error fetching admin data:', error);
+      // Error handled silently in production
     } finally {
       setLoading(false);
     }
@@ -95,7 +95,7 @@ const AdminPage = () => {
           : user
       ));
     } catch (error) {
-      console.error('Error updating user:', error);
+      // Error handled silently in production
     }
   };
 
@@ -108,7 +108,7 @@ const AdminPage = () => {
           : card
       ));
     } catch (error) {
-      console.error('Error updating card:', error);
+      // Error handled silently in production
     }
   };
 
@@ -121,7 +121,7 @@ const AdminPage = () => {
           : report
       ));
     } catch (error) {
-      console.error('Error updating report:', error);
+      // Error handled silently in production
     }
   };
 

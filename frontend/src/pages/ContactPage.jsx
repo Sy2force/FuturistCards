@@ -46,7 +46,7 @@ const ContactPage = () => {
       reset();
       setTimeout(() => setSubmitSuccess(false), 5000);
     } catch (error) {
-      console.error('Form submission error:', error);
+      // Error handled silently in production
     } finally {
       setIsSubmitting(false);
     }

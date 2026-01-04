@@ -14,10 +14,22 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'terser',
+    target: 'es2015',
     rollupOptions: {
       output: {
-        manualChunks: undefined
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['framer-motion', '@heroicons/react'],
+          forms: ['react-hook-form', '@hookform/resolvers', 'yup'],
+          utils: ['axios', 'react-hot-toast']
+        }
       }
-    }
+    },
+    chunkSizeWarningLimit: 1000
+  },
+  preview: {
+    port: 4173,
+    host: true
   }
 });

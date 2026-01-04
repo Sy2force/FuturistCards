@@ -102,7 +102,7 @@ const MyCardsPage = () => {
       setCards(cards.filter(card => card._id !== cardId));
       setDeleteModal({ isOpen: false, cardId: null, cardName: '' });
     } catch (error) {
-      console.error('Error deleting card:', error);
+      // Error handled silently in production
     }
   };
 

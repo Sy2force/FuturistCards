@@ -100,7 +100,7 @@ const DashboardPage = () => {
       setRecentActivity(mockActivity);
       
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      // Error handled silently in production
     } finally {
       setLoading(false);
     }

@@ -45,11 +45,12 @@ const RegisterPage = () => {
       return false;
     }
 
-    // Phone validation - optional field, no validation needed
+    // Phone validation - optional field, accept any format
 
-    // Password validation (simplified - minimum 4 characters)
-    if (formData.password.length < 4) {
-      setValidationError(t('validation.passwordMinLength'));
+    // Password validation - HackerU requirements: 1 uppercase, 1 lowercase, 1 digit, 1 special char, min 8 chars
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/;
+    if (!passwordRegex.test(formData.password)) {
+      setValidationError(t('validation.passwordRequirements'));
       return false;
     }
 
@@ -97,7 +98,7 @@ const RegisterPage = () => {
   const displayError = validationError || error;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex rtl pt-16" data-testid="register-page" dir="rtl" lang="he">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex" data-testid="register-page">
       {/* Left side - Form */}
       <div className="w-full lg:w-3/4 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 xl:px-20">
         <div className="mx-auto w-full max-w-md lg:max-w-lg xl:max-w-xl">

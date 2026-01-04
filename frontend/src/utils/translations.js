@@ -1,17 +1,93 @@
 // Hebrew translations for FuturistCards
 const translations = {
+  // Home Page
+  home: {
+    title: 'כרטיסי ביקור דיגיטליים מתקדמים',
+    subtitle: 'צור כרטיסי ביקור דיגיטליים מקצועיים בקלות ובמהירות',
+    welcomeBack: 'ברוך השב',
+    loggedInSubtitle: 'מוכן ליצור כרטיס ביקור חדש או לנהל את הכרטיסים הקיימים שלך?',
+    badge: 'הפלטפורמה המובילה',
+    buttons: {
+      createAdvanced: 'צור כרטיס מתקדם',
+      dashboard: 'לוח בקרה',
+      browse: 'עיין בכרטיסים',
+      getStarted: 'התחל עכשיו',
+      learnMore: 'למד עוד',
+      createCard: 'צור כרטיס'
+    },
+    features: {
+      fast: {
+        title: 'מהיר וקל',
+        description: 'צור כרטיס ביקור מקצועי תוך דקות ספורות'
+      },
+      beautiful: {
+        title: 'עיצוב מושלם',
+        description: 'תבניות מעוצבות ומותאמות אישית לכל עסק'
+      },
+      secure: {
+        title: 'בטוח ומאובטח',
+        description: 'הנתונים שלך מוגנים ברמת האבטחה הגבוהה ביותר'
+      },
+      global: {
+        title: 'נגיש בכל מקום',
+        description: 'כרטיסים דיגיטליים הנגישים מכל מקום בעולם'
+      }
+    },
+    stats: {
+      users: 'משתמשים',
+      cards: 'כרטיסים',
+      uptime: 'זמינות',
+      rating: 'דירוג'
+    },
+    testimonials: {
+      john: {
+        name: 'יוחנן דוד',
+        role: 'מנהל שיווק',
+        content: 'הפלטפורמה הכי טובה שהשתמשתי בה ליצירת כרטיסי ביקור דיגיטליים'
+      },
+      sarah: {
+        name: 'שרה כהן',
+        role: 'יזמת',
+        content: 'חסכתי המון זמן וכסף בזכות הכרטיסים הדיגיטליים'
+      },
+      mike: {
+        name: 'מיכאל לוי',
+        role: 'מפתח',
+        content: 'ממשק משתמש מעולה וקל לשימוש'
+      }
+    },
+    status: {
+      connectedApiKey: 'מחובר למפתח API',
+      advancedTools: 'כלים מתקדמים',
+      fullAnalytics: 'אנליטיקה מלאה'
+    }
+  },
+
   // Validation messages
   validation: {
     required: 'שדה זה הוא חובה',
     email: 'כתובת אימייל לא תקינה',
-    minLength: 'אורך מינימלי: {{min}} תווים',
-    maxLength: 'אורך מקסימלי: {{max}} תווים',
+    emailRequired: 'אימייל נדרש',
+    emailInvalid: 'כתובת אימייל לא תקינה',
+    firstNameRequired: 'שם פרטי נדרש',
+    lastNameRequired: 'שם משפחה נדרש',
+    minLength: 'מינימום {{min}} תווים',
+    maxLength: 'מקסימום {{max}} תווים',
+    passwordMismatch: 'הסיסמאות לא תואמות',
+    invalidEmail: 'כתובת אימייל לא תקינה',
+    phoneFormat: 'פורמט טלפון לא תקין',
+    password: 'הסיסמה חייבת להכיל לפחות 8 תווים',
+    confirmPassword: 'הסיסמאות אינן תואמות',
     phone: 'מספר טלפון לא תקין',
-    url: 'כתובת URL לא תקינה',
-    password: 'הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה, ספרה וסימן מיוחד',
-    passwordMatch: 'הסיסמאות אינן תואמות',
-    businessOnly: 'פעולה זו זמינה רק למשתמשי עסק',
-    adminOnly: 'פעולה זו זמינה רק למנהלים'
+    loginSuccess: 'התחברת בהצלחה!'
+  },
+
+  // Error handling
+  error: {
+    title: '404 - הדף לא נמצא',
+    description: 'הדף שחיפשת לא קיים או הוסר',
+    goHome: 'חזור לדף הבית',
+    tryAgain: 'נסה שוב'
   },
 
   // Navigation
@@ -79,8 +155,35 @@ const translations = {
     goBack: 'חזור אחורה',
     notLoggedIn: 'לא מחובר למערכת',
     accessDenied: 'גישה נדחתה',
-    contextError: 'שגיאה בהקשר הרכיב'
+    contextError: 'שגיאה בהקשר הרכיב',
+    firstNameRequired: 'שם פרטי נדרש',
+    lastNameRequired: 'שם משפחה נדרש',
+    updateError: 'שגיאה בעדכון',
+    currentPasswordRequired: 'סיסמה נוכחית נדרשת',
+    newPasswordRequired: 'סיסמה חדשה נדרשת',
+    passwordTooShort: 'הסיסמה חייבת להכיל לפחות 8 תווים',
+    passwordRequirements: 'הסיסמה חייבת להכיל אות גדולה, אות קטנה, מספר ותו מיוחד',
+    confirmPasswordRequired: 'אישור סיסמה נדרש',
+    passwordsNotMatch: 'הסיסמאות אינן תואמות',
+    passwordChangeError: 'שגיאה בשינוי הסיסמה',
+    changePassword: 'שנה סיסמה',
+    currentPassword: 'סיסמה נוכחית',
+    newPassword: 'סיסמה חדשה',
+    confirmPassword: 'אישור סיסמה',
+    changing: 'משנה...',
+    currentPasswordPlaceholder: 'הכנס את הסיסמה הנוכחית',
+    newPasswordPlaceholder: 'הכנס סיסמה חדשה',
+    confirmPasswordPlaceholder: 'אשר את הסיסמה החדשה',
+    passwordRequirementsText: 'לפחות 8 תווים, אות גדולה, אות קטנה, מספר ותו מיוחד'
   },
+
+  // Roles
+  roles: {
+    admin: 'מנהל',
+    business: 'עסק',
+    user: 'משתמש'
+  },
+
 
   // Authentication
   auth: {
@@ -121,11 +224,11 @@ const translations = {
     signIn: 'התחבר',
     optional: 'אופציונלי',
     loginRequired: 'נדרשת התחברות',
-    roles: {
-      user: 'משתמש',
-      business: 'עסק',
-      admin: 'מנהל'
-    }
+    loginToAccount: 'התחבר לחשבון שלך',
+    signUp: 'הירשם',
+    noAccount: 'אין לך חשבון?',
+    welcomeBackFuture: 'ברוך הבא לעתיד',
+    loginDescription: 'התחבר לחשבון שלך וגלה את העולם הדיגיטלי של כרטיסי הביקור'
   },
 
   // Cards
@@ -167,7 +270,11 @@ const translations = {
     views: 'צפיות',
     likes: 'לייקים',
     created: 'נוצר',
-    updated: 'עודכן'
+    updated: 'עודכן',
+    clearFilters: 'נקה מסננים',
+    notFound: 'כרטיס לא נמצא',
+    updatedDemo: 'הכרטיס עודכן בהצלחה (מצב הדגמה)',
+    deletedDemo: 'הכרטיס נמחק בהצלחה (מצב הדגמה)'
   },
 
   // Card Details
@@ -249,7 +356,9 @@ const translations = {
     searchResults: '{{count}} תוצאות נמצאו עבור "{{term}}"',
     views: 'צפיות',
     viewDetails: 'צפה בפרטים',
-    removeFromFavorites: 'הסר מהמועדפים'
+    removeFromFavorites: 'הסר מהמועדפים',
+    added: 'נוסף למועדפים',
+    removed: 'הוסר מהמועדפים'
   },
 
   // My Cards
@@ -288,13 +397,147 @@ const translations = {
     bioPlaceholder: 'ספר על עצמך...',
     saveChanges: 'שמור שינויים',
     updateSuccess: 'הפרופיל עודכן בהצלחה',
-    updateError: 'שגיאה בעדכון הפרופיל'
+    updateError: 'שגיאה בעדכון הפרופיל',
+    roles: {
+      admin: 'מנהל',
+      business: 'עסק', 
+      user: 'משתמש'
+    }
   },
+
+  // About Page
+  about: {
+    title: 'אודות FuturistCards',
+    description: 'הפלטפורמה המובילה ליצירת כרטיסי ביקור דיגיטליים מתקדמים',
+    leadingPlatform: 'הפלטפורמה המובילה',
+    ourMission: 'המשימה שלנו',
+    missionDescription: 'אנו מחויבים לספק פתרונות דיגיטליים מתקדמים ליצירת כרטיסי ביקור מקצועיים',
+    platformDescription: 'FuturistCards היא פלטפורמה חדשנית המאפשרת ליצור כרטיסי ביקור דיגיטליים מקצועיים בקלות ובמהירות',
+    ourVision: 'החזון שלנו',
+    visionDescription: 'להפוך את כרטיסי הביקור הדיגיטליים לסטנדרט בעולם העסקי המודרני',
+    readyToStart: 'מוכן להתחיל?',
+    joinThousands: 'הצטרף לאלפי משתמשים המשתמשים בפלטפורמה שלנו',
+    createMyCard: 'צור את הכרטיס שלי',
+    createAccount: 'צור חשבון',
+    discoverCards: 'גלה כרטיסים',
+    completelyFree: 'חינם לחלוטין',
+    secureAndSafe: 'בטוח ומאובטח',
+    fiveStarRating: 'דירוג 5 כוכבים',
+    features: {
+      fast: {
+        title: 'מהיר וקל',
+        description: 'צור כרטיס ביקור מקצועי תוך דקות ספורות'
+      },
+      share: {
+        title: 'שתף בקלות',
+        description: 'שתף את הכרטיס שלך בכל הפלטפורמות הדיגיטליות'
+      },
+      secure: {
+        title: 'בטוח ומאובטח',
+        description: 'הנתונים שלך מוגנים ברמת האבטחה הגבוהה ביותר'
+      }
+    },
+    stats: {
+      users: 'משתמשים',
+      cards: 'כרטיסים',
+      satisfaction: 'שביעות רצון',
+      support: 'תמיכה'
+    }
+  },
+
+
+
+  // Dashboard
+  dashboard: {
+    title: 'לוח בקרה',
+    welcome: 'ברוך הבא',
+    stats: {
+      totalCards: 'סה"כ כרטיסים',
+      totalViews: 'סה"כ צפיות',
+      totalLikes: 'סה"כ לייקים',
+      monthlyViews: 'צפיות חודשיות'
+    },
+    recentCards: 'כרטיסים אחרונים',
+    recentActivity: 'פעילות אחרונה',
+    activity: {
+      cardCreated: 'כרטיס נוצר',
+      cardViewed: 'כרטיס נצפה',
+      favoriteAdded: 'נוסף למועדפים'
+    },
+    time: {
+      now: 'עכשיו',
+      minutesAgo: 'לפני {{minutes}} דקות',
+      hoursAgo: 'לפני {{hours}} שעות',
+      yesterday: 'אתמול'
+    }
+  },
+
+  // Contact
+  contact: {
+    title: 'צור קשר',
+    subtitle: 'נשמח לשמוע ממך',
+    form: {
+      name: 'שם מלא',
+      email: 'אימייל',
+      subject: 'נושא',
+      message: 'הודעה',
+      send: 'שלח הודעה',
+      sending: 'שולח...',
+      success: 'ההודעה נשלחה בהצלחה!'
+    },
+    info: {
+      email: 'אימייל',
+      phone: 'טלפון',
+      address: 'כתובת'
+    },
+    validation: {
+      nameRequired: 'שם נדרש',
+      emailRequired: 'אימייל נדרש',
+      emailInvalid: 'כתובת אימייל לא תקינה',
+      subjectRequired: 'נושא נדרש',
+      messageRequired: 'הודעה נדרשת',
+      messageMinLength: 'ההודעה חייבת להכיל לפחות 10 תווים'
+    }
+  },
+
+  // Admin
+  admin: {
+    title: 'ניהול מערכת',
+    users: 'משתמשים',
+    cards: 'כרטיסים',
+    reports: 'דוחות',
+    roles: {
+      admin: 'מנהל',
+      business: 'עסק',
+      user: 'משתמש'
+    },
+    stats: 'סטטיסטיקות',
+    today: 'היום',
+    anonymousUser: 'משתמש אנונימי',
+    registeredUser: 'משתמש רשום'
+  },
+
+  // Mock Data
+  mockData: {
+    myCards: {
+      card1: {
+        title: 'יוחנן כהן',
+        subtitle: 'מפתח Full Stack',
+        company: 'TechCorp',
+        description: 'מפתח מנוסה עם התמחות ב-React ו-Node.js'
+      },
+      card2: {
+        title: 'שרה לוי',
+        subtitle: 'מעצבת UI/UX',
+        company: 'DesignStudio',
+        description: 'מעצבת יצירתית עם ניסיון בעיצוב ממשקי משתמש'
+      }
+    }
+  },
+
 
   // Edit Card
   editCard: {
-    pageTitle: 'עריכת כרטיס',
-    pageDescription: 'ערוך את כרטיס הביקור שלך',
     title: 'עריכת כרטיס ביקור',
     subtitle: 'ערוך ועדכן את כרטיס הביקור שלך',
     preview: 'תצוגה מקדימה',
@@ -328,15 +571,247 @@ const translations = {
       totalCards: 'סה"כ כרטיסים',
       totalViews: 'סה"כ צפיות',
       totalLikes: 'סה"כ לייקים',
-      activeCards: 'כרטיסים פעילים'
+      averageRating: 'דירוג ממוצע'
     }
   },
 
+
   // Unauthorized
   unauthorized: {
-    title: 'נדרשת התחברות',
-    description: 'כדי לצפות במועדפים שלך, עליך להתחבר תחילה',
+    title: 'גישה לא מורשית',
+    message: 'אין לך הרשאה לגשת לדף זה',
+    loginRequired: 'נדרשת התחברות למערכת',
+    goHome: 'חזור לדף הבית',
     login: 'התחבר'
+  },
+
+  // Services
+  services: {
+    title: 'השירותים שלנו',
+    subtitle: 'פתרונות דיגיטליים מתקדמים לעסק שלך',
+    sparkle: '✨',
+    badge: 'השירותים המתקדמים ביותר',
+    personalizedTitle: 'שלום',
+    loggedInSubtitle: 'גלה את השירותים המתקדמים שלנו המותאמים במיוחד עבורך',
+    closeModal: 'סגור',
+    cta: {
+      getQuote: 'קבל הצעת מחיר',
+      viewPortfolio: 'צפה בתיק העבודות'
+    },
+    modal: {
+      startingPrice: 'מחיר התחלתי',
+      deliveryTime: 'זמן אספקה',
+      call: 'התקשר',
+      email: 'שלח מייל',
+      startProject: 'התחל פרויקט'
+    },
+    hero: {
+      subtitle: 'פתרונות דיגיטליים מתקדמים לעסק שלך'
+    },
+    benefits: {
+      quality: {
+        title: 'איכות מעולה',
+        description: 'אנו מתחייבים לאיכות הגבוהה ביותר בכל פרויקט'
+      },
+      speed: {
+        title: 'מהירות ביצוע',
+        description: 'פרויקטים מסופקים במועד ובמהירות מקסימלית'
+      },
+      support: {
+        title: 'תמיכה מלאה',
+        description: 'תמיכה טכנית מלאה לאחר מסירת הפרויקט'
+      }
+    },
+    categories: {
+      all: 'הכל',
+      development: 'פיתוח',
+      mobile: 'מובייל',
+      design: 'עיצוב',
+      ecommerce: 'מסחר אלקטרוני',
+      marketing: 'שיווק',
+      security: 'אבטחה'
+    },
+    card: {
+      startingPrice: 'מחיר התחלתי',
+      reviews: 'ביקורות',
+      clients: 'לקוחות',
+      moreDetails: 'פרטים נוספים',
+      orderNow: 'הזמן עכשיו',
+      additionalFeatures: 'תכונות נוספות'
+    },
+    webDevelopment: {
+      title: 'פיתוח אתרים',
+      description: 'אתרים מקצועיים ומותאמים אישית',
+      startingPrice: '₪2,500',
+      deliveryTime: '2-4 שבועות',
+      price: '₪2,500 - ₪15,000',
+      duration: '2-4 שבועות',
+      features: {
+        react: 'פיתוח React',
+        node: 'שרת Node.js',
+        database: 'מסד נתונים',
+        api: 'API מותאם'
+      }
+    },
+    mobileApp: {
+      title: 'אפליקציות מובייל',
+      description: 'אפליקציות iOS ו-Android מתקדמות',
+      startingPrice: '₪8,000',
+      deliveryTime: '6-12 שבועות',
+      price: '₪8,000 - ₪50,000',
+      duration: '6-12 שבועות',
+      features: {
+        reactNative: 'React Native',
+        flutter: 'Flutter',
+        platforms: 'iOS ו-Android',
+        deploy: 'פרסום בחנויות'
+      }
+    },
+    uiuxDesign: {
+      title: 'עיצוב UI/UX',
+      description: 'עיצוב ממשק משתמש מקצועי',
+      startingPrice: '₪1,800',
+      deliveryTime: '1-3 שבועות',
+      price: '₪1,800 - ₪8,000',
+      duration: '1-3 שבועות',
+      features: {
+        figma: 'עיצוב ב-Figma',
+        prototyping: 'אבטיפוס אינטראקטיבי',
+        designSystem: 'מערכת עיצוב',
+        userTesting: 'בדיקות משתמש'
+      }
+    },
+    ecommerce: {
+      title: 'חנויות אונליין',
+      description: 'פלטפורמות מכירה מתקדמות',
+      startingPrice: '₪4,500',
+      deliveryTime: '3-6 שבועות',
+      price: '₪4,500 - ₪25,000',
+      duration: '3-6 שבועות',
+      features: {
+        shopify: 'פלטפורמת Shopify',
+        payment: 'מערכת תשלומים',
+        stock: 'ניהול מלאי',
+        analytics: 'אנליטיקה מתקדמת'
+      }
+    },
+    digitalMarketing: {
+      title: 'שיווק דיגיטלי',
+      description: 'קמפיינים ממוקדים ויעילים',
+      startingPrice: '₪1,200',
+      deliveryTime: '1-2 שבועות',
+      price: '₪1,200 - ₪10,000',
+      duration: '1-2 שבועות',
+      features: {
+        seo: 'קידום אתרים (SEO)',
+        social: 'שיווק ברשתות חברתיות',
+        content: 'יצירת תוכן',
+        analytics: 'מדידה וניתוח'
+      }
+    },
+    cybersecurity: {
+      title: 'אבטחת מידע',
+      description: 'הגנה מתקדמת על הנתונים שלך',
+      startingPrice: '₪3,000',
+      deliveryTime: '2-4 שבועות',
+      price: '₪3,000 - ₪20,000',
+      duration: '2-4 שבועות',
+      features: {
+        audit: 'ביקורת אבטחה',
+        ssl: 'הצפנת SSL',
+        backup: 'גיבוי מאובטח',
+        monitoring: 'ניטור 24/7'
+      }
+    }
+  },
+
+  // Packs
+  packs: {
+    title: 'תוכניות מחיר',
+    subtitle: 'בחר את התוכנית המתאימה לך',
+    popular: 'פופולרי',
+    perMonth: 'לחודש',
+    billing: {
+      monthly: 'חיוב חודשי',
+      yearly: 'חיוב שנתי',
+      billedYearly: 'חיוב שנתי',
+      save: 'חסוך'
+    },
+    cta: {
+      choosePlan: 'בחר תוכנית'
+    },
+    basic: {
+      name: 'בסיסי',
+      description: 'מושלם להתחלה',
+      features: {
+        cards: 'כרטיסי ביקור',
+        storage: 'שטח אחסון',
+        analytics: 'אנליטיקה בסיסית',
+        support: 'תמיכה',
+        customDomain: 'דומיין מותאם',
+        api: 'גישה ל-API',
+        whiteLabel: 'מיתוג לבן',
+        priority: 'תמיכה מועדפת'
+      }
+    },
+    pro: {
+      name: 'מקצועי',
+      description: 'לעסקים קטנים ובינוניים',
+      features: {
+        cards: 'כרטיסי ביקור',
+        storage: 'שטח אחסון',
+        analytics: 'אנליטיקה מתקדמת',
+        support: 'תמיכה',
+        customDomain: 'דומיין מותאם',
+        api: 'גישה ל-API',
+        whiteLabel: 'מיתוג לבן',
+        priority: 'תמיכה מועדפת'
+      }
+    },
+    enterprise: {
+      name: 'ארגוני',
+      description: 'לארגונים גדולים',
+      features: {
+        cards: 'כרטיסי ביקור',
+        storage: 'שטח אחסון',
+        analytics: 'אנליטיקה מלאה',
+        support: 'תמיכה',
+        customDomain: 'דומיין מותאם',
+        api: 'גישה ל-API',
+        whiteLabel: 'מיתוג לבן',
+        priority: 'תמיכה מועדפת'
+      }
+    },
+    storage: {
+      oneGB: '1GB',
+      tenGB: '10GB',
+      hundredGB: '100GB'
+    },
+    supportTypes: {
+      email: 'אימייל',
+      chatEmail: 'צ\'אט ואימייל',
+      phoneSupport: 'תמיכה טלפונית 24/7'
+    },
+    limits: {
+      unlimited: 'ללא הגבלה',
+      fiveGB: '5GB',
+      tenGB: '10GB',
+      twentyFiveGB: '25GB'
+    }
+  },
+
+
+  // Mini Card Form
+  miniCardForm: {
+    validation: {
+      titleRequired: 'כותרת נדרשת',
+      descriptionRequired: 'תיאור נדרש',
+      descriptionMin: 'התיאור חייב להכיל לפחות 10 תווים',
+      emailRequired: 'אימייל נדרש',
+      emailInvalid: 'כתובת אימייל לא תקינה',
+      phoneRequired: 'טלפון נדרש',
+      websiteInvalid: 'כתובת אתר לא תקינה'
+    }
   }
 };
 

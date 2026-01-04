@@ -85,7 +85,7 @@ const CreateCardPage = () => {
       // Rediriger vers la page des cartes
       navigate('/my-cards');
     } catch (error) {
-      console.error('Erreur lors de la création de la carte:', error);
+      // Error handled silently in production
     } finally {
       setIsSubmitting(false);
     }

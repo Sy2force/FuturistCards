@@ -24,8 +24,8 @@ const PacksPage = () => {
       color: 'from-gray-500 to-gray-600',
       popular: false,
       prices: {
-        monthly: 29,
-        yearly: 290
+        monthly: 99,
+        yearly: 990
       },
       features: [
         { name: t('packs.basic.features.cards'), included: true, limit: '5' },
@@ -46,8 +46,8 @@ const PacksPage = () => {
       color: 'from-cyan-500 to-purple-500',
       popular: true,
       prices: {
-        monthly: 79,
-        yearly: 790
+        monthly: 249,
+        yearly: 2490
       },
       features: [
         { name: t('packs.pro.features.cards'), included: true, limit: '50' },
@@ -68,8 +68,8 @@ const PacksPage = () => {
       color: 'from-purple-500 to-pink-500',
       popular: false,
       prices: {
-        monthly: 199,
-        yearly: 1990
+        monthly: 599,
+        yearly: 5990
       },
       features: [
         { name: t('packs.enterprise.features.cards'), included: true, limit: t('packs.limits.unlimited') },

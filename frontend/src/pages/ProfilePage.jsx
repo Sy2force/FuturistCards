@@ -63,7 +63,6 @@ const ProfilePage = () => {
       
       toast.success(t('profile.updateSuccess'));
     } catch (error) {
-      console.error('Profile update error:', error);
       toast.error(t('profile.updateError'));
     } finally {
       setLoading(false);

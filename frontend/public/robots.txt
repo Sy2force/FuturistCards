@@ -13,4 +13,4 @@ Disallow: /edit-card/
 Disallow: /favorites
 Disallow: /profile
 
-Sitemap: https://futuristcards.com/sitemap.xml
+Sitemap: https://futuristcards.vercel.app/sitemap.xml
