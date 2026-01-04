@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npx vite --port 3010",
-    "start": "npx vite --port 3010",
-    "build": "npx vite build",
-    "preview": "npx vite preview --port 4173",
+    "dev": "vite --port 3010",
+    "start": "vite --port 3010",
+    "build": "vite build",
+    "preview": "vite preview --port 4173",
     "lint": "eslint . --report-unused-disable-directives --max-warnings=0",
     "vercel-build": "npm run build"
   },
