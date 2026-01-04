@@ -14,7 +14,7 @@ const generateToken = (id) => {
 // User registration
 const register = async (req, res) => {
   try {
-    const { firstName, lastName, name, email, password, role } = req.body;
+    const { firstName, lastName, name, email, phone, password, role } = req.body;
 
     // Combine firstName and lastName or use name
     const fullName = name || `${firstName} ${lastName}`.trim();
@@ -44,6 +44,7 @@ const register = async (req, res) => {
     const user = await User.create({
       name: fullName,
       email,
+      phone: phone || '',
       password: hashedPassword,
       role: role || 'user'
     });

@@ -45,7 +45,14 @@ const RegisterPage = () => {
       return false;
     }
 
-    // Phone validation - optional field, accept any format
+    // Phone validation - optional field, validate format if provided
+    if (formData.phone && formData.phone.trim() !== '') {
+      const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,15}$/;
+      if (!phoneRegex.test(formData.phone.trim())) {
+        setValidationError(t('validation.phoneFormat'));
+        return false;
+      }
+    }
 
     // Password validation - HackerU requirements: 1 uppercase, 1 lowercase, 1 digit, 1 special char, min 8 chars
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/;
