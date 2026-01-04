@@ -1,42 +1,22 @@
 {
-  "buildCommand": "npm ci && npm run build",
-  "outputDirectory": "dist",
-  "rewrites": [
+  "version": 2,
+  "name": "futuristcards",
+  "builds": [
     {
-      "source": "/((?!api|assets|_next|favicon.ico|robots.txt|sitemap.xml).*)",
-      "destination": "/index.html"
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "handle": "filesystem"
     },
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
-          "key": "Referrer-Policy",
-          "value": "strict-origin-when-cross-origin"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "env": {
@@ -45,5 +25,9 @@
     "VITE_APP_NAME": "FuturistCards",
     "VITE_DEBUG_MODE": "false",
     "NODE_ENV": "production"
-  }
+  },
+  "buildCommand": "npm ci && npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm ci",
+  "framework": null
 }
