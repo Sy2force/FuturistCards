@@ -91,6 +91,26 @@ const translations = {
   },
 
   // Navigation
+  nav: {
+    home: 'בית',
+    cards: 'כרטיסים',
+    myCards: 'הכרטיסים שלי',
+    createCard: 'צור כרטיס',
+    favorites: 'מועדפים',
+    profile: 'פרופיל',
+    admin: 'ניהול',
+    about: 'אודות',
+    login: 'התחבר',
+    register: 'הירשם',
+    logout: 'התנתק',
+    darkMode: 'מצב כהה',
+    lightMode: 'מצב בהיר',
+    language: 'שפה',
+    backToMyCards: 'חזור לכרטיסים',
+    backToCards: 'חזור לגלריה'
+  },
+  
+  // Navigation (legacy support)
   navigation: {
     home: 'בית',
     cards: 'כרטיסים',
@@ -503,18 +523,64 @@ const translations = {
   // Admin
   admin: {
     title: 'ניהול מערכת',
+    subtitle: 'ניהול מערכת ומשתמשים',
+    welcome: 'ברוך הבא {{name}}',
+    refreshData: 'רענן נתונים',
+    today: 'היום',
+    connected: 'מחובר',
+    disconnected: 'מנותק',
     users: 'משתמשים',
     cards: 'כרטיסים',
     reports: 'דוחות',
+    cardNoName: 'כרטיס ללא שם',
+    user: 'משתמש',
+    anonymousUser: 'משתמש אנונימי',
+    registeredUser: 'משתמש רשום',
+    quickActions: 'פעולות מהירות',
+    refreshStats: 'רענן סטטיסטיקות',
+    systemStatus: 'סטטוס המערכת',
     roles: {
       admin: 'מנהל',
       business: 'עסק',
       user: 'משתמש'
     },
-    stats: 'סטטיסטיקות',
-    today: 'היום',
-    anonymousUser: 'משתמש אנונימי',
-    registeredUser: 'משתמש רשום'
+    stats: {
+      totalUsers: 'סה"כ משתמשים',
+      totalCards: 'סה"כ כרטיסים',
+      totalLikes: 'סה"כ לייקים',
+      activeUsers: 'משתמשים פעילים'
+    },
+    charts: {
+      usersRealTime: 'משתמשים בזמן אמת',
+      cardsRealTime: 'כרטיסים בזמן אמת',
+      likesRealTime: 'לייקים בזמן אמת',
+      viewsRealTime: 'צפיות בזמן אמת',
+      activeUsers: 'משתמשים פעילים'
+    },
+    tabs: {
+      overview: 'סקירה כללית',
+      realtime: 'זמן אמת',
+      users: 'משתמשים',
+      cards: 'כרטיסים',
+      reports: 'דוחות'
+    },
+    simulation: {
+      simulateNewUser: 'הדמה משתמש חדש',
+      simulateNewCard: 'הדמה כרטיס חדש',
+      simulateNewLike: 'הדמה לייק חדש',
+      newUserMessage: 'משתמש חדש נרשם למערכת',
+      newUser: 'משתמש חדש',
+      newCardMessage: 'כרטיס חדש נוצר',
+      cardCreator: 'יוצר כרטיס',
+      newLikeMessage: 'כרטיס קיבל לייק חדש',
+      fan: 'מעריץ'
+    },
+    metrics: {
+      uptime: 'זמינות',
+      responseTime: 'זמן תגובה',
+      serverUsage: 'שימוש בשרת',
+      databaseUsage: 'שימוש במסד נתונים'
+    }
   },
 
   // Mock Data
