@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://futuristcards.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api';
 
 // Configure axios instance for cards API
 const cardsAPI = axios.create({

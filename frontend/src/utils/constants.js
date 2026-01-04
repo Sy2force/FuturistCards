@@ -4,7 +4,7 @@
 
 // API Configuration
 export const API_CONFIG = {
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || 'https://futuristcards.onrender.com/api',
+  BASE_URL: import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api',
   TIMEOUT: 10000, // 10 seconds
   RETRY_ATTEMPTS: 3
 };
