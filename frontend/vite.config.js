@@ -15,14 +15,9 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom'],
           router: ['react-router-dom'],
-          ui: ['framer-motion', '@heroicons/react'],
-          forms: ['react-hook-form', '@hookform/resolvers', 'yup'],
-          utils: ['axios', 'react-hot-toast']
+          utils: ['axios', 'framer-motion', 'react-hot-toast']
         }
       }
     }
-  },
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom']
   }
 });

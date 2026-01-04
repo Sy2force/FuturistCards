@@ -2,59 +2,31 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{js,jsx}",
   ],
   darkMode: 'class',
   theme: {
     extend: {
+      colors: {
+        primary: {
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+        },
+      },
       animation: {
-        'spin-slow': 'spin 3s linear infinite',
-        'pulse-glow': 'pulse-glow 2s ease-in-out infinite alternate',
-        'float': 'float 3s ease-in-out infinite',
+        'fade-in': 'fadeIn 0.5s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
       },
       keyframes: {
-        'pulse-glow': {
-          '0%': { 
-            boxShadow: '0 0 5px rgba(59, 130, 246, 0.5)',
-            transform: 'scale(1)'
-          },
-          '100%': { 
-            boxShadow: '0 0 20px rgba(59, 130, 246, 0.8)',
-            transform: 'scale(1.05)'
-          }
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
         },
-        'float': {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-10px)' }
-        }
-      },
-      colors: {
-        // Booking.com Color System
-        booking: {
-          blue: '#003580',
-          'blue-hover': '#00224f',
-          'blue-light': '#0071c2',
-          yellow: '#febb02',
-          green: '#008009',
-          red: '#cc0000',
-          gray: '#6b6b6b',
-          'gray-light': '#f5f5f5',
-          white: '#ffffff',
-          black: '#262626',
+        slideUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
-        },
-        dark: "#0f172a",
       },
     },
   },
