@@ -112,8 +112,7 @@ async function startServer() {
   
   if (mongoURI) {
     try {
-      console.log('🔄 Connecting to MongoDB...');
-      console.log('📍 MongoDB URI:', mongoURI.replace(/\/\/.*@/, '//***:***@'));
+      // MongoDB connection attempt
       
       const mongoOptions = {
         serverSelectionTimeoutMS: 30000,
@@ -126,24 +125,20 @@ async function startServer() {
       };
 
       await mongoose.connect(mongoURI, mongoOptions);
-      console.log('✅ MongoDB connected successfully');
-      console.log('📊 Database:', mongoose.connection.name);
-      console.log('🔗 Connection state:', mongoose.connection.readyState);
+      // MongoDB connected successfully
     } catch (err) {
       console.error('❌ MongoDB Connection Error:', err.message);
       console.error('🔍 Error details:', err);
-      console.log('⚠️  Server will continue in fallback mode');
+      // Server continues in fallback mode
       // Don't exit - continue without MongoDB
     }
   } else {
-    console.log('⚠️  No MongoDB URI provided - running in fallback mode');
+    // No MongoDB URI - fallback mode
   }
 
   // Start server regardless of MongoDB connection
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🌐 Health check: http://localhost:${PORT}/api/health`);
+    // Server started on port ${PORT}
   });
 }
 
