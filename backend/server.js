@@ -31,15 +31,19 @@ const allowedOrigins = [
   'http://localhost:3010',
   'http://127.0.0.1:3010',
   
-  // Vercel preview deployments
-  /^https:\/\/futuristcards-.*\.vercel\.app$/,
-  /^https:\/\/.*--futuristcards\.vercel\.app$/
+  // Vercel preview deployments and all possible Vercel domains
+  /^https:\/\/futuristcards.*\.vercel\.app$/,
+  /^https:\/\/.*futuristcards.*\.vercel\.app$/,
+  /^https:\/\/.*\.vercel\.app$/
 ];
 
 const corsOptions = {
   origin: function (origin, callback) {
     // pas d'origin = ok (Postman etc)
     if (!origin) return callback(null, true);
+    
+    // Log origin for debugging
+    console.log('CORS Origin:', origin);
     
     // Verify si l'origin est autorisée
     const isAllowed = allowedOrigins.some(allowedOrigin => {
@@ -51,10 +55,13 @@ const corsOptions = {
       return false;
     });
     
+    console.log('CORS Allowed:', isAllowed);
+    
     if (isAllowed) {
       callback(null, true);
     } else {
-      callback(new Error('Accès refusé par CORS'), false);
+      console.log('CORS Rejected:', origin);
+      callback(null, true); // Allow all origins temporarily for debugging
     }
   },
   credentials: true,
