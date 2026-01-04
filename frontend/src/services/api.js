@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { handleApiError } from '../utils/errorHandler';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api';
 
@@ -6,8 +7,8 @@ const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.
 // Create une instance axios centralisée pour tous les appels API
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,
-  timeout: 10000, // 10 second timeout
+  withCredentials: false, // Disable credentials for CORS issues
+  timeout: 15000, // Increase timeout for Vercel
   headers: {
     'Content-Type': 'application/json'
   }
@@ -60,7 +61,12 @@ api.interceptors.response.use(
       }
     }
     
-    return Promise.reject(error.response?.data || error);
+    const userMessage = handleApiError(error, originalRequest.url);
+    return Promise.reject({ 
+      ...error.response?.data, 
+      userMessage,
+      originalError: error 
+    });
   }
 );
 

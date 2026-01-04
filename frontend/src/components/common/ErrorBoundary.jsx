@@ -19,7 +19,12 @@ class ErrorBoundary extends Component {
 
     // Log error to console in development
     if (import.meta.env.MODE === 'development') {
-      // Error caught by ErrorBoundary - logged for debugging
+      console.error('ErrorBoundary caught an error:', error, errorInfo);
+    }
+    
+    // Log error in production for debugging Vercel issues
+    if (import.meta.env.PROD) {
+      console.error('Production Error:', error.message, error.stack);
     }
   }
 

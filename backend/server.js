@@ -61,10 +61,10 @@ const corsOptions = {
       callback(null, true);
     } else {
       console.log('CORS Rejected:', origin);
-      callback(null, true); // Allow all origins temporarily for debugging
+      callback(null, false); // Properly reject unauthorized origins
     }
   },
-  credentials: true,
+  credentials: false,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: [
     'Content-Type', 

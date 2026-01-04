@@ -6,6 +6,7 @@ import { ThemeProvider } from './context/ThemeProvider'
 import { AuthProvider } from './context/AuthContext'
 import { FavoritesProvider } from './context/FavoritesContext'
 import ErrorBoundary from './components/common/ErrorBoundary'
+import './utils/errorHandler' // Global error handling
 import App from './App'
 import './index.css'
 
