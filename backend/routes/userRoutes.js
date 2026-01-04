@@ -1,6 +1,6 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { protect, admin } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const { mockUsers } = require('../data/mockData');
 const { t } = require('../utils/i18n');
@@ -114,7 +114,7 @@ router.get('/demo-business', async (req, res) => {
 // Routes protégées (APRÈS les routes publiques)
 
 // GET /api/users/stats/dashboard - Statistiques pour le dashboard admin (AVANT :id)
-router.get('/stats/dashboard', protect, adminOnly, async (req, res) => {
+router.get('/stats/dashboard', protect, admin, async (req, res) => {
   try {
     const totalUsers = await User.countDocuments();
     const activeUsers = await User.countDocuments({ isActive: true });
@@ -156,7 +156,7 @@ router.get('/stats/dashboard', protect, adminOnly, async (req, res) => {
 });
 
 // GET /api/users - Liste tous les users (admin seulement)
-router.get('/', protect, adminOnly, async (req, res) => {
+router.get('/', protect, admin, async (req, res) => {
   try {
     const users = await User.find({}).select('-password');
     res.json({
@@ -173,7 +173,7 @@ router.get('/', protect, adminOnly, async (req, res) => {
 });
 
 // GET /api/users/:id - Récupérer un user spécifique (admin seulement)
-router.get('/:id', protect, adminOnly, async (req, res) => {
+router.get('/:id', protect, admin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password');
     if (!user) {
@@ -196,7 +196,7 @@ router.get('/:id', protect, adminOnly, async (req, res) => {
 });
 
 // PUT /api/users/:id - Mettre à jour un user (admin seulement)
-router.put('/:id', protect, adminOnly, async (req, res) => {
+router.put('/:id', protect, admin, async (req, res) => {
   try {
     const { name, email, role, isActive } = req.body;
     
@@ -228,7 +228,7 @@ router.put('/:id', protect, adminOnly, async (req, res) => {
 });
 
 // DELETE /api/users/:id - Supprimer un user (admin seulement)
-router.delete('/:id', protect, adminOnly, async (req, res) => {
+router.delete('/:id', protect, admin, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     
@@ -265,7 +265,73 @@ router.delete('/:id', protect, adminOnly, async (req, res) => {
 // GET /api/users/me - Profil utilisateur actuel
 router.get('/me', protect, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select('-password');
+    let user;
+    try {
+      user = await User.findById(req.user.id).select('-password');
+      if (!user) {
+        // Fallback to mock users
+        user = mockUsers.find(u => u._id.toString() === req.user.id.toString());
+        if (user) {
+          // Remove password from mock user
+          const { password, ...userWithoutPassword } = user;
+          user = userWithoutPassword;
+        }
+      }
+    } catch (dbError) {
+      // Fallback to mock users if MongoDB is unavailable
+      user = mockUsers.find(u => u._id.toString() === req.user.id.toString());
+      if (user) {
+        // Remove password from mock user
+        const { password, ...userWithoutPassword } = user;
+        user = userWithoutPassword;
+      }
+    }
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: t('users.userNotFound')
+      });
+    }
+    
+    res.json({
+      success: true,
+      user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: t('users.profileError'),
+      error: error.message
+    });
+  }
+});
+
+// GET /api/users/profile - Alias for /me
+router.get('/profile', protect, async (req, res) => {
+  try {
+    let user;
+    try {
+      user = await User.findById(req.user.id).select('-password');
+      if (!user) {
+        // Fallback to mock users
+        user = mockUsers.find(u => u._id.toString() === req.user.id.toString());
+        if (user) {
+          // Remove password from mock user
+          const { password, ...userWithoutPassword } = user;
+          user = userWithoutPassword;
+        }
+      }
+    } catch (dbError) {
+      // Fallback to mock users if MongoDB is unavailable
+      user = mockUsers.find(u => u._id.toString() === req.user.id.toString());
+      if (user) {
+        // Remove password from mock user
+        const { password, ...userWithoutPassword } = user;
+        user = userWithoutPassword;
+      }
+    }
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -636,7 +702,7 @@ router.post('/resend-verification', protect, async (req, res) => {
 });
 
 // GET /api/users/search - Rechercher des utilisateurs (admin seulement)
-router.get('/search', protect, adminOnly, async (req, res) => {
+router.get('/search', protect, admin, async (req, res) => {
   try {
     const { q, role, isActive, limit = 20, offset = 0 } = req.query;
     

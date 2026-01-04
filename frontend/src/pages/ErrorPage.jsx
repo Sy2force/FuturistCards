@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from "../hooks/useTranslation";
 import { motion } from 'framer-motion';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { 
   HomeIcon, 
   CreditCardIcon, 
@@ -11,10 +11,11 @@ import {
 } from '@heroicons/react/24/outline';
 
 const ErrorPage = () => {
-  const { t } = useTranslation();
+  // Set document title
+  useDocumentTitle('Error | FuturistCards');
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4" dir="rtl" lang="he">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
       <div className="text-center max-w-lg mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -27,10 +28,10 @@ const ErrorPage = () => {
             404
           </h1>
           <h2 className="text-3xl font-semibold text-white mb-4">
-            {t('error.notFound.title')}
+            Page Not Found
           </h2>
           <p className="text-gray-300 text-lg">
-            {t('error.notFound.description')}
+            The page you're looking for doesn't exist or has been moved.
           </p>
         </motion.div>
 
@@ -45,7 +46,7 @@ const ErrorPage = () => {
             className="group flex items-center justify-center bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
           >
             <HomeIcon className="w-5 h-5 mr-2" />
-            {t('error.notFound.goHome')}
+            Go Home
             <ArrowRightIcon className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
           
@@ -54,7 +55,7 @@ const ErrorPage = () => {
             className="group flex items-center justify-center glass-card text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:bg-white/10"
           >
             <CreditCardIcon className="w-5 h-5 mr-2" />
-            {t('error.notFound.viewCards')}
+            View Cards
             <ArrowRightIcon className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>
@@ -67,26 +68,26 @@ const ErrorPage = () => {
         >
           <h3 className="font-semibold text-white mb-4 flex items-center justify-center">
             <InformationCircleIcon className="w-5 h-5 mr-2" />
-            {t('error.notFound.suggestions')}
+            Quick Links
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
             <Link 
               to="/about" 
               className="text-cyan-400 hover:text-cyan-300 transition-colors p-2 rounded hover:bg-white/5"
             >
-              {t('navbar.about')}
+              About Us
             </Link>
             <Link 
               to="/login" 
               className="text-cyan-400 hover:text-cyan-300 transition-colors p-2 rounded hover:bg-white/5"
             >
-              {t('navbar.login')}
+              Login
             </Link>
             <Link 
               to="/register" 
               className="text-cyan-400 hover:text-cyan-300 transition-colors p-2 rounded hover:bg-white/5"
             >
-              {t('navbar.register')}
+              Register
             </Link>
           </div>
         </motion.div>

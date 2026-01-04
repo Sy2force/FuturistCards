@@ -1,15 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from "../hooks/useTranslation";
 import { motion } from 'framer-motion';
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const NotFound = () => {
-  const { t } = useTranslation();
   const { currentTheme } = useRoleTheme();
   
+  // Set document title
+  useDocumentTitle('Page Not Found | FuturistCards');
+  
   return (
-    <div className="min-h-screen glass-gradient flex items-center justify-center px-4" dir="rtl" lang="he">
+    <div className="min-h-screen glass-gradient flex items-center justify-center px-4">
       <motion.div 
         className="text-center max-w-md mx-auto"
         initial={{ opacity: 0, y: 50 }}
@@ -34,7 +36,7 @@ const NotFound = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            {t('error.title')}
+            {'title'}
           </motion.h2>
           
           <motion.p 
@@ -44,7 +46,7 @@ const NotFound = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            {t('error.description')}
+            {'description'}
           </motion.p>
           
           <motion.div 
@@ -57,14 +59,14 @@ const NotFound = () => {
               to="/"
               className="glass-button glass-button-primary inline-block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {t('common.back')}
+              {'Back'}
             </Link>
             
             <Link
               to="/cards"
               className="glass-button glass-button-secondary block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {t('cards.title')}
+              {'Business Cards'}
             </Link>
           </motion.div>
         </div>

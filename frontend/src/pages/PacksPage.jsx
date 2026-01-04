@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from "../hooks/useTranslation";
+import { useRoleTheme } from '../context/ThemeProvider';
 import {
   CheckIcon,
   XMarkIcon,
@@ -12,14 +12,14 @@ import {
 } from '@heroicons/react/24/outline';
 
 const PacksPage = () => {
-  const { t, language } = useTranslation();
+  const { currentTheme } = useRoleTheme();
   const [billingCycle, setBillingCycle] = useState('monthly');
 
   const packs = [
     {
       id: 'basic',
-      name: t('packs.basic.name'),
-      description: t('packs.basic.description'),
+      name: 'Basic Plan',
+      description: 'Perfect for individuals getting started',
       icon: CogIcon,
       color: 'from-gray-500 to-gray-600',
       popular: false,
@@ -28,20 +28,20 @@ const PacksPage = () => {
         yearly: 990
       },
       features: [
-        { name: t('packs.basic.features.cards'), included: true, limit: '5' },
-        { name: t('packs.basic.features.storage'), included: true, limit: t('packs.storage.oneGB') },
-        { name: t('packs.basic.features.analytics'), included: true },
-        { name: t('packs.basic.features.support'), included: true, limit: t('packs.supportTypes.email') },
-        { name: t('packs.basic.features.customDomain'), included: false },
-        { name: t('packs.basic.features.api'), included: false },
-        { name: t('packs.basic.features.whiteLabel'), included: false },
-        { name: t('packs.basic.features.priority'), included: false }
+        { name: 'Business Cards', included: true, limit: '5' },
+        { name: 'Cloud Storage', included: true, limit: '1 GB' },
+        { name: 'Basic Analytics', included: true },
+        { name: 'Email Support', included: true, limit: 'Standard' },
+        { name: 'Custom Domain', included: false },
+        { name: 'API Access', included: false },
+        { name: 'White Label', included: false },
+        { name: 'Priority Support', included: false }
       ]
     },
     {
       id: 'pro',
-      name: t('packs.pro.name'),
-      description: t('packs.pro.description'),
+      name: 'Professional Plan',
+      description: 'Ideal for businesses and professionals',
       icon: StarIcon,
       color: 'from-cyan-500 to-purple-500',
       popular: true,
@@ -50,20 +50,20 @@ const PacksPage = () => {
         yearly: 2490
       },
       features: [
-        { name: t('packs.pro.features.cards'), included: true, limit: '50' },
-        { name: t('packs.pro.features.storage'), included: true, limit: t('packs.storage.tenGB') },
-        { name: t('packs.pro.features.analytics'), included: true },
-        { name: t('packs.pro.features.support'), included: true, limit: t('packs.supportTypes.chatEmail') },
-        { name: t('packs.pro.features.customDomain'), included: true },
-        { name: t('packs.pro.features.api'), included: true },
-        { name: t('packs.pro.features.whiteLabel'), included: false },
-        { name: t('packs.pro.features.priority'), included: true }
+        { name: 'Business Cards', included: true, limit: '50' },
+        { name: 'Cloud Storage', included: true, limit: '10 GB' },
+        { name: 'Advanced Analytics', included: true },
+        { name: 'Priority Support', included: true, limit: 'Chat & Email' },
+        { name: 'Custom Domain', included: true },
+        { name: 'API Access', included: true },
+        { name: 'White Label', included: false },
+        { name: 'Priority Support', included: true }
       ]
     },
     {
       id: 'enterprise',
-      name: t('packs.enterprise.name'),
-      description: t('packs.enterprise.description'),
+      name: 'Enterprise Plan',
+      description: 'Complete solution for large organizations',
       icon: RocketLaunchIcon,
       color: 'from-purple-500 to-pink-500',
       popular: false,
@@ -72,14 +72,14 @@ const PacksPage = () => {
         yearly: 5990
       },
       features: [
-        { name: t('packs.enterprise.features.cards'), included: true, limit: t('packs.limits.unlimited') },
-        { name: t('packs.enterprise.features.storage'), included: true, limit: t('packs.storage.hundredGB') },
-        { name: t('packs.enterprise.features.analytics'), included: true },
-        { name: t('packs.enterprise.features.support'), included: true, limit: t('packs.supportTypes.phoneSupport') },
-        { name: t('packs.enterprise.features.customDomain'), included: true },
-        { name: t('packs.enterprise.features.api'), included: true },
-        { name: t('packs.enterprise.features.whiteLabel'), included: true },
-        { name: t('packs.enterprise.features.priority'), included: true }
+        { name: 'Business Cards', included: true, limit: 'Unlimited' },
+        { name: 'Cloud Storage', included: true, limit: '100 GB' },
+        { name: 'Enterprise Analytics', included: true },
+        { name: 'Dedicated Support', included: true, limit: 'Phone & Chat' },
+        { name: 'Custom Domain', included: true },
+        { name: 'Full API Access', included: true },
+        { name: 'White Label', included: true },
+        { name: 'Priority Support', included: true }
       ]
     }
   ];
@@ -106,10 +106,13 @@ const PacksPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('packs.pageTitle')} - FuturistCards</title>
-        <meta name="description" content={t('packs.pageDescription')} />
+        <title>Pricing Plans | FuturistCards</title>
+        <meta name="description" content="Choose the perfect plan for your digital business card needs. From individual to enterprise solutions." />
       </Helmet>
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir={language === 'he' ? 'rtl' : 'ltr'}>
+    <div 
+      className="min-h-screen pt-20" 
+      style={{ backgroundColor: currentTheme.colors.background }}
+    >
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
@@ -118,20 +121,33 @@ const PacksPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-              {t('packs.hero.title')}
+            <h1 
+              className="text-4xl md:text-6xl font-bold mb-6"
+              style={{ color: currentTheme.colors.text.primary }}
+            >
+              Choose Your Perfect{' '}
               <span className="text-gradient bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">
-                {t('packs.hero.highlight')}
+                Plan
               </span>
             </h1>
-            <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">
-              {t('packs.hero.subtitle')}
+            <p 
+              className="text-xl mb-8 max-w-3xl mx-auto"
+              style={{ color: currentTheme.colors.text.secondary }}
+            >
+              Select the ideal plan for your digital business card needs. From personal use to enterprise solutions.
             </p>
 
             {/* Billing Toggle */}
             <div className="flex items-center justify-center mb-12">
-              <span className={`mr-3 ${billingCycle === 'monthly' ? 'text-white' : 'text-gray-400'}`}>
-                {t('packs.billing.monthly')}
+              <span 
+                className="mr-3"
+                style={{ 
+                  color: billingCycle === 'monthly' 
+                    ? currentTheme.colors.text.primary 
+                    : currentTheme.colors.text.secondary 
+                }}
+              >
+                Monthly
               </span>
               <motion.button
                 onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
@@ -146,10 +162,17 @@ const PacksPage = () => {
                   }`}
                 />
               </motion.button>
-              <span className={`ml-3 ${billingCycle === 'yearly' ? 'text-white' : 'text-gray-400'}`}>
-                {t('packs.billing.yearly')}
+              <span 
+                className="ml-3"
+                style={{ 
+                  color: billingCycle === 'yearly' 
+                    ? currentTheme.colors.text.primary 
+                    : currentTheme.colors.text.secondary 
+                }}
+              >
+                Yearly
                 <span className="ml-1 text-green-400 text-sm font-medium">
-                  ({t('packs.billing.save')} 20%)
+                  (Save 20%)
                 </span>
               </span>
             </div>
@@ -179,7 +202,7 @@ const PacksPage = () => {
                   {pack.popular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                       <div className="bg-gradient-to-r from-cyan-500 to-purple-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                        {t('packs.popular')}
+                        Most Popular
                       </div>
                     </div>
                   )}
@@ -188,23 +211,43 @@ const PacksPage = () => {
                     <div className={`inline-flex p-3 rounded-lg bg-gradient-to-r ${pack.color} mb-4`}>
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">{pack.name}</h3>
-                    <p className="text-gray-300">{pack.description}</p>
+                    <h3 
+                      className="text-2xl font-bold mb-2"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
+                      {pack.name}
+                    </h3>
+                    <p style={{ color: currentTheme.colors.text.secondary }}>
+                      {pack.description}
+                    </p>
                   </div>
 
                   <div className="text-center mb-8">
                     <div className="flex items-baseline justify-center">
-                      <span className="text-4xl font-bold text-white">{price.monthly * 4}₪</span>
-                      <span className="text-gray-400 ml-1">{t('packs.perMonth')}</span>
+                      <span 
+                        className="text-4xl font-bold"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
+                        ${price.monthly}
+                      </span>
+                      <span 
+                        className="ml-1"
+                        style={{ color: currentTheme.colors.text.secondary }}
+                      >
+                        /month
+                      </span>
                     </div>
                     {billingCycle === 'yearly' && (
                       <div className="mt-2">
-                        <p className="text-sm text-gray-400">
-                          {t('packs.billing.billedYearly')}: {price.total * 4}₪
+                        <p 
+                          className="text-sm"
+                          style={{ color: currentTheme.colors.text.secondary }}
+                        >
+                          Billed yearly: ${price.total}
                         </p>
                         {savings > 0 && (
                           <p className="text-sm text-green-400 font-medium">
-                            {t('packs.billing.save')} {savings}%
+                            Save {savings}%
                           </p>
                         )}
                       </div>
@@ -219,7 +262,14 @@ const PacksPage = () => {
                         ) : (
                           <XMarkIcon className="w-5 h-5 text-gray-500 mr-3 flex-shrink-0" />
                         )}
-                        <span className={`text-sm ${feature.included ? 'text-white' : 'text-gray-500'}`}>
+                        <span 
+                          className="text-sm"
+                          style={{ 
+                            color: feature.included 
+                              ? currentTheme.colors.text.primary 
+                              : currentTheme.colors.text.secondary 
+                          }}
+                        >
                           {feature.name}
                           {feature.limit && feature.included && (
                             <span className="text-cyan-400 ml-1">({feature.limit})</span>
@@ -237,8 +287,9 @@ const PacksPage = () => {
                         ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white hover:from-cyan-600 hover:to-purple-600'
                         : 'glass-button'
                     }`}
+                    onClick={() => handleSelectPack(pack.id)}
                   >
-                    {t('packs.cta.choosePlan')}
+                    Choose Plan
                   </motion.button>
                 </motion.div>
               );
@@ -257,11 +308,17 @@ const PacksPage = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              {t('packs.comparison.title')}
+            <h2 
+              className="text-3xl md:text-4xl font-bold mb-4"
+              style={{ color: currentTheme.colors.text.primary }}
+            >
+              Compare Features
             </h2>
-            <p className="text-xl text-gray-300">
-              {t('packs.comparison.subtitle')}
+            <p 
+              className="text-xl"
+              style={{ color: currentTheme.colors.text.secondary }}
+            >
+              Find the perfect plan that matches your business needs
             </p>
           </motion.div>
 
@@ -276,11 +333,18 @@ const PacksPage = () => {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-700">
-                    <th className="text-left py-4 px-6 text-white font-semibold">
-                      {t('packs.comparison.features')}
+                    <th 
+                      className="text-left py-4 px-6 font-semibold"
+                      style={{ color: currentTheme.colors.text.primary }}
+                    >
+                      Features
                     </th>
                     {packs.map((pack) => (
-                      <th key={pack.id} className="text-center py-4 px-6 text-white font-semibold">
+                      <th 
+                        key={pack.id} 
+                        className="text-center py-4 px-6 font-semibold"
+                        style={{ color: currentTheme.colors.text.primary }}
+                      >
                         {pack.name}
                       </th>
                     ))}
@@ -289,7 +353,10 @@ const PacksPage = () => {
                 <tbody>
                   {packs[0].features.map((_, featureIndex) => (
                     <tr key={featureIndex} className="border-b border-gray-800">
-                      <td className="py-4 px-6 text-gray-300">
+                      <td 
+                        className="py-4 px-6"
+                        style={{ color: currentTheme.colors.text.secondary }}
+                      >
                         {packs[0].features[featureIndex].name}
                       </td>
                       {packs.map((pack) => (
@@ -328,7 +395,7 @@ const PacksPage = () => {
             className="text-center mb-12"
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              {t('packs.faq.title')}
+              {'title'}
             </h2>
           </motion.div>
 
@@ -342,11 +409,20 @@ const PacksPage = () => {
             <div className="space-y-6">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="border-b border-gray-700 pb-6 last:border-b-0">
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    {t(`packs.faq.questions.q${i}.question`)}
+                  <h3 
+                    className="text-lg font-semibold mb-2"
+                    style={{ color: currentTheme.colors.text.primary }}
+                  >
+                    {i === 1 && 'Can I change my plan anytime?'}
+                    {i === 2 && 'Do you offer refunds?'}
+                    {i === 3 && 'Is my data secure?'}
+                    {i === 4 && 'Do you provide customer support?'}
                   </h3>
-                  <p className="text-gray-300">
-                    {t(`packs.faq.questions.q${i}.answer`)}
+                  <p style={{ color: currentTheme.colors.text.secondary }}>
+                    {i === 1 && 'Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.'}
+                    {i === 2 && 'We offer a 30-day money-back guarantee for all annual plans.'}
+                    {i === 3 && 'Absolutely. We use enterprise-grade security and encryption to protect your data.'}
+                    {i === 4 && 'Yes, we provide 24/7 support for all our customers with different tiers based on your plan.'}
                   </p>
                 </div>
               ))}
@@ -366,11 +442,17 @@ const PacksPage = () => {
             className="glass-card p-8 md:p-12"
           >
             <ShieldCheckIcon className="w-16 h-16 text-cyan-400 mx-auto mb-6" />
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              {t('packs.cta.title')}
+            <h2 
+              className="text-3xl md:text-4xl font-bold mb-6"
+              style={{ color: currentTheme.colors.text.primary }}
+            >
+              Ready to Get Started?
             </h2>
-            <p className="text-xl text-gray-300 mb-8">
-              {t('packs.cta.subtitle')}
+            <p 
+              className="text-xl mb-8"
+              style={{ color: currentTheme.colors.text.secondary }}
+            >
+              Join thousands of professionals already using FuturistCards to grow their business.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.button
@@ -378,14 +460,14 @@ const PacksPage = () => {
                 whileTap={{ scale: 0.95 }}
                 className="glass-button px-8 py-3 text-lg font-semibold"
               >
-                {t('packs.cta.startTrial')}
+                Start Free Trial
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="glass-card px-8 py-3 text-lg font-semibold text-white border-2 border-cyan-400/30 hover:border-cyan-400/60"
               >
-                {t('packs.cta.contactSales')}
+                Contact Sales
               </motion.button>
             </div>
           </motion.div>

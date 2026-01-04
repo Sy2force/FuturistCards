@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTranslation } from "../hooks/useTranslation";
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { Helmet } from 'react-helmet-async';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation();
-  const { login, loading, error, clearError } = useAuth();
-  
-  // Set document title
-  useDocumentTitle(t('auth.login'));
+  const { login, loading, error, clearError, user, getRedirectPath } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate(getRedirectPath(user.role), { replace: true });
+    }
+  }, [user, navigate, getRedirectPath]);
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -30,13 +32,13 @@ const LoginPage = () => {
 
   const validateForm = () => {
     if (!formData.email || !formData.password) {
-      setValidationError(t('validation.required'));
+      setValidationError('All fields are required');
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setValidationError(t('validation.invalidEmail'));
+      setValidationError('Invalid email address');
       return false;
     }
 
@@ -55,9 +57,9 @@ const LoginPage = () => {
       const result = await login(formData.email, formData.password);
       
       if (result.success) {
-        setSuccess(t('validation.loginSuccess'));
+        setSuccess('Login successful! Redirecting...');
         setTimeout(() => {
-          navigate('/cards');
+          navigate(getRedirectPath(result.user.role));
         }, 1500);
       }
     } catch (err) {
@@ -68,16 +70,22 @@ const LoginPage = () => {
   const displayError = validationError || error;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex rtl pt-16" data-testid="login-page" dir="rtl" lang="he">
+    <>
+      <Helmet>
+        <title>Login | FuturistCards</title>
+        <meta name="description" content="Login to your FuturistCards account to access your digital business cards" />
+      </Helmet>
+      
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex pt-16" data-testid="login-page">
       {/* Left side - Form */}
       <div className="w-full lg:w-3/4 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 xl:px-20">
         <div className="mx-auto w-full max-w-md lg:max-w-lg xl:max-w-xl">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-white mb-4 animate-float">
-              {t('auth.login')}
+              Login
             </h2>
             <p className="text-lg text-indigo-200">
-              {t('auth.loginToAccount')}
+              Welcome back! Please login to your account
             </p>
           </div>
 
@@ -97,7 +105,7 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit} className="space-y-6" data-testid="login-form">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                  {t('auth.email')}
+                  Email
                 </label>
                 <input
                   type="email"
@@ -106,7 +114,7 @@ const LoginPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
-                  placeholder={t('auth.emailPlaceholder')}
+                  placeholder="Enter your email"
                   required
                   data-testid="login-email"
                 />
@@ -114,7 +122,7 @@ const LoginPage = () => {
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                  {t('auth.password')}
+                  Password
                 </label>
                 <input
                   type="password"
@@ -123,7 +131,7 @@ const LoginPage = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
-                  placeholder={t('auth.passwordPlaceholder')}
+                  placeholder="Enter your password"
                   required
                   data-testid="login-password"
                 />
@@ -139,7 +147,7 @@ const LoginPage = () => {
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                   ) : (
-                    t('auth.signIn')
+                    'Sign In'
                   )}
                 </button>
               </div>
@@ -147,13 +155,13 @@ const LoginPage = () => {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-white/80">
-                {t('auth.noAccount')} {' '}
+                Don't have an account? {' '}
                 <Link 
                   to="/register" 
                   className="font-medium text-blue-300 hover:text-blue-200 transition-colors"
                   data-testid="register-link"
                 >
-                  {t('auth.signUp')}
+                  Sign Up
                 </Link>
               </p>
             </div>
@@ -170,7 +178,7 @@ const LoginPage = () => {
         <div className="absolute inset-0 transform hover:scale-105 transition-all duration-700 ease-out">
           <img 
             src="/images/login-hero.jpg" 
-            alt={t('auth.loginImageAlt')}
+            alt="Login hero image"
             className="h-full w-full object-cover"
             onError={(e) => {
               e.target.style.display = 'none';
@@ -198,10 +206,10 @@ const LoginPage = () => {
         <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
           <div className="text-white transform hover:translate-y-[-2px] transition-all duration-300">
             <h3 className="text-xl lg:text-2xl font-bold mb-3 text-white drop-shadow-lg">
-              {t('auth.welcomeBackFuture')}
+              Welcome to the Future
             </h3>
             <p className="text-sm lg:text-base text-white/95 leading-relaxed backdrop-blur-sm bg-black/20 rounded-lg p-3 border border-white/20">
-              {t('auth.loginDescription')}
+              Create and manage your digital business cards with cutting-edge technology
             </p>
           </div>
         </div>
@@ -210,6 +218,7 @@ const LoginPage = () => {
         <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-cyan-400/60 via-purple-400/40 to-transparent"></div>
       </div>
     </div>
+    </>
   );
 };
 

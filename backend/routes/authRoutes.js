@@ -8,12 +8,12 @@ const {
   logout
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
-const { validateRegistration, validateLogin } = require('../middleware/validation');
+const { validateRegister, validateLogin } = require('../middleware/validation');
 
 const router = express.Router();
 
 // routes ouvertes à tous
-router.post('/register', validateRegistration, register);
+router.post('/register', validateRegister, register);
 router.post('/login', validateLogin, login);
 
 // routes qui nécessitent d'être connecté

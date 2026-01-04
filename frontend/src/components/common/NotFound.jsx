@@ -1,9 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useTranslation } from "../../hooks/useTranslation";
 
 const NotFound = () => {
-  const { t } = useTranslation();
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center px-4">
@@ -31,10 +29,10 @@ const NotFound = () => {
           className="mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            {t('error.title')}
+            {'title'}
           </h2>
           <p className="text-gray-300 text-lg max-w-md mx-auto">
-            {t('error.description')}
+            {'description'}
           </p>
         </motion.div>
 
@@ -48,7 +46,7 @@ const NotFound = () => {
             to="/"
             className="inline-block bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            {t('unauthorized.backToHome')}
+            {'back To Home'}
           </Link>
           
           <div className="mt-6">
@@ -56,7 +54,7 @@ const NotFound = () => {
               to="/cards"
               className="text-cyan-400 hover:text-cyan-300 underline transition-colors duration-300"
             >
-              {t('cards.title')}
+              {'Business Cards'}
             </Link>
           </div>
         </motion.div>
@@ -68,7 +66,7 @@ const NotFound = () => {
           className="mt-12"
         >
           <div className="text-gray-400 text-sm">
-            <p>FuturistCards • {t('error.title')}</p>
+            <p>FuturistCards • {'title'}</p>
           </div>
         </motion.div>
       </motion.div>

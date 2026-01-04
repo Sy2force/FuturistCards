@@ -33,7 +33,7 @@ const ProtectedRoute = ({ children, requiredRole = null, requiredRoles = null })
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            טוען...
+            Loading...
           </motion.p>
         </motion.div>
       </div>
@@ -44,12 +44,12 @@ const ProtectedRoute = ({ children, requiredRole = null, requiredRoles = null })
     return <Navigate to="/login" replace />;
   }
 
-  // בדיקת תפקיד יחיד
+  // Check single role
   if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // בדיקת תפקידים מרובים
+  // Check multiple roles
   if (requiredRoles && !requiredRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useRoleTheme, useTheme } from '../../context/ThemeProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -31,7 +30,6 @@ const DarkModeIcon = ({ isDark }) => (
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
   const { currentTheme } = useRoleTheme();
-  const { t } = useTranslation();
   
   return (
     <motion.button
@@ -41,7 +39,7 @@ const ThemeToggle = () => {
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       data-testid="dark-mode-toggle"
-      aria-label={t('theme.toggle')}
+      aria-label="Toggle theme"
     >
       <DarkModeIcon isDark={theme === 'dark'} />
     </motion.button>
@@ -50,7 +48,6 @@ const ThemeToggle = () => {
 
 const Navbar = ({ onCreateCard }) => {
   const { user, logout } = useAuth();
-  const { t } = useTranslation();
   const { currentTheme, isDark, toggleDarkMode } = useRoleTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -86,35 +83,45 @@ const Navbar = ({ onCreateCard }) => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     logout();
-    navigate('/login');
+    navigate('/');
   };
 
-  // Navigation links configuration - different for logged in vs logged out users
-  const publicLinks = [
-    { path: '/', key: 'home', label: t('navbar.home') },
-    { path: '/about', key: 'about', label: t('navbar.about') },
-    { path: '/services', key: 'services', label: t('navbar.services') },
-    { path: '/contact', key: 'contact', label: t('navbar.contact') },
-  ];
+  // Navigation links configuration by role
+  const navigationByRole = {
+    // Public (non connecté) : Home, About, Cards, Login, Register
+    public: [
+      { path: '/', key: 'home', label: 'Home' },
+      { path: '/about', key: 'about', label: 'About' },
+      { path: '/cards', key: 'cards', label: 'Cards' },
+    ],
+    // User : Cards, My Cards, Create Card, Favorites, Logout
+    user: [
+      { path: '/cards', key: 'cards', label: 'Cards' },
+      { path: '/my-cards', key: 'my-cards', label: 'My Cards' },
+      { path: '/create-card', key: 'create-card', label: 'Create Card' },
+      { path: '/favorites', key: 'favorites', label: 'Favorites' },
+    ],
+    // Business : Dashboard, My Cards, Create Card, Analytics, Logout  
+    business: [
+      { path: '/dashboard', key: 'dashboard', label: 'Dashboard' },
+      { path: '/my-cards', key: 'my-cards', label: 'My Cards' },
+      { path: '/create-card', key: 'create-card', label: 'Create Card' },
+      { path: '/analytics', key: 'analytics', label: 'Analytics' },
+    ],
+    // Admin : Admin Panel, Manage Users, Logs, Logout
+    admin: [
+      { path: '/admin', key: 'admin', label: 'Admin Panel' },
+      { path: '/admin/users', key: 'manage-users', label: 'Manage Users' },
+      { path: '/admin/logs', key: 'logs', label: 'Logs' },
+    ]
+  };
 
-  const authenticatedLinks = [
-    { path: '/', key: 'home', label: t('navbar.home') },
-    { path: '/cards', key: 'cards', label: t('navbar.cards') },
-    { path: '/my-cards', key: 'my-cards', label: t('navbar.myCards'), roles: ['business', 'admin'] },
-    { path: '/create-card', key: 'create-card', label: 'צור כרטיס', roles: ['business', 'admin'] },
-    { path: '/favorites', key: 'favorites', label: t('navbar.favorites') },
-    { path: '/dashboard', key: 'dashboard', label: t('navbar.dashboard') },
-    { path: '/admin', key: 'admin', label: t('navbar.admin'), roles: ['admin'] },
-  ];
-
-  // Get appropriate links based on authentication status
+  // Get appropriate links based on authentication status and role
   const getNavigationLinks = () => {
     if (!user) {
-      return publicLinks;
+      return navigationByRole.public;
     }
-    return authenticatedLinks.filter(link => 
-      !link.roles || link.roles.includes(user.role)
-    );
+    return navigationByRole[user.role] || navigationByRole.user;
   };
 
   const getNavbarTestId = () => {
@@ -152,7 +159,7 @@ const Navbar = ({ onCreateCard }) => {
               to="/" 
               className="flex items-center gap-2 transition-colors duration-200"
               style={{ color: currentTheme.colors.text.primary }}
-              aria-label={t('navbar.home')}
+              aria-label="Home"
               data-testid="navbar-logo"
             >
               {/* Logo Icon */}
@@ -200,7 +207,7 @@ const Navbar = ({ onCreateCard }) => {
                   className="text-xs opacity-75 text-center"
                   style={{ color: currentTheme.colors.text.secondary }}
                 >
-                  כרטיסי ביקור דיגיטליים
+                  Digital Business Cards
                 </span>
               </div>
             </Link>
@@ -237,11 +244,11 @@ const Navbar = ({ onCreateCard }) => {
             {/* Auth Section */}
             {user ? (
               <div className="flex items-center space-x-3">
-                {/* מחוון סטטוס משתמש */}
+                {/* User status indicator */}
                 <div className="flex items-center space-x-2">
                   <div className="flex items-center space-x-1">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-xs text-green-400 font-medium">{t('home.status.connected')}</span>
+                    <span className="text-xs text-green-400 font-medium">Connected</span>
                   </div>
                   <span 
                     className="px-2 py-1 text-xs font-semibold rounded-full"
@@ -251,14 +258,14 @@ const Navbar = ({ onCreateCard }) => {
                     }}
                     data-testid="user-role-badge"
                   >
-                    {user.role === 'admin' ? t('roles.admin') : 
-                     user.role === 'business' ? t('roles.business') : t('roles.user')}
+                    {user.role === 'admin' ? 'Admin' : 
+                     user.role === 'business' ? 'Business' : 'User'}
                   </span>
                   <span 
                     className="text-sm hidden lg:inline"
                     style={{ color: currentTheme.colors.text.secondary }}
                   >
-                    {t('navbar.hello')}, {user.firstName}
+                    Hello, {user.firstName}
                   </span>
                 </div>
                 
@@ -274,7 +281,7 @@ const Navbar = ({ onCreateCard }) => {
                   whileTap={{ scale: 0.95 }}
                   data-testid="link-logout"
                 >
-                  {t('navbar.logout')}
+                  Logout
                 </motion.button>
               </div>
             ) : (
@@ -288,7 +295,7 @@ const Navbar = ({ onCreateCard }) => {
                   }}
                   data-testid="link-login"
                 >
-                  {t('navbar.login')}
+                  Login
                 </Link>
                 <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                   <Link
@@ -300,7 +307,7 @@ const Navbar = ({ onCreateCard }) => {
                     }}
                     data-testid="link-register"
                   >
-                    {t('navbar.register')}
+                    Register
                   </Link>
                 </motion.div>
               </div>
@@ -316,7 +323,7 @@ const Navbar = ({ onCreateCard }) => {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               data-testid="mobile-menu-toggle"
-              aria-label={t('navbar.toggleMenu')}
+              aria-label="Toggle menu"
             >
               {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
             </motion.button>
@@ -361,7 +368,7 @@ const Navbar = ({ onCreateCard }) => {
                           className="text-sm"
                           style={{ color: currentTheme.colors.text.secondary }}
                         >
-                          {t('navbar.hello')}, {user.firstName}
+                          Hello, {user.firstName}
                         </span>
                       </div>
                       <button
@@ -373,7 +380,7 @@ const Navbar = ({ onCreateCard }) => {
                         }}
                         data-testid="mobile-link-logout"
                       >
-                        {t('navbar.logout')}
+                        Logout
                       </button>
                     </div>
                   ) : (
@@ -387,7 +394,7 @@ const Navbar = ({ onCreateCard }) => {
                         }}
                         data-testid="mobile-link-login"
                       >
-                        {t('navbar.login')}
+                        Login
                       </Link>
                       <Link
                         to="/register"
@@ -398,7 +405,7 @@ const Navbar = ({ onCreateCard }) => {
                         }}
                         data-testid="mobile-link-register"
                       >
-                        {t('navbar.register')}
+                        Register
                       </Link>
                     </div>
                   )}

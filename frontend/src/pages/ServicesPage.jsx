@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from "../hooks/useTranslation";
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { 
@@ -30,8 +29,7 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 
 const ServicesPage = () => {
-  const { t, i18n } = useTranslation();
-  const { language } = i18n;
+  const language = 'en'; // Fixed language to English
   const { user } = useAuth();
   const { currentTheme } = useRoleTheme();
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -42,7 +40,7 @@ const ServicesPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // טעינת מועדפי משתמש וספירת צפיות
+    // Load user favorites and view counts
     const savedFavorites = JSON.parse(localStorage.getItem('serviceFavorites') || '[]');
     const savedViews = JSON.parse(localStorage.getItem('serviceViews') || '{}');
     setFavorites(savedFavorites);
@@ -74,96 +72,96 @@ const ServicesPage = () => {
       id: 1,
       category: 'development',
       icon: CodeBracketIcon,
-      title: t('services.webDevelopment.title'),
-      description: t('services.webDevelopment.description'),
-      features: [t('services.webDevelopment.features.react'), t('services.webDevelopment.features.node'), t('services.webDevelopment.features.database'), t('services.webDevelopment.features.api')],
-      price: t('services.webDevelopment.price'),
-      duration: t('services.webDevelopment.duration'),
+      title: 'Custom Web Development',
+      description: 'Professional full-stack web applications built with modern technologies',
+      features: ['React & Node.js', 'Database Design', 'REST API', 'Responsive Design'],
+      price: '$2,500 - $10,000',
+      duration: '4-12 weeks',
       rating: 4.9,
       reviews: 127,
-      deliveryTime: t('services.webDevelopment.deliveryTime'),
-      startingPrice: t('services.webDevelopment.startingPrice')
+      deliveryTime: '2-4 weeks',
+      startingPrice: '$2,500'
     },
     {
       id: 2,
       category: 'mobile',
       icon: DevicePhoneMobileIcon,
-      title: t('services.mobileApp.title'),
-      description: t('services.mobileApp.description'),
-      features: [t('services.mobileApp.features.reactNative'), t('services.mobileApp.features.flutter'), t('services.mobileApp.features.platforms'), t('services.mobileApp.features.deploy')],
-      price: t('services.mobileApp.price'),
-      duration: t('services.mobileApp.duration'),
+      title: 'Mobile App Development',
+      description: 'Native and cross-platform mobile applications for iOS and Android',
+      features: ['React Native', 'Flutter', 'Cross-platform', 'App Store Deploy'],
+      price: '$3,000 - $15,000',
+      duration: '6-16 weeks',
       rating: 4.8,
       reviews: 89,
-      deliveryTime: t('services.mobileApp.deliveryTime'),
-      startingPrice: t('services.mobileApp.startingPrice')
+      deliveryTime: '3-6 weeks',
+      startingPrice: '$3,000'
     },
     {
       id: 3,
       category: 'design',
       icon: SwatchIcon,
-      title: t('services.uiuxDesign.title'),
-      description: t('services.uiuxDesign.description'),
-      features: [t('services.uiuxDesign.features.figma'), t('services.uiuxDesign.features.prototyping'), t('services.uiuxDesign.features.designSystem'), t('services.uiuxDesign.features.userTesting')],
-      price: t('services.uiuxDesign.price'),
-      duration: t('services.uiuxDesign.duration'),
+      title: 'UI/UX Design',
+      description: 'Beautiful and intuitive user interface designs that convert visitors into customers',
+      features: ['Figma Design', 'Prototyping', 'Design System', 'User Testing'],
+      price: '$1,500 - $5,000',
+      duration: '2-8 weeks',
       rating: 4.9,
       reviews: 156,
-      deliveryTime: t('services.uiuxDesign.deliveryTime'),
-      startingPrice: t('services.uiuxDesign.startingPrice')
+      deliveryTime: '1-3 weeks',
+      startingPrice: '$1,500'
     },
     {
       id: 4,
       category: 'ecommerce',
       icon: GlobeAltIcon,
-      title: t('services.ecommerce.title'),
-      description: t('services.ecommerce.description'),
-      features: [t('services.ecommerce.features.shopify'), t('services.ecommerce.features.payment'), t('services.ecommerce.features.stock'), t('services.ecommerce.features.analytics')],
-      price: t('services.ecommerce.price'),
-      duration: t('services.ecommerce.duration'),
+      title: 'E-commerce Solutions',
+      description: 'Complete online stores with payment processing and inventory management',
+      features: ['Shopify/WooCommerce', 'Payment Gateway', 'Inventory Management', 'Sales Analytics'],
+      price: '$2,000 - $8,000',
+      duration: '3-10 weeks',
       rating: 4.7,
       reviews: 203,
-      deliveryTime: t('services.ecommerce.deliveryTime'),
-      startingPrice: t('services.ecommerce.startingPrice')
+      deliveryTime: '2-4 weeks',
+      startingPrice: '$2,000'
     },
     {
       id: 5,
       category: 'marketing',
       icon: ChartBarIcon,
-      title: t('services.digitalMarketing.title'),
-      description: t('services.digitalMarketing.description'),
-      features: [t('services.digitalMarketing.features.seo'), t('services.digitalMarketing.features.social'), t('services.digitalMarketing.features.content'), t('services.digitalMarketing.features.analytics')],
-      price: t('services.digitalMarketing.price'),
-      duration: t('services.digitalMarketing.duration'),
+      title: 'Digital Marketing',
+      description: 'Comprehensive digital marketing strategies to grow your online presence',
+      features: ['SEO Optimization', 'Social Media', 'Content Marketing', 'Analytics Tracking'],
+      price: '$800 - $3,000/month',
+      duration: 'Ongoing',
       rating: 4.6,
       reviews: 91,
-      deliveryTime: t('services.digitalMarketing.deliveryTime'),
-      startingPrice: t('services.digitalMarketing.startingPrice')
+      deliveryTime: '1-2 weeks setup',
+      startingPrice: '$800/month'
     },
     {
       id: 6,
       category: 'security',
       icon: ShieldCheckIcon,
-      title: t('services.cybersecurity.title'),
-      description: t('services.cybersecurity.description'),
-      features: [t('services.cybersecurity.features.audit'), t('services.cybersecurity.features.ssl'), t('services.cybersecurity.features.backup'), t('services.cybersecurity.features.monitoring')],
-      price: t('services.cybersecurity.price'),
-      duration: t('services.cybersecurity.duration'),
+      title: 'Security & Maintenance',
+      description: 'Website security audits and ongoing maintenance to keep your site protected',
+      features: ['Security Audit', 'SSL Certificates', 'Regular Backups', '24/7 Monitoring'],
+      price: '$300 - $1,500/month',
+      duration: 'Ongoing',
       rating: 4.8,
       reviews: 67,
-      deliveryTime: t('services.cybersecurity.deliveryTime'),
-      startingPrice: t('services.cybersecurity.startingPrice')
+      deliveryTime: '1 week setup',
+      startingPrice: '$300/month'
     }
   ];
 
   const categories = [
-    { id: 'all', name: t('services.categories.all'), icon: CogIcon },
-    { id: 'development', name: t('services.categories.development'), icon: CodeBracketIcon },
-    { id: 'mobile', name: t('services.categories.mobile'), icon: DevicePhoneMobileIcon },
-    { id: 'design', name: t('services.categories.design'), icon: SwatchIcon },
-    { id: 'ecommerce', name: t('services.categories.ecommerce'), icon: GlobeAltIcon },
-    { id: 'marketing', name: t('services.categories.marketing'), icon: ChartBarIcon },
-    { id: 'security', name: t('services.categories.security'), icon: ShieldCheckIcon }
+    { id: 'all', name: 'All Services', icon: CogIcon },
+    { id: 'development', name: 'Web Development', icon: CodeBracketIcon },
+    { id: 'mobile', name: 'Mobile Apps', icon: DevicePhoneMobileIcon },
+    { id: 'design', name: 'UI/UX Design', icon: SwatchIcon },
+    { id: 'ecommerce', name: 'E-commerce', icon: GlobeAltIcon },
+    { id: 'marketing', name: 'Digital Marketing', icon: ChartBarIcon },
+    { id: 'security', name: 'Security', icon: ShieldCheckIcon }
   ];
 
   const filteredServices = selectedCategory === 'all' 
@@ -173,22 +171,22 @@ const ServicesPage = () => {
   const benefits = [
     {
       icon: CheckCircleIcon,
-      title: t('services.benefits.quality.title'),
-      description: t('services.benefits.quality.description')
+      title: 'Professional Quality',
+      description: 'Enterprise-grade solutions with cutting-edge technology'
     },
     {
       icon: RocketLaunchIcon,
-      title: t('services.benefits.speed.title'),
-      description: t('services.benefits.speed.description')
+      title: 'Fast Delivery',
+      description: 'Quick turnaround times without compromising on quality'
     },
     {
       icon: ShieldCheckIcon,
-      title: t('services.benefits.support.title'),
-      description: t('services.benefits.support.description')
+      title: 'Ongoing Support',
+      description: '24/7 technical support and maintenance services'
     }
   ];
 
-  // רכיב מודל יצירת קשר
+  // Contact modal component
   const ContactModal = () => (
     <AnimatePresence>
       {showContactModal && (
@@ -216,11 +214,11 @@ const ServicesPage = () => {
                   <div className={`flex justify-center items-center mb-6 ${language === 'he' ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
                     <div className="text-center">
                       <p className="text-2xl font-bold text-green-400">{selectedService.startingPrice}</p>
-                      <p className="text-sm text-gray-400">{t('services.modal.startingPrice')}</p>
+                      <p className="text-sm text-gray-400">Starting Price</p>
                     </div>
                     <div className="text-center">
                       <p className="text-lg font-semibold text-blue-400">{selectedService.deliveryTime}</p>
-                      <p className="text-sm text-gray-400">{t('services.modal.deliveryTime')}</p>
+                      <p className="text-sm text-gray-400">Delivery Time</p>
                     </div>
                   </div>
                 </>
@@ -236,7 +234,7 @@ const ServicesPage = () => {
                 }}
               >
                 <ChatBubbleLeftRightIcon className="h-5 w-5 ml-2" />
-                {t('services.modal.startProject')}
+                Start Project
               </GlassButton>
               
               <div className="grid grid-cols-2 gap-4">
@@ -245,14 +243,14 @@ const ServicesPage = () => {
                   className={`flex items-center justify-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors ${language === 'he' ? 'flex-row-reverse' : ''}`}
                 >
                   <PhoneIcon className={`h-5 w-5 text-green-400 ${language === 'he' ? 'mr-2' : 'ml-2'}`} />
-                  <span className="text-white">{t('services.modal.call')}</span>
+                  <span className="text-white">Call Us</span>
                 </button>
                 <button 
                   onClick={() => window.open('mailto:services@futuristcards.com', '_self')}
                   className={`flex items-center justify-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors ${language === 'he' ? 'flex-row-reverse' : ''}`}
                 >
                   <EnvelopeIcon className={`h-5 w-5 text-blue-400 ${language === 'he' ? 'mr-2' : 'ml-2'}`} />
-                  <span className="text-white">{t('services.modal.email')}</span>
+                  <span className="text-white">Email Us</span>
                 </button>
               </div>
             </div>
@@ -261,7 +259,7 @@ const ServicesPage = () => {
               onClick={() => setShowContactModal(false)}
               className={`absolute top-4 text-gray-400 hover:text-white transition-colors ${language === 'he' ? 'right-4' : 'left-4'}`}
             >
-{t('services.closeModal')}
+✕
             </button>
           </motion.div>
         </motion.div>
@@ -272,11 +270,14 @@ const ServicesPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('services.title')} - FuturistCards</title>
-        <meta name="description" content={t('services.hero.subtitle')} />
+        <title>Professional Web Services | FuturistCards</title>
+        <meta name="description" content="Professional web development, mobile apps, UI/UX design, and digital marketing services. Transform your business with cutting-edge technology solutions." />
       </Helmet>
       
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" dir={language === 'he' ? 'rtl' : 'ltr'}>
+    <div 
+      className="min-h-screen pt-16" 
+      style={{ backgroundColor: currentTheme.colors.background }}
+    >
       <ContactModal />
       
       {/* Hero Section */}
@@ -290,13 +291,13 @@ const ServicesPage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* מחוון סטטוס משתמש */}
+            {/* User status indicator */}
             {user && (
               <div className="flex justify-center mb-4">
                 <div className="flex items-center space-x-2 px-4 py-2 rounded-full bg-green-500/20 border border-green-500/30">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
                   <span className="text-sm text-green-400 font-medium">
-                    {t('home.status.connectedAs')}{user.role === 'admin' ? t('roles.admin') : user.role === 'business' ? t('roles.business') : t('roles.user')}
+                      Connected as {user.role === 'admin' ? 'Administrator' : user.role === 'business' ? 'Business Account' : 'User'}
                   </span>
                 </div>
               </div>
@@ -309,19 +310,19 @@ const ServicesPage = () => {
                 color: currentTheme.colors.primary
               }}
             >
-{t('services.sparkle')} {t('services.badge')}
+✨ Premium Services
             </span>
             
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight text-white">
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                {user ? `${t('services.personalizedTitle')} ${user.name}` : t('services.title')}
+                {user ? `Professional Services for ${user.firstName}` : 'Professional Web Services'}
               </span>
             </h1>
             
             <p className="text-xl mb-8 max-w-3xl mx-auto leading-relaxed text-gray-300">
               {user ? 
-                t('services.loggedInSubtitle') : 
-                t('services.subtitle')
+                'Tailored digital solutions to accelerate your business growth with cutting-edge technology and professional expertise.' : 
+                'Transform your business with professional web development, mobile apps, UI/UX design, and digital marketing services.'
               }
             </p>
             
@@ -337,7 +338,7 @@ const ServicesPage = () => {
                   className={`px-8 py-4 text-lg font-semibold ${language === 'he' ? 'flex-row-reverse' : ''}`}
                 >
                   <RocketLaunchIcon className={`w-6 h-6 ${language === 'he' ? 'mr-3' : 'ml-3'}`} />
-                  {t('services.cta.getQuote')}
+                  Get Free Quote
                 </GlassButton>
               </motion.div>
               
@@ -354,12 +355,12 @@ const ServicesPage = () => {
                   className={`px-8 py-4 text-lg font-semibold ${language === 'he' ? 'flex-row-reverse' : ''}`}
                 >
                   <GlobeAltIcon className={`w-6 h-6 ${language === 'he' ? 'ml-3' : 'mr-3'}`} />
-                  {t('services.cta.viewPortfolio')}
+                  View Our Work
                 </GlassButton>
               </motion.div>
             </div>
             
-            {/* תצוגת יתרונות */}
+            {/* Benefits display */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -400,11 +401,17 @@ const ServicesPage = () => {
       <section className="py-12 w-full">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4 text-white">
-              {t('services.categories.title')}
+            <h2 
+              className="text-3xl font-bold mb-4"
+              style={{ color: currentTheme.colors.text.primary }}
+            >
+              Our Professional Services
             </h2>
-            <p className="text-lg mb-8 text-gray-300">
-              {t('services.categories.subtitle')}
+            <p 
+              className="text-lg mb-8"
+              style={{ color: currentTheme.colors.text.secondary }}
+            >
+              Choose from our comprehensive range of digital solutions
             </p>
           </div>
           
@@ -492,7 +499,7 @@ const ServicesPage = () => {
                               />
                             ))}
                             <span className="mr-2 text-sm text-gray-300">{service.rating}</span>
-                            <span className="text-xs text-gray-400">({service.reviews} {t('services.card.reviews')})</span>
+                            <span className="text-xs text-gray-400">({service.reviews} reviews)</span>
                           </div>
                         </div>
                       </div>
@@ -502,21 +509,21 @@ const ServicesPage = () => {
                       {service.description}
                     </p>
                     
-                    {/* מידע מחיר ומשלוח */}
+                    {/* Price and delivery info */}
                     <div className="flex justify-between items-center mb-4 p-3 bg-white/5 rounded-lg">
                       <div className="text-center">
                         <p className="text-lg font-bold text-green-400">{service.startingPrice}</p>
-                        <p className="text-xs text-gray-400">{t('services.card.startingPrice')}</p>
+                        <p className="text-xs text-gray-400">Starting Price</p>
                       </div>
                       <div className="text-center">
                         <p className="text-sm font-semibold text-blue-400">{service.deliveryTime}</p>
-                        <p className="text-xs text-gray-400">{t('services.card.deliveryTime')}</p>
+                        <p className="text-xs text-gray-400">Delivery Time</p>
                       </div>
                     </div>
                   
                     <div className="mb-6">
                       <h4 className="text-sm font-semibold mb-3 text-blue-400">
-                        {t('services.features')}:
+                        What's Included:
                       </h4>
                       <ul className="space-y-2">
                         {service.features.slice(0, 3).map((feature, idx) => (
@@ -526,7 +533,7 @@ const ServicesPage = () => {
                           </li>
                         ))}
                         {service.features.length > 3 && (
-                          <li className="text-xs text-gray-400">+{service.features.length - 3} {t('services.card.additionalFeatures')}</li>
+                          <li className="text-xs text-gray-400">+{service.features.length - 3} more features</li>
                         )}
                       </ul>
                     </div>
@@ -535,7 +542,7 @@ const ServicesPage = () => {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center space-x-2">
                           <UserGroupIcon className="w-4 h-4 text-gray-400" />
-                          <span className="text-xs text-gray-400">{service.reviews} {t('services.card.clients')}</span>
+                          <span className="text-xs text-gray-400">{service.reviews} happy clients</span>
                         </div>
                         <div className="flex items-center space-x-2">
                           <ClockIcon className="w-4 h-4 text-gray-400" />
@@ -550,7 +557,7 @@ const ServicesPage = () => {
                           onClick={() => handleServiceClick(service)}
                           className="py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium"
                         >
-                          {t('services.card.moreDetails')}
+                          View Details
                         </motion.button>
                         
                         <motion.button
@@ -562,14 +569,14 @@ const ServicesPage = () => {
                           }}
                           className="py-2 px-4 bg-green-500 hover:bg-green-600 text-white rounded-lg transition-colors text-sm font-medium"
                         >
-                          {t('services.card.orderNow')}
+                          Get Started
                         </motion.button>
                       </div>
                       
                       {service.rating >= 4.8 && (
                         <div className="text-center">
                           <span className="text-xs px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-{t('services.star')} {t('services.card.recommended')}
+⭐ Highly Recommended
                           </span>
                         </div>
                       )}
@@ -587,10 +594,10 @@ const ServicesPage = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             {[
-              { number: '500+', label: t('services.stats.projectsCompleted'), icon: CheckCircleIcon },
-              { number: '98%', label: t('services.stats.customerSatisfaction'), icon: StarIcon },
-              { number: '24/7', label: t('services.stats.technicalSupport'), icon: ShieldCheckIcon },
-              { number: '50+', label: t('services.stats.happyClients'), icon: UserGroupIcon }
+              { number: '500+', label: 'Projects Completed', icon: CheckCircleIcon },
+              { number: '98%', label: 'Customer Satisfaction', icon: StarIcon },
+              { number: '24/7', label: 'Technical Support', icon: ShieldCheckIcon },
+              { number: '250+', label: 'Happy Clients', icon: UserGroupIcon }
             ].map((stat, index) => (
               <motion.div
                 key={index}
@@ -629,10 +636,10 @@ const ServicesPage = () => {
                 viewport={{ once: true }}
               >
                 <h2 className="text-3xl md:text-4xl font-bold mb-6">
-                  {t('services.cta.title')}
+                  Ready to Transform Your Business?
                 </h2>
                 <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-                  {t('services.cta.subtitle')}
+                  Let's discuss your project and create something amazing together. Get a free consultation and quote.
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -646,7 +653,7 @@ const ServicesPage = () => {
                       data-testid="start-project-cta"
                     >
                       <RocketLaunchIcon className="w-6 h-6 mr-2" />
-                      {t('services.cta.startProject')}
+                      Start Your Project
                     </Link>
                   </motion.div>
                   
@@ -660,7 +667,7 @@ const ServicesPage = () => {
                       data-testid="schedule-call-cta"
                     >
                       <CheckCircleIcon className="w-6 h-6 mr-2" />
-                      {t('services.cta.scheduleCall')}
+                      Schedule Free Call
                     </Link>
                   </motion.div>
                 </div>
@@ -668,15 +675,15 @@ const ServicesPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm opacity-80">
                   <div className="flex items-center justify-center gap-2">
                     <CheckCircleIcon className="w-4 h-4" />
-                    <span>{t('services.cta.fullWarranty')}</span>
+                    <span>Full Warranty Included</span>
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <ShieldCheckIcon className="w-4 h-4" />
-                    <span>{t('services.cta.support247')}</span>
+                    <span>24/7 Support Available</span>
                   </div>
                   <div className="flex items-center justify-center gap-2">
                     <StarIcon className="w-4 h-4" fill="currentColor" />
-                    <span>{t('services.cta.fiveStarRating')}</span>
+                    <span>5-Star Rated Service</span>
                   </div>
                 </div>
               </motion.div>

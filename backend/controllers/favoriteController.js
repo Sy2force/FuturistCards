@@ -1,9 +1,9 @@
 const Favorite = require('../models/Favorite');
 const Card = require('../models/Card');
 const { mockFavorites, mockCards } = require('../data/mockData');
-const { t } = require('../utils/i18n');
+// Removed i18n dependency - using English only
 
-// get les favoris de l'user
+// Get user favorites
 const getFavorites = async (req, res) => {
   try {
     let favorites;
@@ -27,27 +27,27 @@ const getFavorites = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: t('server.serverError'),
+      message: 'Server error occurred. Please try again.',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
 
-// ajouter aux favoris
+// Add to favorites
 const addToFavorites = async (req, res) => {
   try {
     const { cardId } = req.params;
     
-    // Verify si la carte existe
+    // Verify that the card exists
     const card = await Card.findById(cardId);
     if (!card) {
       return res.status(404).json({
         success: false,
-        message: t('cards.cardNotFound')
+        message: 'Card not found'
       });
     }
     
-    // Verify si déjà en favoris
+    // Check if already in favorites
     const existingFavorite = await Favorite.findOne({
       user: req.user.id,
       card: cardId
@@ -56,7 +56,7 @@ const addToFavorites = async (req, res) => {
     if (existingFavorite) {
       return res.status(400).json({
         success: false,
-        message: 'כבר במועדפים'
+        message: 'Card is already in favorites'
       });
     }
     
@@ -72,12 +72,12 @@ const addToFavorites = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: t('server.serverError')
+      message: 'Server error occurred. Please try again.'
     });
   }
 };
 
-// retirer des favoris
+// Remove from favorites
 const removeFromFavorites = async (req, res) => {
   try {
     const { cardId } = req.params;
@@ -90,23 +90,23 @@ const removeFromFavorites = async (req, res) => {
     if (!favorite) {
       return res.status(404).json({
         success: false,
-        message: 'מועדף לא נמצא'
+        message: 'Favorite not found'
       });
     }
     
     res.json({
       success: true,
-      message: 'הוסר מהמועדפים'
+      message: 'Removed from favorites successfully'
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: t('server.serverError')
+      message: 'Server error occurred. Please try again.'
     });
   }
 };
 
-// Verify si en favoris
+// Check if in favorites
 const checkFavorite = async (req, res) => {
   try {
     const { cardId } = req.params;
@@ -123,12 +123,12 @@ const checkFavorite = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: t('server.serverError')
+      message: 'Server error occurred. Please try again.'
     });
   }
 };
 
-// nombre de favoris
+// Get favorites count
 const getFavoritesCount = async (req, res) => {
   try {
     const count = await Favorite.countDocuments({ user: req.user.id });
@@ -140,7 +140,7 @@ const getFavoritesCount = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       success: false,
-      message: t('server.serverError')
+      message: 'Server error occurred. Please try again.'
     });
   }
 };

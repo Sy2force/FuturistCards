@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useRoleTheme } from '../../context/ThemeProvider';
 
 const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
-  const { t } = useTranslation();
   const { isDark } = useRoleTheme();
   
   const [formData, setFormData] = useState({
@@ -40,21 +38,21 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
     const newErrors = {};
     
     if (!formData.currentPassword) {
-      newErrors.currentPassword = t('common.currentPasswordRequired');
+      newErrors.currentPassword = 'current Password Required';
     }
     
     if (!formData.newPassword) {
-      newErrors.newPassword = t('common.newPasswordRequired');
+      newErrors.newPassword = 'new Password Required';
     } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = t('common.passwordTooShort');
+      newErrors.newPassword = 'password Too Short';
     } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/.test(formData.newPassword)) {
-      newErrors.newPassword = t('common.passwordRequirements');
+      newErrors.newPassword = 'password Requirements';
     }
     
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = t('common.confirmPasswordRequired');
+      newErrors.confirmPassword = 'confirm Password Required';
     } else if (formData.newPassword !== formData.confirmPassword) {
-      newErrors.confirmPassword = t('common.passwordsNotMatch');
+      newErrors.confirmPassword = 'passwords Not Match';
     }
 
     setErrors(newErrors);
@@ -80,7 +78,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
       onClose();
     } catch (error) {
       // Error changing password
-      setErrors({ general: error.message || t('common.passwordChangeError') });
+      setErrors({ general: error.message || 'password Change Error' });
     } finally {
       setLoading(false);
     }
@@ -100,7 +98,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
       <div className={`${isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white/90 border-gray-200'} backdrop-blur-lg rounded-2xl p-6 w-full max-w-md shadow-3d border`}>
         <div className="flex justify-between items-center mb-6">
           <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            {t('common.changePassword')}
+            {'change Password'}
           </h2>
           <button
             onClick={onClose}
@@ -121,7 +119,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.currentPassword')}
+              {'current Password'}
             </label>
             <div className="relative">
               <input
@@ -136,7 +134,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                       ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                       : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-                placeholder={t('common.currentPasswordPlaceholder')}
+                placeholder={'current Password Placeholder'}
               />
               <button
                 type="button"
@@ -162,7 +160,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.newPassword')}
+              {'new Password'}
             </label>
             <div className="relative">
               <input
@@ -177,7 +175,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                       ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                       : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-                placeholder={t('common.newPasswordPlaceholder')}
+                placeholder={'new Password Placeholder'}
               />
               <button
                 type="button"
@@ -200,13 +198,13 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
               <p className="mt-1 text-sm text-red-400">{errors.newPassword}</p>
             )}
             <p className={`mt-1 text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-              {t('common.passwordRequirementsText')}
+              {'password Requirements Text'}
             </p>
           </div>
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.confirmPassword')}
+              {'confirm Password'}
             </label>
             <div className="relative">
               <input
@@ -221,7 +219,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                       ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                       : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-                placeholder={t('common.confirmPasswordPlaceholder')}
+                placeholder={'confirm Password Placeholder'}
               />
               <button
                 type="button"
@@ -255,14 +253,14 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300'
               } transition-colors`}
             >
-              {t('common.cancel')}
+              {'Cancel'}
             </button>
             <button
               type="submit"
               disabled={loading}
               className="btn-danger flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? t('common.changing') : t('common.changePassword')}
+              {loading ? 'changing' : 'change Password'}
             </button>
           </div>
         </form>

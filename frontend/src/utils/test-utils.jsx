@@ -4,7 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '../context/AuthContext';
 import { FavoritesProvider } from '../context/FavoritesContext';
 
-// פונקציית רינדור מותאמת לרכיבים הזקוקים לספקים
+// Custom render function for components that need providers
 const AllTheProviders = ({ children }) => {
   return (
     <HelmetProvider>
@@ -22,8 +22,8 @@ const AllTheProviders = ({ children }) => {
 const customRender = (ui, options) =>
   render(ui, { wrapper: AllTheProviders, ...options });
 
-// ייצוא מחדש של הכל
+// Re-export everything
 export * from '@testing-library/react';
 
-// דריסת מתודת הרינדור
+// Override render method
 export { customRender as render };

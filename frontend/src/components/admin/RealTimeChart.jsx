@@ -73,7 +73,7 @@ const RealTimeChart = ({ data, title, color = 'blue', type = 'line' }) => {
         <h3 className="text-lg font-semibold text-white">{title}</h3>
         <div className="flex items-center space-x-2">
           <div className={`w-2 h-2 rounded-full bg-${color}-400 animate-pulse`}></div>
-          <span className="text-sm text-gray-400">זמן אמת</span>
+          <span className="text-sm text-gray-400">Real time</span>
         </div>
       </div>
       

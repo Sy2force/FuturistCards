@@ -7,7 +7,7 @@ const connectDB = async () => {
     // Try MongoDB Atlas first, then local fallback
     const mongoURI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/futuristcards';
     
-    console.log('🔄 Connecting to MongoDB...');
+    // Connecting to MongoDB...
     
     const conn = await mongoose.connect(mongoURI, {
       useNewUrlParser: true,
@@ -19,7 +19,7 @@ const connectDB = async () => {
     });
     
     isConnected = true;
-    console.log('✅ MongoDB connected successfully:', conn.connection.host);
+    // MongoDB connected successfully
     
     // Connection event handlers
     mongoose.connection.on('error', (err) => {
@@ -39,8 +39,6 @@ const connectDB = async () => {
 
     return conn;
   } catch (error) {
-    console.log('❌ MongoDB Connection Error:', error.message);
-    console.log('⚠️  Server will continue in fallback mode');
     isConnected = false;
     return null;
   }

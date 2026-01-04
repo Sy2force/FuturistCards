@@ -18,7 +18,8 @@ const hebrewTranslations = {
     updateError: 'שגיאה בעדכון',
     wrongCurrentPassword: 'הסיסמה הנוכחית שגויה',
     passwordChanged: 'הסיסמה שונתה בהצלחה',
-    passwordChangeError: 'שגיאה בשינוי הסיסמה'
+    passwordChangeError: 'שגיאה בשינוי הסיסמה',
+    userNotFound: 'המשתמש לא נמצא'
   },
 
   // General server messages
@@ -38,6 +39,7 @@ const hebrewTranslations = {
     userDeleted: 'המשתמש נמחק בהצלחה',
     cannotDeleteSelf: 'לא ניתן למחוק את החשבון שלך',
     profileUpdated: 'הפרופיל עודכן בהצלחה (מצב דמו)',
+    profileError: 'שגיאה בטעינת הפרופיל',
     demoLoginSuccess: 'התחברות דמו הצליחה',
     demoLoginError: 'שגיאה בהתחברות דמו',
     demoBusinessLoginSuccess: 'התחברות דמו עסקי הצליחה',
@@ -45,6 +47,7 @@ const hebrewTranslations = {
     statsError: 'שגיאה בטעינת הסטטיסטיקות',
     usersError: 'שגיאה בטעינת המשתמשים'
   },
+
 
   // Card management
   cards: {

@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useRoleTheme } from '../../context/ThemeProvider';
-import { useTranslation } from "../../hooks/useTranslation";
 import { toast } from 'react-hot-toast';
 import { api } from '../../services/api';
 
 const AdminPanel = () => {
   const { isAdmin } = useAuth();
   const { isDark } = useRoleTheme();
-  const { t } = useTranslation();
   const [stats, setStats] = useState({
     users: { total: 0, user: 0, business: 0, admin: 0 },
     cards: { total: 0, published: 0, draft: 0 },
@@ -22,7 +20,7 @@ const AdminPanel = () => {
         const response = await api.get('/admin/stats');
         setStats(response.data.stats);
       } catch (error) {
-        toast.error(t('admin.errors.loadingStats'));
+        toast.error('loading Stats');
         // Error fetching admin stats - handled by toast
       } finally {
         setLoading(false);
@@ -36,13 +34,13 @@ const AdminPanel = () => {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen flex items-center justify-center" dir="rtl" lang="he">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">
-            {t('admin.accessDenied.title')}
+            {'title'}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {t('admin.accessDenied.message')}
+            {'message'}
           </p>
         </div>
       </div>
@@ -50,15 +48,15 @@ const AdminPanel = () => {
   }
 
   return (
-    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="admin-page" dir="rtl" lang="he">
+    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="admin-page">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            {t('admin.title')}
+            {'Admin Dashboard'}
           </h1>
           <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            {t('admin.subtitle')}
+            {'subtitle'}
           </p>
         </div>
 
@@ -67,7 +65,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-600 font-medium">{t('admin.stats.users')}</p>
+                <p className="text-sm text-blue-600 font-medium">{'users'}</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.users.total}
                 </p>
@@ -81,7 +79,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-green-600 font-medium">{t('admin.stats.cards')}</p>
+                <p className="text-sm text-green-600 font-medium">{'cards'}</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.cards.total}
                 </p>
@@ -95,7 +93,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-purple-600 font-medium">{t('admin.stats.business')}</p>
+                <p className="text-sm text-purple-600 font-medium">{'business'}</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.users.business}
                 </p>
@@ -111,7 +109,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-red-600 font-medium">{t('admin.stats.admins')}</p>
+                <p className="text-sm text-red-600 font-medium">{'admins'}</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.users.admin}
                 </p>
@@ -128,27 +126,27 @@ const AdminPanel = () => {
           {/* User Management */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              👥 {t('admin.userManagement.title')}
+              👥 {'title'}
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {t('admin.userManagement.roleDistribution')}
+                  {'role Distribution'}
                 </h3>
                 <div className="mt-2 space-y-1">
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t('admin.userManagement.users')}: {loading ? '...' : stats.users.user}
+                    {'users'}: {loading ? '...' : stats.users.user}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t('admin.userManagement.business')}: {loading ? '...' : stats.users.business}
+                    {'business'}: {loading ? '...' : stats.users.business}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t('admin.userManagement.admins')}: {loading ? '...' : stats.users.admin}
+                    {'admins'}: {loading ? '...' : stats.users.admin}
                   </p>
                 </div>
               </div>
               <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {t('admin.userManagement.manageUsers')}
+                {'manage Users'}
               </button>
             </div>
           </div>
@@ -156,24 +154,24 @@ const AdminPanel = () => {
           {/* Content Management */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              📇 {t('admin.contentManagement.title')}
+              📇 {'title'}
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {t('admin.contentManagement.cardStats')}
+                  {'card Stats'}
                 </h3>
                 <div className="mt-2 space-y-1">
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t('admin.contentManagement.total')}: {loading ? '...' : stats.cards.total}
+                    {'total'}: {loading ? '...' : stats.cards.total}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t('admin.contentManagement.published')}: {loading ? '...' : stats.cards.published}
+                    {'published'}: {loading ? '...' : stats.cards.published}
                   </p>
                 </div>
               </div>
               <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {t('admin.contentManagement.manageCards')}
+                {'manage Cards'}
               </button>
             </div>
           </div>
@@ -181,24 +179,24 @@ const AdminPanel = () => {
           {/* System Settings */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              ⚙️ {t('admin.systemSettings.title')}
+              ⚙️ {'title'}
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {t('admin.systemSettings.system')}
+                  {'system'}
                 </h3>
                 <div className="mt-2 space-y-1">
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t('admin.systemSettings.version')}: {loading ? '...' : stats.system.version}
+                    {'version'}: {loading ? '...' : stats.system.version}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {t('admin.systemSettings.uptime')}: {loading ? '...' : Math.floor(stats.system.uptime / 60)} min
+                    {'uptime'}: {loading ? '...' : Math.floor(stats.system.uptime / 60)} min
                   </p>
                 </div>
               </div>
               <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {t('admin.systemSettings.settings')}
+                {'settings'}
               </button>
             </div>
           </div>
@@ -206,19 +204,19 @@ const AdminPanel = () => {
           {/* Analytics */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              📊 {t('admin.analytics.title')}
+              📊 {'title'}
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {t('admin.analytics.reports')}
+                  {'reports'}
                 </h3>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {t('admin.analytics.description')}
+                  {'description'}
                 </p>
               </div>
               <button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {t('admin.analytics.viewReports')}
+                {'view Reports'}
               </button>
             </div>
           </div>
@@ -230,7 +228,7 @@ const AdminPanel = () => {
             <svg className="w-8 h-8 inline mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            {t('admin.recentActivity.title')}
+            {'title'}
           </h2>
           <div className="space-y-4">
             <div className={`flex items-center p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
@@ -241,10 +239,10 @@ const AdminPanel = () => {
               </div>
               <div>
                 <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {t('admin.recentActivity.newUser')}
+                  {'new User'}
                 </p>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {t('admin.recentActivity.twoHoursAgo')}
+                  {'two Hours Ago'}
                 </p>
               </div>
             </div>
@@ -252,10 +250,10 @@ const AdminPanel = () => {
               <span className="text-2xl mr-4">📇</span>
               <div>
                 <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {t('admin.recentActivity.newCard')}
+                  {'new Card'}
                 </p>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {t('admin.recentActivity.fourHoursAgo')}
+                  {'four Hours Ago'}
                 </p>
               </div>
             </div>
@@ -263,10 +261,10 @@ const AdminPanel = () => {
               <span className="text-2xl mr-4">⚠️</span>
               <div>
                 <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {t('admin.recentActivity.reportedContent')}
+                  {'reported Content'}
                 </p>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {t('admin.recentActivity.sixHoursAgo')}
+                  {'six Hours Ago'}
                 </p>
               </div>
             </div>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from "../hooks/useTranslation";
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { 
   CreditCardIcon, 
   HeartIcon, 
@@ -22,10 +22,12 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 
 const DashboardPage = () => {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const { favorites } = useFavorites();
   const { currentTheme } = useRoleTheme();
+  
+  // Set document title
+  useDocumentTitle('Dashboard | FuturistCards');
   const [stats, setStats] = useState({
     totalCards: 5,
     totalViews: 1247,
@@ -47,52 +49,52 @@ const DashboardPage = () => {
       // Mock data for demonstration
       const mockRecentCards = [
         {
-          id: 1,
-          title: t('dashboard.mockCards.sarah.title'),
-          description: t('dashboard.mockCards.sarah.description'),
-          views: 156,
-          createdAt: t('dashboard.time.today'),
-          image: null
+          "id": 1,
+          "title": 'Professional Business Card',
+          "description": 'Modern digital business card with contact information',
+          "views": 156,
+          "createdAt": 'Today',
+          "image": null
         },
         {
-          id: 2,
-          title: t('dashboard.mockCards.danny.title'),
-          description: t('dashboard.mockCards.danny.description'),
-          views: 89,
-          createdAt: t('dashboard.time.yesterday'),
-          image: null
+          "id": 2,
+          "title": 'Creative Portfolio Card',
+          "description": 'Showcase your creative work and portfolio',
+          "views": 89,
+          "createdAt": 'Yesterday',
+          "image": null
         },
         {
-          id: 3,
-          title: t('dashboard.mockCards.michal.title'),
-          description: t('dashboard.mockCards.michal.description'),
-          views: 234,
-          createdAt: t('dashboard.time.threeDaysAgo'),
-          image: null
+          "id": 3,
+          "title": 'Corporate Executive Card',
+          "description": 'Executive-level business card with company branding',
+          "views": 234,
+          "createdAt": '3 days ago',
+          "image": null
         }
       ];
 
       const mockActivity = [
         {
-          id: 1,
-          type: 'card_created',
-          message: t('dashboard.activity.cardCreated'),
-          time: t('dashboard.time.twoHoursAgo'),
-          icon: PlusIcon
+          "id": 1,
+          "type": 'card_created',
+          "message": 'New card created successfully',
+          "time": '2 hours ago',
+          "icon": PlusIcon
         },
         {
-          id: 2,
-          type: 'card_viewed',
-          message: t('dashboard.activity.cardViewed'),
-          time: t('dashboard.time.today'),
-          icon: EyeIcon
+          "id": 2,
+          "type": 'card_viewed',
+          "message": 'Your card was viewed by someone',
+          "time": 'Today',
+          "icon": EyeIcon
         },
         {
-          id: 3,
-          type: 'favorite_added',
-          message: t('dashboard.activity.favoriteAdded'),
-          time: t('dashboard.time.yesterday'),
-          icon: HeartIcon
+          "id": 3,
+          "type": 'favorite_added',
+          "message": 'Someone added your card to favorites',
+          "time": 'Yesterday',
+          "icon": HeartIcon
         }
       ];
 
@@ -108,38 +110,38 @@ const DashboardPage = () => {
 
   const statCards = [
     {
-      title: t('dashboard.stats.totalCards'),
-      value: stats.totalCards,
-      icon: CreditCardIcon,
-      color: 'from-blue-500 to-cyan-500',
-      change: '+12%'
+      "title": 'Total Cards',
+      "value": stats.totalCards,
+      "icon": CreditCardIcon,
+      "color": 'from-blue-500 to-cyan-500',
+      "change": '+12%'
     },
     {
-      title: t('dashboard.stats.totalViews'),
-      value: stats.totalViews,
-      icon: EyeIcon,
-      color: 'from-green-500 to-emerald-500',
-      change: '+8%'
+      "title": 'Total Views',
+      "value": stats.totalViews,
+      "icon": EyeIcon,
+      "color": 'from-green-500 to-emerald-500',
+      "change": '+8%'
     },
     {
-      title: t('dashboard.stats.totalLikes'),
-      value: stats.totalLikes,
-      icon: HeartIcon,
-      color: 'from-pink-500 to-rose-500',
-      change: '+15%'
+      "title": 'Total Likes',
+      "value": stats.totalLikes,
+      "icon": HeartIcon,
+      "color": 'from-pink-500 to-rose-500',
+      "change": '+15%'
     },
     {
-      title: t('dashboard.stats.favorites'),
-      value: stats.favoriteCards,
-      icon: HeartIcon,
-      color: 'from-purple-500 to-violet-500',
-      change: '+5%'
+      "title": 'Favorites',
+      "value": stats.favoriteCards,
+      "icon": HeartIcon,
+      "color": 'from-purple-500 to-violet-500',
+      "change": '+5%'
     }
   ];
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center" dir="rtl" lang="he">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white"></div>
       </div>
     );
@@ -148,11 +150,11 @@ const DashboardPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('dashboard.title')} - FuturistCards</title>
-        <meta name="description" content={t('dashboard.description')} />
+        <title>Dashboard - FuturistCards</title>
+        <meta name="description" content="Your personal dashboard with statistics, recent cards, and quick actions" />
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
@@ -161,10 +163,10 @@ const DashboardPage = () => {
             className="mb-8"
           >
             <h1 className="text-4xl font-bold text-white mb-2">
-              {t('dashboard.welcome')}, {user?.firstName || user?.name}!
+              Welcome to your Dashboard, {user?.firstName || user?.name}!
             </h1>
             <p className="text-gray-300">
-              {t('dashboard.subtitle')}
+              Here's an overview of your business cards and recent activity
             </p>
           </motion.div>
 
@@ -181,7 +183,7 @@ const DashboardPage = () => {
                   <div>
                     <p className="text-gray-300 text-sm">{stat.title}</p>
                     <p className="text-3xl font-bold text-white">{stat.value}</p>
-                    <p className="text-xs text-green-400 mt-1">{t('dashboard.monthlyGrowth')}</p>
+                    <p className="text-xs text-green-400 mt-1">{stat.change} monthly growth</p>
                   </div>
                   <stat.icon className={`h-8 w-8 ${stat.color}`} />
                 </div>
@@ -199,10 +201,10 @@ const DashboardPage = () => {
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold text-white">
-                  {t('dashboard.recentCards')}
+                  Recent Cards
                 </h2>
                 <Link to="/my-cards" className="text-blue-400 hover:text-blue-300 text-sm">
-                  {t('dashboard.viewAllCards')}
+                  View All Cards
                 </Link>
               </div>
               <div className="space-y-4">
@@ -220,7 +222,7 @@ const DashboardPage = () => {
                           <div className="flex justify-between items-center text-sm text-gray-400">
                             <span className="flex items-center">
                               <EyeIcon className="h-4 w-4 ml-1" />
-                              {card.views} {t('dashboard.views')}
+                              {card.views} views
                             </span>
                             <span className="flex items-center">
                               <ClockIcon className="h-4 w-4 ml-1" />
@@ -243,11 +245,11 @@ const DashboardPage = () => {
                   <div className="text-center py-12">
                     <CreditCardIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                     <p className="text-gray-300 text-lg">
-                      {t('dashboard.noCards')}
+                      No cards yet
                     </p>
                     <Link to="/create-card">
                       <GlassButton className="mt-4">
-                        {t('dashboard.createFirstCard')}
+                        Create Your First Card
                       </GlassButton>
                     </Link>
                   </div>
@@ -262,7 +264,7 @@ const DashboardPage = () => {
               transition={{ delay: 0.3 }}
             >
               <h2 className="text-2xl font-bold text-white mb-6">
-                {t('dashboard.recentActivity')}
+                Recent Activity
               </h2>
               <div className="space-y-4">
                 {recentActivity.map((activity) => (
@@ -291,17 +293,17 @@ const DashboardPage = () => {
             transition={{ delay: 0.4 }}
           >
             <h2 className="text-2xl font-bold text-white mb-6">
-              {t('dashboard.quickActions')}
+              Quick Actions
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Link to="/create-card">
                 <GlassCard className="p-6 hover:scale-105 transition-all cursor-pointer group">
                   <PlusIcon className="h-8 w-8 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
                   <h3 className="text-lg font-semibold text-white mb-2">
-                    {t('dashboard.createCard')}
+                    Create New Card
                   </h3>
                   <p className="text-gray-300 text-sm">
-                    {t('dashboard.createCardDesc')}
+                    Design and create a new digital business card
                   </p>
                 </GlassCard>
               </Link>
@@ -310,10 +312,10 @@ const DashboardPage = () => {
                 <GlassCard className="p-6 hover:scale-105 transition-all cursor-pointer group">
                   <EyeIcon className="h-8 w-8 text-green-400 mb-4 group-hover:scale-110 transition-transform" />
                   <h3 className="text-lg font-semibold text-white mb-2">
-                    {t('dashboard.browseCards')}
+                    Browse Cards
                   </h3>
                   <p className="text-gray-300 text-sm">
-                    {t('dashboard.browseCardsDesc')}
+                    Explore and discover amazing business cards
                   </p>
                 </GlassCard>
               </Link>
@@ -322,10 +324,10 @@ const DashboardPage = () => {
                 <GlassCard className="p-6 hover:scale-105 transition-all cursor-pointer group">
                   <HeartIcon className="h-8 w-8 text-red-400 mb-4 group-hover:scale-110 transition-transform" />
                   <h3 className="text-lg font-semibold text-white mb-2">
-                    {t('dashboard.viewFavorites')}
+                    View Favorites
                   </h3>
                   <p className="text-gray-300 text-sm">
-                    {t('dashboard.viewFavoritesDesc')}
+                    Access your saved and liked business cards
                   </p>
                 </GlassCard>
               </Link>
@@ -340,39 +342,39 @@ const DashboardPage = () => {
             className="mt-8"
           >
             <h2 className="text-2xl font-bold text-white mb-6">
-              {t('dashboard.performanceAnalysis')}
+              Performance Analysis
             </h2>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <GlassCard className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">{t('dashboard.weeklyViews')}</h3>
+                  <h3 className="text-lg font-semibold text-white">Weekly Views</h3>
                   <ArrowTrendingUpIcon className="h-6 w-6 text-green-400" />
                 </div>
                 <div className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-300">{t('dashboard.days.sunday')}</span>
-                    <span className="text-white">45 {t('dashboard.views')}</span>
+                    <span className="text-gray-300">Sunday</span>
+                    <span className="text-white">45 views</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">{t('dashboard.days.monday')}</span>
-                    <span className="text-white">67 {t('dashboard.views')}</span>
+                    <span className="text-gray-300">Monday</span>
+                    <span className="text-white">67 views</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-300">{t('dashboard.days.tuesday')}</span>
-                    <span className="text-white">89 {t('dashboard.views')}</span>
+                    <span className="text-gray-300">Tuesday</span>
+                    <span className="text-white">89 views</span>
                   </div>
                 </div>
               </GlassCard>
 
               <GlassCard className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">{t('dashboard.monthlyGoals')}</h3>
+                  <h3 className="text-lg font-semibold text-white">Monthly Goals</h3>
                   <CalendarIcon className="h-6 w-6 text-blue-400" />
                 </div>
                 <div className="space-y-4">
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-gray-300">{t('dashboard.views')}</span>
+                      <span className="text-gray-300">Views</span>
                       <span className="text-white">1,247 / 2,000</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
@@ -381,7 +383,7 @@ const DashboardPage = () => {
                   </div>
                   <div>
                     <div className="flex justify-between mb-1">
-                      <span className="text-gray-300">{t('dashboard.likes')}</span>
+                      <span className="text-gray-300">Likes</span>
                       <span className="text-white">89 / 150</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">

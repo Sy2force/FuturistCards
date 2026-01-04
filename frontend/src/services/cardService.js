@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api';
+const API_URL = import.meta.env.VITE_API_BASE_URL || 'https://futuristcards.onrender.com/api';
 
 // Configure axios instance for cards API
 const cardsAPI = axios.create({
@@ -32,7 +32,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת כרטיסים'
+        error: error.response?.data?.message || 'Failed to load cards'
       };
     }
   },
@@ -49,7 +49,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת כרטיס'
+        error: error.response?.data?.message || 'Failed to load card'
       };
     }
   },
@@ -66,7 +66,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת הכרטיסים שלך'
+        error: error.response?.data?.message || 'Failed to load your cards'
       };
     }
   },
@@ -84,7 +84,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל ביצירת כרטיס'
+        error: error.response?.data?.message || 'Failed to create card'
       };
     }
   },
@@ -102,7 +102,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בעדכון כרטיס'
+        error: error.response?.data?.message || 'Failed to update card'
       };
     }
   },
@@ -113,13 +113,13 @@ export const cardService = {
       const response = await cardsAPI.delete(`/${cardId}`);
       return {
         success: true,
-        message: response.data.message || 'כרטיס נמחק בהצלחה'
+        message: response.data.message || 'Card deleted successfully'
       };
     } catch (error) {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל במחיקת כרטיס'
+        error: error.response?.data?.message || 'Failed to delete card'
       };
     }
   },
@@ -159,7 +159,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בחיפוש כרטיסים'
+        error: error.response?.data?.message || 'Failed to search cards'
       };
     }
   },
@@ -176,7 +176,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת כרטיסים פופולריים'
+        error: error.response?.data?.message || 'Failed to load popular cards'
       };
     }
   },
@@ -194,7 +194,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בהוספה/הסרה ממועדפים'
+        error: error.response?.data?.message || 'Failed to add/remove from favorites'
       };
     }
   },
@@ -211,7 +211,7 @@ export const cardService = {
       // Error handled in return statement
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת מועדפים'
+        error: error.response?.data?.message || 'Failed to load favorites'
       };
     }
   },
@@ -227,7 +227,7 @@ export const cardService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת סטטיסטיקות כרטיס'
+        error: error.response?.data?.message || 'Failed to load card statistics'
       };
     }
   },
@@ -243,7 +243,7 @@ export const cardService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת כרטיסים לפי קטגוריה'
+        error: error.response?.data?.message || 'Failed to load cards by category'
       };
     }
   },
@@ -259,7 +259,7 @@ export const cardService = {
     } catch (error) {
       return {
         success: false,
-        error: error.response?.data?.message || 'כשל בטעינת כרטיסים אחרונים'
+        error: error.response?.data?.message || 'Failed to load recent cards'
       };
     }
   },
@@ -269,35 +269,35 @@ export const cardService = {
     const errors = {};
     
     if (!cardData.title?.trim()) {
-      errors.title = 'כותרת נדרשת';
+      errors.title = 'Title is required';
     }
     
     if (!cardData.subtitle?.trim()) {
-      errors.subtitle = 'כותרת משנה נדרשת';
+      errors.subtitle = 'Subtitle is required';
     }
     
     if (!cardData.description?.trim()) {
-      errors.description = 'תיאור נדרש';
+      errors.description = 'Description is required';
     }
     
     if (!cardData.email?.trim()) {
-      errors.email = 'אימייל נדרש';
+      errors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cardData.email)) {
-      errors.email = 'פורמט אימייל לא תקין';
+      errors.email = 'Invalid email format';
     }
     
     if (!cardData.phone?.trim()) {
-      errors.phone = 'מספר טלפון נדרש';
+      errors.phone = 'Phone number is required';
     } else if (!/^[\d\s\-+()]+$/.test(cardData.phone)) {
-      errors.phone = 'פורמט טלפון לא תקין';
+      errors.phone = 'Invalid phone format';
     }
     
     if (!cardData.address?.country?.trim()) {
-      errors.country = 'מדינה נדרשת';
+      errors.country = 'Country is required';
     }
     
     if (!cardData.address?.city?.trim()) {
-      errors.city = 'עיר נדרשת';
+      errors.city = 'City is required';
     }
     
     return {

@@ -46,20 +46,20 @@ const ActivityFeed = ({ activities, isConnected }) => {
     const time = new Date(timestamp);
     const diffInMinutes = Math.floor((now - time) / (1000 * 60));
     
-    if (diffInMinutes < 1) return 'עכשיו';
-    if (diffInMinutes < 60) return `לפני ${diffInMinutes} דקות`;
-    if (diffInMinutes < 1440) return `לפני ${Math.floor(diffInMinutes / 60)} שעות`;
-    return time.toLocaleDateString('he-IL');
+    if (diffInMinutes < 1) return 'now';
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)} hours ago`;
+    return time.toLocaleDateString('en-US');
   };
 
   return (
     <div className="glass-card p-6">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold text-white">פעילות אחרונה</h3>
+        <h3 className="text-xl font-bold text-white">Recent Activity</h3>
         <div className="flex items-center space-x-2">
           <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-400 animate-pulse' : 'bg-red-400'}`}></div>
           <span className="text-sm text-gray-400">
-            {isConnected ? 'מחובר' : 'מנותק'}
+            {isConnected ? 'Connected' : 'Disconnected'}
           </span>
         </div>
       </div>
@@ -101,7 +101,7 @@ const ActivityFeed = ({ activities, isConnected }) => {
         {activities.length === 0 && (
           <div className="text-center py-8">
             <ClockIcon className="w-12 h-12 text-gray-500 mx-auto mb-3" />
-            <p className="text-gray-400">אין פעילות אחרונה</p>
+            <p className="text-gray-400">No recent activity</p>
           </div>
         )}
       </div>

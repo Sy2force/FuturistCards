@@ -466,7 +466,7 @@ export const userService = {
         user: 'User',
         business: 'Business',
         admin: 'Admin'
-      }[user.role] || 'משתמש',
+      }[user.role] || 'User',
       isVerified: user.emailVerified || false,
       memberSince: user.createdAt ? new Date(user.createdAt).getFullYear() : null
     };
@@ -477,21 +477,21 @@ export const userService = {
     const errors = {};
     
     if (!userData.firstName?.trim()) {
-      errors.firstName = 'שם פרטי נדרש';
+      errors.firstName = 'First name is required';
     }
     
     if (!userData.lastName?.trim()) {
-      errors.lastName = 'שם משפחה נדרש';
+      errors.lastName = 'Last name is required';
     }
     
     if (!userData.email?.trim()) {
-      errors.email = 'אימייל נדרש';
+      errors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(userData.email)) {
-      errors.email = 'פורמט אימייל לא תקין';
+      errors.email = 'Invalid email format';
     }
     
     if (userData.phone && !/^[\d\s\-+()]+$/.test(userData.phone)) {
-      errors.phone = 'פורמט טלפון לא תקין';
+      errors.phone = 'Invalid phone format';
     }
     
     return {

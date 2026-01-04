@@ -7,7 +7,7 @@ const OfflineModeContext = createContext();
 export const useOfflineMode = () => {
   const context = useContext(OfflineModeContext);
   if (!context) {
-    throw new Error(t('common.contextError'));
+    throw new Error('context Error');
   }
   return context;
 };

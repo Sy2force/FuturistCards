@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { useTranslation } from "../../hooks/useTranslation";
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../../context/AuthContext';
 import { useRoleTheme } from '../../context/ThemeProvider';
@@ -9,7 +8,6 @@ import { useRoleTheme } from '../../context/ThemeProvider';
 const Profile = () => {
   const { user, updateProfile } = useAuth();
   const { isDark } = useRoleTheme();
-  const { t } = useTranslation();
   
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -49,13 +47,13 @@ const Profile = () => {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center" dir="rtl" lang="he">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-            {t('common.accessDenied')}
+            {'access Denied'}
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {t('common.loginRequired')}
+            {'login Required'}
           </p>
         </div>
       </div>
@@ -74,15 +72,15 @@ const Profile = () => {
     const newErrors = {};
     
     if (!formData.firstName.trim()) {
-      newErrors.firstName = t('validation.firstNameRequired');
+      newErrors.firstName = 'first Name Required';
     }
     if (!formData.lastName.trim()) {
-      newErrors.lastName = t('validation.lastNameRequired');
+      newErrors.lastName = 'last Name Required';
     }
     if (!formData.email.trim()) {
-      newErrors.email = t('validation.emailRequired');
+      newErrors.email = 'email Required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = t('validation.invalidEmail');
+      newErrors.email = 'invalid Email';
     }
 
     setErrors(newErrors);
@@ -124,9 +122,9 @@ const Profile = () => {
 
   const getRoleLabel = (role) => {
     switch (role) {
-      case 'admin': return t('profile.roles.admin');
-      case 'business': return t('profile.roles.business');
-      default: return t('profile.roles.user');
+      case 'admin': return 'admin';
+      case 'business': return 'business';
+      default: return 'user';
     }
   };
 
@@ -139,15 +137,15 @@ const Profile = () => {
   };
 
   return (
-    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="profile-page" dir="rtl" lang="he">
+    <div className={`min-h-screen pt-24 pb-12 ${isDark ? 'bg-gray-900' : 'bg-gray-50'}`} data-testid="profile-page">
       <div className="max-w-4xl mx-auto px-6">
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            {t('profile.title')}
+            {'My Profile'}
           </h1>
           <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            {t('profile.subtitle')}
+            {'subtitle'}
           </p>
         </div>
 
@@ -156,7 +154,7 @@ const Profile = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-600 font-medium">{t('dashboard.myCards')}</p>
+                <p className="text-sm text-blue-600 font-medium">{'my Cards'}</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {userStats.totalCards}
                 </p>
@@ -170,7 +168,7 @@ const Profile = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-red-600 font-medium">{t('profile.totalLikes')}</p>
+                <p className="text-sm text-red-600 font-medium">{'total Likes'}</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {userStats.totalLikes}
                 </p>
@@ -186,7 +184,7 @@ const Profile = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-green-600 font-medium">{t('profile.totalViews')}</p>
+                <p className="text-sm text-green-600 font-medium">{'total Views'}</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {userStats.totalViews}
                 </p>
@@ -203,7 +201,7 @@ const Profile = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-purple-600 font-medium">{t('dashboard.favorites')}</p>
+                <p className="text-sm text-purple-600 font-medium">{'favorites'}</p>
                 <p className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {userStats.favoriteCards}
                 </p>
@@ -248,10 +246,10 @@ const Profile = () => {
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6">
               <div>
                 <h1 className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'} mb-2`} data-testid="profile-heading">
-                  {user?.firstName || t('auth.firstName')} {user?.lastName || t('profile.lastName')}
+                  {user?.firstName || 'First Name'} {user?.lastName || 'last Name'}
                 </h1>
                 <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
-                  {user?.position || t('profile.position')} {user?.company && t('profile.atCompany', { company: user.company })}
+                  {user?.position || 'position'} {user?.company && t('profile.atCompany', { company: user.company })}
                 </p>
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white ${getRoleColor(user?.role)}`}>
                   {getRoleLabel(user?.role)}
@@ -267,14 +265,14 @@ const Profile = () => {
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    {t('common.cancel')}
+                    {'Cancel'}
                   </>
                 ) : (
                   <>
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
-                    {t('common.edit')}
+                    {'Edit'}
                   </>
                 )}
               </button>
@@ -290,7 +288,7 @@ const Profile = () => {
                       <svg className="w-4 h-4 inline mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      {t('profile.firstName')}
+                      {'first Name'}
                     </label>
                     <input
                       name="firstName"
@@ -298,7 +296,7 @@ const Profile = () => {
                       onChange={handleChange}
                       type="text"
                       className={`w-full px-4 py-3 border ${errors.firstName ? 'border-red-500' : isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={t('profile.firstNamePlaceholder')}
+                      placeholder={'first Name Placeholder'}
                     />
                     {errors.firstName && (
                       <p className="mt-1 text-sm text-red-600">{errors.firstName}</p>
@@ -311,7 +309,7 @@ const Profile = () => {
                       <svg className="w-4 h-4 inline mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      {t('profile.lastName')}
+                      {'last Name'}
                     </label>
                     <input
                       name="lastName"
@@ -319,7 +317,7 @@ const Profile = () => {
                       onChange={handleChange}
                       type="text"
                       className={`w-full px-4 py-3 border ${errors.lastName ? 'border-red-500' : isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={t('profile.lastNamePlaceholder')}
+                      placeholder={'last Name Placeholder'}
                     />
                     {errors.lastName && (
                       <p className="mt-1 text-sm text-red-600">{errors.lastName}</p>
@@ -332,7 +330,7 @@ const Profile = () => {
                       <svg className="w-4 h-4 inline mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
-                      {t('profile.email')}
+                      {'email'}
                     </label>
                     <input
                       name="email"
@@ -340,7 +338,7 @@ const Profile = () => {
                       onChange={handleChange}
                       type="email"
                       className={`w-full px-4 py-3 border ${errors.email ? 'border-red-500' : isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={t('profile.emailPlaceholder')}
+                      placeholder={'email Placeholder'}
                     />
                     {errors.email && (
                       <p className="mt-1 text-sm text-red-600">{errors.email}</p>
@@ -353,7 +351,7 @@ const Profile = () => {
                       <svg className="w-4 h-4 inline mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a1 1 0 001-1V4a1 1 0 00-1-1H8a1 1 0 00-1 1v16a1 1 0 001 1z" />
                       </svg>
-                      {t('profile.phone')}
+                      {'phone'}
                     </label>
                     <input
                       name="phone"
@@ -361,7 +359,7 @@ const Profile = () => {
                       onChange={handleChange}
                       type="tel"
                       className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={t('profile.phonePlaceholder')}
+                      placeholder={'phone Placeholder'}
                     />
                   </div>
 
@@ -371,7 +369,7 @@ const Profile = () => {
                       <svg className="w-4 h-4 inline mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
-                      {t('profile.company')}
+                      {'company'}
                     </label>
                     <input
                       name="company"
@@ -379,7 +377,7 @@ const Profile = () => {
                       onChange={handleChange}
                       type="text"
                       className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={t('profile.companyPlaceholder')}
+                      placeholder={'company Placeholder'}
                     />
                   </div>
 
@@ -397,7 +395,7 @@ const Profile = () => {
                       onChange={handleChange}
                       type="text"
                       className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={t('profile.positionPlaceholder')}
+                      placeholder={'position Placeholder'}
                     />
                   </div>
 
@@ -415,7 +413,7 @@ const Profile = () => {
                       onChange={handleChange}
                       type="url"
                       className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={t('profile.websitePlaceholder')}
+                      placeholder={'website Placeholder'}
                     />
                   </div>
 
@@ -430,7 +428,7 @@ const Profile = () => {
                       onChange={handleChange}
                       rows={4}
                       className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all resize-none`}
-                      placeholder={t('profile.bioPlaceholder')}
+                      placeholder={'bio Placeholder'}
                     />
                   </div>
                 </div>
@@ -446,7 +444,7 @@ const Profile = () => {
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    {t('common.cancel')}
+                    {'Cancel'}
                   </button>
                   <button
                     type="submit"
@@ -456,7 +454,7 @@ const Profile = () => {
                     {isLoading ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block"></div>
-                        {t('common.saving')}
+                        {'saving'}
                       </>
                     ) : (
                       <>
@@ -481,9 +479,9 @@ const Profile = () => {
                   </h3>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
-                      <span className="mr-2">{t('common.email')}</span>
+                      <span className="mr-2">{'Email'}</span>
                       <div>
-                        <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t('common.email')}</span>
+                        <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'Email'}</span>
                         <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>{user?.email}</p>
                       </div>
                     </div>
@@ -493,7 +491,7 @@ const Profile = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a1 1 0 001-1V4a1 1 0 00-1-1H8a1 1 0 00-1 1v16a1 1 0 001 1z" />
                         </svg>
                         <div>
-                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t('common.phone')}</span>
+                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'Phone'}</span>
                           <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>{user.phone}</p>
                         </div>
                       </div>
@@ -504,7 +502,7 @@ const Profile = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 919-9" />
                         </svg>
                         <div>
-                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t('common.website')}</span>
+                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'website'}</span>
                           <a 
                             href={user.website} 
                             target="_blank" 
@@ -534,7 +532,7 @@ const Profile = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                           </svg>
                           <div>
-                            <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t('profile.company')}</span>
+                            <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'company'}</span>
                             <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>{user.company}</p>
                           </div>
                         </div>
@@ -545,7 +543,7 @@ const Profile = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
                           </svg>
                           <div>
-                            <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{t('profile.position')}</span>
+                            <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'position'}</span>
                             <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>{user.position}</p>
                           </div>
                         </div>

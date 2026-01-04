@@ -9,7 +9,7 @@ import ErrorBoundary from './components/common/ErrorBoundary'
 import App from './App'
 import './index.css'
 
-// נקודת כניסה ראשית לאפליקציה
+// Main application entry point
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 

@@ -1,11 +1,9 @@
 import { motion } from 'framer-motion';
 import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import { useTheme } from '../../context/ThemeProvider';
-import { useTranslation } from "../../hooks/useTranslation";
 
 const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
-  const { t } = useTranslation();
 
   return (
     <motion.button
@@ -13,8 +11,8 @@ const ThemeToggle = () => {
       className="relative p-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
-      aria-label={theme === 'dark' ? t('theme.enableLightMode') : t('theme.enableDarkMode')}
-      title={theme === 'dark' ? t('theme.lightMode') : t('theme.darkMode')}
+      aria-label={theme === 'dark' ? 'enable Light Mode' : 'enable Dark Mode'}
+      title={theme === 'dark' ? 'light Mode' : 'dark Mode'}
       data-testid="dark-toggle"
     >
       <motion.div

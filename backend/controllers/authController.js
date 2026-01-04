@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
 const mongoose = require('mongoose');
 const { mockUsers } = require('../data/mockData');
-const { t } = require('../utils/i18n');
+// Removed i18n dependency - using English only
 
 // Generate JWT token
 const generateToken = (id) => {
@@ -20,7 +20,7 @@ const register = async (req, res) => {
     const fullName = name || `${firstName} ${lastName}`.trim();
     
     if (!fullName || fullName.length < 2) {
-      return res.status(400).json({ message: t('auth.nameRequired') });
+      return res.status(400).json({ message: 'Name is required and must be at least 2 characters' });
     }
 
     // Check if email already exists (simplified - allow any email format)
@@ -33,27 +33,41 @@ const register = async (req, res) => {
     }
     
     if (existingUser) {
-      return res.status(400).json({ message: t('auth.emailExists') });
+      return res.status(400).json({ message: 'Email already exists. Please use a different email address.' });
     }
 
     // Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create the user
-    const user = await User.create({
-      name: fullName,
-      email,
-      phone: phone || '',
-      password: hashedPassword,
-      role: role || 'user'
-    });
+    // Create the user (with MongoDB fallback)
+    let user;
+    try {
+      user = await User.create({
+        name: fullName,
+        email,
+        phone: phone || '',
+        password: hashedPassword,
+        role: role || 'user'
+      });
+    } catch (dbError) {
+      // MongoDB fallback - create mock user
+      user = {
+        _id: new Date().getTime().toString(),
+        name: fullName,
+        email,
+        phone: phone || '',
+        password: hashedPassword,
+        role: role || 'user',
+        createdAt: new Date()
+      };
+    }
 
     const token = generateToken(user._id);
 
     res.status(201).json({
       success: true,
-      message: t('auth.accountCreated'),
+      message: 'Account created successfully! Welcome to FuturistCards.',
       token,
       user: {
         id: user._id,
@@ -63,7 +77,7 @@ const register = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: t('auth.registrationError'), error: error.message });
+    res.status(500).json({ message: 'Registration failed. Please try again.', error: error.message });
   }
 };
 
@@ -76,26 +90,30 @@ const login = async (req, res) => {
     try {
       // Check if user already exists in MongoDB
       user = await User.findOne({ email });
+      if (!user) {
+        // Fallback to mock users if not found in MongoDB
+        user = mockUsers.find(u => u.email === email);
+      }
     } catch (dbError) {
       // Fallback to mock users if MongoDB is unavailable
       user = mockUsers.find(u => u.email === email);
     }
     
     if (!user) {
-      return res.status(401).json({ message: t('auth.invalidCredentials') });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: t('auth.invalidCredentials') });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     const token = generateToken(user._id);
 
     res.json({
       success: true,
-      message: t('auth.loginSuccess'),
+      message: 'Login successful! Welcome back.',
       token,
       user: {
         id: user._id,
@@ -105,21 +123,21 @@ const login = async (req, res) => {
       }
     });
   } catch (error) {
-    res.status(500).json({ message: t('auth.loginError'), error: error.message });
+    res.status(500).json({ message: 'Login failed. Please try again.', error: error.message });
   }
 };
 
-// get le profil
+// Get user profile
 const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select('-password');
     res.json({ user });
   } catch (error) {
-    res.status(500).json({ message: t('server.serverError'), error: error.message });
+    res.status(500).json({ message: 'Server error occurred. Please try again.', error: error.message });
   }
 };
 
-// Update le profil
+// Update user profile
 const updateProfile = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -133,11 +151,11 @@ const updateProfile = async (req, res) => {
 
     res.json({ 
       success: true,
-      message: t('auth.profileUpdated'),
+      message: 'Profile updated successfully',
       user 
     });
   } catch (error) {
-    res.status(500).json({ message: t('auth.updateError'), error: error.message });
+    res.status(500).json({ message: 'Profile update failed. Please try again.', error: error.message });
   }
 };
 
@@ -158,7 +176,7 @@ const changePassword = async (req, res) => {
     // Verify current password
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return res.status(400).json({ message: t('auth.wrongCurrentPassword') });
+      return res.status(400).json({ message: 'Current password is incorrect' });
     }
 
     // Hash new password
@@ -169,18 +187,18 @@ const changePassword = async (req, res) => {
 
     res.json({ 
       success: true,
-      message: t('auth.passwordChanged') 
+      message: 'Password changed successfully' 
     });
   } catch (error) {
-    res.status(500).json({ message: t('auth.passwordChangeError'), error: error.message });
+    res.status(500).json({ message: 'Password change failed. Please try again.', error: error.message });
   }
 };
 
-// déconnexion (côté client surtout)
+// Logout (mainly client-side)
 const logout = (req, res) => {
   res.json({ 
     success: true,
-    message: t('auth.logoutSuccess') 
+    message: 'Logout successful' 
   });
 };
 

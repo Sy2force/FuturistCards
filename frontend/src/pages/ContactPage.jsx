@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from "../hooks/useTranslation";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import { useRoleTheme } from '../context/ThemeProvider';
 import {
   EnvelopeIcon,
   PhoneIcon,
@@ -16,15 +16,15 @@ import {
 } from '@heroicons/react/24/outline';
 
 const ContactPage = () => {
-  const { t, language } = useTranslation();
+  const { currentTheme } = useRoleTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const schema = yup.object({
-    name: yup.string().required(t('contact.validation.nameRequired')),
-    email: yup.string().email(t('contact.validation.emailInvalid')).required(t('contact.validation.emailRequired')),
-    subject: yup.string().required(t('contact.validation.subjectRequired')),
-    message: yup.string().min(10, t('contact.validation.messageMinLength')).required(t('contact.validation.messageRequired')),
+    name: yup.string().required('Name is required'),
+    email: yup.string().email('Invalid email format').required('Email is required'),
+    subject: yup.string().required('Subject is required'),
+    message: yup.string().min(10, 'Message must be at least 10 characters').required('Message is required'),
     company: yup.string(),
     phone: yup.string()
   });
@@ -55,26 +55,26 @@ const ContactPage = () => {
   const contactInfo = [
     {
       icon: EnvelopeIcon,
-      title: t('contact.info.email'),
+      title: 'Email',
       value: 'contact@futuristcards.com',
       link: 'mailto:contact@futuristcards.com'
     },
     {
       icon: PhoneIcon,
-      title: t('contact.info.phone'),
+      title: 'Phone',
       value: '+972-50-123-4567',
       link: 'tel:+972501234567'
     },
     {
       icon: MapPinIcon,
-      title: t('contact.info.address'),
-      value: t('contact.info.addressValue'),
+      title: 'Address',
+      value: 'Tel Aviv, Israel',
       link: null
     },
     {
       icon: ClockIcon,
-      title: t('contact.info.hours'),
-      value: t('contact.info.hoursValue'),
+      title: 'Business Hours',
+      value: 'Sun-Thu: 9:00-18:00',
       link: null
     }
   ];
@@ -82,22 +82,22 @@ const ContactPage = () => {
   const quickActions = [
     {
       icon: ChatBubbleLeftRightIcon,
-      title: t('contact.quickActions.whatsapp.title'),
-      description: t('contact.quickActions.whatsapp.description'),
+      title: 'WhatsApp Chat',
+      description: 'Get instant support via WhatsApp',
       action: () => window.open('https://wa.me/972501234567', '_blank'),
       color: 'from-green-500 to-green-600'
     },
     {
       icon: CalendarDaysIcon,
-      title: t('contact.quickActions.meeting.title'),
-      description: t('contact.quickActions.meeting.description'),
+      title: 'Schedule Meeting',
+      description: 'Book a consultation call',
       action: () => window.open('https://calendly.com/futuristcards', '_blank'),
       color: 'from-blue-500 to-blue-600'
     },
     {
       icon: EnvelopeIcon,
-      title: t('contact.quickActions.email.title'),
-      description: t('contact.quickActions.email.description'),
+      title: 'Send Email',
+      description: 'Reach us directly via email',
       action: () => window.location.href = 'mailto:contact@futuristcards.com',
       color: 'from-purple-500 to-purple-600'
     }
@@ -106,8 +106,8 @@ const ContactPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('contact.title')} - FuturistCards</title>
-        <meta name="description" content={t('contact.description')} />
+        <title>Contact Us - FuturistCards</title>
+        <meta name="description" content="Get in touch with FuturistCards team for support, inquiries, and business partnerships" />
       </Helmet>
       
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir={language === 'he' ? 'rtl' : 'ltr'}>
@@ -121,13 +121,13 @@ const ContactPage = () => {
             className="space-y-8"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
-              {t('contact.hero.title')}{' '}
+              Get in Touch{' '}
               <span className="bg-gradient-to-r from-cyan-500 to-purple-500 bg-clip-text text-transparent block mt-2">
-                {t('contact.hero.titleHighlight')}
+                With Our Team
               </span>
             </h1>
             <p className="text-xl md:text-2xl max-w-3xl mx-auto leading-relaxed text-gray-300">
-              {t('contact.hero.subtitle')}
+              Ready to revolutionize your business cards? Let's discuss your project and bring your vision to life.
             </p>
           </motion.div>
         </div>
@@ -143,7 +143,7 @@ const ContactPage = () => {
             className="rounded-2xl p-6 lg:p-8 shadow-xl backdrop-blur-sm border transition-all duration-300 bg-black/20 border-white/20"
           >
             <h2 className="text-2xl font-bold mb-6 text-white">
-              {t('contact.form.title')}
+              Send us a Message
             </h2>
 
             {submitSuccess && (
@@ -153,7 +153,7 @@ const ContactPage = () => {
                 className="mb-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl"
               >
                 <p className="text-green-400 font-medium text-center">
-                  {t('contact.form.successMessage')}
+                  Thank you! Your message has been sent successfully. We'll get back to you soon.
                 </p>
               </motion.div>
             )}
@@ -162,13 +162,13 @@ const ContactPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-300">
-                    {t('contact.form.fields.name')} *
+                    Full Name *
                   </label>
                   <input
                     {...register('name')}
                     type="text"
                     className="w-full px-4 py-3 rounded-xl border transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-black/20 border-white/20 text-white placeholder-gray-400"
-                    placeholder={t('contact.form.placeholders.name')}
+                    placeholder="Enter your full name"
                   />
                   {errors.name && (
                     <p className="mt-2 text-sm text-red-500">{errors.name.message}</p>
@@ -177,13 +177,13 @@ const ContactPage = () => {
 
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-300">
-                    {t('contact.form.fields.email')} *
+                    Email Address *
                   </label>
                   <input
                     {...register('email')}
                     type="email"
                     className="w-full px-4 py-3 rounded-xl border transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-black/20 border-white/20 text-white placeholder-gray-400"
-                    placeholder={t('contact.form.placeholders.email')}
+                    placeholder="Enter your email address"
                   />
                   {errors.email && (
                     <p className="mt-2 text-sm text-red-500">{errors.email.message}</p>
@@ -194,38 +194,38 @@ const ContactPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-300">
-                    {t('contact.form.fields.company')}
+                    Company (Optional)
                   </label>
                   <input
                     {...register('company')}
                     type="text"
                     className="w-full px-4 py-3 rounded-xl border transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-black/20 border-white/20 text-white placeholder-gray-400"
-                    placeholder={t('contact.form.placeholders.company')}
+                    placeholder="Enter your company name"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-300">
-                    {t('contact.form.fields.phone')}
+                    Phone (Optional)
                   </label>
                   <input
                     {...register('phone')}
                     type="tel"
                     className="w-full px-4 py-3 rounded-xl border transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-black/20 border-white/20 text-white placeholder-gray-400"
-                    placeholder={t('contact.form.placeholders.phone')}
+                    placeholder="Enter your phone number"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-300">
-                  {t('contact.form.fields.subject')} *
+                  Subject *
                 </label>
                 <input
                   {...register('subject')}
                   type="text"
                   className="w-full px-4 py-3 rounded-xl border transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-black/20 border-white/20 text-white placeholder-gray-400"
-                  placeholder={t('contact.form.placeholders.subject')}
+                  placeholder="What can we help you with?"
                 />
                 {errors.subject && (
                   <p className="mt-2 text-sm text-red-500">{errors.subject.message}</p>
@@ -234,13 +234,13 @@ const ContactPage = () => {
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-300">
-                  {t('contact.form.fields.message')} *
+                  Message *
                 </label>
                 <textarea
                   {...register('message')}
                   rows={6}
                   className="w-full px-4 py-3 rounded-xl border transition-all duration-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none bg-black/20 border-white/20 text-white placeholder-gray-400"
-                  placeholder={t('contact.form.placeholders.message')}
+                  placeholder="Tell us about your project or inquiry..."
                 />
                 {errors.message && (
                   <p className="mt-2 text-sm text-red-500">{errors.message.message}</p>
@@ -257,12 +257,12 @@ const ContactPage = () => {
                 {isSubmitting ? (
                   <div className="flex items-center justify-center">
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                    {t('contact.form.sending')}
+                    Sending...
                   </div>
                 ) : (
                   <div className="flex items-center justify-center">
                     <PaperAirplaneIcon className="w-5 h-5 ml-2" />
-                    {t('contact.form.submit')}
+                    Send Message
                   </div>
                 )}
               </motion.button>
@@ -279,7 +279,7 @@ const ContactPage = () => {
               className="rounded-2xl p-6 lg:p-8 shadow-xl backdrop-blur-sm border transition-all duration-300 bg-black/20 border-white/20"
             >
               <h2 className="text-2xl font-bold mb-6 text-white">
-                {t('contact.info.title')}
+                Contact Information
               </h2>
               <div className="space-y-4">
                 {contactInfo.map((info, index) => {
@@ -316,7 +316,7 @@ const ContactPage = () => {
               className="rounded-2xl p-6 lg:p-8 shadow-xl backdrop-blur-sm border transition-all duration-300 bg-black/20 border-white/20"
             >
               <h2 className="text-2xl font-bold mb-6 text-white">
-                {t('contact.quickActions.title')}
+                Quick Actions
               </h2>
               <div className="space-y-3">
                 {quickActions.map((action, index) => {

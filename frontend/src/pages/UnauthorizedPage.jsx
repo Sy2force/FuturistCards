@@ -1,11 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from "../hooks/useTranslation";
 import { motion } from 'framer-motion';
 import { useRoleTheme } from '../context/ThemeProvider';
 
 const UnauthorizedPage = () => {
-  const { t } = useTranslation();
   const { currentTheme } = useRoleTheme();
 
   return (
@@ -46,7 +44,7 @@ const UnauthorizedPage = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            {t('unauthorized.title')}
+            Access Denied
           </motion.h2>
           
           <motion.p 
@@ -56,7 +54,7 @@ const UnauthorizedPage = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            {t('unauthorized.description')}
+            You don't have permission to access this page. Please contact an administrator if you believe this is an error.
           </motion.p>
           
           <motion.div 
@@ -69,14 +67,14 @@ const UnauthorizedPage = () => {
               to="/"
               className="glass-button glass-button-primary inline-block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {t('unauthorized.goHome')}
+              Go Home
             </Link>
             
             <Link
               to="/login"
               className="glass-button glass-button-secondary block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {t('unauthorized.login')}
+              Login
             </Link>
           </motion.div>
         </div>

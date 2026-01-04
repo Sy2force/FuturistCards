@@ -1,17 +1,16 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import { useRoleTheme } from './context/ThemeProvider';
 import { motion } from 'framer-motion';
-import { useTranslation } from "./hooks/useTranslation";
 
-// רכיבי פריסה
+// Layout components
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 
-// טעינה עצלה של דפים לביצועים טובים יותר
+// Lazy loading pages for better performance
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const RegisterPage = lazy(() => import('./pages/RegisterPage'));
@@ -26,15 +25,17 @@ const PacksPage = lazy(() => import('./pages/PacksPage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const AdminPage = lazy(() => import('./pages/AdminPage'));
+const AnalyticsPage = lazy(() => import('./pages/admin/AnalyticsPage'));
+const ManageUsersPage = lazy(() => import('./pages/admin/ManageUsersPage'));
+const LogsPage = lazy(() => import('./pages/admin/LogsPage'));
 const MyCardsPage = lazy(() => import('./pages/dashboard/MyCards'));
 const CreateCardPage = lazy(() => import('./pages/CreateCardPage'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const UnauthorizedPage = lazy(() => import('./pages/UnauthorizedPage'));
 
-// רכיב טעינה
+// Loading component
 const LoadingSpinner = () => {
   const { currentTheme } = useRoleTheme();
-  const { t } = useTranslation();
   
   return (
     <div 
@@ -61,7 +62,7 @@ const LoadingSpinner = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          {t('common.loading')}
+          Loading...
         </motion.p>
       </motion.div>
     </div>
@@ -70,18 +71,20 @@ const LoadingSpinner = () => {
 
 function App() {
   const { currentTheme } = useRoleTheme();
-  const { t } = useTranslation();
+  
+  // Force title update on app load
+  useEffect(() => {
+    document.title = 'FuturistCards | Digital Business Cards';
+  }, []);
   
   return (
     <div 
       className="min-h-screen flex flex-col"
       style={{ backgroundColor: currentTheme.colors.background }}
-      dir="rtl"
-      lang="he"
     >
       <Helmet>
-        <title>{t('common.title')}</title>
-        <meta name="description" content={t('common.description')} />
+        <title>FuturistCards | Digital Business Cards</title>
+        <meta name="description" content="Create professional digital business cards" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content={currentTheme.colors.primary} />
       </Helmet>
@@ -150,6 +153,21 @@ function App() {
             <Route path="/admin" element={
               <ProtectedRoute requiredRoles={['admin']}>
                 <AdminPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/analytics" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <AnalyticsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/users" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <ManageUsersPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/logs" element={
+              <ProtectedRoute requiredRoles={['admin']}>
+                <LogsPage />
               </ProtectedRoute>
             } />
             

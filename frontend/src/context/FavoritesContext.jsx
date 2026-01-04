@@ -1,13 +1,12 @@
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { t } from '../utils/translations';
 
 const FavoritesContext = createContext();
 
 export const useFavorites = () => {
   const context = useContext(FavoritesContext);
   if (!context) {
-    throw new Error(t('common.contextError'));
+    throw new Error('useFavorites must be used within a FavoritesProvider');
   }
   return context;
 };
@@ -16,7 +15,7 @@ export const FavoritesProvider = ({ children }) => {
   const { user } = useAuth();
   const [favorites, setFavorites] = useState({});
 
-  // Charger les favoris depuis localStorage au démarrage
+  // Load favorites from localStorage on startup
   useEffect(() => {
     const savedFavorites = localStorage.getItem('allFavorites');
     if (savedFavorites) {
@@ -28,7 +27,7 @@ export const FavoritesProvider = ({ children }) => {
     }
   }, []);
 
-  // Sauvegarder les favoris dans localStorage
+  // Save favorites to localStorage
   const saveFavorites = (newFavorites) => {
     localStorage.setItem('allFavorites', JSON.stringify(newFavorites));
     setFavorites(newFavorites);

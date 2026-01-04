@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from "../hooks/useTranslation";
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
+import { useRoleTheme } from '../context/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { UserIcon, EnvelopeIcon, PhoneIcon, MapPinIcon, CameraIcon } from '@heroicons/react/24/outline';
 import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 import GlassInput from '../components/ui/GlassInput';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
-  const { t } = useTranslation();
-  const { user, updateUser } = useAuth();
+  const { user, updateProfile, logout } = useAuth();
+  const { currentTheme } = useRoleTheme();
+  const navigate = useNavigate();
+  
+  // Set document title
+  useDocumentTitle('Profile | FuturistCards');
+  
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState(null);
   
@@ -58,12 +65,12 @@ const ProfilePage = () => {
       
       // Update user data
       const updatedUser = { ...user, ...data };
-      updateUser(updatedUser);
+      updateProfile(updatedUser);
       localStorage.setItem('user', JSON.stringify(updatedUser));
       
-      toast.success(t('profile.updateSuccess'));
+      toast.success('Profile updated successfully');
     } catch (error) {
-      toast.error(t('profile.updateError'));
+      toast.error('Error updating profile');
     } finally {
       setLoading(false);
     }
@@ -88,18 +95,18 @@ const ProfilePage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('profile.title')} - {t('common.siteName')}</title>
-        <meta name="description" content={t('profile.subtitle')} />
+        <title>My Profile - FuturistCards</title>
+        <meta name="description" content="Manage your personal profile information and account settings" />
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-8" dir="rtl" lang="he">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-4xl font-bold text-white mb-8">{t('profile.title')}</h1>
+            <h1 className="text-4xl font-bold text-white mb-8">My Profile</h1>
             
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {/* Avatar Section */}
@@ -108,7 +115,7 @@ const ProfilePage = () => {
                   <div className="relative">
                     <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
                       {user?.avatar ? (
-                        <img src={user.avatar} alt={t('profile.avatarAlt')} className="w-24 h-24 rounded-full object-cover" />
+                        <img src={user.avatar} alt="User Avatar" className="w-24 h-24 rounded-full object-cover" />
                       ) : (
                         <UserIcon className="w-12 h-12 text-white" />
                       )}
@@ -119,88 +126,88 @@ const ProfilePage = () => {
                   </label>
                 </div>
                 <div>
-                  <h3 className="text-xl font-semibold text-white">{user?.name || t('profile.noName')}</h3>
+                  <h3 className="text-xl font-semibold text-white">{user?.name || 'No Name'}</h3>
                   <p className="text-white/70">{user?.email}</p>
-                  <p className="text-white/50 text-sm">{t('profile.member')} {new Date(user?.createdAt).toLocaleDateString()}</p>
+                  <p className="text-white/50 text-sm">Member since {new Date(user?.createdAt || Date.now()).toLocaleDateString()}</p>
                 </div>
               </div>
             </GlassCard>
 
               {/* Personal Info */}
               <GlassCard className="p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">{t('profile.personalInfo')}</h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Personal Information</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-1">
-                      {t('auth.firstName')}
+                      Full Name
                     </label>
                     <GlassInput
                       {...register('name')}
-                      placeholder={t('auth.firstNamePlaceholder')}
+                      placeholder="Enter your full name"
                       error={errors.name?.message}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-1">
-                      {t('auth.email')}
+                      Email Address
                     </label>
                     <GlassInput
                       {...register('email')}
                       type="email"
-                      placeholder={t('auth.emailPlaceholder')}
+                      placeholder="Enter your email address"
                       error={errors.email?.message}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-1">
-                      {t('auth.phone')}
+                      Phone Number
                     </label>
                     <GlassInput
                       {...register('phone')}
                       type="tel"
-                      placeholder={t('auth.phonePlaceholder')}
+                      placeholder="Enter your phone number"
                       error={errors.phone?.message}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-1">
-                      {t('common.address')}
+                      Location
                     </label>
                     <GlassInput
                       {...register('location')}
-                      placeholder={t('profile.addressPlaceholder')}
+                      placeholder="Enter your location"
                       error={errors.location?.message}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-1">
-                      {t('profile.company')}
+                      Company
                     </label>
                     <GlassInput
                       {...register('company')}
-                      placeholder={t('profile.companyPlaceholder')}
+                      placeholder="Enter your company name"
                       error={errors.company?.message}
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-white/70 mb-1">
-                      {t('profile.position')}
+                      Job Title
                     </label>
                     <GlassInput
                       {...register('position')}
-                      placeholder={t('profile.positionPlaceholder')}
+                      placeholder="Enter your job title"
                       error={errors.position?.message}
                     />
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-white/70 mb-1">
-                      {t('profile.bio')}
+                      Biography
                     </label>
                     <GlassInput
                       {...register('bio')}
                       multiline
                       rows={4}
-                      placeholder={t('profile.bioPlaceholder')}
+                      placeholder="Tell us about yourself..."
                       error={errors.bio?.message}
                     />
                   </div>
@@ -215,14 +222,14 @@ const ProfilePage = () => {
                     variant="secondary"
                     onClick={() => window.history.back()}
                   >
-                    {t('common.cancel')}
+                    Cancel
                   </GlassButton>
                   <GlassButton
                     type="submit"
                     loading={loading}
                     disabled={loading}
                   >
-                    {t('profile.saveChanges')}
+                    Save Changes
                   </GlassButton>
                 </div>
               </GlassCard>

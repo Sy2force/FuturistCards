@@ -39,7 +39,7 @@ class OfflineService {
         } else {
           resolve({
             success: false,
-            message: 'אימייל או סיסמה שגויים'
+            message: 'Invalid email or password'
           });
         }
       }, 500);
@@ -61,7 +61,7 @@ class OfflineService {
         
         resolve({
           success: true,
-          message: 'הרשמה הצליחה (מצב דמו)',
+          message: 'Registration successful (demo mode)',
           user: newUser
         });
       }, 800);
@@ -131,7 +131,7 @@ class OfflineService {
         } else {
           resolve({
             success: false,
-            message: t('cards.notFound')
+            message: 'not Found'
           });
         }
       }, 200);
@@ -144,7 +144,7 @@ class OfflineService {
         if (!this.currentUser || (this.currentUser.role !== 'business' && this.currentUser.role !== 'admin')) {
           resolve({
             success: false,
-            message: t('common.accessDenied')
+            message: 'access Denied'
           });
           return;
         }
@@ -163,7 +163,7 @@ class OfflineService {
         
         resolve({
           success: true,
-          message: 'כרטיס נוצר בהצלחה (מצב דמו)',
+          message: 'Card created successfully (demo mode)',
           card: newCard
         });
       }, 600);
@@ -181,7 +181,7 @@ class OfflineService {
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
-              message: t('common.accessDenied')
+              message: 'access Denied'
             });
             return;
           }
@@ -194,13 +194,13 @@ class OfflineService {
           
           resolve({
             success: true,
-            message: t('cards.updatedDemo'),
+            message: 'updated Demo',
             card: offlineCards[cardIndex]
           });
         } else {
           resolve({
             success: false,
-            message: t('cards.notFound')
+            message: 'not Found'
           });
         }
       }, 400);
@@ -218,7 +218,7 @@ class OfflineService {
           if (card.user_id !== this.currentUser._id && this.currentUser.role !== 'admin') {
             resolve({
               success: false,
-              message: t('common.accessDenied')
+              message: 'access Denied'
             });
             return;
           }
@@ -227,12 +227,12 @@ class OfflineService {
           
           resolve({
             success: true,
-            message: t('cards.deletedDemo')
+            message: 'deleted Demo'
           });
         } else {
           resolve({
             success: false,
-            message: t('cards.notFound')
+            message: 'not Found'
           });
         }
       }, 300);
@@ -244,7 +244,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser) {
-          resolve({ success: false, message: t('common.notLoggedIn') });
+          resolve({ success: false, message: 'not Logged In' });
           return;
         }
         
@@ -266,7 +266,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser) {
-          resolve({ success: false, message: t('common.notLoggedIn') });
+          resolve({ success: false, message: 'not Logged In' });
           return;
         }
         
@@ -281,7 +281,7 @@ class OfflineService {
           resolve({
             success: true,
             action: 'removed',
-            message: t('favorites.removed')
+            message: 'removed'
           });
         } else {
           // Ajouter aux favoris
@@ -294,7 +294,7 @@ class OfflineService {
           resolve({
             success: true,
             action: 'added',
-            message: t('favorites.added')
+            message: 'added'
           });
         }
       }, 200);
@@ -306,7 +306,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser || this.currentUser.role !== 'admin') {
-          resolve({ success: false, message: 'גישה לא מורשית' });
+          resolve({ success: false, message: 'Unauthorized access' });
           return;
         }
         
@@ -322,7 +322,7 @@ class OfflineService {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (!this.currentUser || this.currentUser.role !== 'admin') {
-          resolve({ success: false, message: 'גישה לא מורשית' });
+          resolve({ success: false, message: 'Unauthorized access' });
           return;
         }
         

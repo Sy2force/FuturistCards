@@ -2,20 +2,22 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
-import { useTranslation } from "../hooks/useTranslation";
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import apiService from '../services/api';
 import { UserIcon, EnvelopeIcon, PhoneIcon, GlobeAltIcon, MapPinIcon, PhotoIcon, DocumentCheckIcon, ArrowLeftIcon, XMarkIcon, PencilIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 
 const EditCardPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { t } = useTranslation();
   const { user } = useAuth();
   const { isDark } = useRoleTheme();
   const fileInputRef = useRef(null);
+  
+  // Set document title
+  useDocumentTitle('Edit Card | FuturistCards');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -38,12 +40,12 @@ const EditCardPage = () => {
   const [cardNotFound, setCardNotFound] = useState(false);
   
   const colorOptions = [
-    { bg: '#1e293b', text: '#ffffff', accent: '#3b82f6', name: t('editCard.colors.darkBlue') },
-    { bg: '#7c3aed', text: '#ffffff', accent: '#f59e0b', name: t('editCard.colors.purple') },
-    { bg: '#059669', text: '#ffffff', accent: '#fbbf24', name: t('editCard.colors.green') },
-    { bg: '#dc2626', text: '#ffffff', accent: '#60a5fa', name: t('editCard.colors.red') },
-    { bg: '#0891b2', text: '#ffffff', accent: '#f97316', name: t('editCard.colors.turquoise') },
-    { bg: '#be185d', text: '#ffffff', accent: '#34d399', name: t('editCard.colors.pink') }
+    { bg: '#1e293b', text: '#ffffff', accent: '#3b82f6', name: 'dark Blue' },
+    { bg: '#7c3aed', text: '#ffffff', accent: '#f59e0b', name: 'purple' },
+    { bg: '#059669', text: '#ffffff', accent: '#fbbf24', name: 'green' },
+    { bg: '#dc2626', text: '#ffffff', accent: '#60a5fa', name: 'red' },
+    { bg: '#0891b2', text: '#ffffff', accent: '#f97316', name: 'turquoise' },
+    { bg: '#be185d', text: '#ffffff', accent: '#34d399', name: 'pink' }
   ];
 
   // Load card data on component mount
@@ -90,7 +92,7 @@ const EditCardPage = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        toast.error(t('editCard.imageTooLarge'));
+        toast.error('image Too Large');
         return;
       }
       
@@ -127,7 +129,7 @@ const EditCardPage = () => {
       const cardIndex = userCards.findIndex(c => c.id === id);
       
       if (cardIndex === -1) {
-        throw new Error(t('editCard.cardNotFound'));
+        throw new Error('card Not Found');
       }
       
       const updatedCard = {
@@ -150,10 +152,10 @@ const EditCardPage = () => {
       userCards[cardIndex] = updatedCard;
       localStorage.setItem('userCards', JSON.stringify(userCards));
       
-      toast.success(t('editCard.updateSuccess'));
+      toast.success('update Success');
       navigate('/my-cards');
     } catch (error) {
-      const errorMessage = error.message || t('editCard.updateError');
+      const errorMessage = error.message || 'update Error';
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
@@ -163,19 +165,19 @@ const EditCardPage = () => {
   
   if (!user || (user.role !== 'business' && user.role !== 'admin')) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-4">
-            {t('editCard.accessDenied')}
+            {'access Denied'}
           </h1>
           <p className="text-gray-300 mb-6">
-            {t('editCard.businessAccountRequired')}
+            {'business Account Required'}
           </p>
           <button 
             onClick={() => navigate('/my-cards')}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
           >
-            {t('editCard.backToMyCards')}
+            {'back To My Cards'}
           </button>
         </div>
       </div>
@@ -184,10 +186,10 @@ const EditCardPage = () => {
   
   if (cardLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">{t('common.loading')}</p>
+          <p className="text-gray-300">{'Loading...'}</p>
         </div>
       </div>
     );
@@ -195,19 +197,19 @@ const EditCardPage = () => {
   
   if (cardNotFound) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-4">
-            {t('editCard.cardNotFoundTitle')}
+            {'card Not Found Title'}
           </h2>
           <p className="text-gray-300 mb-6">
-            {t('editCard.cardNotFoundMessage')}
+            {'card Not Found Message'}
           </p>
           <button 
             onClick={() => navigate('/my-cards')}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
           >
-            {t('editCard.backToMyCards')}
+            {'back To My Cards'}
           </button>
         </div>
       </div>
@@ -217,15 +219,15 @@ const EditCardPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('editCard.pageTitle')} - FuturistCards</title>
-        <meta name="description" content={t('editCard.pageDescription')} />
-        <html lang="he" dir="rtl" />
+        <title>{'page Title'} - FuturistCards</title>
+        <meta name="description" content={'page Description'} />
+        <html lang="en" dir="ltr" />
       </Helmet>
       
       <motion.div 
         className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12"
-        dir="rtl"
-        lang="he"
+        dir="ltr"
+        lang="en"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -244,10 +246,10 @@ const EditCardPage = () => {
               <PencilIcon className="w-8 h-8 text-white" />
             </motion.div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
-              {t('editCard.title')}
+              {'title'}
             </h1>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              {t('editCard.subtitle')}
+              {'subtitle'}
             </p>
           </motion.div>
 
@@ -262,7 +264,7 @@ const EditCardPage = () => {
               <div className="sticky top-8">
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                   <PhotoIcon className="w-5 h-5 ml-2" />
-                  {t('editCard.preview')}
+                  {'preview'}
                 </h3>
                 <motion.div 
                   className="rounded-2xl p-6 shadow-xl border border-white/10 backdrop-blur-lg"
@@ -276,7 +278,7 @@ const EditCardPage = () => {
                       {imagePreview ? (
                         <img
                           src={imagePreview}
-                          alt={t('editCard.profileImage')}
+                          alt={'profile Image'}
                           className="w-24 h-24 rounded-full object-cover border-4"
                           style={{ borderColor: formData.accentColor }}
                         />
@@ -290,16 +292,16 @@ const EditCardPage = () => {
                       )}
                     </div>
                     <h4 className="text-xl font-bold mb-1" style={{ color: formData.textColor }}>
-                      {formData.name || t('editCard.yourName')}
+                      {formData.name || 'your Name'}
                     </h4>
                     <p className="font-medium mb-1" style={{ color: formData.accentColor }}>
-                      {formData.title || t('editCard.yourTitle')}
+                      {formData.title || 'your Title'}
                     </p>
                     <p className="text-sm mb-3" style={{ color: `${formData.textColor}80` }}>
-                      {formData.company || t('editCard.yourCompany')}
+                      {formData.company || 'your Company'}
                     </p>
                     <p className="text-sm mb-4" style={{ color: `${formData.textColor}90` }}>
-                      {formData.description || t('editCard.yourDescription')}
+                      {formData.description || 'your Description'}
                     </p>
                   </div>
                 </motion.div>
@@ -319,7 +321,7 @@ const EditCardPage = () => {
                   {/* Image Upload */}
                   <div className="text-center">
                     <label className="block text-sm font-medium text-gray-300 mb-4">
-                      {t('editCard.profileImage')}
+                      {'profile Image'}
                     </label>
                     <div className="relative inline-block">
                       <input
@@ -333,7 +335,7 @@ const EditCardPage = () => {
                         <div className="relative">
                           <img
                             src={imagePreview}
-                            alt={t('editCard.previewAlt')}
+                            alt={'preview Alt'}
                             className="w-32 h-32 rounded-full object-cover border-4 shadow-lg"
                             style={{ borderColor: formData.accentColor }}
                           />
@@ -355,7 +357,7 @@ const EditCardPage = () => {
                           <div className="text-center">
                             <PhotoIcon className="w-8 h-8 text-gray-400 group-hover:text-blue-400 mx-auto mb-2" />
                             <p className="text-xs text-gray-400 group-hover:text-blue-400">
-                              {t('editCard.addImage')}
+                              {'add Image'}
                             </p>
                           </div>
                         </button>
@@ -368,7 +370,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 inline ml-1" />
-                        {t('editCard.fullName')} *
+                        {'full Name'} *
                       </label>
                       <input
                         type="text"
@@ -376,13 +378,13 @@ const EditCardPage = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        placeholder={t('editCard.fullNamePlaceholder')}
+                        placeholder={'Enter full name'}
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {t('editCard.jobTitle')} *
+                        {'job Title'} *
                       </label>
                       <input
                         type="text"
@@ -390,7 +392,7 @@ const EditCardPage = () => {
                         value={formData.title}
                         onChange={handleChange}
                         required
-                        placeholder={t('editCard.jobTitlePlaceholder')}
+                        placeholder={'Enter job title'}
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
@@ -399,7 +401,7 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       <BuildingOfficeIcon className="w-4 h-4 inline ml-1" />
-                      {t('editCard.company')} *
+                      {'company'} *
                     </label>
                     <input
                       type="text"
@@ -407,21 +409,21 @@ const EditCardPage = () => {
                       value={formData.company}
                       onChange={handleChange}
                       required
-                      placeholder={t('editCard.companyPlaceholder')}
+                      placeholder={'Enter company name'}
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      {t('editCard.description')}
+                      {'description'}
                     </label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
                       rows={4}
-                      placeholder={t('editCard.descriptionPlaceholder')}
+                      placeholder={'Enter description'}
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all resize-none"
                     />
                   </div>
@@ -430,7 +432,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         <EnvelopeIcon className="w-4 h-4 inline ml-1" />
-                        {t('editCard.email')} *
+                        {'email'} *
                       </label>
                       <input
                         type="email"
@@ -438,14 +440,14 @@ const EditCardPage = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        placeholder="your@email.com"
+                        placeholder={'Enter email address'}
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         <PhoneIcon className="w-4 h-4 inline ml-1" />
-                        {t('editCard.phone')} *
+                        {'phone'} *
                       </label>
                       <input
                         type="tel"
@@ -453,7 +455,7 @@ const EditCardPage = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                        placeholder="050-123-4567"
+                        placeholder={'Enter phone number'}
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
@@ -462,14 +464,14 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       <GlobeAltIcon className="w-4 h-4 inline ml-1" />
-                      {t('editCard.website')}
+                      {'website'}
                     </label>
                     <input
                       type="url"
                       name="website"
                       value={formData.website}
                       onChange={handleChange}
-                      placeholder="https://www.example.com"
+                      placeholder={'website Placeholder'}
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                     />
                   </div>
@@ -477,14 +479,14 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       <MapPinIcon className="w-4 h-4 inline ml-1" />
-                      {t('editCard.address')}
+                      {'address'}
                     </label>
                     <input
                       type="text"
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
-                      placeholder={t('editCard.addressPlaceholder')}
+                      placeholder={'address Placeholder'}
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                     />
                   </div>
@@ -492,7 +494,7 @@ const EditCardPage = () => {
                   {/* Color Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-4">
-                      {t('editCard.selectCardColors')}
+                      {'select Card Colors'}
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {colorOptions.map((option, index) => (
@@ -543,7 +545,7 @@ const EditCardPage = () => {
                       whileHover={{ scale: 1.02 }}
                     >
                       <ArrowLeftIcon className="w-5 h-5 ml-2 inline" />
-                      {t('editCard.cancel')}
+                      {'cancel'}
                     </motion.button>
                     <motion.button
                       type="submit"
@@ -558,12 +560,12 @@ const EditCardPage = () => {
                             animate={{ rotate: 360 }}
                             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                           />
-                          {t('editCard.updating')}
+                          {'updating'}
                         </>
                       ) : (
                         <>
                           <DocumentCheckIcon className="w-5 h-5 ml-2" />
-                          {t('editCard.saveChanges')}
+                          {'save Changes'}
                         </>
                       )}
                     </motion.button>

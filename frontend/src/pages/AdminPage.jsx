@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../context/AuthContext';
 import useRealTimeStats from '../hooks/useRealTimeStats';
 import { 
@@ -27,7 +26,6 @@ import RealTimeChart from '../components/admin/RealTimeChart';
 import ActivityFeed from '../components/admin/ActivityFeed';
 
 const AdminPage = () => {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const { stats: realTimeStats, recentActivities, isConnected, simulateActivity, refreshStats } = useRealTimeStats();
   const [users, setUsers] = useState([]);
@@ -62,8 +60,8 @@ const AdminPage = () => {
       
       const realCards = localCards.map(card => ({
         _id: card.id,
-        title: card.name || card.title || t('admin.cardNoName'),
-        owner: card.createdBy || t('admin.user'),
+        title: card.name || card.title || 'card No Name',
+        owner: card.createdBy || 'user',
         status: 'active',
         views: card.views || Math.floor(Math.random() * 200),
         likes: card.likes || Math.floor(Math.random() * 50),
@@ -72,8 +70,8 @@ const AdminPage = () => {
       
       // Simuler quelques rapports
       const mockReports = [
-        { _id: '1', type: 'inappropriate', cardId: realCards[0]?._id, reportedBy: t('admin.anonymousUser'), status: 'pending', createdAt: new Date() },
-        { _id: '2', type: 'spam', cardId: realCards[1]?._id, reportedBy: t('admin.registeredUser'), status: 'resolved', createdAt: new Date() }
+        { _id: '1', type: 'inappropriate', cardId: realCards[0]?._id, reportedBy: 'anonymous User', status: 'pending', createdAt: new Date() },
+        { _id: '2', type: 'spam', cardId: realCards[1]?._id, reportedBy: 'registered User', status: 'resolved', createdAt: new Date() }
       ];
       
       setUsers(realUsers);
@@ -127,7 +125,7 @@ const AdminPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white"></div>
       </div>
     );
@@ -149,11 +147,11 @@ const AdminPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('admin.title')} - FuturistCards</title>
-        <meta name="description" content={t('admin.subtitle')} />
+        <title>{'Admin Dashboard'} - FuturistCards</title>
+        <meta name="description" content={'subtitle'} />
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
@@ -164,7 +162,7 @@ const AdminPage = () => {
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h1 className="text-4xl font-bold text-white mb-2">
-                  {t('admin.title')}
+                  {'Admin Dashboard'}
                 </h1>
                 <p className="text-gray-300">
                   {t('admin.welcome', { name: user?.name })}
@@ -175,7 +173,7 @@ const AdminPage = () => {
                 className="flex items-center"
               >
                 <ArrowPathIcon className="h-5 w-5 ml-2" />
-                {t('admin.refreshData')}
+                {'refresh Data'}
               </GlassButton>
             </div>
           </motion.div>
@@ -188,10 +186,10 @@ const AdminPage = () => {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
           >
             {[
-              { title: t('admin.stats.totalUsers'), value: realTimeStats.totalUsers, icon: UserGroupIcon, color: 'text-blue-400', trend: '+' + realTimeStats.usersToday },
-              { title: t('admin.stats.totalCards'), value: realTimeStats.totalCards, icon: CreditCardIcon, color: 'text-green-400', trend: '+' + realTimeStats.cardsToday },
-              { title: t('admin.stats.totalLikes'), value: realTimeStats.totalLikes, icon: HeartIcon, color: 'text-red-400', trend: '+' + realTimeStats.likesToday },
-              { title: t('admin.stats.activeUsers'), value: realTimeStats.activeUsers, icon: SignalIcon, color: 'text-emerald-400', trend: isConnected ? t('admin.connected') : t('admin.disconnected') }
+              { title: 'total Users', value: realTimeStats.totalUsers, icon: UserGroupIcon, color: 'text-blue-400', trend: '+' + realTimeStats.usersToday },
+              { title: 'total Cards', value: realTimeStats.totalCards, icon: CreditCardIcon, color: 'text-green-400', trend: '+' + realTimeStats.cardsToday },
+              { title: 'total Likes', value: realTimeStats.totalLikes, icon: HeartIcon, color: 'text-red-400', trend: '+' + realTimeStats.likesToday },
+              { title: 'active Users', value: realTimeStats.activeUsers, icon: SignalIcon, color: 'text-emerald-400', trend: isConnected ? 'connected' : 'disconnected' }
             ].map((stat, index) => (
               <GlassCard key={index} className="p-6 hover:scale-105 transition-transform">
                 <div className="flex items-center justify-between mb-2">
@@ -202,7 +200,7 @@ const AdminPage = () => {
                   <stat.icon className={`h-8 w-8 ${stat.color}`} />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-400">{t('admin.today')}</span>
+                  <span className="text-xs text-gray-400">{'today'}</span>
                   <span className={`text-xs ${stat.color} font-medium`}>{stat.trend}</span>
                 </div>
               </GlassCard>
@@ -218,17 +216,17 @@ const AdminPage = () => {
           >
             <RealTimeChart 
               data={realTimeStats.totalUsers} 
-              title={t('admin.charts.usersRealTime')} 
+              title={'users Real Time'} 
               color="blue" 
             />
             <RealTimeChart 
               data={realTimeStats.totalCards} 
-              title={t('admin.charts.cardsRealTime')} 
+              title={'cards Real Time'} 
               color="green" 
             />
             <RealTimeChart 
               data={realTimeStats.totalLikes} 
-              title={t('admin.charts.likesRealTime')} 
+              title={'likes Real Time'} 
               color="red" 
             />
           </motion.div>
@@ -242,11 +240,11 @@ const AdminPage = () => {
           >
             <div className="flex space-x-4 bg-black/20 rounded-lg p-2">
               {[
-                { id: 'overview', label: t('admin.tabs.overview') },
-                { id: 'realtime', label: t('admin.tabs.realtime') },
-                { id: 'users', label: t('admin.tabs.users') },
-                { id: 'cards', label: t('admin.tabs.cards') },
-                { id: 'reports', label: t('admin.tabs.reports') }
+                { id: 'overview', label: 'overview' },
+                { id: 'realtime', label: 'realtime' },
+                { id: 'users', label: 'users' },
+                { id: 'cards', label: 'cards' },
+                { id: 'reports', label: 'reports' }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -275,42 +273,42 @@ const AdminPage = () => {
               
               {/* Quick Actions */}
               <GlassCard className="p-6">
-                <h3 className="text-xl font-bold text-white mb-6">{t('admin.quickActions')}</h3>
+                <h3 className="text-xl font-bold text-white mb-6">{'quick Actions'}</h3>
                 <div className="space-y-4">
                   <GlassButton 
                     onClick={() => simulateActivity('user_registered', { 
-                      message: t('admin.simulation.newUserMessage'), 
-                      user: t('admin.simulation.newUser'),
+                      message: 'new User Message', 
+                      user: 'new User',
                       icon: 'user' 
                     })}
                     className="w-full justify-center"
                   >
                     <UserGroupIcon className="h-5 w-5 ml-2" />
-                    {t('admin.simulation.simulateNewUser')}
+                    {'simulate New User'}
                   </GlassButton>
                   
                   <GlassButton 
                     onClick={() => simulateActivity('card_created', { 
-                      message: t('admin.simulation.newCardMessage'), 
-                      user: t('admin.simulation.cardCreator'),
+                      message: 'new Card Message', 
+                      user: 'card Creator',
                       icon: 'card' 
                     })}
                     className="w-full justify-center"
                   >
                     <CreditCardIcon className="h-5 w-5 ml-2" />
-                    {t('admin.simulation.simulateNewCard')}
+                    {'simulate New Card'}
                   </GlassButton>
                   
                   <GlassButton 
                     onClick={() => simulateActivity('card_liked', { 
-                      message: t('admin.simulation.newLikeMessage'), 
-                      user: t('admin.simulation.fan'),
+                      message: 'new Like Message', 
+                      user: 'fan',
                       icon: 'like' 
                     })}
                     className="w-full justify-center"
                   >
                     <HeartIcon className="h-5 w-5 ml-2" />
-                    {t('admin.simulation.simulateNewLike')}
+                    {'simulate New Like'}
                   </GlassButton>
                   
                   <GlassButton 
@@ -318,7 +316,7 @@ const AdminPage = () => {
                     className="w-full justify-center bg-green-500/20 border-green-500/30"
                   >
                     <ArrowPathIcon className="h-5 w-5 ml-2" />
-                    {t('admin.refreshStats')}
+                    {'refresh Stats'}
                   </GlassButton>
                 </div>
               </GlassCard>
@@ -335,25 +333,25 @@ const AdminPage = () => {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <RealTimeChart 
                   data={realTimeStats.totalViews} 
-                  title={t('admin.charts.viewsRealTime')} 
+                  title={'views Real Time'} 
                   color="purple" 
                 />
                 <RealTimeChart 
                   data={realTimeStats.activeUsers} 
-                  title={t('admin.charts.activeUsers')} 
+                  title={'active Users'} 
                   color="orange" 
                 />
               </div>
               
               {/* System Health */}
               <GlassCard className="p-6">
-                <h3 className="text-xl font-bold text-white mb-6">{t('admin.systemStatus')}</h3>
+                <h3 className="text-xl font-bold text-white mb-6">{'system Status'}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   {[
-                    { metric: t('admin.metrics.uptime'), value: '99.9%', status: 'good' },
-                    { metric: t('admin.metrics.responseTime'), value: '120ms', status: 'good' },
-                    { metric: t('admin.metrics.serverUsage'), value: '45%', status: 'warning' },
-                    { metric: t('admin.metrics.databaseUsage'), value: '67%', status: 'good' }
+                    { metric: 'uptime', value: '99.9%', status: 'good' },
+                    { metric: 'response Time', value: '120ms', status: 'good' },
+                    { metric: 'server Usage', value: '45%', status: 'warning' },
+                    { metric: 'database Usage', value: '67%', status: 'good' }
                   ].map((metric, index) => (
                     <div key={index} className="p-4 bg-white/5 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
@@ -382,7 +380,7 @@ const AdminPage = () => {
                   <MagnifyingGlassIcon className="h-5 w-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
-                    placeholder={t('admin.searchUsers')}
+                    placeholder={'search Users'}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full bg-black/20 border border-white/20 rounded-lg px-10 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400"
@@ -393,9 +391,9 @@ const AdminPage = () => {
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="bg-black/20 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-400"
                 >
-                  <option value="all">{t('admin.filters.allStatuses')}</option>
-                  <option value="active">{t('admin.filters.active')}</option>
-                  <option value="suspended">{t('admin.filters.suspended')}</option>
+                  <option value="all">{'all Statuses'}</option>
+                  <option value="active">{'active'}</option>
+                  <option value="suspended">{'suspended'}</option>
                 </select>
               </div>
 
@@ -405,12 +403,12 @@ const AdminPage = () => {
                   <table className="w-full">
                     <thead className="bg-black/20">
                       <tr>
-                        <th className="px-6 py-4 text-right text-white font-medium">{t('admin.table.name')}</th>
-                        <th className="px-6 py-4 text-right text-white font-medium">{t('admin.table.email')}</th>
-                        <th className="px-6 py-4 text-right text-white font-medium">{t('admin.table.role')}</th>
-                        <th className="px-6 py-4 text-right text-white font-medium">{t('admin.table.status')}</th>
-                        <th className="px-6 py-4 text-right text-white font-medium">{t('admin.table.cards')}</th>
-                        <th className="px-6 py-4 text-right text-white font-medium">{t('admin.table.actions')}</th>
+                        <th className="px-6 py-4 text-right text-white font-medium">{'name'}</th>
+                        <th className="px-6 py-4 text-right text-white font-medium">{'email'}</th>
+                        <th className="px-6 py-4 text-right text-white font-medium">{'role'}</th>
+                        <th className="px-6 py-4 text-right text-white font-medium">{'status'}</th>
+                        <th className="px-6 py-4 text-right text-white font-medium">{'cards'}</th>
+                        <th className="px-6 py-4 text-right text-white font-medium">{'actions'}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -424,7 +422,7 @@ const AdminPage = () => {
                                 ? 'bg-purple-500/20 text-purple-300' 
                                 : 'bg-blue-500/20 text-blue-300'
                             }`}>
-                              {user.role === 'business' ? t('admin.roles.business') : t('admin.roles.user')}
+                              {user.role === 'business' ? 'business' : 'user'}
                             </span>
                           </td>
                           <td className="px-6 py-4">
@@ -433,7 +431,7 @@ const AdminPage = () => {
                                 ? 'bg-green-500/20 text-green-300' 
                                 : 'bg-red-500/20 text-red-300'
                             }`}>
-                              {user.status === 'active' ? t('admin.status.active') : t('admin.status.suspended')}
+                              {user.status === 'active' ? 'active' : 'suspended'}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-white">{user.cardsCount}</td>
@@ -447,10 +445,10 @@ const AdminPage = () => {
                                     : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
                                 }`}
                               >
-                                {user.status === 'active' ? t('admin.actions.suspend') : t('admin.actions.activate')}
+                                {user.status === 'active' ? 'suspend' : 'activate'}
                               </button>
                               <button className="bg-blue-500/20 text-blue-300 hover:bg-blue-500/30 px-3 py-1 rounded text-sm">
-                                {t('admin.actions.view')}
+                                {'view'}
                               </button>
                             </div>
                           </td>
@@ -474,7 +472,7 @@ const AdminPage = () => {
                   <MagnifyingGlassIcon className="h-5 w-5 absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <input
                     type="text"
-                    placeholder={t('admin.searchCards')}
+                    placeholder={'search Cards'}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="w-full bg-black/20 border border-white/20 rounded-lg px-10 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-blue-400"
@@ -485,10 +483,10 @@ const AdminPage = () => {
                   onChange={(e) => setFilterStatus(e.target.value)}
                   className="bg-black/20 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-400"
                 >
-                  <option value="all">{t('admin.filters.allStatuses')}</option>
-                  <option value="active">{t('admin.filters.active')}</option>
-                  <option value="reported">{t('admin.filters.reported')}</option>
-                  <option value="suspended">{t('admin.filters.suspended')}</option>
+                  <option value="all">{'all Statuses'}</option>
+                  <option value="active">{'active'}</option>
+                  <option value="reported">{'reported'}</option>
+                  <option value="suspended">{'suspended'}</option>
                 </select>
               </div>
 
@@ -503,25 +501,25 @@ const AdminPage = () => {
                         card.status === 'reported' ? 'bg-yellow-500/20 text-yellow-300' :
                         'bg-red-500/20 text-red-300'
                       }`}>
-                        {card.status === 'active' ? t('admin.status.active') : 
-                         card.status === 'reported' ? t('admin.status.reported') : t('admin.status.suspended')}
+                        {card.status === 'active' ? 'active' : 
+                         card.status === 'reported' ? 'reported' : 'suspended'}
                       </span>
                     </div>
                     
-                    <p className="text-gray-300 text-sm">{t('admin.cardOwner')}: {card.owner}</p>
+                    <p className="text-gray-300 text-sm">{'card Owner'}: {card.owner}</p>
                     
                     <div className="flex justify-between items-center text-sm text-gray-400 mb-4">
-                      <span>{card.views} {t('admin.views')}</span>
-                      <span>{card.likes} {t('admin.likes')}</span>
+                      <span>{card.views} {'views'}</span>
+                      <span>{card.likes} {'likes'}</span>
                       {card.reports > 0 && (
-                        <span className="text-red-400">{card.reports} {t('admin.reports')}</span>
+                        <span className="text-red-400">{card.reports} {'Reports'}</span>
                       )}
                     </div>
                     
                     <div className="flex space-x-2">
                       <button className="flex-1 bg-blue-500/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-500/30 transition-colors flex items-center justify-center">
                         <EyeIcon className="h-4 w-4 ml-2" />
-                        {t('admin.actions.view')}
+                        {'view'}
                       </button>
                       <button
                         onClick={() => handleCardAction(card.id, card.status === 'active' ? 'suspend' : 'approve')}
@@ -531,7 +529,7 @@ const AdminPage = () => {
                             : 'bg-green-500/20 text-green-300 hover:bg-green-500/30'
                         }`}
                       >
-                        {card.status === 'active' ? t('admin.actions.suspend') : t('admin.actions.approve')}
+                        {card.status === 'active' ? 'suspend' : 'approve'}
                       </button>
                     </div>
                   </GlassCard>
@@ -547,7 +545,7 @@ const AdminPage = () => {
             >
               <GlassCard className="overflow-hidden">
                 <div className="p-6 border-b border-white/10">
-                  <h3 className="text-xl font-bold text-white">{t('admin.pendingReports')}</h3>
+                  <h3 className="text-xl font-bold text-white">{'pending Reports'}</h3>
                 </div>
                 <div className="divide-y divide-white/10">
                   {reports.map((report) => (
@@ -555,16 +553,16 @@ const AdminPage = () => {
                       <div className="flex justify-between items-start mb-4">
                         <div>
                           <h4 className="text-lg font-semibold text-white mb-2">{report.cardTitle}</h4>
-                          <p className="text-gray-300 text-sm">{t('admin.reportedBy')}: {report.reportedBy}</p>
-                          <p className="text-gray-300 text-sm">{t('admin.reason')}: {report.reason}</p>
+                          <p className="text-gray-300 text-sm">{'reported By'}: {report.reportedBy}</p>
+                          <p className="text-gray-300 text-sm">{'reason'}: {report.reason}</p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-sm ${
                           report.status === 'pending' ? 'bg-yellow-500/20 text-yellow-300' :
                           report.status === 'resolved' ? 'bg-green-500/20 text-green-300' :
                           'bg-red-500/20 text-red-300'
                         }`}>
-                          {report.status === 'pending' ? t('admin.status.pending') : 
-                           report.status === 'resolved' ? t('admin.status.resolved') : t('admin.status.rejected')}
+                          {report.status === 'pending' ? 'pending' : 
+                           report.status === 'resolved' ? 'resolved' : 'rejected'}
                         </span>
                       </div>
                       
@@ -574,16 +572,16 @@ const AdminPage = () => {
                             onClick={() => handleReportAction(report.id, 'resolved')}
                             className="bg-green-500/20 text-green-300 px-4 py-2 rounded hover:bg-green-500/30 transition-colors"
                           >
-                            {t('admin.actions.approveReport')}
+                            {'approve Report'}
                           </button>
                           <button
                             onClick={() => handleReportAction(report.id, 'rejected')}
                             className="bg-red-500/20 text-red-300 px-4 py-2 rounded hover:bg-red-500/30 transition-colors"
                           >
-                            {t('admin.actions.rejectReport')}
+                            {'reject Report'}
                           </button>
                           <button className="bg-blue-500/20 text-blue-300 px-4 py-2 rounded hover:bg-blue-500/30 transition-colors">
-                            {t('admin.actions.viewCard')}
+                            {'view Card'}
                           </button>
                         </div>
                       )}

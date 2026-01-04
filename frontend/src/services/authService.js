@@ -13,7 +13,7 @@ const authAPI = axios.create({
 });
 
 export const authService = {
-  // se connecter
+  // Login user
   login: async (credentials) => {
     try {
       const response = await authAPI.post('/login', credentials);
@@ -23,14 +23,14 @@ export const authService = {
         safeSetItem(STORAGE_KEYS.USER, response.data.user);
         return response.data;
       } else {
-        throw new Error(response.data.message || 'כשל בהתחברות');
+        throw new Error(response.data.message || 'Login failed');
       }
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'שגיאת רשת');
+      throw new Error(error.response?.data?.message || error.message || 'Network error');
     }
   },
 
-  // Create un compte
+  // Register new user
   register: async (userData) => {
     try {
       const response = await authAPI.post('/register', userData);
@@ -40,38 +40,38 @@ export const authService = {
         safeSetItem(STORAGE_KEYS.USER, response.data.user);
         return response.data;
       } else {
-        throw new Error(response.data.message || 'כשל ברישום');
+        throw new Error(response.data.message || 'Registration failed');
       }
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'שגיאת רשת');
+      throw new Error(error.response?.data?.message || error.message || 'Network error');
     }
   },
 
-  // se déconnecter
+  // Logout user
   logout: () => {
     localStorage.removeItem(STORAGE_KEYS.TOKEN);
     localStorage.removeItem(STORAGE_KEYS.USER);
     window.location.href = '/';
   },
 
-  // get l'user actuel
+  // Get current user
   getCurrentUser: () => {
     return safeGetItem(STORAGE_KEYS.USER);
   },
 
-  // get le token
+  // Get token
   getToken: () => {
     return safeGetItem(STORAGE_KEYS.TOKEN);
   },
 
-  // Verify si connecté
+  // Check if authenticated
   isAuthenticated: () => {
     const user = safeGetItem(STORAGE_KEYS.USER);
     const token = safeGetItem(STORAGE_KEYS.TOKEN);
     return !!(user && token);
   },
 
-  // get le profil
+  // Get user profile
   getProfile: async () => {
     try {
       const token = safeGetItem(STORAGE_KEYS.TOKEN);
@@ -80,11 +80,11 @@ export const authService = {
       });
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'שגיאה בטעינת פרופיל');
+      throw new Error(error.response?.data?.message || 'Error loading profile');
     }
   },
 
-  // Update le profil
+  // Update user profile
   updateProfile: async (profileData) => {
     try {
       const token = safeGetItem(STORAGE_KEYS.TOKEN);
@@ -97,14 +97,14 @@ export const authService = {
         safeSetItem(STORAGE_KEYS.USER, updatedUser);
         return response.data;
       } else {
-        throw new Error(response.data.message || 'שגיאה בעדכון פרופיל');
+        throw new Error(response.data.message || 'Error updating profile');
       }
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'שגיאה בעדכון פרופיל');
+      throw new Error(error.response?.data?.message || error.message || 'Error updating profile');
     }
   },
 
-  // changer le mot de passe
+  // Change password
   changePassword: async (currentPassword, newPassword) => {
     try {
       const token = safeGetItem(STORAGE_KEYS.TOKEN);
@@ -117,7 +117,7 @@ export const authService = {
       
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || error.message || 'שגיאה בשינוי סיסמה');
+      throw new Error(error.response?.data?.message || error.message || 'Error changing password');
     }
   }
 };

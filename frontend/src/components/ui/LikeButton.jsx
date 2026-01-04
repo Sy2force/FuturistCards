@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../../context/AuthContext';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useFavorites } from '../../context/FavoritesContext';
 
 const LikeButton = ({ 
@@ -14,7 +13,6 @@ const LikeButton = ({
   onLikeChange = null
 }) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const { toggleFavorite, isFavorite } = useFavorites();
   const [likeCount, setLikeCount] = useState(() => {
     // Get initial like count from localStorage or generate random
@@ -104,7 +102,7 @@ const LikeButton = ({
         whileHover={{ scale: loading ? 1 : 1.05 }}
         whileTap={{ scale: loading ? 1 : 0.95 }}
         initial={false}
-        title={!user ? t('auth.loginRequired') : (isLiked ? t('likes.unlike') : t('likes.like'))}
+        title={!user ? 'login Required' : (isLiked ? 'unlike' : 'like')}
         data-testid="like-button-action"
       >
         <AnimatePresence mode="wait">
@@ -162,7 +160,7 @@ const LikeButton = ({
             className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50"
           >
             <div className="bg-red-600 text-white text-xs px-3 py-2 rounded-lg shadow-lg whitespace-nowrap">
-              {!user ? t('auth.loginRequired') : t('common.error')}
+              {!user ? 'login Required' : 'Error'}
               <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600"></div>
             </div>
           </motion.div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useFavorites } from '../../context/FavoritesContext';
 import LikeButton from '../ui/LikeButton';
 
@@ -9,7 +8,6 @@ const Card = ({
   onEdit, 
   showActions = false 
 }) => {
-  const { t } = useTranslation();
   const { toggleFavorite, isFavorite } = useFavorites();
   
   return (
@@ -44,7 +42,7 @@ const Card = ({
                 </svg>
               </div>
               <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">{card.title}</p>
-              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? card.category || card.category : t('common.category')}</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs">{card.category ? card.category || card.category : 'Category'}</p>
             </div>
           </div>
         </div>
@@ -69,12 +67,12 @@ const Card = ({
             <svg className="w-4 h-4 inline mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
             </svg>
-            <span className="mr-2">{card.subtitle || t('common.position')}</span>
+            <span className="mr-2">{card.subtitle || 'position'}</span>
             <span className="text-gray-400">•</span>
             <svg className="w-4 h-4 inline ml-2 mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span>{card.category ? card.category || card.category : t('common.category')}</span>
+            <span>{card.category ? card.category || card.category : 'Category'}</span>
           </div>
           <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 leading-relaxed">
             {card.description}
@@ -104,7 +102,7 @@ const Card = ({
               <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
               </svg>
-              <span className="truncate max-w-[60px]">{t('common.website')}</span>
+              <span className="truncate max-w-[60px]">{'website'}</span>
             </div>
           )}
         </div>
@@ -124,7 +122,7 @@ const Card = ({
                   onClick={() => onEdit(card._id || card.id)}
                   data-testid="edit-card-btn"
                   className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200 shadow-sm hover:scale-110"
-                  aria-label={t('cards.editCard')}
+                  aria-label={'edit Card'}
                 >
                   <span className="text-lg">✏️</span>
                 </button>
@@ -134,7 +132,7 @@ const Card = ({
                   onClick={() => onDelete(card._id || card.id)}
                   data-testid="delete-card-btn"
                   className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 shadow-sm hover:scale-110"
-                  aria-label={t('cards.deleteCard')}
+                  aria-label={'delete Card'}
                 >
                   <span className="text-lg">🗑️</span>
                 </button>

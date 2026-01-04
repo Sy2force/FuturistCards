@@ -15,10 +15,9 @@ const userRoutes = require("./routes/userRoutes");
 const { 
   generalLimiter, 
   authLimiter, 
-  registerLimiter, 
-  cardLimiter 
+  apiLimiter 
 } = require('./middleware/rateLimiter');
-const { errorHandler } = require("./middleware/errorHandler");
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -80,8 +79,7 @@ app.use(compression());
 // Apply rate limiting
 app.use('/api', generalLimiter);
 app.use('/api/auth/login', authLimiter);
-app.use('/api/auth/register', registerLimiter);
-app.use('/api/cards', cardLimiter);
+app.use('/api/auth/register', authLimiter);
 
 // pour parser le JSON
 app.use(express.json({ strict: false }));

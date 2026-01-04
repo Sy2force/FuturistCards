@@ -4,17 +4,19 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useTranslation } from "../hooks/useTranslation";
 import { useFavorites } from '../context/FavoritesContext';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, EyeIcon } from '@heroicons/react/24/solid';
 import LikeButton from '../components/ui/LikeButton';
 
 const FavoritesPage = () => {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const { isDark } = useRoleTheme();
   const { favorites, getFavoriteCards } = useFavorites();
+  
+  // Set document title
+  useDocumentTitle('Favorites | FuturistCards');
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -50,9 +52,9 @@ const FavoritesPage = () => {
         {
           id: '1',
           _id: '1',
-          title: t('mockData.favorites.card1.title'),
-          subtitle: t('mockData.favorites.card1.subtitle'),
-          description: t('mockData.favorites.card1.description'),
+          title: 'title',
+          subtitle: 'subtitle',
+          description: 'description',
           image: null,
           views: 245,
           likes: parseInt(localStorage.getItem('card_likes_1') || '18'),
@@ -62,16 +64,16 @@ const FavoritesPage = () => {
           accentColor: '#3b82f6',
           category: 'technology',
           author: {
-            name: t('mockData.favorites.card1.author'),
+            name: 'author',
             avatar: null
           }
         },
         {
           id: '2',
           _id: '2',
-          title: t('mockData.favorites.card2.title'),
-          subtitle: t('mockData.favorites.card2.subtitle'),
-          description: t('mockData.favorites.card2.description'),
+          title: 'title',
+          subtitle: 'subtitle',
+          description: 'description',
           image: null,
           views: 189,
           likes: parseInt(localStorage.getItem('card_likes_2') || '24'),
@@ -81,16 +83,16 @@ const FavoritesPage = () => {
           accentColor: '#f59e0b',
           category: 'design',
           author: {
-            name: t('mockData.favorites.card2.author'),
+            name: 'author',
             avatar: null
           }
         },
         {
           id: '3',
           _id: '3',
-          title: t('mockData.favorites.card3.title'),
-          subtitle: t('mockData.favorites.card3.subtitle'),
-          description: t('mockData.favorites.card3.description'),
+          title: 'title',
+          subtitle: 'subtitle',
+          description: 'description',
           image: null,
           views: 156,
           likes: parseInt(localStorage.getItem('card_likes_3') || '31'),
@@ -100,7 +102,7 @@ const FavoritesPage = () => {
           accentColor: '#fbbf24',
           category: 'business',
           author: {
-            name: t('mockData.favorites.card3.author'),
+            name: 'author',
             avatar: null
           }
         }
@@ -114,7 +116,7 @@ const FavoritesPage = () => {
       
       setCards(favoriteCards);
     } catch (error) {
-      setError(t('favorites.loadError'));
+      setError('load Error');
     } finally {
       setLoading(false);
     }
@@ -173,11 +175,11 @@ const FavoritesPage = () => {
     return (
       <>
         <Helmet>
-          <title>{t('auth.loginRequired')} - {t('common.siteName')}</title>
+          <title>{'login Required'} - {'site Name'}</title>
         </Helmet>
         <motion.div 
           className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4"
-          dir="rtl" lang="he"
+          dir="ltr" lang="en"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
@@ -195,23 +197,23 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-12 h-12 text-white" />
             </motion.div>
             <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-              {t('unauthorized.title')}
+              {'title'}
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-8">
-              {t('unauthorized.description')}
+              {'description'}
             </p>
             <motion.div className="space-y-4">
               <Link 
                 to="/login"
                 className="block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                {t('unauthorized.login')}
+                {'login'}
               </Link>
               <Link 
                 to="/register"
                 className="block bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100 px-8 py-3 rounded-xl font-medium transition-all duration-200"
               >
-                {t('navbar.register')}
+                {'Register'}
               </Link>
             </motion.div>
           </motion.div>
@@ -223,13 +225,13 @@ const FavoritesPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('favorites.title')} - {t('common.siteName')}</title>
-        <meta name="description" content={t('favorites.metaDescription')} />
+        <title>{'title'} - {'site Name'}</title>
+        <meta name="description" content={'meta Description'} />
       </Helmet>
 
       <motion.div 
         className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 py-12"
-        dir="rtl" lang="he"
+        dir="ltr" lang="en"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -246,10 +248,10 @@ const FavoritesPage = () => {
               <HeartSolidIcon className="w-8 h-8 text-white" />
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 bg-clip-text text-transparent mb-4">
-              {t('favorites.title')}
+              {'title'}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {t('favorites.noFavoritesDescription')}
+              {'no Favorites Description'}
             </p>
           </motion.div>
 
@@ -267,7 +269,7 @@ const FavoritesPage = () => {
               whileTap={{ scale: 0.95 }}
             >
               <ArrowLeftIcon className="w-5 h-5 mr-2" />
-              {t('navigation.backToMyCards')}
+              {'back To My Cards'}
             </motion.button>
           </motion.div>
 
@@ -279,7 +281,7 @@ const FavoritesPage = () => {
               transition={{ delay: 0.3, duration: 0.5 }}
             >
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-              <span className="ml-3 text-gray-600 dark:text-gray-400">{t('favorites.loading')}</span>
+              <span className="ml-3 text-gray-600 dark:text-gray-400">{'loading'}</span>
             </motion.div>
           ) : cards.length === 0 ? (
             <motion.div 
@@ -296,10 +298,10 @@ const FavoritesPage = () => {
                 💖
               </motion.div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">
-                {t('favorites.noFavorites')}
+                {'no Favorites'}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto">
-                {t('favorites.noFavoritesDescription')}
+                {'no Favorites Description'}
               </p>
               <motion.div className="space-y-4">
                 <Link 
@@ -307,7 +309,7 @@ const FavoritesPage = () => {
                   className="inline-block bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-3 rounded-xl font-medium transition-all duration-200"
                 >
                   <EyeIcon className="w-5 h-5 inline mr-2" />
-                  {t('favorites.exploreCards')}
+                  {'explore Cards'}
                 </Link>
               </motion.div>
             </motion.div>
@@ -331,9 +333,9 @@ const FavoritesPage = () => {
                     onChange={(e) => setSortBy(e.target.value)}
                     className={`w-full px-4 py-2 rounded-lg border ${isDark ? 'bg-gray-800 border-gray-600 text-white' : 'bg-white border-gray-300 text-gray-900'} focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
                   >
-                    <option value="recent">{t('favorites.sortRecent')}</option>
-                    <option value="likes">{t('favorites.sortPopular')}</option>
-                    <option value="alphabetical">{t('favorites.sortAlphabetical')}</option>
+                    <option value="recent">{'sort Recent'}</option>
+                    <option value="likes">{'sort Popular'}</option>
+                    <option value="alphabetical">{'sort Alphabetical'}</option>
                   </select>
                 </div>
                 
@@ -391,7 +393,7 @@ const FavoritesPage = () => {
                       />
                       <span className="flex items-center">
                         <EyeIcon className="w-4 h-4 mr-1" />
-                        {getCardStats(card._id).views || 0} {t('favorites.views')}
+                        {getCardStats(card._id).views || 0} {'views'}
                       </span>
                     </div>
 
@@ -401,7 +403,7 @@ const FavoritesPage = () => {
                         to={`/cards/${card._id}`}
                         className="btn-primary flex-1 text-sm text-center"
                       >
-                        {t('favorites.viewDetails')}
+                        {'view Details'}
                       </Link>
                       <LikeButton 
                         cardId={card._id}

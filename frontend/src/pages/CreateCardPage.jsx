@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from '../hooks/useTranslation';
 import { useAuth } from '../context/AuthContext';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import {
   UserIcon,
   EnvelopeIcon,
@@ -16,9 +16,11 @@ import {
 } from '@heroicons/react/24/outline';
 
 const CreateCardPage = () => {
-  const { t, language } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  
+  // Set document title
+  useDocumentTitle('Create Card | FuturistCards');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -94,8 +96,8 @@ const CreateCardPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('createCard.title')} - FuturistCards</title>
-        <meta name="description" content={t('createCard.metaDescription')} />
+        <title>{'title'} - FuturistCards</title>
+        <meta name="description" content={'meta Description'} />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir={language === 'he' ? 'rtl' : 'ltr'}>
@@ -109,10 +111,10 @@ const CreateCardPage = () => {
               className="text-center mb-8"
             >
               <h1 className="text-4xl font-bold text-white mb-4">
-                {t('createCard.title')}
+                {'title'}
               </h1>
               <p className="text-xl text-gray-300">
-                {t('createCard.subtitle')}
+                {'subtitle'}
               </p>
             </motion.div>
 
@@ -124,18 +126,18 @@ const CreateCardPage = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="bg-black/20 border border-white/20 rounded-2xl p-6 backdrop-blur-sm"
               >
-                <h2 className="text-2xl font-bold text-white mb-6">{t('createCard.cardDetails')}</h2>
+                <h2 className="text-2xl font-bold text-white mb-6">{'card Details'}</h2>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Image Upload */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.profileImage')}
+                      {'profile Image'}
                     </label>
                     <div className="flex items-center space-x-4 space-x-reverse">
                       <div className="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
                         {imagePreview ? (
-                          <img src={imagePreview} alt={t('createCard.imagePreview')} className="w-full h-full object-cover" />
+                          <img src={imagePreview} alt={'image Preview'} className="w-full h-full object-cover" />
                         ) : (
                           <PhotoIcon className="w-8 h-8 text-gray-400" />
                         )}
@@ -147,7 +149,7 @@ const CreateCardPage = () => {
                           onChange={handleImageChange}
                           className="hidden"
                         />
-                        {t('createCard.selectImage')}
+                        {'select Image'}
                       </label>
                     </div>
                   </div>
@@ -155,7 +157,7 @@ const CreateCardPage = () => {
                   {/* Name */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.fullName')} *
+                      {'full Name'} *
                     </label>
                     <div className="relative">
                       <UserIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -166,7 +168,7 @@ const CreateCardPage = () => {
                         onChange={handleInputChange}
                         required
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={t('createCard.fullNamePlaceholder')}
+                        placeholder={'full Name Placeholder'}
                       />
                     </div>
                   </div>
@@ -174,7 +176,7 @@ const CreateCardPage = () => {
                   {/* Title */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.jobTitle')} *
+                      {'job Title'} *
                     </label>
                     <input
                       type="text"
@@ -183,14 +185,14 @@ const CreateCardPage = () => {
                       onChange={handleInputChange}
                       required
                       className="w-full px-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={t('createCard.jobTitlePlaceholder')}
+                      placeholder={'job Title Placeholder'}
                     />
                   </div>
 
                   {/* Company */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.company')}
+                      {'company'}
                     </label>
                     <div className="relative">
                       <BuildingOfficeIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -200,7 +202,7 @@ const CreateCardPage = () => {
                         value={formData.company}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={t('createCard.companyPlaceholder')}
+                        placeholder={'company Placeholder'}
                       />
                     </div>
                   </div>
@@ -208,7 +210,7 @@ const CreateCardPage = () => {
                   {/* Email */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.email')} *
+                      {'email'} *
                     </label>
                     <div className="relative">
                       <EnvelopeIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -219,7 +221,7 @@ const CreateCardPage = () => {
                         onChange={handleInputChange}
                         required
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="example@email.com"
+                        placeholder={'email Placeholder'}
                       />
                     </div>
                   </div>
@@ -227,7 +229,7 @@ const CreateCardPage = () => {
                   {/* Phone */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.phone')}
+                      {'phone'}
                     </label>
                     <div className="relative">
                       <PhoneIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -237,7 +239,7 @@ const CreateCardPage = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="050-123-4567"
+                        placeholder={'phone Placeholder'}
                       />
                     </div>
                   </div>
@@ -245,7 +247,7 @@ const CreateCardPage = () => {
                   {/* Website */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.website')}
+                      {'website'}
                     </label>
                     <div className="relative">
                       <GlobeAltIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -255,7 +257,7 @@ const CreateCardPage = () => {
                         value={formData.website}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="https://example.com"
+                        placeholder={'website Placeholder'}
                       />
                     </div>
                   </div>
@@ -263,7 +265,7 @@ const CreateCardPage = () => {
                   {/* Address */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.address')}
+                      {'address'}
                     </label>
                     <div className="relative">
                       <MapPinIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -273,7 +275,7 @@ const CreateCardPage = () => {
                         value={formData.address}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={t('createCard.addressPlaceholder')}
+                        placeholder={'address Placeholder'}
                       />
                     </div>
                   </div>
@@ -281,7 +283,7 @@ const CreateCardPage = () => {
                   {/* Description */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {t('createCard.description')}
+                      {'description'}
                     </label>
                     <textarea
                       name="description"
@@ -289,17 +291,17 @@ const CreateCardPage = () => {
                       onChange={handleInputChange}
                       rows={3}
                       className="w-full px-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                      placeholder={t('createCard.descriptionPlaceholder')}
+                      placeholder={'description Placeholder'}
                     />
                   </div>
 
                   {/* Color Customization */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-white">{t('createCard.cardDesign')}</h3>
+                    <h3 className="text-lg font-semibold text-white">{'card Design'}</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-300">
-                          {t('createCard.backgroundColor')}
+                          {'background Color'}
                         </label>
                         <input
                           type="color"
@@ -311,7 +313,7 @@ const CreateCardPage = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-300">
-                          {t('createCard.textColor')}
+                          {'text Color'}
                         </label>
                         <input
                           type="color"
@@ -323,7 +325,7 @@ const CreateCardPage = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-300">
-                          {t('createCard.accentColor')}
+                          {'accent Color'}
                         </label>
                         <input
                           type="color"
@@ -347,12 +349,12 @@ const CreateCardPage = () => {
                     {isSubmitting ? (
                       <div className="flex items-center justify-center">
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2"></div>
-                        {t('createCard.creating')}
+                        {'creating'}
                       </div>
                     ) : (
                       <div className="flex items-center justify-center">
                         <PlusIcon className="w-5 h-5 ml-2" />
-                        {t('createCard.createButton')}
+                        {'create Button'}
                       </div>
                     )}
                   </motion.button>
@@ -366,7 +368,7 @@ const CreateCardPage = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="bg-black/20 border border-white/20 rounded-2xl p-6 backdrop-blur-sm"
               >
-                <h2 className="text-2xl font-bold text-white mb-6">{t('createCard.preview')}</h2>
+                <h2 className="text-2xl font-bold text-white mb-6">{'preview'}</h2>
                 
                 {/* Card Preview */}
                 <div className="relative">
@@ -378,7 +380,7 @@ const CreateCardPage = () => {
                       {/* Profile Image */}
                       <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden bg-gray-300">
                         {imagePreview ? (
-                          <img src={imagePreview} alt={t('createCard.profileImage')} className="w-full h-full object-cover" />
+                          <img src={imagePreview} alt={'profile Image'} className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full bg-gray-400 flex items-center justify-center">
                             <UserIcon className="w-8 h-8 text-gray-600" />
@@ -391,7 +393,7 @@ const CreateCardPage = () => {
                         className="text-xl font-bold mb-1"
                         style={{ color: formData.textColor }}
                       >
-                        {formData.name || t('createCard.fullNamePreview')}
+                        {formData.name || 'full Name Preview'}
                       </h3>
 
                       {/* Title */}
@@ -399,7 +401,7 @@ const CreateCardPage = () => {
                         className="text-sm mb-2"
                         style={{ color: formData.accentColor }}
                       >
-                        {formData.title || t('createCard.jobTitlePreview')}
+                        {formData.title || 'job Title Preview'}
                       </p>
 
                       {/* Company */}

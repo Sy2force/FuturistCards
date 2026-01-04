@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useAuth } from '../../context/AuthContext';
 import { validateEmail, validatePassword, validateName, isFormValid } from '../../utils/validation';
 
 const RegisterForm = ({ onSuccess }) => {
-  const { t } = useTranslation();
   const { register } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
@@ -37,7 +35,7 @@ const RegisterForm = ({ onSuccess }) => {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = t('validation.passwordMismatch');
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     setErrors(newErrors);
@@ -79,7 +77,7 @@ const RegisterForm = ({ onSuccess }) => {
         onSuccess(result.user);
       }
     } catch (error) {
-      setErrors({ general: error.message || t('auth.registerError') });
+      setErrors({ general: error.message || 'Registration failed' });
     } finally {
       setLoading(false);
     }
@@ -100,7 +98,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Name */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          {t('auth.fullName')}
+          Full Name
         </label>
         <input
           type="text"
@@ -110,7 +108,7 @@ const RegisterForm = ({ onSuccess }) => {
           className={`w-full px-4 py-3 bg-white/5 border ${
             errors.name ? 'border-red-500' : 'border-gray-600'
           } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300`}
-          placeholder={t('auth.fullNamePlaceholder')}
+          placeholder="Enter your full name"
           disabled={loading}
           data-testid="register-name"
         />
@@ -122,7 +120,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          {t('auth.email')}
+          Email
         </label>
         <input
           type="email"
@@ -132,7 +130,7 @@ const RegisterForm = ({ onSuccess }) => {
           className={`w-full px-4 py-3 bg-white/5 border ${
             errors.email ? 'border-red-500' : 'border-gray-600'
           } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300`}
-          placeholder={t('auth.emailPlaceholder')}
+          placeholder="Enter your email address"
           disabled={loading}
           data-testid="register-email"
         />
@@ -144,7 +142,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Role Selection */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          {t('auth.accountType')}
+          Account Type
         </label>
         <select
           name="role"
@@ -154,15 +152,15 @@ const RegisterForm = ({ onSuccess }) => {
           disabled={loading}
           data-testid="register-role"
         >
-          <option value="user" className="bg-gray-800">{t('auth.userAccount')}</option>
-          <option value="business" className="bg-gray-800">{t('auth.businessAccount')}</option>
+          <option value="user">Regular User</option>
+          <option value="business">Business</option>
         </select>
       </div>
 
       {/* Password */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          {t('auth.password')}
+          Password
         </label>
         <div className="relative">
           <input
@@ -173,7 +171,7 @@ const RegisterForm = ({ onSuccess }) => {
             className={`w-full px-4 py-3 bg-white/5 border ${
               errors.password ? 'border-red-500' : 'border-gray-600'
             } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 pr-12`}
-            placeholder={t('auth.passwordPlaceholder')}
+            placeholder="Create a strong password"
             disabled={loading}
             data-testid="register-password"
           />
@@ -203,7 +201,7 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Confirm Password */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          {t('auth.confirmPassword')}
+          Confirm Password
         </label>
         <div className="relative">
           <input
@@ -214,7 +212,7 @@ const RegisterForm = ({ onSuccess }) => {
             className={`w-full px-4 py-3 bg-white/5 border ${
               errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
             } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 pr-12`}
-            placeholder={t('auth.confirmPasswordPlaceholder')}
+            placeholder="Confirm your password"
             disabled={loading}
             data-testid="register-confirm-password"
           />
@@ -244,14 +242,14 @@ const RegisterForm = ({ onSuccess }) => {
       {/* Submit Button */}
       <button
         type="submit"
-        disabled={loading || !isFormValid(errors, formData, ['name', 'email', 'password', t('auth.confirmPassword')])}
+        disabled={loading || !isFormValid(errors, formData, ['name', 'email', 'password', 'confirmPassword'])}
         className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:scale-100 disabled:cursor-not-allowed flex items-center justify-center"
         data-testid="register-submit"
       >
         {loading ? (
           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
         ) : (
-          t('auth.registerButton')
+          'Create Account'
         )}
       </button>
     </form>

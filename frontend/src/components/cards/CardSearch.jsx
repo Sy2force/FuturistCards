@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from "../../hooks/useTranslation";
 
 // Search configuration
 const SEARCH_CONFIG = {
@@ -8,7 +7,6 @@ const SEARCH_CONFIG = {
 };
 
 const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsCount = 0 }) => {
-  const { t } = useTranslation();
   const [query, setQuery] = useState(initialQuery);
   const [filters, setFilters] = useState({
     category: '',
@@ -17,7 +15,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
   });
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // חיפוש עם השהיה
+  // Search with debounce delay
   const debouncedSearch = useCallback((searchQuery, searchFilters) => {
     const timeoutId = setTimeout(() => {
       onSearch?.(searchQuery, searchFilters);
@@ -56,20 +54,20 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
 
   // Categories for filtering
   const categories = [
-    { value: '', label: t('cards.filters.allCategories') },
-    { value: 'business', label: t('cards.categories.business') },
-    { value: 'personal', label: t('cards.categories.personal') },
-    { value: 'creative', label: t('cards.categories.creative') },
-    { value: 'professional', label: t('cards.categories.professional') },
-    { value: 'networking', label: t('cards.categories.networking') }
+    { value: '', label: 'all Categories' },
+    { value: 'business', label: 'business' },
+    { value: 'personal', label: 'personal' },
+    { value: 'creative', label: 'creative' },
+    { value: 'professional', label: 'professional' },
+    { value: 'networking', label: 'networking' }
   ];
 
   // Sort options
   const sortOptions = [
-    { value: 'newest', label: t('cards.sort.newest') },
-    { value: 'oldest', label: t('cards.sort.oldest') },
-    { value: 'name', label: t('cards.sort.name') },
-    { value: 'popular', label: t('cards.sort.popular') }
+    { value: 'newest', label: 'newest' },
+    { value: 'oldest', label: 'oldest' },
+    { value: 'name', label: 'name' },
+    { value: 'popular', label: 'popular' }
   ];
 
   return (
@@ -87,7 +85,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
             type="text"
             value={query}
             onChange={handleQueryChange}
-            placeholder={t('cards.search.placeholder')}
+            placeholder={'placeholder'}
             className="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
           {query && (
@@ -139,7 +137,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
             {/* Category Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {t('cards.filters.category')}
+                {'category'}
               </label>
               <select
                 value={filters.category}
@@ -160,7 +158,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
                 onClick={clearFilters}
                 className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
               >
-                {t('cards.filters.clear')}
+                {'clear'}
               </button>
             </div>
           </div>
@@ -171,7 +169,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
       {(query || filters.category || filters.sortBy !== 'newest') && (
         <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
           <span className="text-sm text-gray-600 dark:text-gray-400 mr-2">
-            {t('cards.activeFilters')}:
+            {'active Filters'}:
           </span>
           {query && (
             <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -17,18 +16,17 @@ import {
 } from '@heroicons/react/24/outline';
 
 const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
-  const { t } = useTranslation();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   // Validation schema pour création rapide
   const schema = yup.object({
-    title: yup.string().required(t('miniCardForm.validation.titleRequired')),
-    description: yup.string().min(10, t('miniCardForm.validation.descriptionMin')).required(t('miniCardForm.validation.descriptionRequired')),
-    email: yup.string().email(t('miniCardForm.validation.emailInvalid')).required(t('miniCardForm.validation.emailRequired')),
-    phone: yup.string().required(t('miniCardForm.validation.phoneRequired')),
+    title: yup.string().required('title Required'),
+    description: yup.string().min(10, 'description Min').required('description Required'),
+    email: yup.string().email('email Invalid').required('email Required'),
+    phone: yup.string().required('phone Required'),
     company: yup.string(),
-    website: yup.string().url(t('miniCardForm.validation.websiteInvalid')),
+    website: yup.string().url('website Invalid'),
     address: yup.string()
   });
 
@@ -58,7 +56,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
       });
 
       if (!response.ok) {
-        throw new Error(t('createCard.error'));
+        throw new Error('error');
       }
 
       const result = await response.json();
@@ -76,7 +74,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
         onClose();
       }, 2000);
     } catch (error) {
-      toast.error(t('miniCardForm.errorMessage'));
+      toast.error('error Message');
     } finally {
       setIsSubmitting(false);
     }
@@ -108,10 +106,10 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-white" data-testid="mini-card-modal-title">
-                {t('miniCardForm.title')}
+                {'title'}
               </h2>
               <p className="text-gray-300 text-sm">
-                {t('miniCardForm.subtitle')}
+                {'subtitle'}
               </p>
             </div>
           </div>
@@ -137,7 +135,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <p className="text-green-400 font-medium">
-                {t('miniCardForm.successMessage')}
+                {'success Message'}
               </p>
             </div>
           </motion.div>
@@ -150,7 +148,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <UserIcon className="w-4 h-4 mr-2" />
-                {t('miniCardForm.fields.title')} *
+                {'title'} *
               </label>
               <input
                 {...register('title')}
@@ -158,7 +156,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="title"
                 data-testid="mini-card-title"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={t('miniCardForm.placeholders.title')}
+                placeholder={'title'}
               />
               {errors.title && (
                 <p className="mt-1 text-sm text-red-400">{errors.title.message}</p>
@@ -168,7 +166,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <SparklesIcon className="w-4 h-4 mr-2" />
-                {t('miniCardForm.fields.description')} *
+                {'description'} *
               </label>
               <textarea
                 {...register('description')}
@@ -176,7 +174,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="description"
                 data-testid="mini-card-description"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all resize-none"
-                placeholder={t('miniCardForm.placeholders.description')}
+                placeholder={'description'}
               />
               {errors.description && (
                 <p className="mt-1 text-sm text-red-400">{errors.description.message}</p>
@@ -189,7 +187,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <EnvelopeIcon className="w-4 h-4 mr-2" />
-                {t('miniCardForm.fields.email')} *
+                {'email'} *
               </label>
               <input
                 {...register('email')}
@@ -197,7 +195,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="email"
                 data-testid="mini-card-email"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={t('miniCardForm.placeholders.email')}
+                placeholder={'email'}
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
@@ -207,7 +205,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <PhoneIcon className="w-4 h-4 mr-2" />
-                {t('miniCardForm.fields.phone')} *
+                {'phone'} *
               </label>
               <input
                 {...register('phone')}
@@ -215,7 +213,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="phone"
                 data-testid="mini-card-phone"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={t('miniCardForm.placeholders.phone')}
+                placeholder={'phone'}
               />
               {errors.phone && (
                 <p className="mt-1 text-sm text-red-400">{errors.phone.message}</p>
@@ -228,7 +226,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <BuildingOfficeIcon className="w-4 h-4 mr-2" />
-                {t('miniCardForm.fields.company')}
+                {'company'}
               </label>
               <input
                 {...register('company')}
@@ -236,14 +234,14 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="company"
                 data-testid="mini-card-company"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={t('miniCardForm.placeholders.company')}
+                placeholder={'company'}
               />
             </div>
 
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <GlobeAltIcon className="w-4 h-4 mr-2" />
-                {t('miniCardForm.fields.website')}
+                {'website'}
               </label>
               <input
                 {...register('website')}
@@ -251,7 +249,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="website"
                 data-testid="mini-card-website"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={t('miniCardForm.placeholders.website')}
+                placeholder={'website'}
               />
               {errors.website && (
                 <p className="mt-1 text-sm text-red-400">{errors.website.message}</p>
@@ -262,7 +260,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
           <div>
             <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
               <MapPinIcon className="w-4 h-4 mr-2" />
-              {t('miniCardForm.fields.address')}
+              {'address'}
             </label>
             <input
               {...register('address')}
@@ -270,7 +268,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               name="address"
               data-testid="mini-card-address"
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-              placeholder={t('miniCardForm.placeholders.address')}
+              placeholder={'address'}
             />
           </div>
 
@@ -282,10 +280,10 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               </svg>
               <div>
                 <p className="text-blue-400 text-sm font-medium mb-1">
-                  {t('miniCardForm.info.title')}
+                  {'title'}
                 </p>
                 <p className="text-blue-300 text-sm">
-                  {t('miniCardForm.info.description')}
+                  {'description'}
                 </p>
               </div>
             </div>
@@ -304,12 +302,12 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               {isSubmitting ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  {t('miniCardForm.submitting')}
+                  {'submitting'}
                 </div>
               ) : (
                 <div className="flex items-center justify-center">
                   <PlusIcon className="w-5 h-5 mr-2" />
-                  {t('miniCardForm.submit')}
+                  {'submit'}
                 </div>
               )}
             </motion.button>
@@ -322,7 +320,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               className="px-6 py-3 bg-white/10 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/20 transition-all duration-300"
               data-testid="cancel-button"
             >
-              {t('miniCardForm.cancel')}
+              {'cancel'}
             </motion.button>
           </div>
         </form>

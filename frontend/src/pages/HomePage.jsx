@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from '../hooks/useTranslation';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -23,65 +22,64 @@ import GlassButton from '../components/ui/GlassButton';
 import MiniCardForm from '../components/forms/MiniCardForm';
 
 const HomePage = () => {
-  const { t, language } = useTranslation();
   const { isDark, currentTheme } = useRoleTheme();
   const { user } = useAuth();
   
   // Set document title
-  useDocumentTitle(t('nav.home'));
+  useDocumentTitle('Home | FuturistCards');
   const [showMiniCardForm, setShowMiniCardForm] = useState(false);
 
   const features = [
     {
       icon: SparklesIcon,
-      title: t('home.features.fast.title'),
-      description: t('home.features.fast.description'),
+      title: 'Fast and Easy',
+      description: 'Create a professional business card in minutes',
       color: 'from-blue-500 to-cyan-500'
     },
     {
       icon: CreditCardIcon,
-      title: t('home.features.beautiful.title'),
-      description: t('home.features.beautiful.description'),
+      title: 'Beautiful Design',
+      description: 'Stunning templates and customization options',
       color: 'from-purple-500 to-pink-500'
     },
     {
       icon: HeartIcon,
-      title: t('home.features.secure.title'),
-      description: t('home.features.secure.description'),
+      title: 'Safe and Secure',
+      description: 'Your data is protected with the highest security level',
       color: 'from-green-500 to-emerald-500'
     },
     {
       icon: GlobeAltIcon,
-      title: t('home.features.global.title'),
-      description: t('home.features.global.description'),
+      title: 'Global Reach',
+      description: 'Share your card with anyone, anywhere in the world',
       color: 'from-orange-500 to-red-500'
     }
   ];
 
   const stats = [
-    { number: '10K+', label: t('home.stats.users'), icon: UserGroupIcon },
-    { number: '50K+', label: t('home.stats.cards'), icon: CreditCardIcon },
-    { number: '99.9%', label: t('home.stats.uptime'), icon: BoltIcon },
-    { number: '4.9/5', label: t('home.stats.rating'), icon: StarIcon }
+    { number: '10K+', label: 'Users', icon: UserGroupIcon },
+    { number: '50K+', label: 'Cards', icon: CreditCardIcon },
+    { number: '99.9%', label: 'Uptime', icon: BoltIcon },
+    { number: '4.9/5', label: 'Rating', icon: StarIcon }
   ];
 
   const testimonials = [
     {
-      name: t('home.testimonials.john.name'),
-      role: t('home.testimonials.john.role'),
-      content: t('home.testimonials.john.content'),
+      name: 'John Cohen',
+      role: 'Marketing Manager',
+      content: 'This platform completely changed the way I network. The digital business cards are professional and impressive!',
       avatar: 'JD'
     },
     {
-      name: t('home.testimonials.sarah.name'),
-      role: t('home.testimonials.sarah.role'),
-      content: t('home.testimonials.sarah.content'),
+      name: 'Sarah Levy',
+      role: 'Entrepreneur',
+      content: 'Easy to use with amazing results. My clients are impressed with my innovative digital card.',
       avatar: 'SC'
     },
     {
-      name: t('home.testimonials.mike.name'),
-      role: t('home.testimonials.mike.role'),
-      content: t('home.testimonials.mike.content'),
+      name: 'Michael David',
+      role: 'Software Developer',
+      content: 'The advanced technology and modern design make this the perfect solution for tech professionals.',
       avatar: 'MT'
     }
   ];
@@ -89,11 +87,11 @@ const HomePage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('home.title')} - FuturistCards</title>
-        <meta name="description" content={t('home.subtitle')} />
+        <title>Advanced Digital Business Cards - FuturistCards</title>
+        <meta name="description" content="Create professional digital business cards easily and quickly" />
       </Helmet>
       
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" dir={language === 'he' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       {/* Hero Section */}
       <div className="relative overflow-hidden w-full pt-20">
         <div className="container mx-auto px-4 py-20">
@@ -117,20 +115,20 @@ const HomePage = () => {
                 <svg className="w-5 h-5 inline mr-2 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
-                {t('home.badge')}
+                Leading Platform
               </span>
             </motion.div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight text-white">
               <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                {user ? `${t('home.welcomeBack')}, ${user.name}!` : t('home.title')}
+                {user ? `Welcome Back, ${user.name}!` : 'Advanced Digital Business Cards'}
               </span>
             </h1>
             
             <p className="text-xl mb-12 max-w-4xl mx-auto leading-relaxed text-gray-300">
               {user ? 
-                t('home.loggedInSubtitle') : 
-                t('home.subtitle')
+                'Ready to create a new business card or manage your existing cards?' : 
+                'Create professional digital business cards easily and quickly'
               }
             </p>
             
@@ -150,7 +148,7 @@ const HomePage = () => {
                       className="px-8 py-4 text-lg font-semibold"
                     >
                       <SparklesIcon className="w-6 h-6 ml-3" />
-                      {t('home.buttons.createAdvanced')}
+                      Create Advanced Card
                     </GlassButton>
                   </motion.div>
                   
@@ -167,7 +165,7 @@ const HomePage = () => {
                       className="px-8 py-4 text-lg font-semibold"
                     >
                       <ChartBarIcon className="w-6 h-6 ml-3" />
-                      {t('home.buttons.dashboard')}
+                      Dashboard
                     </GlassButton>
                   </motion.div>
                 </>
@@ -185,7 +183,7 @@ const HomePage = () => {
                       className="px-8 py-4 text-lg font-semibold"
                     >
                       <SparklesIcon className="w-6 h-6 ml-3" />
-                      {t('home.buttons.createCard')}
+                      Create Your Card
                     </GlassButton>
                   </motion.div>
                   
@@ -202,7 +200,7 @@ const HomePage = () => {
                       className="px-8 py-4 text-lg font-semibold"
                     >
                       <UserGroupIcon className="w-6 h-6 ml-3" />
-                      {t('home.buttons.register')}
+                      Register Now
                     </GlassButton>
                   </motion.div>
                 </>
@@ -222,7 +220,7 @@ const HomePage = () => {
                   className="px-8 py-4 text-lg font-semibold"
                 >
                   <CreditCardIcon className="w-6 h-6 ml-3" />
-                  {t('home.buttons.browse')}
+                  Browse Cards
                 </GlassButton>
               </motion.div>
             </div>
@@ -239,15 +237,15 @@ const HomePage = () => {
                 <>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-green-400 font-medium">{t('home.status.connectedAs')}{user.role === 'admin' ? t('roles.admin') : user.role === 'business' ? t('roles.business') : t('roles.user')}</span>
+                    <span className="text-green-400 font-medium">Connected as {user.role === 'admin' ? 'Admin' : user.role === 'business' ? 'Business' : 'User'}</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CreditCardIcon className="w-5 h-5 text-blue-400" />
-                    {t('home.status.advancedTools')}
+                    Advanced Tools
                   </div>
                   <div className="flex items-center gap-2">
                     <ChartBarIcon className="w-5 h-5 text-purple-400" />
-                    {t('home.status.fullAnalytics')}
+                    Full Analytics
                   </div>
                 </>
               ) : (
@@ -255,15 +253,15 @@ const HomePage = () => {
                 <>
                   <div className="flex items-center gap-2">
                     <ShieldCheckIcon className="w-5 h-5 text-green-400" />
-                    {t('home.status.secure')}
+                    Secure
                   </div>
                   <div className="flex items-center gap-2">
                     <BoltIcon className="w-5 h-5 text-yellow-400" />
-                    {t('home.status.fast')}
+                    Fast
                   </div>
                   <div className="flex items-center gap-2">
                     <StarIcon className="w-5 h-5 text-blue-400" />
-                    {t('home.status.rating')}
+                    5.0 Rating
                   </div>
                 </>
               )}
@@ -282,10 +280,10 @@ const HomePage = () => {
             transition={{ duration: 0.8 }}
           >
             <h2 className="text-4xl font-bold mb-4 text-white">
-              {t('home.features.whyChooseUs')}
+              Why Choose Us?
             </h2>
             <p className="text-lg text-gray-300">
-              {t('home.features.uniqueAdvantages')}
+              Discover the advantages of our digital business cards
             </p>
           </motion.div>
 
@@ -347,10 +345,10 @@ const HomePage = () => {
           >
             <div className="text-center mb-12">
               <h2 className="text-4xl font-bold mb-4 text-white">
-                {t('home.testimonials.title')}
+                What Our Customers Say
               </h2>
               <p className="text-xl text-gray-300">
-                {t('home.testimonials.subtitle')}
+                Thousands of satisfied customers worldwide
               </p>
             </div>
             
@@ -405,9 +403,9 @@ const HomePage = () => {
               transition={{ duration: 0.6, delay: 1.2 }}
               className="text-white"
             >
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">{t('home.cta.title')}</h2>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Get Started?</h2>
               <p className="text-xl md:text-2xl mb-10 opacity-90 max-w-2xl mx-auto">
-                {t('home.cta.subtitle')}
+                Join thousands of professionals who have already upgraded their networking
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -421,7 +419,7 @@ const HomePage = () => {
                     data-testid="cta-register"
                   >
                     <UserGroupIcon className="w-6 h-6 ml-2" />
-                    {t('home.cta.createAccount')}
+                    Create Free Account
                   </Link>
                 </motion.div>
                 
@@ -435,7 +433,7 @@ const HomePage = () => {
                     data-testid="cta-browse"
                   >
                     <CreditCardIcon className="w-6 h-6 ml-2" />
-                    {t('home.cta.browseCards')}
+                    Browse Cards
                   </Link>
                 </motion.div>
               </div>
@@ -443,15 +441,15 @@ const HomePage = () => {
               <div className="mt-8 flex flex-wrap justify-center items-center gap-6 text-sm opacity-80">
                 <div className="flex items-center gap-2">
                   <ShieldCheckIcon className="w-4 h-4" />
-                  {t('home.cta.secure')}
+                  100% Secure
                 </div>
                 <div className="flex items-center gap-2">
                   <DevicePhoneMobileIcon className="w-4 h-4" />
-                  {t('home.cta.mobileCompatible')}
+                  Mobile Compatible
                 </div>
                 <div className="flex items-center gap-2">
                   <BoltIcon className="w-4 h-4" />
-                  {t('home.cta.instantFast')}
+                  Lightning Fast
                 </div>
               </div>
             </motion.div>

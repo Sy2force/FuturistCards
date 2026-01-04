@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useRoleTheme } from '../../context/ThemeProvider';
 
 const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
-  const { t } = useTranslation();
   const { isDark } = useRoleTheme();
   
   const [formData, setFormData] = useState({
@@ -37,17 +35,17 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
     const newErrors = {};
     
     if (!formData.firstName.trim()) {
-      newErrors.firstName = t('common.firstNameRequired');
+      newErrors.firstName = 'first Name Required';
     }
     
     if (!formData.lastName.trim()) {
-      newErrors.lastName = t('common.lastNameRequired');
+      newErrors.lastName = 'last Name Required';
     }
     
     if (!formData.email.trim()) {
-      newErrors.email = t('validation.emailRequired');
+      newErrors.email = 'email Required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = t('validation.emailInvalid');
+      newErrors.email = 'email Invalid';
     }
 
     setErrors(newErrors);
@@ -65,7 +63,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       onClose();
     } catch (error) {
       // Error updating profile
-      setErrors({ general: t('common.updateError') });
+      setErrors({ general: 'update Error' });
     } finally {
       setLoading(false);
     }
@@ -78,7 +76,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       <div className={`${isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white/90 border-gray-200'} backdrop-blur-lg rounded-2xl p-6 w-full max-w-md shadow-3d border`}>
         <div className="flex justify-between items-center mb-6">
           <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            {t('common.editProfile')}
+            {'edit Profile'}
           </h2>
           <button
             onClick={onClose}
@@ -99,7 +97,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.firstName')}
+              {'First Name'}
             </label>
             <input
               type="text"
@@ -113,7 +111,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                     ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                     : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={t('common.firstNamePlaceholder')}
+              placeholder={'first Name Placeholder'}
             />
             {errors.firstName && (
               <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>
@@ -122,7 +120,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.lastName')}
+              {'Last Name'}
             </label>
             <input
               type="text"
@@ -136,7 +134,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                     ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                     : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={t('common.lastNamePlaceholder')}
+              placeholder={'last Name Placeholder'}
             />
             {errors.lastName && (
               <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>
@@ -145,7 +143,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.email')}
+              {'Email'}
             </label>
             <input
               type="email"
@@ -159,7 +157,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                     ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                     : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={t('auth.emailPlaceholder')}
+              placeholder={'email Placeholder'}
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-400">{errors.email}</p>
@@ -168,7 +166,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.phone')} ({t('common.optional')})
+              {'Phone'} ({'Optional'})
             </label>
             <input
               type="tel"
@@ -180,13 +178,13 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                   ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                   : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={t('common.phonePlaceholder')}
+              placeholder={'phone Placeholder'}
             />
           </div>
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {t('common.bio')} ({t('common.optional')})
+              {'bio'} ({'Optional'})
             </label>
             <textarea
               name="bio"
@@ -198,7 +196,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                   ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                   : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors resize-none`}
-              placeholder={t('common.bioPlaceholder')}
+              placeholder={'bio Placeholder'}
             />
           </div>
 
@@ -212,14 +210,14 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300'
               } transition-colors`}
             >
-              {t('common.cancel')}
+              {'Cancel'}
             </button>
             <button
               type="submit"
               disabled={loading}
               className="btn-primary flex-1 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? t('common.saving') : t('common.saveChanges')}
+              {loading ? 'saving' : 'save Changes'}
             </button>
           </div>
         </form>

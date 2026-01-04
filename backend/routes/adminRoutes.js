@@ -1,15 +1,15 @@
 const express = require('express');
-const { protect, adminOnly } = require('../middleware/authMiddleware');
+const { protect, admin } = require('../middleware/authMiddleware');
 const User = require('../models/User');
 const Card = require('../models/Card');
 const asyncHandler = require('express-async-handler');
-const { t } = require('../utils/i18n');
+// Removed i18n dependency - using English only
 
 const router = express.Router();
 
-// Toutes les routes admin nécessitent une authentification et le rôle admin
+  // All admin routes require authentication and admin role
 router.use(protect);
-router.use(adminOnly);
+router.use(admin);
 
 /**
  * @desc    Get all users (admin only)
@@ -64,7 +64,7 @@ router.get('/users/:id', asyncHandler(async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: t('users.userNotFound')
+        message: 'User not found'
       });
     }
 
@@ -111,7 +111,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
   if (!['user', 'business', 'admin'].includes(role)) {
     return res.status(400).json({
       success: false,
-      message: t('admin.invalidRole')
+      message: 'Invalid role. Must be user, business, or admin.'
     });
   }
 
@@ -123,7 +123,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: t('users.userNotFound')
+        message: 'User not found'
       });
     }
 
@@ -134,7 +134,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      message: t('admin.roleUpdatedMock'),
+      message: 'User role updated successfully (demo mode)',
       user: {
         id: user._id,
         firstName: user.firstName,
@@ -167,7 +167,7 @@ router.put('/users/:id/role', asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: t('admin.roleUpdated'),
+    message: 'User role updated successfully',
     user
   });
 }));
@@ -184,7 +184,7 @@ router.delete('/users/:id', asyncHandler(async (req, res) => {
   if (userId === req.user.id) {
     return res.status(400).json({
       success: false,
-      message: t('users.cannotDeleteSelf')
+      message: 'You cannot delete your own account'
     });
   }
 
@@ -196,7 +196,7 @@ router.delete('/users/:id', asyncHandler(async (req, res) => {
     if (!user) {
       return res.status(404).json({
         success: false,
-        message: t('users.userNotFound')
+        message: 'User not found'
       });
     }
 
@@ -204,7 +204,7 @@ router.delete('/users/:id', asyncHandler(async (req, res) => {
 
     return res.json({
       success: true,
-      message: t('users.userDeleted') + ' (מצב דמו)'
+      message: 'User deleted successfully (demo mode)'
     });
   }
 
@@ -263,7 +263,7 @@ router.delete('/cards/:id', asyncHandler(async (req, res) => {
   if (process.env.NODE_ENV === 'development' || !process.env.MONGODB_URI) {
     return res.json({
       success: true,
-      message: t('cards.cardDeletedMock')
+      message: 'Card deleted successfully (demo mode)'
     });
   }
 
@@ -272,7 +272,7 @@ router.delete('/cards/:id', asyncHandler(async (req, res) => {
   if (!card) {
     return res.status(404).json({
       success: false,
-      message: t('cards.cardNotFound')
+      message: 'Card not found'
     });
   }
 
@@ -280,7 +280,7 @@ router.delete('/cards/:id', asyncHandler(async (req, res) => {
 
   res.json({
     success: true,
-    message: t('cards.cardDeleted')
+    message: 'Card deleted successfully'
   });
 }));
 

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MagnifyingGlassIcon, XMarkIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
-import { useTranslation } from "../../hooks/useTranslation";
 
 const SearchBar = ({ 
   onSearch, 
@@ -13,7 +12,6 @@ const SearchBar = ({
   showSuggestions = false,
   debounceMs = 300
 }) => {
-  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestionsList, setShowSuggestionsList] = useState(false);
@@ -21,9 +19,9 @@ const SearchBar = ({
   const inputRef = useRef(null);
   const suggestionRef = useRef(null);
   
-  const defaultPlaceholder = placeholder || t('search.placeholder');
+  const defaultPlaceholder = placeholder || 'placeholder';
 
-  // חיפוש עם השהיה
+  // Search with debounce delay
   useEffect(() => {
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -40,7 +38,7 @@ const SearchBar = ({
     };
   }, [searchTerm, onSearch, debounceMs]);
 
-  // טיפול בלחיצה מחוץ לסגירת הצעות
+  // Handle click outside to close suggestions
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (suggestionRef.current && !suggestionRef.current.contains(event.target) &&
@@ -118,7 +116,7 @@ const SearchBar = ({
           }}
           onBlur={() => {
             setIsFocused(false);
-            // השהיית הסתרת הצעות לאפשר לחיצות
+            // Delay hiding suggestions to allow clicks
             setTimeout(() => setShowSuggestionsList(false), 150);
           }}
           onKeyDown={handleKeyDown}
@@ -145,7 +143,7 @@ const SearchBar = ({
               animate={{ opacity: 1, scale: 1 }}
               onClick={onFilterToggle}
               className="mr-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-              title={t('search.filters')}
+              title={'filters'}
             >
               <AdjustmentsHorizontalIcon className="h-5 w-5" />
             </motion.button>
@@ -158,7 +156,7 @@ const SearchBar = ({
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={clearSearch}
               className="mr-3 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-              title={t('search.clear')}
+              title={'clear'}
             >
               <XMarkIcon className="h-5 w-5" />
             </motion.button>
@@ -173,7 +171,7 @@ const SearchBar = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          {t('search.searching')}: &quot;{searchTerm}&quot;
+          {'searching'}: &quot;{searchTerm}&quot;
         </motion.div>
       )}
       
@@ -209,7 +207,7 @@ const SearchBar = ({
                 animate={{ opacity: 1 }}
                 className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700"
               >
-                {t('search.pressEnter')}: &quot;{searchTerm}&quot;
+                {'press Enter'}: &quot;{searchTerm}&quot;
               </motion.div>
             )}
           </motion.div>

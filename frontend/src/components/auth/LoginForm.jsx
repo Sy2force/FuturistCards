@@ -1,10 +1,8 @@
 import { useState } from 'react';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useAuth } from '../../context/AuthContext';
 import { validateEmail, validatePassword, isFormValid } from '../../utils/validation';
 
 const LoginForm = ({ onSuccess }) => {
-  const { t } = useTranslation();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
@@ -57,7 +55,7 @@ const LoginForm = ({ onSuccess }) => {
       await login(formData.email, formData.password);
       if (onSuccess) onSuccess();
     } catch (error) {
-      setErrors({ general: error.message || t('auth.loginError') });
+      setErrors({ general: error.message || 'Invalid email or password' });
     } finally {
       setLoading(false);
     }
@@ -86,7 +84,7 @@ const LoginForm = ({ onSuccess }) => {
       {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          {t('auth.email')}
+          Email
         </label>
         <input
           type="email"
@@ -96,7 +94,7 @@ const LoginForm = ({ onSuccess }) => {
           className={`w-full px-4 py-3 bg-white/5 border ${
             errors.email ? 'border-red-500' : 'border-gray-600'
           } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300`}
-          placeholder={t('auth.emailPlaceholder')}
+          placeholder="Enter your email address"
           disabled={loading}
           data-testid="login-email"
         />
@@ -108,7 +106,7 @@ const LoginForm = ({ onSuccess }) => {
       {/* Password */}
       <div>
         <label className="block text-sm font-medium text-gray-300 mb-2">
-          {t('auth.password')}
+          Password
         </label>
         <div className="relative">
           <input
@@ -119,7 +117,7 @@ const LoginForm = ({ onSuccess }) => {
             className={`w-full px-4 py-3 bg-white/5 border ${
               errors.password ? 'border-red-500' : 'border-gray-600'
             } rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 pr-12`}
-            placeholder={t('auth.passwordPlaceholder')}
+            placeholder="Enter your password"
             disabled={loading}
             data-testid="login-password"
           />
@@ -155,7 +153,7 @@ const LoginForm = ({ onSuccess }) => {
           disabled={loading}
           data-testid="demo-account-button"
         >
-          🎯 {t('auth.useDemoAccount')}
+          🎯 Use Demo Account
         </button>
       </div>
 
@@ -169,7 +167,7 @@ const LoginForm = ({ onSuccess }) => {
         {loading ? (
           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
         ) : (
-          t('auth.loginButton')
+          'Sign In'
         )}
       </button>
     </form>

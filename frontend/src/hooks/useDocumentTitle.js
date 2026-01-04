@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 
 export const useDocumentTitle = (title) => {
-  useEffect(() => {
-    const previousTitle = document.title;
-    document.title = title ? `${title} | FuturistCards` : 'FuturistCards | Cartes Digitales';
-    
-    return () => {
-      document.title = previousTitle;
-    };
+  useLayoutEffect(() => {
+    const siteName = 'FuturistCards';
+    const newTitle = title && title.trim() ? 
+      `${title}` : 
+      `${siteName} - Digital Business Cards`;
+    document.title = newTitle;
   }, [title]);
 };
 

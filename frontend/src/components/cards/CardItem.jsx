@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useTranslation } from "../../hooks/useTranslation";
 import { useAuth } from '../../context/AuthContext';
 import { useRoleTheme } from '../../context/ThemeProvider';
 import { formatPhoneNumber, formatDisplayUrl, truncateText } from '../../utils/formatters';
@@ -9,7 +8,6 @@ import LikeButton from '../ui/LikeButton';
 
 const CardItem = ({ card, onLike, showActions = true, onClick }) => {
   const { user } = useAuth();
-  const { t } = useTranslation();
   const { isDark } = useRoleTheme(); // Theme context for styling
   
   // Mock card stats - using useMemo to prevent re-renders
@@ -68,7 +66,7 @@ const CardItem = ({ card, onLike, showActions = true, onClick }) => {
         {/* Demo Badge */}
         {card.isDemo && (
           <div className="absolute top-3 left-3 bg-yellow-400 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
-            {t('common.demo')}
+            {'demo'}
           </div>
         )}
       </div>
@@ -152,7 +150,7 @@ const CardItem = ({ card, onLike, showActions = true, onClick }) => {
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium text-center transition-colors"
             data-testid="card-view-details"
           >
-            {t('cards.viewDetails')}
+            {'view Details'}
           </Link>
           
           {canEdit && (

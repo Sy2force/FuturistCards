@@ -1,4 +1,3 @@
-import { useTranslation } from "../../hooks/useTranslation";
 import { useRoleTheme } from '../../context/ThemeProvider';
 
 const CardFilters = ({ 
@@ -14,7 +13,6 @@ const CardFilters = ({
   categories,
   sortOptions
 }) => {
-  const { t } = useTranslation();
   const { isDark } = useRoleTheme();
 
   const clearAllFilters = () => {
@@ -32,12 +30,12 @@ const CardFilters = ({
         {/* Search Input */}
         <div className="lg:col-span-2">
           <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-            🔍 {t('common.search')}
+            🔍 {'Search'}
           </label>
           <div className="relative">
             <input
               type="text"
-              placeholder={t('cards.searchPlaceholder')}
+              placeholder={'search Placeholder'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={`w-full px-4 py-2 pr-10 pl-4 rounded-lg border ${
@@ -67,7 +65,7 @@ const CardFilters = ({
         {/* Category Filter */}
         <div>
           <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-            📂 {t('cards.filterByCategory')}
+            📂 {'filter By Category'}
           </label>
           <select
             value={selectedCategory}
@@ -89,7 +87,7 @@ const CardFilters = ({
         {/* Sort Options */}
         <div>
           <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-            🔄 {t('cards.sortBy')}
+            🔄 {'sort By'}
           </label>
           <select
             value={sortBy}
@@ -100,7 +98,7 @@ const CardFilters = ({
                 : 'bg-white border-gray-300 text-gray-900 focus:border-blue-500'
             } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
           >
-            <option value=''>{t('filters.allCategories')}</option>
+            <option value=''>{'all Categories'}</option>
             {sortOptions.map(option => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -114,10 +112,10 @@ const CardFilters = ({
       <div className={`pt-4 border-t ${isDark ? 'border-gray-700' : 'border-gray-200'} flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4`}>
         <div className="flex items-center gap-4">
           <div className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-            <span className="font-medium">{resultsCount}</span> {t('cards.totalCards')}
+            <span className="font-medium">{resultsCount}</span> {'total Cards'}
             {searchTerm && (
               <span className="ml-2">
-                • {t('common.searchResults')} &ldquo;<span className="font-medium">{searchTerm}</span>&rdquo;
+                • {'search Results'} &ldquo;<span className="font-medium">{searchTerm}</span>&rdquo;
               </span>
             )}
           </div>
@@ -131,7 +129,7 @@ const CardFilters = ({
                   : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
               }`}
             >
-              {t('common.clearFilters')}
+              {'clear Filters'}
             </button>
           )}
         </div>
@@ -149,7 +147,7 @@ const CardFilters = ({
                   ? isDark ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
                   : isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'
               }`}
-              title={t('common.gridView')}
+              title={'grid View'}
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -162,7 +160,7 @@ const CardFilters = ({
                   ? isDark ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'
                   : isDark ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-700'
               }`}
-              title={t('common.listView')}
+              title={'list View'}
             >
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
@@ -176,7 +174,7 @@ const CardFilters = ({
       {categories.length > 1 && (
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
           <div className={`text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-            {t('cards.quickFilters')}:
+            {'quick Filters'}:
           </div>
           <div className="flex flex-wrap gap-2">
             {categories.slice(1, 6).map(category => (

@@ -1,9 +1,9 @@
 const Card = require('../models/Card');
 const User = require('../models/User');
 const { mockCards, mockUsers } = require('../data/mockData');
-const { t } = require('../utils/i18n');
+// Removed i18n dependency - using English only
 
-// get toutes les cartes publiques
+// Get all public cards
 const getAllCards = async (req, res) => {
   try {
     let cards;
@@ -12,7 +12,7 @@ const getAllCards = async (req, res) => {
         .populate('user', 'name email')
         .sort({ createdAt: -1 });
     } catch (dbError) {
-      // Utilisation des données de test en cas d'erreur de base de données
+      // Use mock data in case of database error
       cards = mockCards.map(card => ({
         ...card,
         user: mockUsers.find(u => u._id === card.userId)
@@ -24,7 +24,7 @@ const getAllCards = async (req, res) => {
       cards
     });
   } catch (error) {
-    res.status(500).json({ message: t('cards.cardsError') });
+    res.status(500).json({ message: 'Failed to retrieve cards. Please try again.' });
   }
 };
 
@@ -35,7 +35,7 @@ const getCardById = async (req, res) => {
       .populate('user', 'name email');
 
     if (!card) {
-      return res.status(404).json({ message: t('cards.cardNotFound') });
+      return res.status(404).json({ message: 'Card not found' });
     }
 
     res.json({
@@ -54,33 +54,80 @@ const createCard = async (req, res) => {
 
     // If user is connected, check role
     if (req.user) {
-      const user = await User.findById(req.user.id);
-      if (user.role !== 'business' && user.role !== 'admin') {
-        return res.status(403).json({ 
-          message: t('server.businessRequired') 
+      let user;
+      try {
+        user = await User.findById(req.user.id);
+        if (!user) {
+          // Fallback to mock users
+          user = mockUsers.find(u => u._id.toString() === req.user.id.toString());
+        }
+      } catch (dbError) {
+        // Fallback to mock users if MongoDB is unavailable
+        user = mockUsers.find(u => u._id.toString() === req.user.id.toString());
+      }
+
+      if (!user) {
+        return res.status(404).json({ 
+          message: 'User not found'
         });
       }
 
-      const card = await Card.create({
-        title: title || user.name,
-        description: description || `Carte professionnelle de ${user.name}`,
-        phone: phone || '',
-        email: email || user.email,
-        website,
-        address,
-        company,
-        user: req.user.id,
-        anonymous: false
-      });
+      if (user.role !== 'business' && user.role !== 'admin') {
+        return res.status(403).json({ 
+          message: 'Business account required to create cards' 
+        });
+      }
 
-      const populatedCard = await Card.findById(card._id)
-        .populate('user', 'name email');
+      let card;
+      try {
+        card = await Card.create({
+          title: title || user.name || `${user.firstName} ${user.lastName}`,
+          description: description || `Carte professionnelle de ${user.name || user.firstName + ' ' + user.lastName}`,
+          phone: phone || user.phone || '',
+          email: email || user.email,
+          website,
+          address,
+          company,
+          user: req.user.id,
+          anonymous: false
+        });
 
-      return res.json({
-        success: true,
-        message: t('cards.cardCreated'),
-        card: populatedCard
-      });
+        const populatedCard = await Card.findById(card._id)
+          .populate('user', 'name email');
+
+        return res.json({
+          success: true,
+          message: 'Card created successfully',
+          card: populatedCard
+        });
+      } catch (dbError) {
+        // MongoDB fallback - create mock card
+        const mockCard = {
+          _id: new Date().getTime().toString(),
+          title: title || user.name || `${user.firstName} ${user.lastName}`,
+          description: description || `Carte professionnelle de ${user.name || user.firstName + ' ' + user.lastName}`,
+          phone: phone || user.phone || '',
+          email: email || user.email,
+          website: website || '',
+          address: address || '',
+          company: company || '',
+          user: {
+            _id: user._id,
+            name: user.name || `${user.firstName} ${user.lastName}`,
+            email: user.email
+          },
+          anonymous: false,
+          likes: [],
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+
+        return res.json({
+          success: true,
+          message: 'Card created successfully',
+          card: mockCard
+        });
+      }
     }
 
     // Création anonyme (route /public)
@@ -99,11 +146,12 @@ const createCard = async (req, res) => {
 
     res.json({
       success: true,
-      message: t('cards.cardCreated'),
+      message: 'Card created successfully',
       card
     });
   } catch (error) {
-    res.status(500).json({ message: t('cards.createError'), error: error.message });
+    console.error('Card creation error:', error);
+    res.status(500).json({ message: 'Failed to create card. Please try again.', error: error.message });
   }
 };
 
@@ -116,9 +164,9 @@ const updateCard = async (req, res) => {
       return res.status(404).json({ message: 'Carte non trouvée' });
     }
 
-    // Verify que c'est bien le propriétaire
+    // Verify that the user is the card owner
     if (card.user.toString() !== req.user.id) {
-      return res.status(403).json({ message: t('cards.unauthorized') });
+      return res.status(403).json({ message: 'Unauthorized to update this card' });
     }
 
     const updatedCard = await Card.findByIdAndUpdate(
@@ -129,11 +177,11 @@ const updateCard = async (req, res) => {
 
     res.json({
       success: true,
-      message: t('cards.cardUpdated'),
+      message: 'Card updated successfully',
       card: updatedCard
     });
   } catch (error) {
-    res.status(500).json({ message: t('cards.updateError') });
+    res.status(500).json({ message: 'Failed to update card. Please try again.' });
   }
 };
 
@@ -146,20 +194,20 @@ const deleteCard = async (req, res) => {
       return res.status(404).json({ message: 'Carte non trouvée' });
     }
 
-    // Verify les permissions (propriétaire ou admin)
+    // Verify permissions (owner or admin)
     const user = await User.findById(req.user.id);
     if (card.user.toString() !== req.user.id && user.role !== 'admin') {
-      return res.status(403).json({ message: t('cards.unauthorized') });
+      return res.status(403).json({ message: 'Unauthorized to delete this card' });
     }
 
     await Card.findByIdAndDelete(req.params.id);
 
     res.json({
       success: true,
-      message: t('cards.cardDeleted')
+      message: 'Card deleted successfully'
     });
   } catch (error) {
-    res.status(500).json({ message: t('cards.deleteError') });
+    res.status(500).json({ message: 'Failed to delete card. Please try again.' });
   }
 };
 
@@ -201,7 +249,7 @@ const getMyCards = async (req, res) => {
         .populate('user', 'name email')
         .sort({ createdAt: -1 });
     } catch (dbError) {
-      // Utilisation des données de test si MongoDB indisponible
+      // Use mock data if MongoDB is unavailable
       cards = mockCards.filter(card => card.userId === req.user.id || card.userId === req.user._id).map(card => ({
         ...card,
         user: mockUsers.find(u => u._id === card.userId)
@@ -214,7 +262,7 @@ const getMyCards = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ 
-      message: t('cards.cardsError'),
+      message: 'Failed to retrieve user cards. Please try again.',
       error: error.message 
     });
   }
@@ -225,7 +273,7 @@ const toggleLike = async (req, res) => {
   try {
     res.json({
       success: true,
-      message: 'תכונה תהיה זמינה בקרוב'
+      message: 'Feature will be available soon'
     });
   } catch (error) {
     res.status(500).json({ message: 'Erreur serveur' });
@@ -259,7 +307,7 @@ const searchCards = async (req, res) => {
       cards
     });
   } catch (error) {
-    res.status(500).json({ message: t('server.serverError') });
+    res.status(500).json({ message: 'Server error occurred. Please try again.' });
   }
 };
 

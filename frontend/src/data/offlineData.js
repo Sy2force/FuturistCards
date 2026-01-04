@@ -1,11 +1,10 @@
 // Offline mode - Demo data for FuturistCards
-// Note: This file contains static demo data. For full i18n support, 
-// consider implementing dynamic translation keys for card content.
+// Note: This file contains static demo data in English only.
 export const offlineUsers = [
   {
     _id: 'demo_user_1',
-    firstName: 'דוד',
-    lastName: 'כהן',
+    firstName: 'David',
+    lastName: 'Cohen',
     email: 'david.cohen@example.com',
     role: 'business',
     isActive: true,
@@ -13,8 +12,8 @@ export const offlineUsers = [
   },
   {
     _id: 'demo_user_2',
-    firstName: 'רחל',
-    lastName: 'לוי',
+    firstName: 'Rachel',
+    lastName: 'Levy',
     email: 'rachel.levi@example.com',
     role: 'user',
     isActive: true,
@@ -22,8 +21,8 @@ export const offlineUsers = [
   },
   {
     _id: 'demo_user_3',
-    firstName: 'מנהל',
-    lastName: 'מערכת',
+    firstName: 'System',
+    lastName: 'Admin',
     email: 'admin@futuristcards.com',
     role: 'admin',
     isActive: true,
@@ -34,20 +33,20 @@ export const offlineUsers = [
 export const offlineCards = [
   {
     _id: 'demo_card_1',
-    title: 'פתרונות טכנולוגיים מתקדמים',
-    subtitle: 'פיתוח אתרים ואפליקציות',
-    description: 'מומחה בפיתוח אפליקציות מודרניות עם React, Node.js וטכנולוגיות ענן. למעלה מעשור ניסיון ביצירת פתרונות דיגיטליים חדשניים.',
+    title: 'Advanced Tech Solutions',
+    subtitle: 'Web & App Development',
+    description: 'Expert in modern application development with React, Node.js and cloud technologies. Over a decade of experience creating innovative digital solutions.',
     phone: '+972-3-123-4567',
     email: 'contact@techsolutions.co.il',
     web: 'https://techsolutions.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=200&fit=crop',
-      alt: 'Bureau moderne avec ordinateurs'
+      alt: 'Modern office with computers'
     },
     address: {
-      street: 'רחוב הרצל 123',
-      city: 'תל אביב',
-      country: 'ישראל',
+      street: '123 Innovation Drive',
+      city: 'New York',
+      country: 'USA',
       houseNumber: '123'
     },
     category: 'technology',
@@ -59,20 +58,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_2',
-    title: 'סטודיו עיצוב יצירתי',
-    subtitle: 'עיצוב UI/UX ומיתוג',
-    description: 'סטודיו עיצוב יצירתי המתמחה בחוויית משתמש וזהות חזותית. אנו יוצרים ממשקים מודרניים ואינטואיטיביים לפרויקטים הדיגיטליים שלכם.',
+    title: 'Creative Design Studio',
+    subtitle: 'UI/UX Design & Branding',
+    description: 'Creative design studio specializing in user experience and visual identity. We create modern and intuitive interfaces for your digital projects.',
     phone: '+972-3-987-6543',
     email: 'hello@designstudio.co.il',
     web: 'https://designstudio.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=200&fit=crop',
-      alt: 'Espace de travail design'
+      alt: 'Design workspace'
     },
     address: {
-      street: 'שדרות רוטשילד 456',
-      city: 'תל אביב',
-      country: 'ישראל',
+      street: '456 Creative Boulevard',
+      city: 'San Francisco',
+      country: 'USA',
       houseNumber: '456'
     },
     category: 'design',
@@ -84,20 +83,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_3',
-    title: 'מומחה שיווק דיגיטלי',
-    subtitle: 'אסטרטגיה ושיווק צמיחה',
-    description: 'יועץ שיווק דיגיטלי עם מומחיות ב-SEO, SEM, רשתות חברתיות ואנליטיקס. ליווי אישי להגברת הנוכחות המקוונת שלכם.',
+    title: 'Digital Marketing Expert',
+    subtitle: 'Growth Strategy & Marketing',
+    description: 'Digital marketing consultant with expertise in SEO, SEM, social media and analytics. Personal guidance to enhance your online presence.',
     phone: '+972-3-555-4433',
     email: 'expert@marketing-digital.co.il',
     web: 'https://marketing-digital.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=200&fit=crop',
-      alt: 'Graphiques marketing'
+      alt: 'Marketing graphics'
     },
     address: {
-      street: 'שדרות בן גוריון 789',
-      city: 'תל אביב',
-      country: 'ישראל',
+      street: '789 Market Street',
+      city: 'Los Angeles',
+      country: 'USA',
       houseNumber: '789'
     },
     category: 'marketing',
@@ -109,20 +108,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_4',
-    title: 'ייעוץ אסטרטגיה עסקית',
-    subtitle: 'טרנספורמציה דיגיטלית',
-    description: 'משרד ייעוץ המתמחה בטרנספורמציה דיגיטלית של עסקים. ליווי אסטרטגי לייעול התהליכים והאצת הצמיחה שלכם.',
+    title: 'Business Strategy Consulting',
+    subtitle: 'Digital Transformation',
+    description: 'Consulting firm specializing in digital transformation of businesses. Strategic guidance to optimize your processes and accelerate growth.',
     phone: '+972-3-778-8990',
     email: 'contact@business-strategy.co.il',
     web: 'https://business-strategy.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=200&fit=crop',
-      alt: 'Réunion d\'affaires'
+      alt: 'Business meeting'
     },
     address: {
-      street: 'רחוב דיזנגוף 321',
-      city: 'תל אביב',
-      country: 'ישראל',
+      street: '321 Business Plaza',
+      city: 'Chicago',
+      country: 'USA',
       houseNumber: '321'
     },
     category: 'business',
@@ -134,20 +133,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_5',
-    title: 'כספים והשקעות',
-    subtitle: 'ניהול תיק השקעות',
-    description: 'יועץ פיננסי עצמאי המתמחה בניהול תיק השקעות והשקעות. פתרונות מותאמים אישית לייעול החיסכון וההשקעות שלכם.',
+    title: 'Finance & Investments',
+    subtitle: 'Portfolio Management',
+    description: 'Independent financial advisor specializing in investment portfolio management. Personalized solutions to optimize your savings and investments.',
     phone: '+972-3-665-5443',
     email: 'conseiller@finance-invest.co.il',
     web: 'https://finance-invest.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=200&fit=crop',
-      alt: 'Graphiques financiers'
+      alt: 'Financial charts'
     },
     address: {
-      street: 'רחוב השלום 654',
-      city: 'תל אביב',
-      country: 'ישראל',
+      street: '654 Wall Street',
+      city: 'New York',
+      country: 'USA',
       houseNumber: '654'
     },
     category: 'finance',
@@ -159,20 +158,20 @@ export const offlineCards = [
   },
   {
     _id: 'demo_card_6',
-    title: 'מרפאה רפואית מודרנית',
-    subtitle: 'רפואה כללית',
-    description: 'מרפאה רפואית המצוידת בטכנולוגיות החדישות ביותר למעקב רפואי מלא. ייעוץ רפואי בתיאום מראש וטלה-רפואה זמינים.',
+    title: 'Modern Medical Clinic',
+    subtitle: 'General Medicine',
+    description: 'Medical clinic equipped with the latest technologies for comprehensive medical care. Medical consultations by appointment and telemedicine available.',
     phone: '+972-3-443-3221',
     email: 'cabinet@medecine-moderne.co.il',
     web: 'https://medecine-moderne.co.il',
     image: {
       url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=200&fit=crop',
-      alt: 'Cabinet médical moderne'
+      alt: 'Modern medical office'
     },
     address: {
-      street: 'שדרות ויקטור הוגו 987',
-      city: 'תל אביב',
-      country: 'ישראל',
+      street: '987 Health Avenue',
+      city: 'Boston',
+      country: 'USA',
       houseNumber: '987'
     },
     category: 'medical',
@@ -223,19 +222,19 @@ export const offlineStats = {
   recentActivity: [
     {
       type: 'card_created',
-      user: 'דוד כהן',
-      target: 'מרפאה רפואית מודרנית',
+      user: 'David Cohen',
+      target: 'Modern Medical Clinic',
       timestamp: '2024-03-20T08:00:00.000Z'
     },
     {
       type: 'card_liked',
-      user: 'רחל לוי',
-      target: 'סטודיו עיצוב יצירתי',
+      user: 'Rachel Levy',
+      target: 'Creative Design Studio',
       timestamp: '2024-12-21T14:30:00.000Z'
     },
     {
       type: 'user_registered',
-      user: 'רחל לוי',
+      user: 'Rachel Levy',
       timestamp: '2024-02-10T14:30:00.000Z'
     }
   ]

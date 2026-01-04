@@ -1,12 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { t } from '../utils/translations';
 
 const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error(t('common.contextError'));
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
@@ -47,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     setError('');
     try {
       if (!email || !password) {
-        throw new Error(t('auth.emailPasswordRequired'));
+        throw new Error('Email and password are required');
       }
       
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
@@ -61,7 +60,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || t('auth.loginError'));
+        throw new Error(data.message || 'Login failed');
       }
 
       if (data.success && data.user && data.token) {
@@ -80,10 +79,10 @@ export const AuthProvider = ({ children }) => {
         
         return { success: true, user: transformedUser };
       } else {
-        throw new Error(data.message || t('auth.loginError'));
+        throw new Error(data.message || 'Login failed');
       }
     } catch (error) {
-      setError(error.message || t('auth.loginError'));
+      setError(error.message || 'Login failed');
       throw error;
     } finally {
       setLoading(false);
@@ -105,7 +104,7 @@ export const AuthProvider = ({ children }) => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || t('auth.registerError'));
+        throw new Error(data.message || 'Registration failed');
       }
 
       if (data.success && data.user && data.token) {
@@ -124,10 +123,10 @@ export const AuthProvider = ({ children }) => {
         
         return { success: true, user: transformedUser };
       } else {
-        throw new Error(data.message || t('auth.registerError'));
+        throw new Error(data.message || 'Registration failed');
       }
     } catch (error) {
-      setError(error.message || t('auth.registerError'));
+      setError(error.message || 'Registration failed');
       throw error;
     } finally {
       setLoading(false);
@@ -167,6 +166,20 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // Get redirect path based on user role
+  const getRedirectPath = (userRole) => {
+    switch (userRole) {
+      case 'user':
+        return '/cards';
+      case 'business':
+        return '/dashboard';
+      case 'admin':
+        return '/admin';
+      default:
+        return '/cards';
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -176,6 +189,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     updateProfile,
+    getRedirectPath,
     isAuthenticated: !!user,
     isAdmin: user?.role === 'admin',
     isBusiness: user?.role === 'business' || user?.role === 'admin',

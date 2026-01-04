@@ -9,5 +9,4 @@ export * from './imageOptimizer';
 export * from './formatters';
 export * from './analytics';
 
-// Re-export i18n utilities
-export { default as i18n } from './i18n';
+// i18n removed - using English only

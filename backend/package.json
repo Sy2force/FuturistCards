@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/package.json",
   "name": "futuristcards-backend",
   "version": "1.0.0",
-  "description": "Backend API pour FuturistCards - Plateforme de cartes de visite digitales",
+  "description": "Backend API for FuturistCards - Digital Business Cards Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

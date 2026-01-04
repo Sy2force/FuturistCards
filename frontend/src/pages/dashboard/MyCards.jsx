@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from '../../hooks/useTranslation';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api';
 import {
@@ -20,7 +19,6 @@ import GlassCard from '../../components/ui/GlassCard';
 import GlassButton from '../../components/ui/GlassButton';
 
 const MyCardsPage = () => {
-  const { t, language } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [cards, setCards] = useState([]);
@@ -43,10 +41,10 @@ const MyCardsPage = () => {
         const mockCards = [
           {
             _id: 'demo-1',
-            title: t('mockData.myCards.card1.title'),
-            subtitle: t('mockData.myCards.card1.subtitle'),
-            company: t('mockData.myCards.card1.company'),
-            description: t('mockData.myCards.card1.description'),
+            title: 'title',
+            subtitle: 'subtitle',
+            company: 'company',
+            description: 'description',
             image: null,
             views: 245,
             likes: 18,
@@ -58,10 +56,10 @@ const MyCardsPage = () => {
           },
           {
             _id: 'demo-2',
-            title: t('mockData.myCards.card2.title'),
-            subtitle: t('mockData.myCards.card2.subtitle'),
-            company: t('mockData.myCards.card2.company'),
-            description: t('mockData.myCards.card2.description'),
+            title: 'title',
+            subtitle: 'subtitle',
+            company: 'company',
+            description: 'description',
             image: null,
             views: 189,
             likes: 24,
@@ -75,7 +73,7 @@ const MyCardsPage = () => {
         setCards([...localCards, ...mockCards]);
       }
     } catch (error) {
-      setError(t('myCards.loadError'));
+      setError('load Error');
     } finally {
       setLoading(false);
     }
@@ -151,7 +149,7 @@ const MyCardsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white"></div>
       </div>
     );
@@ -160,11 +158,11 @@ const MyCardsPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('myCards.title')} - FuturistCards</title>
-        <meta name="description" content={t('myCards.subtitle')} />
+        <title>{'title'} - FuturistCards</title>
+        <meta name="description" content={'subtitle'} />
       </Helmet>
       
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir="rtl">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <motion.div
@@ -175,16 +173,16 @@ const MyCardsPage = () => {
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h1 className="text-4xl font-bold text-white mb-2">
-                  {t('myCards.title')}
+                  {'title'}
                 </h1>
                 <p className="text-gray-300">
-                  {t('myCards.subtitle')}
+                  {'subtitle'}
                 </p>
               </div>
               <Link to="/create-card">
                 <GlassButton className="flex items-center">
                   <PlusIcon className="h-5 w-5 ml-2" />
-                  {t('myCards.createNew')}
+                  {'create New'}
                 </GlassButton>
               </Link>
             </div>
@@ -200,7 +198,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{t('myCards.stats.totalCards')}</p>
+                  <p className="text-gray-300 text-sm">{'total Cards'}</p>
                   <p className="text-3xl font-bold text-white">{cards.length}</p>
                 </div>
                 <ChartBarIcon className="h-8 w-8 text-blue-400" />
@@ -210,7 +208,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{t('myCards.stats.totalViews')}</p>
+                  <p className="text-gray-300 text-sm">{'total Views'}</p>
                   <p className="text-3xl font-bold text-white">
                     {cards.reduce((sum, card) => sum + (card.views || 0), 0)}
                   </p>
@@ -222,7 +220,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{t('myCards.stats.totalLikes')}</p>
+                  <p className="text-gray-300 text-sm">{'total Likes'}</p>
                   <p className="text-3xl font-bold text-white">
                     {cards.reduce((sum, card) => sum + (card.likes || 0), 0)}
                   </p>
@@ -234,7 +232,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{t('myCards.stats.activeCards')}</p>
+                  <p className="text-gray-300 text-sm">{'active Cards'}</p>
                   <p className="text-3xl font-bold text-white">
                     {cards.filter(card => card.status === 'active').length}
                   </p>
@@ -264,15 +262,15 @@ const MyCardsPage = () => {
               <GlassCard className="p-12 max-w-md mx-auto">
                 <PlusIcon className="h-16 w-16 text-gray-400 mx-auto mb-6" />
                 <h3 className="text-2xl font-semibold text-white mb-4">
-                  {t('myCards.noCards')}
+                  {'no Cards'}
                 </h3>
                 <p className="text-gray-300 mb-8">
-                  {t('myCards.createFirst')}
+                  {'create First'}
                 </p>
                 <Link to="/create-card">
                   <GlassButton className="flex items-center mx-auto">
                     <PlusIcon className="h-5 w-5 ml-2" />
-                    {t('myCards.createFirst')}
+                    {'create First'}
                   </GlassButton>
                 </Link>
               </GlassCard>
@@ -338,7 +336,7 @@ const MyCardsPage = () => {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleEditCard(card._id)}
                         className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                        title={t('myCards.editCard')}
+                        title={'edit Card'}
                         disabled={card.isDemo}
                       >
                         <PencilIcon className="w-4 h-4" />
@@ -348,7 +346,7 @@ const MyCardsPage = () => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-                        title={t('myCards.shareCard')}
+                        title={'share Card'}
                       >
                         <ShareIcon className="w-4 h-4" />
                       </motion.button>
@@ -358,7 +356,7 @@ const MyCardsPage = () => {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => openDeleteModal(card)}
                         className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                        title={t('myCards.deleteCard')}
+                        title={'delete Card'}
                         disabled={card.isDemo}
                       >
                         <TrashIcon className="w-4 h-4" />
@@ -382,13 +380,13 @@ const MyCardsPage = () => {
             >
               <div className="flex items-center mb-4">
                 <ExclamationTriangleIcon className="w-8 h-8 text-red-500 ml-3" />
-                <h3 className="text-xl font-bold text-white">{t('myCards.deleteConfirm')}</h3>
+                <h3 className="text-xl font-bold text-white">{'delete Confirm'}</h3>
               </div>
               
               <p className="text-gray-300 mb-6">
                 {t('myCards.deleteMessage', { cardName: deleteModal.cardName })}
                 <br />
-                <span className="text-red-400 text-sm">{t('myCards.deleteWarning')}</span>
+                <span className="text-red-400 text-sm">{'delete Warning'}</span>
               </p>
               
               <div className="flex space-x-3 space-x-reverse">
@@ -398,7 +396,7 @@ const MyCardsPage = () => {
                   onClick={() => handleDeleteCard(deleteModal.cardId)}
                   className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
                 >
-                  {t('common.delete')}
+                  {'Delete'}
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -406,7 +404,7 @@ const MyCardsPage = () => {
                   onClick={closeDeleteModal}
                   className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
                 >
-                  {t('common.cancel')}
+                  {'Cancel'}
                 </motion.button>
               </div>
             </motion.div>

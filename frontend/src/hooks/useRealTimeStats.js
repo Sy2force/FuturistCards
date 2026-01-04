@@ -95,9 +95,9 @@ export const useRealTimeStats = () => {
         activities.push({
           id: `card-${card.id}`,
           type: 'card_created',
-          message: `כרטיס חדש נוצר: ${card.name || card.title || 'כרטיס ללא שם'}`,
+          message: `New card created: ${card.name || card.title || 'Untitled card'}`,
           timestamp: new Date(card.createdAt || Date.now()),
-          user: card.createdBy || 'משתמש',
+          user: card.createdBy || 'User',
           icon: 'card'
         });
       });
@@ -107,7 +107,7 @@ export const useRealTimeStats = () => {
         activities.push({
           id: `user-${user.id}`,
           type: 'user_registered',
-          message: `משתמש חדש נרשם: ${user.firstName} ${user.lastName}`,
+          message: `New user registered: ${user.firstName} ${user.lastName}`,
           timestamp: new Date(user.createdAt || Date.now()),
           user: `${user.firstName} ${user.lastName}`,
           icon: 'user'
@@ -119,9 +119,9 @@ export const useRealTimeStats = () => {
         activities.push({
           id: `like-${Date.now()}-${i}`,
           type: 'card_liked',
-          message: `כרטיס קיבל לייק חדש`,
+          message: `Card received a new like`,
           timestamp: new Date(Date.now() - Math.random() * 3600000),
-          user: 'משתמש',
+          user: 'User',
           icon: 'like'
         });
       }
@@ -148,7 +148,7 @@ export const useRealTimeStats = () => {
           cardId,
           userId,
           timestamp,
-          message: isLiked ? 'כרטיס חדש נוסף למועדפים' : 'כרטיס הוסר מהמועדפים'
+          message: isLiked ? 'Card added to favorites' : 'Card removed from favorites'
         };
         
         return [newActivity, ...prev.slice(0, 9)];
@@ -182,7 +182,7 @@ export const useRealTimeStats = () => {
       type,
       message: data.message,
       timestamp: new Date(),
-      user: data.user || 'משתמש',
+      user: data.user || 'User',
       icon: data.icon || type
     };
     

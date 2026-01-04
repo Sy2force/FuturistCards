@@ -1,5 +1,4 @@
 import { forwardRef } from 'react';
-// import { useTranslation } from "../../hooks/useTranslation";
 
 const FormField = forwardRef(({ 
   label,
@@ -17,7 +16,6 @@ const FormField = forwardRef(({
   options = [],
   ...props
 }, ref) => {
-  // const { t } = useTranslation(); // Unused for now
   
   const baseInputClasses = `
     block w-full px-3 py-2 border rounded-lg shadow-sm

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTranslation } from "../../hooks/useTranslation";
 import FormField from './FormField';
 import { validateCardForm } from '../../utils/validation';
 import { CARD_CATEGORIES } from '../../utils/constants';
@@ -11,7 +10,6 @@ const CardForm = ({
   submitText,
   mode = 'create' // 'create' or 'edit'
 }) => {
-  const { t } = useTranslation();
   
   const [formData, setFormData] = useState({
     title: '',
@@ -126,18 +124,18 @@ const CardForm = ({
   };
 
   const categoryOptions = [
-    { value: CARD_CATEGORIES.BUSINESS, label: t('categories.business') },
-    { value: CARD_CATEGORIES.TECHNOLOGY, label: t('categories.technology') },
-    { value: CARD_CATEGORIES.HEALTHCARE, label: t('categories.healthcare') },
-    { value: CARD_CATEGORIES.EDUCATION, label: t('categories.education') },
-    { value: CARD_CATEGORIES.CREATIVE, label: t('categories.creative') },
-    { value: CARD_CATEGORIES.LEGAL, label: t('categories.legal') },
-    { value: CARD_CATEGORIES.FINANCE, label: t('categories.finance') },
-    { value: CARD_CATEGORIES.RESTAURANT, label: t('categories.restaurant') },
-    { value: CARD_CATEGORIES.FITNESS, label: t('categories.fitness') },
-    { value: CARD_CATEGORIES.BEAUTY, label: t('categories.beauty') },
-    { value: CARD_CATEGORIES.REAL_ESTATE, label: t('categories.realEstate') },
-    { value: CARD_CATEGORIES.AUTOMOTIVE, label: t('categories.automotive') }
+    { value: CARD_CATEGORIES.BUSINESS, label: 'business' },
+    { value: CARD_CATEGORIES.TECHNOLOGY, label: 'technology' },
+    { value: CARD_CATEGORIES.HEALTHCARE, label: 'healthcare' },
+    { value: CARD_CATEGORIES.EDUCATION, label: 'education' },
+    { value: CARD_CATEGORIES.CREATIVE, label: 'creative' },
+    { value: CARD_CATEGORIES.LEGAL, label: 'legal' },
+    { value: CARD_CATEGORIES.FINANCE, label: 'finance' },
+    { value: CARD_CATEGORIES.RESTAURANT, label: 'restaurant' },
+    { value: CARD_CATEGORIES.FITNESS, label: 'fitness' },
+    { value: CARD_CATEGORIES.BEAUTY, label: 'beauty' },
+    { value: CARD_CATEGORIES.REAL_ESTATE, label: 'real Estate' },
+    { value: CARD_CATEGORIES.AUTOMOTIVE, label: 'automotive' }
   ];
 
   return (
@@ -145,37 +143,37 @@ const CardForm = ({
       {/* Basic Information */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {t('cards.basicInformation')}
+          {'basic Information'}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={t('cards.title')}
+            label={'Business Cards'}
             name="title"
             value={formData.title}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched.title ? errors.title : ''}
             required
-            placeholder={t('cards.titlePlaceholder')}
+            placeholder="Enter card title"
             data-testid="card-title-input"
           />
           
           <FormField
-            label={t('cards.subtitle')}
+            label={'Discover amazing digital business cards'}
             name="subtitle"
             value={formData.subtitle}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched.subtitle ? errors.subtitle : ''}
             required
-            placeholder={t('cards.subtitlePlaceholder')}
+            placeholder="Enter card subtitle"
             data-testid="card-subtitle-input"
           />
         </div>
 
         <FormField
-          label={t('cards.description')}
+          label={'description'}
           name="description"
           type="textarea"
           value={formData.description}
@@ -183,13 +181,13 @@ const CardForm = ({
           onBlur={handleBlur}
           error={touched.description ? errors.description : ''}
           required
-          placeholder={t('cards.descriptionPlaceholder')}
+          placeholder="Describe your business or services"
           rows={4}
           data-testid="card-description-input"
         />
 
         <FormField
-          label={t('cards.category')}
+          label={'category'}
           name="category"
           type="select"
           value={formData.category}
@@ -203,12 +201,12 @@ const CardForm = ({
       {/* Contact Information */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {t('cards.contactInformation')}
+          {'contact Information'}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={t('cards.phone')}
+            label={'phone'}
             name="phone"
             type="tel"
             value={formData.phone}
@@ -216,12 +214,12 @@ const CardForm = ({
             onBlur={handleBlur}
             error={touched.phone ? errors.phone : ''}
             required
-            placeholder={t('cards.phonePlaceholder')}
+            placeholder="Enter phone number"
             data-testid="card-phone-input"
           />
           
           <FormField
-            label={t('cards.email')}
+            label={'email'}
             name="email"
             type="email"
             value={formData.email}
@@ -229,20 +227,20 @@ const CardForm = ({
             onBlur={handleBlur}
             error={touched.email ? errors.email : ''}
             required
-            placeholder={t('cards.emailPlaceholder')}
+            placeholder="Enter email address"
             data-testid="card-email-input"
           />
         </div>
 
         <FormField
-          label={t('cards.website')}
+          label={'website'}
           name="web"
           type="url"
           value={formData.web}
           onChange={handleChange}
           onBlur={handleBlur}
           error={touched.web ? errors.web : ''}
-          placeholder={t('cards.websitePlaceholder')}
+          placeholder="Enter website URL"
           data-testid="card-web-input"
         />
       </div>
@@ -250,29 +248,29 @@ const CardForm = ({
       {/* Image */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {t('cards.image')}
+          {'image'}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={t('cards.imageUrl')}
+            label={'image Url'}
             name="image.url"
             type="url"
             value={formData.image?.url || ''}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched['image.url'] ? errors.imageUrl : ''}
-            placeholder={t('cards.imageUrlPlaceholder')}
+            placeholder="Enter image URL"
             data-testid="card-image-url-input"
           />
           
           <FormField
-            label={t('cards.imageAlt')}
+            label={'image Alt'}
             name="image.alt"
             value={formData.image?.alt || ''}
             onChange={handleChange}
             onBlur={handleBlur}
-            placeholder={t('cards.imageAltPlaceholder')}
+            placeholder="Image description"
             data-testid="card-image-alt-input"
           />
         </div>
@@ -281,79 +279,79 @@ const CardForm = ({
       {/* Address */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {t('cards.address')}
+          {'address'}
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={t('cards.state')}
+            label={'state'}
             name="address.state"
             value={formData.address?.state || ''}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched['address.state'] ? errors.state : ''}
             required
-            placeholder={t('cards.statePlaceholder')}
+            placeholder="Enter state/province"
             data-testid="card-state-input"
           />
           
           <FormField
-            label={t('cards.country')}
+            label={'country'}
             name="address.country"
             value={formData.address?.country || ''}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched['address.country'] ? errors.country : ''}
             required
-            placeholder={t('cards.countryPlaceholder')}
+            placeholder="Enter country"
             data-testid="card-country-input"
           />
           
           <FormField
-            label={t('cards.city')}
+            label={'city'}
             name="address.city"
             value={formData.address?.city || ''}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched['address.city'] ? errors.city : ''}
             required
-            placeholder={t('cards.cityPlaceholder')}
+            placeholder="Enter city"
             data-testid="card-city-input"
           />
           
           <FormField
-            label={t('cards.street')}
+            label={'street'}
             name="address.street"
             value={formData.address?.street || ''}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched['address.street'] ? errors.street : ''}
             required
-            placeholder={t('cards.streetPlaceholder')}
+            placeholder="Enter street name"
             data-testid="card-street-input"
           />
           
           <FormField
-            label={t('cards.houseNumber')}
+            label={'house Number'}
             name="address.houseNumber"
             value={formData.address?.houseNumber || ''}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched['address.houseNumber'] ? errors.houseNumber : ''}
             required
-            placeholder={t('cards.houseNumberPlaceholder')}
+            placeholder="Enter house number"
             data-testid="card-houseNumber-input"
           />
           
           <FormField
-            label={t('cards.zipCode')}
+            label={'zip Code'}
             name="address.zip"
             value={formData.address?.zip || ''}
             onChange={handleChange}
             onBlur={handleBlur}
             error={touched['address.zip'] ? errors.zip : ''}
             required
-            placeholder={t('cards.zipCodePlaceholder')}
+            placeholder="Enter ZIP code"
             data-testid="card-zip-input"
           />
         </div>
@@ -370,10 +368,10 @@ const CardForm = ({
           {loading ? (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              {t('common.loading')}
+              {'Loading...'}
             </div>
           ) : (
-            submitText || (mode === 'edit' ? t('cards.updateCard') : t('cards.createCard'))
+            submitText || (mode === 'edit' ? 'update Card' : 'create Card')
           )}
         </button>
       </div>

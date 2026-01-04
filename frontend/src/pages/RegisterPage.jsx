@@ -1,18 +1,20 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useTranslation } from "../hooks/useTranslation";
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { Helmet } from 'react-helmet-async';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const { register, loading, error, clearError } = useAuth();
-  const { t } = useTranslation();
+  const { register, loading, error, clearError, user, getRedirectPath } = useAuth();
   const { isDark } = useRoleTheme();
-  
-  // Set document title
-  useDocumentTitle(t('auth.register'));
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate(getRedirectPath(user.role), { replace: true });
+    }
+  }, [user, navigate, getRedirectPath]);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -51,13 +53,13 @@ const RegisterPage = () => {
       case 'firstName':
       case 'lastName':
         isValid = value.trim().length >= 2;
-        error = isValid ? '' : t('validation.nameMinLength');
+        error = isValid ? '' : 'Must be at least 2 characters';
         break;
       
       case 'email':
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         isValid = emailRegex.test(value);
-        error = isValid ? '' : t('validation.emailInvalid');
+        error = isValid ? '' : 'Invalid email address';
         break;
       
       case 'phone':
@@ -67,19 +69,19 @@ const RegisterPage = () => {
         } else {
           const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,15}$/;
           isValid = phoneRegex.test(value.trim());
-          error = isValid ? '' : t('validation.phoneFormat');
+          error = isValid ? '' : 'Invalid phone format';
         }
         break;
       
       case 'password':
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/;
         isValid = passwordRegex.test(value);
-        error = isValid ? '' : t('validation.passwordRequirements');
+        error = isValid ? '' : 'Password must contain at least 8 characters, uppercase, lowercase, number and special character';
         break;
       
       case 'confirmPassword':
         isValid = value === formData.password && value.length > 0;
-        error = isValid ? '' : t('validation.passwordsNotMatch');
+        error = isValid ? '' : 'Passwords do not match';
         break;
       
       default:
@@ -93,14 +95,14 @@ const RegisterPage = () => {
 
   const validateForm = () => {
     if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
-      setValidationError(t('validation.required'));
+      setValidationError('All required fields must be filled');
       return false;
     }
 
     // Email validation (strict)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setValidationError(t('validation.emailInvalid'));
+      setValidationError('Invalid email address');
       return false;
     }
 
@@ -109,20 +111,20 @@ const RegisterPage = () => {
       const israeliPhoneRegex = /^(\+972|0)([23489]|5[0248]|77)[0-9]{7}$/;
       const generalPhoneRegex = /^[\+]?[0-9\s\-\(\)]{8,15}$/;
       if (!israeliPhoneRegex.test(formData.phone.replace(/[\s\-\(\)]/g, '')) && !generalPhoneRegex.test(formData.phone.trim())) {
-        setValidationError(t('validation.phoneFormat'));
+        setValidationError('Invalid phone format');
         return false;
       }
     }
 
-    // Password validation - HackerU requirements: 1 uppercase, 1 lowercase, 1 digit, 1 special char, min 8 chars
+    // Password validation: 1 uppercase, 1 lowercase, 1 digit, 1 special char, min 8 chars
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/;
     if (!passwordRegex.test(formData.password)) {
-      setValidationError(t('validation.passwordRequirements'));
+      setValidationError('Password must contain at least 8 characters, uppercase, lowercase, number and special character');
       return false;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setValidationError(t('validation.passwordsNotMatch'));
+      setValidationError('Passwords do not match');
       return false;
     }
 
@@ -152,9 +154,9 @@ const RegisterPage = () => {
       const result = await register(userData);
       
       if (result.success) {
-        setSuccess(t('validation.registerSuccess'));
+        setSuccess('Registration successful! Redirecting...');
         setTimeout(() => {
-          navigate('/login');
+          navigate(getRedirectPath(result.user.role));
         }, 1500);
       }
     } catch (err) {
@@ -172,16 +174,22 @@ const RegisterPage = () => {
   const displayError = validationError || error;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex" data-testid="register-page">
+    <>
+      <Helmet>
+        <title>Register | FuturistCards</title>
+        <meta name="description" content="Create your FuturistCards account and start building professional digital business cards" />
+      </Helmet>
+
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex" data-testid="register-page">
       {/* Left side - Form */}
       <div className="w-full lg:w-3/4 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 xl:px-20">
         <div className="mx-auto w-full max-w-md lg:max-w-lg xl:max-w-xl">
           <div className="text-center mb-8">
             <h2 className="text-4xl font-bold text-white mb-4 animate-float">
-              {t('auth.register')}
+              Create Account
             </h2>
             <p className="text-lg text-indigo-200">
-              {t('auth.createNewAccount')}
+              Join FuturistCards today and start creating amazing business cards
             </p>
           </div>
 
@@ -202,7 +210,7 @@ const RegisterPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="firstName" className="block text-sm font-medium text-white mb-2">
-                    {t('auth.firstName')}
+                    First Name
                   </label>
                   <input
                     type="text"
@@ -215,7 +223,7 @@ const RegisterPage = () => {
                       fieldErrors.firstName ? 'border-red-400 focus:ring-red-400' : 
                       'border-white/30 focus:ring-blue-400'
                     }`}
-                    placeholder={t('auth.firstNamePlaceholder')}
+                    placeholder="Enter your first name"
                     required
                     data-testid="register-firstName"
                   />
@@ -226,14 +234,14 @@ const RegisterPage = () => {
                   )}
                   {fieldValid.firstName && !fieldErrors.firstName && (
                     <p className="mt-1 text-sm text-green-300 flex items-center">
-                      <span className="mr-1">✅</span> {t('validation.valid')}
+                      <span className="mr-1">✅</span> Valid
                     </p>
                   )}
                 </div>
 
                 <div>
                   <label htmlFor="lastName" className="block text-sm font-medium text-white mb-2">
-                    {t('auth.lastName')}
+                    Last Name
                   </label>
                   <input
                     type="text"
@@ -246,7 +254,7 @@ const RegisterPage = () => {
                       fieldErrors.lastName ? 'border-red-400 focus:ring-red-400' : 
                       'border-white/30 focus:ring-blue-400'
                     }`}
-                    placeholder={t('auth.lastNamePlaceholder')}
+                    placeholder="Enter your last name"
                     required
                     data-testid="register-lastName"
                   />
@@ -257,7 +265,7 @@ const RegisterPage = () => {
                   )}
                   {fieldValid.lastName && !fieldErrors.lastName && (
                     <p className="mt-1 text-sm text-green-300 flex items-center">
-                      <span className="mr-1">✅</span> {t('validation.valid')}
+                      <span className="mr-1">✅</span> Valid
                     </p>
                   )}
                 </div>
@@ -265,7 +273,7 @@ const RegisterPage = () => {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
-                  {t('auth.email')}
+                  Email
                 </label>
                 <input
                   type="email"
@@ -278,7 +286,7 @@ const RegisterPage = () => {
                     fieldErrors.email ? 'border-red-400 focus:ring-red-400' : 
                     'border-white/30 focus:ring-blue-400'
                   }`}
-                  placeholder={t('auth.emailPlaceholder')}
+                  placeholder="Enter your email"
                   required
                   data-testid="register-email"
                 />
@@ -289,14 +297,14 @@ const RegisterPage = () => {
                 )}
                 {fieldValid.email && !fieldErrors.email && (
                   <p className="mt-1 text-sm text-green-300 flex items-center">
-                    <span className="mr-1">✅</span> {t('validation.emailValid')}
+                    <span className="mr-1">✅</span> Valid email
                   </p>
                 )}
               </div>
 
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-white mb-2">
-                  {t('auth.phone')} <span className="text-gray-400 text-xs">({t('auth.optional')})</span>
+                  Phone <span className="text-gray-400 text-xs">(Optional)</span>
                 </label>
                 <input
                   type="tel"
@@ -309,7 +317,7 @@ const RegisterPage = () => {
                     fieldErrors.phone ? 'border-red-400 focus:ring-red-400' : 
                     'border-white/30 focus:ring-blue-400'
                   }`}
-                  placeholder={t('auth.phonePlaceholder')}
+                  placeholder="Enter your phone number"
                   data-testid="register-phone"
                 />
                 {fieldErrors.phone && (
@@ -319,7 +327,7 @@ const RegisterPage = () => {
                 )}
                 {fieldValid.phone && !fieldErrors.phone && formData.phone.trim() !== '' && (
                   <p className="mt-1 text-sm text-green-300 flex items-center">
-                    <span className="mr-1">✅</span> {t('validation.phoneValid')}
+                    <span className="mr-1">✅</span> Valid phone
                   </p>
                 )}
               </div>
@@ -327,7 +335,7 @@ const RegisterPage = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                    {t('auth.password')}
+                    Password
                   </label>
                   <input
                     type="password"
@@ -340,7 +348,7 @@ const RegisterPage = () => {
                       fieldErrors.password ? 'border-red-400 focus:ring-red-400' : 
                       'border-white/30 focus:ring-blue-400'
                     }`}
-                    placeholder={t('auth.passwordPlaceholder')}
+                    placeholder="Enter your password"
                     required
                     data-testid="register-password"
                   />
@@ -351,14 +359,14 @@ const RegisterPage = () => {
                   )}
                   {fieldValid.password && !fieldErrors.password && (
                     <p className="mt-1 text-sm text-green-300 flex items-center">
-                      <span className="mr-1">✅</span> {t('validation.passwordStrong')}
+                      <span className="mr-1">✅</span> Strong password
                     </p>
                   )}
                 </div>
 
                 <div>
                   <label htmlFor="confirmPassword" className="block text-sm font-medium text-white mb-2">
-                    {t('auth.confirmPassword')}
+                    Confirm Password
                   </label>
                   <input
                     type="password"
@@ -371,7 +379,7 @@ const RegisterPage = () => {
                       fieldErrors.confirmPassword ? 'border-red-400 focus:ring-red-400' : 
                       'border-white/30 focus:ring-blue-400'
                     }`}
-                    placeholder={t('auth.confirmPasswordPlaceholder')}
+                    placeholder="Confirm your password"
                     required
                     data-testid="register-confirmPassword"
                   />
@@ -382,7 +390,7 @@ const RegisterPage = () => {
                   )}
                   {fieldValid.confirmPassword && !fieldErrors.confirmPassword && (
                     <p className="mt-1 text-sm text-green-300 flex items-center">
-                      <span className="mr-1">✅</span> {t('validation.passwordMatch')}
+                      <span className="mr-1">✅</span> Passwords match
                     </p>
                   )}
                 </div>
@@ -390,7 +398,7 @@ const RegisterPage = () => {
 
               <div>
                 <label htmlFor="role" className="block text-sm font-medium text-white mb-2">
-                  {t('auth.accountType')}
+                  Account Type
                 </label>
                 <select
                   id="role"
@@ -400,14 +408,14 @@ const RegisterPage = () => {
                   className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
                   data-testid="register-role"
                 >
-                  <option value="user" className="bg-gray-800 text-white">{t('auth.userAccount')}</option>
-                  <option value="business" className="bg-gray-800 text-white">{t('auth.businessAccount')}</option>
-                  <option value="admin" className="bg-gray-800 text-white">{t('auth.adminAccount')}</option>
+                  <option value="user" className="bg-gray-800 text-white">User</option>
+                  <option value="business" className="bg-gray-800 text-white">Business</option>
+                  <option value="admin" className="bg-gray-800 text-white">Admin</option>
                 </select>
                 <p className="mt-2 text-xs text-white/70">
-                  {formData.role === 'user' && t('auth.userAccountDesc')}
-                  {formData.role === 'business' && t('auth.businessAccountDesc')}
-                  {formData.role === 'admin' && t('auth.adminAccountDesc')}
+                  {formData.role === 'user' && 'Create and manage your personal digital business cards'}
+                  {formData.role === 'business' && 'Create, manage and share multiple business cards for your company'}
+                  {formData.role === 'admin' && 'Full administrative access to manage users and content'}
                 </p>
               </div>
 
@@ -421,7 +429,7 @@ const RegisterPage = () => {
                   {loading ? (
                     <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                   ) : (
-                    t('auth.signUp')
+                    'Sign Up'
                   )}
                 </button>
               </div>
@@ -429,13 +437,13 @@ const RegisterPage = () => {
 
             <div className="mt-6 text-center">
               <p className="text-sm text-white/80">
-                {t('auth.alreadyHaveAccount')} {' '}
+                Already have an account? {' '}
                 <Link 
                   to="/login" 
                   className="font-medium text-blue-300 hover:text-blue-200 transition-colors"
                   data-testid="login-link"
                 >
-                  {t('auth.signIn')}
+                  Sign In
                 </Link>
               </p>
             </div>
@@ -452,7 +460,7 @@ const RegisterPage = () => {
         <div className="absolute inset-0 transform hover:scale-105 transition-all duration-700 ease-out">
           <img 
             src="/images/register-hero.jpg" 
-            alt={t('auth.registerImageAlt')}
+            alt="Register hero image"
             className="h-full w-full object-cover"
             onError={(e) => {
               e.target.style.display = 'none';
@@ -480,10 +488,10 @@ const RegisterPage = () => {
         <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8 bg-gradient-to-t from-black/85 via-black/50 to-transparent">
           <div className="text-white transform hover:translate-y-[-2px] transition-all duration-300">
             <h3 className="text-xl lg:text-2xl font-bold mb-3 text-white drop-shadow-lg">
-              {t('auth.joinFutureCommunity')}
+              Join Our Community
             </h3>
             <p className="text-sm lg:text-base text-white/95 leading-relaxed backdrop-blur-sm bg-black/20 rounded-lg p-3 border border-white/20">
-              {t('auth.registerDescription')}
+              Start creating stunning digital business cards with advanced features and cutting-edge design
             </p>
           </div>
         </div>
@@ -492,6 +500,7 @@ const RegisterPage = () => {
         <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-purple-400/60 via-pink-400/40 to-transparent"></div>
       </div>
     </div>
+    </>
   );
 };
 
