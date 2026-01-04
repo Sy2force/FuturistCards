@@ -1,185 +1,147 @@
-# 🚀 FuturistCards - Digital Business Card Platform
+# 🚀 FuturistCards - Digital Business Cards Platform
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/Sy2force/FuturistCards)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Node.js](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen.svg)](https://nodejs.org/)
-[![React](https://img.shields.io/badge/react-18.2.0-blue.svg)](https://reactjs.org/)
-[![Production Ready](https://img.shields.io/badge/status-production%20ready-brightgreen.svg)]()
+[![Vercel](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://futuristcards.vercel.app)
+[![Render](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://futuristcards.onrender.com)
+[![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)](https://www.mongodb.com/atlas)
 
-> Modern full-stack platform for creating and managing digital business cards with glassmorphism design and complete multilingual support (FR/EN/HE).
+## 📋 Overview
 
-## 📋 Table of Contents
+**FuturistCards** is a modern, full-stack web application for creating, managing, and sharing digital business cards. Built with React 18, Node.js, and MongoDB, it offers a seamless experience for professionals and businesses to digitize their networking.
 
-- [🎯 Overview](#-overview)
-- [✨ Features](#-features)
-- [🛠️ Technologies](#️-technologies)
-- [🚀 Installation](#-installation)
+🌐 **Live Demo**: [https://futuristcards.vercel.app](https://futuristcards.vercel.app)  
+📚 **API Health**: [https://futuristcards.onrender.com/api/health](https://futuristcards.onrender.com/api/health)
 
-### 🔐 Authentification & Autorisation
-- Système d'inscription/connexion sécurisé avec JWT
-- Trois rôles utilisateur : **User**, **Business**, **Admin**
-- Validation stricte des mots de passe (Maj+Min+Chiffre+Spécial)
-- Protection des routes selon les permissions
+## ✨ Key Features
 
-### 💳 Gestion des Cartes
-- Création de cartes de visite personnalisées
-- Édition en temps réel avec prévisualisation
-- Système de favoris pour les utilisateurs
-- Galerie de cartes avec recherche et filtres
-- Partage social intégré
+### 🔐 **Authentication & Security**
+- JWT-based authentication with refresh tokens
+- Role-based access control (User, Business, Admin)
+- HackerU-compliant password validation
+- Protected routes and secure API endpoints
+
+### 💼 **Business Card Management**
+- **CRUD Operations**: Create, Read, Update, Delete cards
+- **Rich Templates**: Customizable card designs
+- **Media Support**: Image upload and optimization
+- **Sharing**: QR codes and direct links
 
 ### 🎨 Interface Utilisateur
 - Design glassmorphism moderne et élégant
-- Mode sombre/clair avec persistance
-- Interface responsive (Mobile-first)
-- Animations fluides avec Framer Motion
-- Support multilingue (FR/EN/HE) avec RTL complet
 
-### 👨‍💼 Dashboard Admin Temps Réel
-- Gestion complète des utilisateurs
-- Statistiques en temps réel avec graphiques
-- Onglet "זמן אמת" (Real-Time) avec métriques live
-- Système d'événements personnalisés
-- Feed d'activités instantané
-- Notifications temps réel pour interactions
+### 🎨 **Modern UI/UX**
+- **Glassmorphism Design** with Tailwind CSS
+- **Dark/Light Mode** with smooth transitions
+- **Responsive Design** (mobile-first)
+- **Animations** with Framer Motion
 
-### 🌍 Localisation Hébraïque Avancée
-- Support RTL complet pour l'hébreu
-- Prix en shekels israéliens (₪) avec conversion réaliste
-- Navigation basée sur les rôles avec labels hébreux
-- ServicesPage entièrement localisée
-- 400+ clés de traduction dans 3 langues
+### 🌍 **Internationalization**
+- **Multi-language**: French, English, Hebrew
+- **RTL Support** for Hebrew
+- **839+ translations** with dynamic switching
 
-## 🛠️ Stack Technique
+### 👑 **Admin Dashboard**
+- User management and analytics
+- Real-time statistics
+- Content moderation
+- System monitoring
 
-### Frontend
-- **React 18** - Framework UI moderne
-- **Vite** - Build tool ultra-rapide
-- **Tailwind CSS** - Framework CSS utility-first
-- **Framer Motion** - Animations fluides
-- **Axios** - Client HTTP
-- **React Router v6** - Navigation SPA
+## 🛠️ Tech Stack
 
-### Backend
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web minimaliste
-- **MongoDB** - Base de données NoSQL
-- **Mongoose** - ODM pour MongoDB
-- **JWT** - Authentification stateless
-- **bcrypt** - Hachage des mots de passe
-- **Helmet** - Sécurité HTTP
+| Layer | Technologies |
+|-------|-------------|
+| **Frontend** | React 18, Vite, Tailwind CSS, Framer Motion, React Router v6 |
+| **Backend** | Node.js, Express.js, MongoDB Atlas, Mongoose ODM |
+| **Auth** | JWT, bcrypt, role-based access control |
+| **Deployment** | Vercel (Frontend), Render (Backend) |
+| **Testing** | Playwright E2E, ESLint |
+| **DevOps** | GitHub Actions, automated deployments |
 
-### Outils & DevOps
-- **ESLint** - Linting JavaScript (0 erreurs, 0 warnings)
-- **Prettier** - Formatage de code
-- **Jest** - Tests unitaires
-- **Playwright** - Tests E2E (93/93 tests passants)
-- **Docker** - Containerisation
-- **GitHub Actions** - CI/CD
+## 🚀 Quick Start
 
-## 🚀 Installation & Démarrage
+### Prerequisites
+- Node.js 18+ and npm
+- MongoDB Atlas account (or local MongoDB)
+- Git
 
-### Prérequis
-- Node.js 18+
-- npm 9+
-- MongoDB (local ou Atlas)
-
-### Installation Rapide
+### 1. Clone & Install
 ```bash
-# Cloner le repository
-git clone https://github.com/username/FuturistCards.git
-cd FuturistCards
+git clone https://github.com/yourusername/futuristcards.git
+cd futuristcards
 
-# Démarrage automatique (recommandé)
-chmod +x start.sh
-./start.sh
+# Install frontend dependencies
+cd frontend && npm install
+
+# Install backend dependencies  
+cd ../backend && npm install
 ```
 
-### Installation Manuelle
-
-#### Backend
+### 2. Environment Setup
 ```bash
-cd backend
-npm install
-cp .env.example .env
-# Configurer les variables d'environnement
-npm run dev
+# Frontend environment
+cp frontend/.env.example frontend/.env
+
+# Backend environment
+cp backend/.env.example backend/.env
 ```
 
-#### Frontend
+**Configure your `.env` files with your MongoDB URI, JWT secrets, etc.**
+
+### 3. Start Development
 ```bash
-cd frontend
-npm install
-cp .env.example .env.local
-# Configurer les variables d'environnement
-npm run dev
+# Terminal 1 - Backend
+cd backend && npm run dev
+
+# Terminal 2 - Frontend  
+cd frontend && npm run dev
 ```
 
-## 🌐 URLs d'Accès
-
-- **Frontend**: http://localhost:3000
+### 4. Access Application
+- **Frontend**: http://localhost:3010
 - **Backend API**: http://localhost:5001
-- **Documentation API**: http://localhost:5001/api-docs
+- **Health Check**: http://localhost:5001/api/health
 
-## 🧪 Tests & Qualité
+## 📁 Project Structure
 
-### Tests Backend (Jest)
-```bash
-cd backend
-npm test
+```
+FuturistCards/
+├── 📁 frontend/                # React 18 + Vite application
+│   ├── 📁 src/
+│   │   ├── 📁 components/      # Reusable UI components
+│   │   ├── 📁 pages/          # Route page components
+│   │   ├── 📁 context/        # React Context providers
+│   │   ├── 📁 hooks/          # Custom React hooks
+│   │   ├── 📁 utils/          # Helper functions
+│   │   └── 📁 data/           # Static data & translations
+│   ├── 📁 public/             # Static assets
+│   ├── 📄 package.json
+│   ├── 📄 vercel.json         # Vercel deployment config
+│   └── 📄 .env.example
+├── 📁 backend/                 # Node.js + Express API
+│   ├── 📁 controllers/        # Route logic
+│   ├── 📁 models/            # MongoDB schemas
+│   ├── 📁 middleware/        # Custom middleware
+│   ├── 📁 routes/            # API endpoints
+│   ├── 📁 config/            # Database & app config
+│   ├── 📄 server.js          # Entry point
+│   ├── 📄 render.yaml        # Render deployment config
+│   └── 📄 .env.example
+├── 📄 README.md
+├── 📄 .gitignore
+└── 📄 LICENSE
 ```
 
-### Tests Frontend (Playwright)
-```bash
-cd frontend
-npx playwright test
-# ✅ 93/93 tests passants
-```
+## 🔧 Configuration
 
-### Qualité Code
-- **ESLint**: 0 erreurs, 0 warnings
-- **Build Production**: ✅ Succès (349.96 kB → 115.20 kB gzippé)
-- **Audit Sécurité**: 0 vulnérabilités critiques/hautes
-- **Performance**: Score 89/100
+### Frontend Environment Variables
+```env
+# Development
+VITE_API_URL=http://localhost:5001/api
+VITE_APP_NAME=FuturistCards
 
-## 📱 Pages & Fonctionnalités
-
-### Pages Publiques
-- **🏠 Accueil** - Présentation et hero section
-- **📋 À Propos** - Information sur l'entreprise
-- **📞 Contact** - Formulaire de contact
-- **🔐 Connexion/Inscription** - Authentification avec design split-screen
-
-### Pages Utilisateur
-- **🎴 Galerie** - Toutes les cartes publiques
-- **❤️ Favoris** - Cartes favorites de l'utilisateur
-- **👤 Profil** - Gestion du profil utilisateur
-
-### Pages Business
-- **➕ Créer** - Création de nouvelles cartes
-- **📝 Mes Cartes** - Gestion des cartes créées
-- **✏️ Éditer** - Modification des cartes existantes
-- **🛍️ Services** - Page services avec prix en ₪
-
-### Pages Admin
-- **📊 Overview** - Vue d'ensemble et statistiques
-- **⚡ זמן אמת** - Métriques temps réel avec graphiques
-- **👥 Users** - Gestion des comptes utilisateurs
-- **🎴 Cards** - Modération du contenu
-- **📈 Reports** - Analytics et rapports avancés
-
-## 🔒 Sécurité
-
-### Mesures Implémentées
-- **Headers de sécurité** avec Helmet.js
-- **Rate limiting** contre les attaques DDoS (100 req/15min)
-- **Validation stricte** des entrées utilisateur
-- **Chiffrement** des mots de passe avec bcrypt
-- **Tokens JWT** sécurisés avec expiration
-- **CORS** configuré pour la production
-
-### Audit de Sécurité ✅
-- **Score Global**: 89/100 - Production Ready
+# Production (set in Vercel dashboard)
+VITE_API_URL=https://futuristcards.onrender.com/api
 - **Vulnérabilités Critiques**: 0
 - **Vulnérabilités Hautes**: 0
 - **Tests de Pénétration**: Passés
