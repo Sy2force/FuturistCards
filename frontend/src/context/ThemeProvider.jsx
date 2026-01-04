@@ -1,5 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 import { ThemeProvider as NextThemesProvider, useTheme } from 'next-themes';
+
+// Safe check for window object
+const isBrowser = typeof window !== 'undefined';
 
 const RoleThemeContext = createContext();
 
@@ -206,9 +210,19 @@ const RoleThemeProvider = ({ children }) => {
     setTheme(isDark ? 'light' : 'dark');
   };
 
+  // Load saved theme from localStorage
+  useEffect(() => {
+    if (isBrowser) {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme) {
+        setIsDarkMode(savedTheme === 'dark');
+      }
+    }
+  }, []);
+
   // Apply CSS variables to document root
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || !isBrowser) return;
     
     const root = document.documentElement;
     const colors = currentTheme.colors;

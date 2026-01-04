@@ -1,4 +1,8 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// Safe check for browser environment
+const isBrowser = typeof window !== 'undefined';
 
 const AuthContext = createContext();
 
@@ -12,6 +16,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
+    if (!isBrowser) return null;
     const savedUser = localStorage.getItem('user');
     try {
       return savedUser ? JSON.parse(savedUser) : null;
@@ -21,19 +26,31 @@ export const AuthProvider = ({ children }) => {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [token, setToken] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const handleUserChanged = () => {
-      const savedUser = localStorage.getItem('user');
+    if (!isBrowser) {
+      setLoading(false);
+      return;
+    }
+    
+    const token = localStorage.getItem('token');
+    const userData = localStorage.getItem('user');
+    
+    if (token && userData) {
       try {
-        setUser(savedUser ? JSON.parse(savedUser) : null);
-      } catch {
-        setUser(null);
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+        setToken(token);
+        setIsAuthenticated(true);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
       }
-    };
-
-    window.addEventListener('userChanged', handleUserChanged);
-    return () => window.removeEventListener('userChanged', handleUserChanged);
+    }
+    setLoading(false);
   }, []);
 
 

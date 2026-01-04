@@ -1,12 +1,12 @@
 // Global error handler for production debugging
 export const logError = (error, context = '') => {
   const errorInfo = {
-    message: error.message,
-    stack: error.stack,
+    message: error?.message || 'Unknown error',
+    stack: error?.stack || 'No stack trace',
     context,
     timestamp: new Date().toISOString(),
-    url: window.location.href,
-    userAgent: navigator.userAgent
+    url: typeof window !== 'undefined' ? window.location.href : 'SSR',
+    userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'Unknown'
   };
   
   // Always log to console for debugging
@@ -48,11 +48,13 @@ export const handleApiError = (error, context = '') => {
   return error.response?.data?.message || error.message || 'An unexpected error occurred.';
 };
 
-// Global error event listener
-window.addEventListener('error', (event) => {
-  logError(event.error, 'Global Error Handler');
-});
+// Global error event listener - only in browser
+if (typeof window !== 'undefined') {
+  window.addEventListener('error', (event) => {
+    logError(event.error, 'Global Error Handler');
+  });
 
-window.addEventListener('unhandledrejection', (event) => {
-  logError(event.reason, 'Unhandled Promise Rejection');
-});
+  window.addEventListener('unhandledrejection', (event) => {
+    logError(event.reason, 'Unhandled Promise Rejection');
+  });
+}
