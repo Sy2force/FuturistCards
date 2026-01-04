@@ -26,10 +26,15 @@ export default defineConfig({
         }
       }
     },
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    assetsDir: 'assets',
+    emptyOutDir: true
   },
   preview: {
     port: 4173,
     host: true
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'axios', 'framer-motion']
   }
 });
