@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { Helmet } from 'react-helmet-async';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
@@ -88,7 +89,7 @@ const CardsPage = () => {
         <meta name="description" content={'Discover amazing digital business cards'} />
       </Helmet>
       
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir={language === 'he' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <motion.div 
@@ -98,10 +99,10 @@ const CardsPage = () => {
           className="text-center mb-12"
         >
           <h1 className="text-5xl font-bold mb-6 text-white">
-            {'title'}
+            Discover Cards
           </h1>
           <p className="text-xl text-gray-300 max-w-4xl mx-auto mb-8">
-            {'subtitle'}
+            Explore our collection of professional digital business cards
           </p>
           
           {/* Create New Card Button */}
@@ -115,7 +116,7 @@ const CardsPage = () => {
               className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
             >
               <PlusIcon className="w-5 h-5 ml-2" />
-              {'create New'}
+              Create New Card
             </Link>
           </motion.div>
         </motion.div>
@@ -134,7 +135,7 @@ const CardsPage = () => {
               <MagnifyingGlassIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder={'search Placeholder'}
+                placeholder="Search cards..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pr-10 pl-4 py-3 rounded-xl border bg-black/20 border-white/20 text-white placeholder-gray-400 focus:bg-black/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-300"
@@ -145,14 +146,14 @@ const CardsPage = () => {
             {/* Filter Toggle & Stats */}
             <div className="flex items-center gap-4">
               <div className="text-sm text-gray-400">
-{t('cards.resultsCount', { count: filteredCards.length })}
+{filteredCards.length} cards found
               </div>
               <button
                 onClick={() => setShowFilters(!showFilters)}
                 className="flex items-center gap-2 px-4 py-3 rounded-xl border bg-black/20 border-white/20 text-white hover:bg-black/30 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               >
                 <FunnelIcon className="w-5 h-5" />
-{'filters'}
+                Filters
               </button>
             </div>
           </div>
@@ -172,7 +173,7 @@ const CardsPage = () => {
                 {/* Category Filter */}
                 <div>
                   <label className="block text-sm font-medium mb-2 text-gray-300">
-{'category'}
+                    Category
                   </label>
                   <select
                     value={selectedCategory}
@@ -190,17 +191,17 @@ const CardsPage = () => {
                 {/* Sort Filter */}
                 <div>
                   <label className="block text-sm font-medium mb-2 text-gray-300">
-{'sort By'}
+                    Sort By
                   </label>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border bg-black/20 border-white/20 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="newest">{'newest'}</option>
-                    <option value="oldest">{'oldest'}</option>
-                    <option value="mostViewed">{'most Viewed'}</option>
-                    <option value="mostLiked">{'most Liked'}</option>
+                    <option value="newest">Newest</option>
+                    <option value="oldest">Oldest</option>
+                    <option value="mostViewed">Most Viewed</option>
+                    <option value="mostLiked">Most Liked</option>
                   </select>
                 </div>
               </div>
@@ -216,7 +217,7 @@ const CardsPage = () => {
                     }}
                     className="text-blue-400 hover:text-blue-300 font-medium text-sm transition-colors"
                   >
-{'clear Filters'}
+                    Clear Filters
                   </button>
                 </div>
               )}
@@ -298,10 +299,10 @@ const CardsPage = () => {
                   {/* Title and Subtitle */}
                   <div className="mb-3">
                     <h3 className="font-bold text-lg mb-1 text-white line-clamp-1">
-                      {'title Key}' || card.title}
+                      {card.title}
                     </h3>
                     <p className="text-sm text-gray-400 line-clamp-1">
-                      {'subtitle Key}' || card.subtitle}
+                      {card.subtitle}
                     </p>
                   </div>
 
@@ -322,7 +323,7 @@ const CardsPage = () => {
                   {/* Description */}
                   {card.description && (
                     <p className="text-sm text-gray-300 line-clamp-2 mb-4 leading-relaxed">
-                      {'description Key}' || card.description}
+                      {card.description}
                     </p>
                   )}
                 </Link>
@@ -343,7 +344,7 @@ const CardsPage = () => {
                       whileTap={{ scale: 0.95 }}
                       className="px-3 py-1 rounded-lg text-xs font-medium transition-colors bg-blue-600/20 text-blue-400 hover:bg-blue-600/30"
                     >
-{'view Card'}
+View Card
                     </motion.button>
                   </Link>
                 </div>
@@ -364,12 +365,12 @@ const CardsPage = () => {
               {searchTerm || selectedCategory !== 'all' ? '🔍' : '📇'}
             </div>
             <h3 className="text-2xl font-bold mb-4 text-white">
-{searchTerm || selectedCategory !== 'all' ? 'no Results' : 'No cards found'}
+{searchTerm || selectedCategory !== 'all' ? 'No Results Found' : 'No Cards Available'}
             </h3>
             <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
 {searchTerm || selectedCategory !== 'all' 
-                ? 'try Different Search' 
-                : 'be First To Create'
+                ? 'Try adjusting your search terms or filters' 
+                : 'Be the first to create a digital business card'
               }
             </p>
             
@@ -385,7 +386,7 @@ const CardsPage = () => {
                   }}
                   className="px-6 py-3 rounded-lg font-medium transition-colors bg-white/10 text-gray-300 hover:bg-white/20"
                 >
-                  {'clear Filters'}
+                  Clear Filters
                 </motion.button>
               )}
               
@@ -398,7 +399,7 @@ const CardsPage = () => {
                   className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300"
                 >
                   <PlusIcon className="w-5 h-5 ml-2" />
-{'create New'}
+                  Create New Card
                 </Link>
               </motion.div>
             </div>
@@ -417,7 +418,7 @@ const CardsPage = () => {
               <div className="absolute inset-0 rounded-full border-4 border-purple-500 border-r-transparent animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
             </div>
             <p className="mt-6 text-lg font-medium text-gray-300">
-{'Loading cards...'}
+Loading cards...
             </p>
             <div className="flex space-x-1 mt-4">
               <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
