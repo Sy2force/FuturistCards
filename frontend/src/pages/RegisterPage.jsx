@@ -3,12 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTranslation } from "../hooks/useTranslation";
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const RegisterPage = () => {
   const navigate = useNavigate();
   const { register, loading, error, clearError } = useAuth();
   const { t } = useTranslation();
   const { isDark } = useRoleTheme();
+  
+  // Set document title
+  useDocumentTitle(t('auth.register'));
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -23,14 +27,68 @@ const RegisterPage = () => {
   });
   const [validationError, setValidationError] = useState('');
   const [success, setSuccess] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [fieldValid, setFieldValid] = useState({});
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
     clearError();
     setValidationError('');
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    
+    // Real-time validation
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    let error = '';
+    let isValid = false;
+
+    switch (name) {
+      case 'firstName':
+      case 'lastName':
+        isValid = value.trim().length >= 2;
+        error = isValid ? '' : t('validation.nameMinLength');
+        break;
+      
+      case 'email':
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        isValid = emailRegex.test(value);
+        error = isValid ? '' : t('validation.emailInvalid');
+        break;
+      
+      case 'phone':
+        if (value.trim() === '') {
+          isValid = true; // Optional field
+          error = '';
+        } else {
+          const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,15}$/;
+          isValid = phoneRegex.test(value.trim());
+          error = isValid ? '' : t('validation.phoneFormat');
+        }
+        break;
+      
+      case 'password':
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*_-])[A-Za-z\d!@#$%^&*_-]{8,}$/;
+        isValid = passwordRegex.test(value);
+        error = isValid ? '' : t('validation.passwordRequirements');
+        break;
+      
+      case 'confirmPassword':
+        isValid = value === formData.password && value.length > 0;
+        error = isValid ? '' : t('validation.passwordsNotMatch');
+        break;
+      
+      default:
+        isValid = value.trim().length > 0;
+        break;
+    }
+
+    setFieldErrors(prev => ({ ...prev, [name]: error }));
+    setFieldValid(prev => ({ ...prev, [name]: isValid }));
   };
 
   const validateForm = () => {
@@ -39,16 +97,18 @@ const RegisterPage = () => {
       return false;
     }
 
-    // Email validation (simplified - accept any email format)
-    if (!formData.email || !formData.email.includes('@')) {
+    // Email validation (strict)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
       setValidationError(t('validation.emailInvalid'));
       return false;
     }
 
-    // Phone validation - optional field, validate format if provided
+    // Phone validation - Israeli format if provided
     if (formData.phone && formData.phone.trim() !== '') {
-      const phoneRegex = /^[\+]?[0-9\s\-\(\)]{8,15}$/;
-      if (!phoneRegex.test(formData.phone.trim())) {
+      const israeliPhoneRegex = /^(\+972|0)([23489]|5[0248]|77)[0-9]{7}$/;
+      const generalPhoneRegex = /^[\+]?[0-9\s\-\(\)]{8,15}$/;
+      if (!israeliPhoneRegex.test(formData.phone.replace(/[\s\-\(\)]/g, '')) && !generalPhoneRegex.test(formData.phone.trim())) {
         setValidationError(t('validation.phoneFormat'));
         return false;
       }
@@ -94,12 +154,19 @@ const RegisterPage = () => {
       if (result.success) {
         setSuccess(t('validation.registerSuccess'));
         setTimeout(() => {
-          navigate('/cards');
+          navigate('/login');
         }, 1500);
       }
     } catch (err) {
       // Error handled by AuthContext
     }
+  };
+
+  const isFormValid = () => {
+    const requiredFields = ['firstName', 'lastName', 'email', 'password', 'confirmPassword'];
+    const allRequiredValid = requiredFields.every(field => fieldValid[field] === true);
+    const noErrors = Object.values(fieldErrors).every(error => !error);
+    return allRequiredValid && noErrors;
   };
 
   const displayError = validationError || error;
@@ -143,11 +210,25 @@ const RegisterPage = () => {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                    className={`w-full px-4 py-3 border bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm rounded-lg ${
+                      fieldValid.firstName === true ? 'border-green-400 focus:ring-green-400' : 
+                      fieldErrors.firstName ? 'border-red-400 focus:ring-red-400' : 
+                      'border-white/30 focus:ring-blue-400'
+                    }`}
                     placeholder={t('auth.firstNamePlaceholder')}
                     required
                     data-testid="register-firstName"
                   />
+                  {fieldErrors.firstName && (
+                    <p className="mt-1 text-sm text-red-300 flex items-center">
+                      <span className="mr-1">❌</span> {fieldErrors.firstName}
+                    </p>
+                  )}
+                  {fieldValid.firstName && !fieldErrors.firstName && (
+                    <p className="mt-1 text-sm text-green-300 flex items-center">
+                      <span className="mr-1">✅</span> {t('validation.valid')}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -160,11 +241,25 @@ const RegisterPage = () => {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                    className={`w-full px-4 py-3 border bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm rounded-lg ${
+                      fieldValid.lastName === true ? 'border-green-400 focus:ring-green-400' : 
+                      fieldErrors.lastName ? 'border-red-400 focus:ring-red-400' : 
+                      'border-white/30 focus:ring-blue-400'
+                    }`}
                     placeholder={t('auth.lastNamePlaceholder')}
                     required
                     data-testid="register-lastName"
                   />
+                  {fieldErrors.lastName && (
+                    <p className="mt-1 text-sm text-red-300 flex items-center">
+                      <span className="mr-1">❌</span> {fieldErrors.lastName}
+                    </p>
+                  )}
+                  {fieldValid.lastName && !fieldErrors.lastName && (
+                    <p className="mt-1 text-sm text-green-300 flex items-center">
+                      <span className="mr-1">✅</span> {t('validation.valid')}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -178,11 +273,25 @@ const RegisterPage = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                  className={`w-full px-4 py-3 border bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm rounded-lg ${
+                    fieldValid.email === true ? 'border-green-400 focus:ring-green-400' : 
+                    fieldErrors.email ? 'border-red-400 focus:ring-red-400' : 
+                    'border-white/30 focus:ring-blue-400'
+                  }`}
                   placeholder={t('auth.emailPlaceholder')}
                   required
                   data-testid="register-email"
                 />
+                {fieldErrors.email && (
+                  <p className="mt-1 text-sm text-red-300 flex items-center">
+                    <span className="mr-1">❌</span> {fieldErrors.email}
+                  </p>
+                )}
+                {fieldValid.email && !fieldErrors.email && (
+                  <p className="mt-1 text-sm text-green-300 flex items-center">
+                    <span className="mr-1">✅</span> {t('validation.emailValid')}
+                  </p>
+                )}
               </div>
 
               <div>
@@ -195,10 +304,24 @@ const RegisterPage = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                  className={`w-full px-4 py-3 border bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm rounded-lg ${
+                    fieldValid.phone === true ? 'border-green-400 focus:ring-green-400' : 
+                    fieldErrors.phone ? 'border-red-400 focus:ring-red-400' : 
+                    'border-white/30 focus:ring-blue-400'
+                  }`}
                   placeholder={t('auth.phonePlaceholder')}
                   data-testid="register-phone"
                 />
+                {fieldErrors.phone && (
+                  <p className="mt-1 text-sm text-red-300 flex items-center">
+                    <span className="mr-1">❌</span> {fieldErrors.phone}
+                  </p>
+                )}
+                {fieldValid.phone && !fieldErrors.phone && formData.phone.trim() !== '' && (
+                  <p className="mt-1 text-sm text-green-300 flex items-center">
+                    <span className="mr-1">✅</span> {t('validation.phoneValid')}
+                  </p>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -212,11 +335,25 @@ const RegisterPage = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                    className={`w-full px-4 py-3 border bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm rounded-lg ${
+                      fieldValid.password === true ? 'border-green-400 focus:ring-green-400' : 
+                      fieldErrors.password ? 'border-red-400 focus:ring-red-400' : 
+                      'border-white/30 focus:ring-blue-400'
+                    }`}
                     placeholder={t('auth.passwordPlaceholder')}
                     required
                     data-testid="register-password"
                   />
+                  {fieldErrors.password && (
+                    <p className="mt-1 text-sm text-red-300 flex items-center">
+                      <span className="mr-1">❌</span> {fieldErrors.password}
+                    </p>
+                  )}
+                  {fieldValid.password && !fieldErrors.password && (
+                    <p className="mt-1 text-sm text-green-300 flex items-center">
+                      <span className="mr-1">✅</span> {t('validation.passwordStrong')}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -229,11 +366,25 @@ const RegisterPage = () => {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-white/30 bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-blue-400 rounded-lg focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm"
+                    className={`w-full px-4 py-3 border bg-white/10 text-white placeholder-white/60 hover:bg-white/20 focus:ring-2 focus:border-transparent transition-all duration-200 backdrop-blur-sm rounded-lg ${
+                      fieldValid.confirmPassword === true ? 'border-green-400 focus:ring-green-400' : 
+                      fieldErrors.confirmPassword ? 'border-red-400 focus:ring-red-400' : 
+                      'border-white/30 focus:ring-blue-400'
+                    }`}
                     placeholder={t('auth.confirmPasswordPlaceholder')}
                     required
                     data-testid="register-confirmPassword"
                   />
+                  {fieldErrors.confirmPassword && (
+                    <p className="mt-1 text-sm text-red-300 flex items-center">
+                      <span className="mr-1">❌</span> {fieldErrors.confirmPassword}
+                    </p>
+                  )}
+                  {fieldValid.confirmPassword && !fieldErrors.confirmPassword && (
+                    <p className="mt-1 text-sm text-green-300 flex items-center">
+                      <span className="mr-1">✅</span> {t('validation.passwordMatch')}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -264,7 +415,7 @@ const RegisterPage = () => {
                 <button
                   type="submit"
                   className="btn-primary w-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-400"
-                  disabled={loading}
+                  disabled={loading || !isFormValid()}
                   data-testid="register-submit-button"
                 >
                   {loading ? (

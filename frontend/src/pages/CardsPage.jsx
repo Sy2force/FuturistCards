@@ -1,16 +1,23 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet-async';
-import { useTranslation } from "../hooks/useTranslation";
+import { useTranslation } from '../hooks/useTranslation';
+import { useRoleTheme } from '../context/ThemeProvider';
+import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { PlusIcon, FunnelIcon, MagnifyingGlassIcon, HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { mockCards } from '../data/mockCards';
 import LikeButton from '../components/ui/LikeButton';
 
 const CardsPage = () => {
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
+  const { isDark } = useRoleTheme();
+  const { user } = useAuth();
+  
+  // Set document title
+  useDocumentTitle(t('nav.cards'));
   const { favorites, toggleFavorite, loading: favLoading } = useFavorites();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);

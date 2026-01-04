@@ -1,13 +1,17 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useTranslation } from "../hooks/useTranslation";
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTranslation } from "../hooks/useTranslation";
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { login, loading, error, clearError } = useAuth();
+  
+  // Set document title
+  useDocumentTitle(t('auth.login'));
   const [formData, setFormData] = useState({
     email: '',
     password: ''

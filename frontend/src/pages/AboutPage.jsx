@@ -1,7 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useTranslation } from "../hooks/useTranslation";
 import { motion } from 'framer-motion';
+import { useTranslation } from '../hooks/useTranslation';
+import { useRoleTheme } from '../context/ThemeProvider';
+import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -18,8 +19,11 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 
 const AboutPage = () => {
-  const { t, language } = useTranslation();
-  const { user } = useAuth();
+  const { t } = useTranslation();
+  const { isDark } = useRoleTheme();
+  
+  // Set document title
+  useDocumentTitle(t('nav.about'));
   
   const features = [
     {
