@@ -320,3 +320,4 @@ MIT License - see [LICENSE](LICENSE)
 <div align="center">
   <p>Made with ❤️ - © 2024 FuturistCards</p>
 </div>
+# Trigger Vercel redeploy
