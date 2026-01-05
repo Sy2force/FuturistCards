@@ -42,9 +42,6 @@ const corsOptions = {
     // pas d'origin = ok (Postman etc)
     if (!origin) return callback(null, true);
     
-    // Log origin for debugging
-    console.log('CORS Origin:', origin);
-    
     // Verify si l'origin est autorisée
     const isAllowed = allowedOrigins.some(allowedOrigin => {
       if (typeof allowedOrigin === 'string') {
@@ -55,12 +52,10 @@ const corsOptions = {
       return false;
     });
     
-    console.log('CORS Allowed:', isAllowed);
-    
     if (isAllowed) {
       callback(null, true);
     } else {
-      console.log('CORS Rejected:', origin);
+      console.warn('CORS Rejected:', origin);
       callback(null, false); // Properly reject unauthorized origins
     }
   },
