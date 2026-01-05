@@ -4,6 +4,42 @@ import { useRoleTheme } from '../../context/ThemeProvider';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 
+const StatCard = ({ title, value, icon, color, change, theme }) => (
+  <motion.div
+    className="glass-card p-6 rounded-xl"
+    style={{
+      backgroundColor: theme.colors.surface,
+      borderColor: theme.colors.border
+    }}
+    whileHover={{ scale: 1.02 }}
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.3 }}
+  >
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium" style={{ color: theme.colors.text.secondary }}>
+          {title}
+        </p>
+        <p className="text-3xl font-bold mt-2" style={{ color: theme.colors.text.primary }}>
+          {value.toLocaleString()}
+        </p>
+        {change && (
+          <p className={`text-sm mt-1 ${change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {change >= 0 ? '+' : ''}{change}% from last month
+          </p>
+        )}
+      </div>
+      <div
+        className="w-12 h-12 rounded-lg flex items-center justify-center"
+        style={{ backgroundColor: color + '20' }}
+      >
+        <span className="text-2xl">{icon}</span>
+      </div>
+    </div>
+  </motion.div>
+);
+
 const AnalyticsPage = () => {
   const { user } = useAuth();
   const { currentTheme } = useRoleTheme();
@@ -40,42 +76,6 @@ const AnalyticsPage = () => {
 
     return () => clearTimeout(timer);
   }, []);
-
-  const StatCard = ({ title, value, icon, color, change }) => (
-    <motion.div
-      className="glass-card p-6 rounded-xl"
-      style={{
-        backgroundColor: currentTheme.colors.surface,
-        borderColor: currentTheme.colors.border
-      }}
-      whileHover={{ scale: 1.02 }}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium" style={{ color: currentTheme.colors.text.secondary }}>
-            {title}
-          </p>
-          <p className="text-3xl font-bold mt-2" style={{ color: currentTheme.colors.text.primary }}>
-            {value.toLocaleString()}
-          </p>
-          {change && (
-            <p className={`text-sm mt-1 ${change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-              {change >= 0 ? '+' : ''}{change}% from last month
-            </p>
-          )}
-        </div>
-        <div
-          className="w-12 h-12 rounded-lg flex items-center justify-center"
-          style={{ backgroundColor: color + '20' }}
-        >
-          <span className="text-2xl">{icon}</span>
-        </div>
-      </div>
-    </motion.div>
-  );
 
   if (loading) {
     return (
@@ -125,6 +125,7 @@ const AnalyticsPage = () => {
               icon="👥"
               color={currentTheme.colors.primary}
               change={12.5}
+              theme={currentTheme}
             />
             <StatCard
               title="Total Cards"
@@ -132,6 +133,7 @@ const AnalyticsPage = () => {
               icon="💳"
               color={currentTheme.colors.accent}
               change={8.3}
+              theme={currentTheme}
             />
             <StatCard
               title="Total Views"
@@ -139,6 +141,7 @@ const AnalyticsPage = () => {
               icon="👁️"
               color="#10B981"
               change={15.7}
+              theme={currentTheme}
             />
             <StatCard
               title="Active Users"
@@ -146,6 +149,7 @@ const AnalyticsPage = () => {
               icon="⚡"
               color="#F59E0B"
               change={-2.1}
+              theme={currentTheme}
             />
           </div>
 

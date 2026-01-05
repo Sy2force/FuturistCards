@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { 
   CreditCardIcon, 
   HeartIcon, 
@@ -25,9 +24,6 @@ const DashboardPage = () => {
   const { user } = useAuth();
   const { favorites } = useFavorites();
   const { currentTheme } = useRoleTheme();
-  
-  // Set document title
-  useDocumentTitle('Dashboard | FuturistCards');
   const [stats, setStats] = useState({
     totalCards: 5,
     totalViews: 1247,

@@ -58,9 +58,7 @@ const LoginPage = () => {
       
       if (result.success) {
         setSuccess('Login successful! Redirecting...');
-        setTimeout(() => {
-          navigate(getRedirectPath(result.user.role));
-        }, 1500);
+        navigate(getRedirectPath(result.user.role), { replace: true });
       }
     } catch (err) {
       // Error handled by AuthContext

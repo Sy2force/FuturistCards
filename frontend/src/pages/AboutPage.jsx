@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { useAuth } from '../context/AuthContext';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -23,7 +22,6 @@ const AboutPage = () => {
   const { user } = useAuth();
   
   // Set document title
-  useDocumentTitle('About | FuturistCards');
   
   const features = [
     {

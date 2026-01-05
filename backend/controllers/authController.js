@@ -36,8 +36,8 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Email already exists. Please use a different email address.' });
     }
 
-    // Hash the password
-    const salt = await bcrypt.genSalt(10);
+    // Hash the password (8 rounds for faster performance while maintaining security)
+    const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     // Create the user (with MongoDB fallback)
@@ -179,8 +179,8 @@ const changePassword = async (req, res) => {
       return res.status(400).json({ message: 'Current password is incorrect' });
     }
 
-    // Hash new password
-    const salt = await bcrypt.genSalt(10);
+    // Hash new password (8 rounds for faster performance while maintaining security)
+    const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     await User.findByIdAndUpdate(req.user.id, { password: hashedPassword });

@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { 
   SparklesIcon, 
   CreditCardIcon, 
@@ -24,9 +23,6 @@ import MiniCardForm from '../components/forms/MiniCardForm';
 const HomePage = () => {
   const { isDark, currentTheme } = useRoleTheme();
   const { user } = useAuth();
-  
-  // Set document title
-  useDocumentTitle('Home | FuturistCards');
   const [showMiniCardForm, setShowMiniCardForm] = useState(false);
 
   const features = [

@@ -2,13 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 const NotFound = () => {
   const { currentTheme } = useRoleTheme();
   
   // Set document title
-  useDocumentTitle('Page Not Found | FuturistCards');
   
   return (
     <div className="min-h-screen glass-gradient flex items-center justify-center px-4">

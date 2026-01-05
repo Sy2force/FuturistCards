@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // Search configuration
 const SEARCH_CONFIG = {
@@ -7,6 +8,7 @@ const SEARCH_CONFIG = {
 };
 
 const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsCount = 0 }) => {
+  const { t } = useTranslation();
   const [query, setQuery] = useState(initialQuery);
   const [filters, setFilters] = useState({
     category: '',

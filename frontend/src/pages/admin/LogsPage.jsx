@@ -104,29 +104,37 @@ const LogsPage = () => {
 
   const getLevelColor = (level) => {
     switch (level) {
-      case 'error':
+      case 'error': {
         return '#EF4444';
-      case 'warning':
+      }
+      case 'warning': {
         return '#F59E0B';
-      case 'success':
+      }
+      case 'success': {
         return '#10B981';
+      }
       case 'info':
-      default:
+      default: {
         return '#3B82F6';
+      }
     }
   };
 
   const getLevelIcon = (level) => {
     switch (level) {
-      case 'error':
+      case 'error': {
         return '❌';
-      case 'warning':
+      }
+      case 'warning': {
         return '⚠️';
-      case 'success':
+      }
+      case 'success': {
         return '✅';
+      }
       case 'info':
-      default:
+      default: {
         return 'ℹ️';
+      }
     }
   };
 
@@ -141,19 +149,23 @@ const LogsPage = () => {
     const logDate = new Date(log.timestamp);
     
     switch (dateRange) {
-      case 'today':
+      case 'today': {
         matchesDate = logDate.toDateString() === now.toDateString();
         break;
-      case 'week':
+      }
+      case 'week': {
         const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         matchesDate = logDate >= weekAgo;
         break;
-      case 'month':
+      }
+      case 'month': {
         const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
         matchesDate = logDate >= monthAgo;
         break;
-      default:
+      }
+      default: {
         matchesDate = true;
+      }
     }
     
     return matchesFilter && matchesSearch && matchesDate;

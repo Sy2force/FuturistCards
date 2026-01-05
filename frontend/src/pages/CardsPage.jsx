@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { PlusIcon, FunnelIcon, MagnifyingGlassIcon, HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import { mockCards } from '../data/mockCards';
@@ -16,7 +15,6 @@ const CardsPage = () => {
   const { user } = useAuth();
   
   // Set document title
-  useDocumentTitle('Cards | FuturistCards');
   const { favorites, toggleFavorite, loading: favLoading } = useFavorites();
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);

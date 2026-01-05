@@ -12,11 +12,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     // Simuler des statistiques pour le dashboard
-    setStats({
-      cards: 3,
-      views: 127,
-      favorites: 23
-    });
+    const timer = setTimeout(() => {
+      setStats({
+        cards: 3,
+        views: 127,
+        favorites: 23
+      });
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   return (

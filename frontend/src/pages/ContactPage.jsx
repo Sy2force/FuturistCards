@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useTranslation } from 'react-i18next';
 import {
   EnvelopeIcon,
   PhoneIcon,
@@ -16,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 const ContactPage = () => {
+  const { t } = useTranslation();
   const { currentTheme } = useRoleTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -110,7 +112,7 @@ const ContactPage = () => {
         <meta name="description" content="Get in touch with FuturistCards team for support, inquiries, and business partnerships" />
       </Helmet>
       
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir={language === 'he' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
       {/* Hero Section */}
       <section className="relative py-20 px-4 sm:px-6 lg:px-8 mb-12">
         <div className="max-w-6xl mx-auto text-center">

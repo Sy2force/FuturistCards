@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { UserIcon, EnvelopeIcon, PhoneIcon, MapPinIcon, CameraIcon } from '@heroicons/react/24/outline';
 import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
@@ -18,7 +17,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   
   // Set document title
-  useDocumentTitle('Profile | FuturistCards');
   
   const [loading, setLoading] = useState(false);
   const [avatar, setAvatar] = useState(null);

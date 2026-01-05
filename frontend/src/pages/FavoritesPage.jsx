@@ -5,7 +5,6 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useFavorites } from '../context/FavoritesContext';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, EyeIcon } from '@heroicons/react/24/solid';
 import LikeButton from '../components/ui/LikeButton';
@@ -16,7 +15,6 @@ const FavoritesPage = () => {
   const { favorites, getFavoriteCards } = useFavorites();
   
   // Set document title
-  useDocumentTitle('Favorites | FuturistCards');
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

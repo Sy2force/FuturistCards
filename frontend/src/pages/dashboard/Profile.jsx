@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useRoleTheme } from '../../context/ThemeProvider';
 
 const Profile = () => {
+  const { t } = useTranslation();
   const { user, updateProfile } = useAuth();
   const { isDark } = useRoleTheme();
   
@@ -571,4 +573,4 @@ const Profile = () => {
   );
 };
 
-export default ProfilePage;
+export default Profile;

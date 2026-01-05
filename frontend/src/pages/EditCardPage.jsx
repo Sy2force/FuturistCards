@@ -5,7 +5,6 @@ import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import apiService from '../services/api';
 import { UserIcon, EnvelopeIcon, PhoneIcon, GlobeAltIcon, MapPinIcon, PhotoIcon, DocumentCheckIcon, ArrowLeftIcon, XMarkIcon, PencilIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 
@@ -17,7 +16,6 @@ const EditCardPage = () => {
   const fileInputRef = useRef(null);
   
   // Set document title
-  useDocumentTitle('Edit Card | FuturistCards');
   
   const [formData, setFormData] = useState({
     name: '',

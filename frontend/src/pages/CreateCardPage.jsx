@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import {
   UserIcon,
   EnvelopeIcon,
@@ -16,11 +16,11 @@ import {
 } from '@heroicons/react/24/outline';
 
 const CreateCardPage = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   
   // Set document title
-  useDocumentTitle('Create Card | FuturistCards');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -100,7 +100,7 @@ const CreateCardPage = () => {
         <meta name="description" content={'meta Description'} />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20" dir={language === 'he' ? 'rtl' : 'ltr'}>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Header */}

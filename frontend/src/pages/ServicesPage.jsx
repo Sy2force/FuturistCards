@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
+import { useTranslation } from 'react-i18next';
 import { 
   CodeBracketIcon, 
   DevicePhoneMobileIcon, 
@@ -29,6 +30,7 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 
 const ServicesPage = () => {
+  const { t } = useTranslation();
   const language = 'en'; // Fixed language to English
   const { user } = useAuth();
   const { currentTheme } = useRoleTheme();
@@ -203,7 +205,6 @@ const ServicesPage = () => {
             exit={{ scale: 0.9, opacity: 0 }}
             className="bg-gradient-to-br from-slate-900 to-purple-900 rounded-2xl p-8 max-w-md w-full border border-white/20"
             onClick={(e) => e.stopPropagation()}
-            dir={language === 'he' ? 'rtl' : 'ltr'}
           >
             <div className="text-center mb-6">
               {selectedService && (
@@ -211,7 +212,7 @@ const ServicesPage = () => {
                   <selectedService.icon className="h-12 w-12 mx-auto mb-4 text-blue-400" />
                   <h3 className="text-2xl font-bold text-white mb-2">{selectedService.title}</h3>
                   <p className="text-gray-300 mb-4">{selectedService.description}</p>
-                  <div className={`flex justify-center items-center mb-6 ${language === 'he' ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
+                  <div className="flex justify-center items-center mb-6 space-x-4">
                     <div className="text-center">
                       <p className="text-2xl font-bold text-green-400">{selectedService.startingPrice}</p>
                       <p className="text-sm text-gray-400">Starting Price</p>
@@ -240,16 +241,16 @@ const ServicesPage = () => {
               <div className="grid grid-cols-2 gap-4">
                 <button 
                   onClick={() => window.open('tel:+972-50-123-4567', '_self')}
-                  className={`flex items-center justify-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors ${language === 'he' ? 'flex-row-reverse' : ''}`}
+                  className="flex items-center justify-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                 >
-                  <PhoneIcon className={`h-5 w-5 text-green-400 ${language === 'he' ? 'mr-2' : 'ml-2'}`} />
+                  <PhoneIcon className="h-5 w-5 text-green-400 ml-2" />
                   <span className="text-white">Call Us</span>
                 </button>
                 <button 
                   onClick={() => window.open('mailto:services@futuristcards.com', '_self')}
-                  className={`flex items-center justify-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors ${language === 'he' ? 'flex-row-reverse' : ''}`}
+                  className="flex items-center justify-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                 >
-                  <EnvelopeIcon className={`h-5 w-5 text-blue-400 ${language === 'he' ? 'mr-2' : 'ml-2'}`} />
+                  <EnvelopeIcon className="h-5 w-5 text-blue-400 ml-2" />
                   <span className="text-white">Email Us</span>
                 </button>
               </div>
@@ -257,7 +258,7 @@ const ServicesPage = () => {
             
             <button
               onClick={() => setShowContactModal(false)}
-              className={`absolute top-4 text-gray-400 hover:text-white transition-colors ${language === 'he' ? 'right-4' : 'left-4'}`}
+              className="absolute top-4 left-4 text-gray-400 hover:text-white transition-colors"
             >
 ✕
             </button>
@@ -335,9 +336,9 @@ const ServicesPage = () => {
                   size="lg"
                   onClick={() => setShowContactModal(true)}
                   data-testid="get-quote-button"
-                  className={`px-8 py-4 text-lg font-semibold ${language === 'he' ? 'flex-row-reverse' : ''}`}
+                  className="px-8 py-4 text-lg font-semibold"
                 >
-                  <RocketLaunchIcon className={`w-6 h-6 ${language === 'he' ? 'mr-3' : 'ml-3'}`} />
+                  <RocketLaunchIcon className="w-6 h-6 ml-3" />
                   Get Free Quote
                 </GlassButton>
               </motion.div>
@@ -352,9 +353,9 @@ const ServicesPage = () => {
                   as={Link}
                   to="/cards"
                   data-testid="view-portfolio-button"
-                  className={`px-8 py-4 text-lg font-semibold ${language === 'he' ? 'flex-row-reverse' : ''}`}
+                  className="px-8 py-4 text-lg font-semibold"
                 >
-                  <GlobeAltIcon className={`w-6 h-6 ${language === 'he' ? 'ml-3' : 'mr-3'}`} />
+                  <GlobeAltIcon className="w-6 h-6 mr-3" />
                   View Our Work
                 </GlassButton>
               </motion.div>

@@ -17,14 +17,17 @@ export const FavoritesProvider = ({ children }) => {
 
   // Load favorites from localStorage on startup
   useEffect(() => {
-    const savedFavorites = localStorage.getItem('allFavorites');
-    if (savedFavorites) {
-      try {
-        setFavorites(JSON.parse(savedFavorites));
-      } catch (error) {
-        setFavorites({});
+    const timer = setTimeout(() => {
+      const savedFavorites = localStorage.getItem('allFavorites');
+      if (savedFavorites) {
+        try {
+          setFavorites(JSON.parse(savedFavorites));
+        } catch (error) {
+          setFavorites({});
+        }
       }
-    }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Save favorites to localStorage

@@ -12,7 +12,6 @@ import { HeartIcon as HeartIconSolid, StarIcon as StarIconSolid } from '@heroico
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useFavorites } from '../context/FavoritesContext';
 import { useAuth } from '../context/AuthContext';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { api } from '../services/api';
 import { mockCards } from '../data/mockCards';
 import LikeButton from '../components/ui/LikeButton';
@@ -21,7 +20,6 @@ const CardDetailsPage = () => {
   const { id } = useParams();
   
   // Set document title
-  useDocumentTitle('Card Details | FuturistCards');
   const navigate = useNavigate();
   const { isDark } = useRoleTheme();
   const { favorites, toggleFavorite } = useFavorites();

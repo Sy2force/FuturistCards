@@ -210,15 +210,7 @@ const RoleThemeProvider = ({ children }) => {
     setTheme(isDark ? 'light' : 'dark');
   };
 
-  // Load saved theme from localStorage
-  useEffect(() => {
-    if (isBrowser) {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        setIsDarkMode(savedTheme === 'dark');
-      }
-    }
-  }, []);
+  // Theme is automatically loaded by next-themes from localStorage
 
   // Apply CSS variables to document root
   useEffect(() => {

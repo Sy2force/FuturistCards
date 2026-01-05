@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { 
   HomeIcon, 
   CreditCardIcon, 
@@ -12,7 +11,6 @@ import {
 
 const ErrorPage = () => {
   // Set document title
-  useDocumentTitle('Error | FuturistCards');
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">

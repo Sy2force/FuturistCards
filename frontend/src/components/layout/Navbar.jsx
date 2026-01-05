@@ -57,7 +57,8 @@ const Navbar = ({ onCreateCard }) => {
 
   // Close mobile menu when route changes
   useEffect(() => {
-    setIsMenuOpen(false);
+    const timer = setTimeout(() => setIsMenuOpen(false), 0);
+    return () => clearTimeout(timer);
   }, [location.pathname]);
 
   // Close mobile menu on escape key

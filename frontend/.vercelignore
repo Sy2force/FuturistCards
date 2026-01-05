@@ -1,0 +1,12 @@
+# Vercel ignore
+node_modules
+.env
+.env.local
+.env.*.local
+dist
+.git
+.DS_Store
+coverage
+.vscode
+test-results
+playwright-report

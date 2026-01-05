@@ -39,24 +39,27 @@ const CardForm = ({
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
-      setFormData(prev => ({
-        ...prev,
-        ...initialData,
-        image: {
-          url: '',
-          alt: '',
-          ...initialData.image
-        },
-        address: {
-          state: '',
-          country: '',
-          city: '',
-          street: '',
-          houseNumber: '',
-          zip: '',
-          ...initialData.address
-        }
-      }));
+      const timer = setTimeout(() => {
+        setFormData(prev => ({
+          ...prev,
+          ...initialData,
+          image: {
+            url: '',
+            alt: '',
+            ...initialData.image
+          },
+          address: {
+            state: '',
+            country: '',
+            city: '',
+            street: '',
+            houseNumber: '',
+            zip: '',
+            ...initialData.address
+          }
+        }));
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [initialData]);
 
