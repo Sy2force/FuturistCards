@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 import { useRoleTheme } from './context/ThemeProvider';
 import { motion } from 'framer-motion';
-import DebugInfo from './components/debug/DebugInfo';
 
 // Layout components
 import Navbar from './components/layout/Navbar';
