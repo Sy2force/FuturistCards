@@ -38,6 +38,34 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://images.unsplash.com">
     
+    <!-- Critical Error Handler for Production Debugging -->
+    <script>
+      window.addEventListener('error', function(event) {
+        // Ignorer les erreurs non critiques ou extensions
+        if (event.filename && (event.filename.includes('extension') || event.filename.includes('content-script'))) return;
+        
+        var errorDiv = document.getElementById('critical-error-display');
+        if (!errorDiv) {
+          errorDiv = document.createElement('div');
+          errorDiv.id = 'critical-error-display';
+          errorDiv.style.position = 'fixed';
+          errorDiv.style.top = '0';
+          errorDiv.style.left = '0';
+          errorDiv.style.width = '100%';
+          errorDiv.style.height = '100%';
+          errorDiv.style.backgroundColor = '#1a1a1a';
+          errorDiv.style.color = '#ff5555';
+          errorDiv.style.zIndex = '999999';
+          errorDiv.style.padding = '20px';
+          errorDiv.style.fontFamily = 'monospace';
+          errorDiv.style.overflow = 'auto';
+          errorDiv.innerHTML = '<h1>Application Error</h1><p>Please share this screenshot with support:</p><hr/><pre id="error-content"></pre>';
+          document.body.appendChild(errorDiv);
+        }
+        var content = document.getElementById('error-content');
+        content.innerText += '\n\n' + new Date().toISOString() + '\n' + (event.error ? event.error.stack : event.message) + '\nfilename: ' + event.filename + '\nlineno: ' + event.lineno;
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
