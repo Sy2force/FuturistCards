@@ -206,8 +206,6 @@ function App() {
           },
         }}
       />
-      
-      <DebugInfo />
     </div>
   );
 }
