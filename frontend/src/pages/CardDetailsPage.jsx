@@ -122,7 +122,7 @@ const CardDetailsPage = () => {
             <div className="absolute inset-0 rounded-full border-4 border-purple-500 border-r-transparent animate-spin mx-auto" style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}></div>
           </div>
           <p className={`text-lg font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            {'loading'}
+            Loading...
           </p>
         </motion.div>
       </div>
@@ -138,9 +138,9 @@ const CardDetailsPage = () => {
           className="text-center max-w-md mx-auto p-8"
         >
           <div className="text-6xl mb-6">😔</div>
-          <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{'card Not Found'}</h2>
+          <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Card Not Found</h2>
           <p className={`mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            {'card Not Found Message'}
+            The card you're looking for doesn't exist or has been removed.
           </p>
           <motion.button
             onClick={() => navigate('/cards')}
@@ -148,7 +148,7 @@ const CardDetailsPage = () => {
             whileTap={{ scale: 0.95 }}
             className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-300 font-medium"
           >
-            {'back To Cards'}
+            Back to Cards
           </motion.button>
         </motion.div>
       </div>
@@ -181,7 +181,7 @@ const CardDetailsPage = () => {
               whileTap={{ scale: 0.95 }}
             >
               <ArrowLeftIcon className="w-5 h-5 mr-2" />
-              {'back To Cards'}
+              Back to Cards
             </motion.button>
 
             <div className="flex items-center space-x-3">
@@ -205,7 +205,7 @@ const CardDetailsPage = () => {
                 whileTap={{ scale: 0.95 }}
               >
                 <ShareIcon className="w-5 h-5 mr-2" />
-                {'share'}
+                Share
               </motion.button>
             </div>
           </motion.div>
@@ -252,11 +252,11 @@ const CardDetailsPage = () => {
                       <div className="flex items-center mt-4 space-x-4 text-sm opacity-80">
                         <div className="flex items-center">
                           <EyeIcon className="w-4 h-4 mr-1" />
-                          <span>{card.views || 0} {'views'}</span>
+                          <span>{card.views || 0} views</span>
                         </div>
                         <div className="flex items-center">
                           <HeartIconSolid className="w-4 h-4 mr-1" />
-                          <span>{card.likes || 0} {'likes'}</span>
+                          <span>{card.likes || 0} likes</span>
                         </div>
                         <div className="flex items-center">
                           <CalendarIcon className="w-4 h-4 mr-1" />
@@ -277,7 +277,7 @@ const CardDetailsPage = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 }}
                   >
-                    <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{'contact Info'}</h2>
+                    <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Contact Info</h2>
                     <div className="space-y-4">
                       {card.email && (
                         <motion.div 
@@ -288,7 +288,7 @@ const CardDetailsPage = () => {
                             <EnvelopeIcon className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1">
-                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{'Email'}</p>
+                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Email</p>
                             <a 
                               href={`mailto:${card.email}`}
                               className="text-blue-500 hover:text-blue-600 transition-colors font-medium"
@@ -308,7 +308,7 @@ const CardDetailsPage = () => {
                             <PhoneIcon className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1">
-                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{'Phone'}</p>
+                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Phone</p>
                             <a 
                               href={`tel:${card.phone}`}
                               className="text-green-500 hover:text-green-600 transition-colors font-medium"
@@ -328,7 +328,7 @@ const CardDetailsPage = () => {
                             <GlobeAltIcon className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1">
-                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{'website'}</p>
+                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Website</p>
                             <a 
                               href={card.website}
                               target="_blank"
@@ -350,7 +350,7 @@ const CardDetailsPage = () => {
                             <MapPinIcon className="w-5 h-5 text-white" />
                           </div>
                           <div className="flex-1">
-                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{'Address'}</p>
+                            <p className={`text-sm font-medium mb-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Address</p>
                             <p className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{card.address}</p>
                           </div>
                         </motion.div>
@@ -364,19 +364,19 @@ const CardDetailsPage = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4 }}
                   >
-                    <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{'about'}</h2>
+                    <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>About</h2>
                     <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
                       {card.description ? (
                         <p className={`leading-relaxed text-lg ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>{card.description}</p>
                       ) : (
-                        <p className={`text-lg italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{'no Description'}</p>
+                        <p className={`text-lg italic ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>No description available</p>
                       )}
                     </div>
 
                     {/* Rating et Reviews */}
                     {card.rating && (
                       <div className="mt-8">
-                        <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{'rating'}</h3>
+                        <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Rating</h3>
                         <div className={`p-6 rounded-xl ${isDarkMode ? 'bg-gray-700/30' : 'bg-gradient-to-r from-yellow-50 to-orange-50'}`}>
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2 gap-2">
@@ -393,7 +393,7 @@ const CardDetailsPage = () => {
                               </span>
                             </div>
                             <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                              {card.reviews} {'reviews'}
+                              {card.reviews} reviews
                             </div>
                           </div>
                         </div>
@@ -403,7 +403,7 @@ const CardDetailsPage = () => {
                     {/* Compétences */}
                     {card.skills && card.skills.length > 0 && (
                       <div className="mt-8">
-                        <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{'skills'}</h3>
+                        <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Skills</h3>
                         <div className="flex flex-wrap gap-2">
                           {card.skills.map((skill, index) => (
                             <motion.span 
@@ -423,7 +423,7 @@ const CardDetailsPage = () => {
                     {/* Services */}
                     {card.services && card.services.length > 0 && (
                       <div className="mt-8">
-                        <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{'services'}</h3>
+                        <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Services</h3>
                         <div className="grid gap-3">
                           {card.services.map((service, index) => (
                             <motion.div 
@@ -443,15 +443,15 @@ const CardDetailsPage = () => {
 
                     {/* Statistiques */}
                     <div className="mt-8">
-                      <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{'statistics'}</h3>
+                      <h3 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Statistics</h3>
                       <div className="grid grid-cols-2 gap-4">
                         <div className={`text-center p-4 rounded-xl ${isDarkMode ? 'bg-gray-700/30' : 'bg-blue-50'}`}>
                           <div className="text-2xl font-bold text-blue-500">{card.views || 0}</div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{'views'}</div>
+                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Views</div>
                         </div>
                         <div className={`text-center p-4 rounded-xl ${isDarkMode ? 'bg-gray-700/30' : 'bg-red-50'}`}>
                           <div className="text-2xl font-bold text-red-500">{card.likes || 0}</div>
-                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>{'likes'}</div>
+                          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Likes</div>
                         </div>
                       </div>
                     </div>
@@ -459,7 +459,7 @@ const CardDetailsPage = () => {
                     {/* Date de création */}
                     <div className="mt-6">
                       <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {'member Since'} {new Date(card.createdAt).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })}
+                        Member since {new Date(card.createdAt).toLocaleDateString('he-IL', { year: 'numeric', month: 'long', day: 'numeric' })}
                       </p>
                     </div>
                   </motion.div>
