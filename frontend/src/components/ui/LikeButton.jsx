@@ -3,34 +3,39 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../../context/AuthContext';
-import { useFavorites } from '../../context/FavoritesContext';
 import toast from 'react-hot-toast';
+
+const API_URL = 'https://futuristcards.onrender.com/api';
 
 const LikeButton = ({ 
   cardId, 
-  initialLikes = 0,
+  initialLikes = [],
   size = 'md', 
   showCount = true, 
   className = '',
   onLikeChange = null
 }) => {
   const { user } = useAuth();
-  const { toggleFavorite, isFavorite } = useFavorites();
-  const [likeCount, setLikeCount] = useState(() => {
-    const savedLikes = localStorage.getItem(`card_likes_${cardId}`);
-    return savedLikes ? parseInt(savedLikes) : (initialLikes || Math.floor(Math.random() * 100) + 10);
-  });
+  const [likes, setLikes] = useState(Array.isArray(initialLikes) ? initialLikes : []);
   const [loading, setLoading] = useState(false);
   const [showParticles, setShowParticles] = useState(false);
 
-  const isLiked = isFavorite(cardId);
+  // Check if current user has liked
+  const isLiked = user && likes.some(like => 
+    like === user._id || 
+    like === user.id || 
+    like._id === user._id ||
+    like.user === user._id
+  );
+
+  const likeCount = likes.length;
 
   // Sync with initialLikes prop
   useEffect(() => {
-    if (initialLikes > 0 && !localStorage.getItem(`card_likes_${cardId}`)) {
-      setLikeCount(initialLikes);
+    if (Array.isArray(initialLikes)) {
+      setLikes(initialLikes);
     }
-  }, [initialLikes, cardId]);
+  }, [initialLikes]);
 
   const handleLikeClick = async (e) => {
     e.preventDefault();
@@ -44,34 +49,70 @@ const LikeButton = ({
     setLoading(true);
     
     try {
+      const token = localStorage.getItem('token');
+      
+      // Call API to toggle like
+      const res = await fetch(`${API_URL}/cards/${cardId}/like`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const newLikes = data.likes || [];
+        setLikes(newLikes);
+        
+        const nowLiked = newLikes.some(like => 
+          like === user._id || 
+          like === user.id || 
+          like._id === user._id
+        );
+
+        // Show particles animation on like
+        if (nowLiked) {
+          setShowParticles(true);
+          setTimeout(() => setShowParticles(false), 1000);
+          toast.success('Liked! ❤️', { duration: 1500 });
+        } else {
+          toast('Unliked', { duration: 1500, icon: '💔' });
+        }
+
+        if (onLikeChange) {
+          onLikeChange({ isLiked: nowLiked, likesCount: newLikes.length, likes: newLikes });
+        }
+      } else {
+        // Fallback to optimistic update if API fails
+        const willBeLiked = !isLiked;
+        const newLikes = willBeLiked 
+          ? [...likes, user._id]
+          : likes.filter(l => l !== user._id && l._id !== user._id);
+        
+        setLikes(newLikes);
+        
+        if (willBeLiked) {
+          setShowParticles(true);
+          setTimeout(() => setShowParticles(false), 1000);
+          toast.success('Liked! ❤️', { duration: 1500 });
+        } else {
+          toast('Unliked', { duration: 1500, icon: '💔' });
+        }
+      }
+    } catch (error) {
+      // Optimistic update on error
       const willBeLiked = !isLiked;
-      const newLikeCount = willBeLiked ? likeCount + 1 : Math.max(0, likeCount - 1);
+      const newLikes = willBeLiked 
+        ? [...likes, user._id]
+        : likes.filter(l => l !== user._id && l._id !== user._id);
       
-      // Optimistic update
-      setLikeCount(newLikeCount);
-      localStorage.setItem(`card_likes_${cardId}`, newLikeCount.toString());
+      setLikes(newLikes);
       
-      // Show particles animation on like
       if (willBeLiked) {
         setShowParticles(true);
         setTimeout(() => setShowParticles(false), 1000);
       }
-      
-      // Toggle favorite in context
-      toggleFavorite(cardId);
-      
-      // Show toast feedback
-      if (willBeLiked) {
-        toast.success('Added to favorites! ❤️', { duration: 1500 });
-      } else {
-        toast('Removed from favorites', { duration: 1500, icon: '💔' });
-      }
-      
-      if (onLikeChange) {
-        onLikeChange({ isLiked: willBeLiked, likesCount: newLikeCount });
-      }
-    } catch (error) {
-      toast.error('Failed to update like');
     } finally {
       setLoading(false);
     }
@@ -79,24 +120,9 @@ const LikeButton = ({
 
   // Size configurations
   const sizeConfig = {
-    sm: {
-      icon: 'w-5 h-5',
-      text: 'text-sm',
-      padding: 'px-3 py-1.5',
-      gap: 'gap-1.5'
-    },
-    md: {
-      icon: 'w-6 h-6',
-      text: 'text-base',
-      padding: 'px-4 py-2',
-      gap: 'gap-2'
-    },
-    lg: {
-      icon: 'w-7 h-7',
-      text: 'text-lg',
-      padding: 'px-5 py-2.5',
-      gap: 'gap-2'
-    }
+    sm: { icon: 'w-5 h-5', text: 'text-sm', padding: 'px-3 py-1.5', gap: 'gap-1.5' },
+    md: { icon: 'w-6 h-6', text: 'text-base', padding: 'px-4 py-2', gap: 'gap-2' },
+    lg: { icon: 'w-7 h-7', text: 'text-lg', padding: 'px-5 py-2.5', gap: 'gap-2' }
   };
 
   const config = sizeConfig[size];
@@ -118,7 +144,7 @@ const LikeButton = ({
         `}
         whileHover={{ scale: loading ? 1 : 1.1 }}
         whileTap={{ scale: loading ? 1 : 0.9 }}
-        title={!user ? 'Login to like' : (isLiked ? 'Remove from favorites' : 'Add to favorites')}
+        title={!user ? 'Login to like' : (isLiked ? 'Unlike' : 'Like')}
         data-testid="like-button-action"
       >
         <AnimatePresence mode="wait">
@@ -140,12 +166,7 @@ const LikeButton = ({
               transition={{ type: "spring", stiffness: 500, damping: 15 }}
             >
               {isLiked ? (
-                <motion.div
-                  animate={{ 
-                    scale: [1, 1.3, 1],
-                  }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
-                >
+                <motion.div animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 0.4, ease: "easeOut" }}>
                   <HeartSolidIcon className={`${config.icon} drop-shadow-lg`} />
                 </motion.div>
               ) : (
@@ -174,12 +195,7 @@ const LikeButton = ({
             {[...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
-                initial={{ 
-                  opacity: 1, 
-                  scale: 0, 
-                  x: 0, 
-                  y: 0 
-                }}
+                initial={{ opacity: 1, scale: 0, x: 0, y: 0 }}
                 animate={{ 
                   opacity: [1, 1, 0], 
                   scale: [0, 1.2, 0.8], 
@@ -187,11 +203,7 @@ const LikeButton = ({
                   y: -40 - i * 12,
                   rotate: (i % 2 === 0 ? 1 : -1) * (20 + i * 15)
                 }}
-                transition={{ 
-                  duration: 1, 
-                  delay: i * 0.08,
-                  ease: "easeOut"
-                }}
+                transition={{ duration: 1, delay: i * 0.08, ease: "easeOut" }}
                 className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               >
                 <HeartSolidIcon className={`w-4 h-4 ${i % 3 === 0 ? 'text-red-400' : i % 3 === 1 ? 'text-pink-400' : 'text-rose-300'}`} />
