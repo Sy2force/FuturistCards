@@ -7,10 +7,39 @@ const isBrowser = typeof window !== 'undefined';
 
 const RoleThemeContext = createContext();
 
+// Default theme for fallback
+const defaultThemeValue = {
+  currentTheme: {
+    name: 'default',
+    colors: {
+      primary: '#6366f1',
+      secondary: '#4f46e5',
+      accent: '#8b5cf6',
+      background: '#1a1a2e',
+      surface: 'rgba(45, 45, 68, 0.8)',
+      border: 'rgba(99, 102, 241, 0.2)',
+      text: {
+        primary: '#ffffff',
+        secondary: '#a0aec0',
+        muted: '#9ca3af'
+      },
+      success: '#10b981',
+      warning: '#f59e0b',
+      error: '#ef4444'
+    }
+  },
+  isDark: true,
+  toggleDarkMode: () => {},
+  userRole: 'default',
+  themes: {},
+  mounted: true
+};
+
 export const useRoleTheme = () => {
   const context = useContext(RoleThemeContext);
+  // Return default theme if context is not available (prevents crashes)
   if (!context) {
-    throw new Error('useRoleTheme must be used within a RoleThemeProvider');
+    return defaultThemeValue;
   }
   return context;
 };
