@@ -7,6 +7,7 @@ import { AuthProvider } from './context/AuthContext'
 import { FavoritesProvider } from './context/FavoritesContext'
 import ErrorBoundary from './components/common/ErrorBoundary'
 import './utils/errorHandler' // Global error handling
+import './i18n' // i18n configuration
 import App from './App'
 import './index.css'
 

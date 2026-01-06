@@ -8,6 +8,7 @@ import { useFavorites } from '../context/FavoritesContext';
 import { PlusIcon, FunnelIcon, MagnifyingGlassIcon, HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import LikeButton from '../components/ui/LikeButton';
+import apiService from '../services/api';
 
 const CardsPage = () => {
   const { isDark } = useRoleTheme();

@@ -19,7 +19,6 @@ import GlassCard from '../../components/ui/GlassCard';
 import GlassButton from '../../components/ui/GlassButton';
 
 const MyCardsPage = () => {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [cards, setCards] = useState([]);
