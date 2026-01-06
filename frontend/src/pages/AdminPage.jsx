@@ -23,28 +23,50 @@ const AdminPage = () => {
   // Fetch data on mount and every 30 seconds
   const fetchData = async (showToast = false) => {
     setRefreshing(true);
+    let cardsLoaded = false;
+    let usersLoaded = false;
+    
     try {
-      // Fetch cards (public endpoint)
-      const cardsRes = await fetch(`${API_URL}/cards`);
-      if (cardsRes.ok) {
-        const cardsData = await cardsRes.json();
-        setCards(cardsData.cards || []);
+      // Fetch cards (public endpoint - always works)
+      try {
+        const cardsRes = await fetch(`${API_URL}/cards`);
+        if (cardsRes.ok) {
+          const cardsData = await cardsRes.json();
+          setCards(cardsData.cards || []);
+          cardsLoaded = true;
+        }
+      } catch (e) {
+        console.log('Cards fetch failed');
       }
 
-      // Fetch users (admin endpoint)
+      // Fetch users (admin endpoint - requires valid admin token)
       const token = localStorage.getItem('token');
       if (token) {
-        const usersRes = await fetch(`${API_URL}/admin/users`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        if (usersRes.ok) {
-          const usersData = await usersRes.json();
-          setUsers(usersData.users || []);
+        try {
+          const usersRes = await fetch(`${API_URL}/admin/users`, {
+            headers: { 
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          if (usersRes.ok) {
+            const usersData = await usersRes.json();
+            setUsers(usersData.users || []);
+            usersLoaded = true;
+          }
+        } catch (e) {
+          console.log('Users fetch failed - admin access required');
         }
       }
 
       setLastUpdate(new Date());
-      if (showToast) toast.success('Data refreshed!');
+      if (showToast) {
+        if (cardsLoaded) {
+          toast.success(`Data refreshed! ${cards.length} cards loaded`);
+        } else {
+          toast.error('Could not load data');
+        }
+      }
     } catch (error) {
       console.error('Fetch error:', error);
       if (showToast) toast.error('Failed to refresh');
