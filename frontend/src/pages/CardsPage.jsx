@@ -85,11 +85,23 @@ const CardsPage = () => {
     return favorites.some(fav => fav._id === cardId || fav.cardId === cardId);
   };
 
+  const handleDeleteCard = async (cardId) => {
+    if (!user || user.role !== 'admin') return;
+    if (!window.confirm('Delete this card?')) return;
+    try {
+      await apiService.deleteCard(cardId);
+      setCards(prev => prev.filter(c => c._id !== cardId));
+      toast.success('Card deleted');
+    } catch (err) {
+      toast.error('Failed to delete');
+    }
+  };
+
   return (
     <>
       <Helmet>
-        <title>{'Business Cards'} - FuturistCards</title>
-        <meta name="description" content={'Discover amazing digital business cards'} />
+        <title>Business Cards - FuturistCards</title>
+        <meta name="description" content="Discover amazing digital business cards" />
       </Helmet>
       
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
@@ -341,15 +353,28 @@ const CardsPage = () => {
                     <span className="font-medium">{card.likes || 0}</span>
                   </div>
                   
-                  <Link to={`/cards/${card._id}`}>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="px-3 py-1 rounded-lg text-xs font-medium transition-colors bg-blue-600/20 text-blue-400 hover:bg-blue-600/30"
-                    >
-View Card
-                    </motion.button>
-                  </Link>
+                  <div className="flex items-center gap-2 pt-4">
+                    {user?.role === 'admin' && (
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleDeleteCard(card._id); }}
+                        className="p-2 rounded-lg bg-red-600/20 text-red-400 hover:bg-red-600/30"
+                        title="Delete"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </motion.button>
+                    )}
+                    <Link to={`/cards/${card._id}`}>
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="px-3 py-1 rounded-lg text-xs font-medium bg-blue-600/20 text-blue-400 hover:bg-blue-600/30"
+                      >
+                        View Card
+                      </motion.button>
+                    </Link>
+                  </div>
                 </div>
               </motion.div>
             ))}
