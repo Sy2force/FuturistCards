@@ -232,7 +232,7 @@ const CreateCardPage = () => {
                     {imagePreview ? (
                       <img
                         src={imagePreview}
-                        alt=Preview
+                        alt="Preview"
                         className="w-24 h-24 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800"
                       />
                     ) : (
@@ -327,7 +327,7 @@ const CreateCardPage = () => {
                       <div className="relative">
                         <img
                           src={imagePreview}
-                          alt=Preview
+                          alt="Preview"
                           className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800 shadow-lg"
                         />
                         <button
