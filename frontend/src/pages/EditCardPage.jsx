@@ -217,8 +217,8 @@ const EditCardPage = () => {
   return (
     <>
       <Helmet>
-        <title>{'page Title'} - FuturistCards</title>
-        <meta name="description" content={'page Description'} />
+        <title>Edit Card - FuturistCards</title>
+        <meta name="description" content="Edit your digital business card" />
         <html lang="en" dir="ltr" />
       </Helmet>
       

@@ -94,8 +94,8 @@ const CreateCardPage = () => {
   return (
     <>
       <Helmet>
-        <title>{'title'} - FuturistCards</title>
-        <meta name="description" content={'meta Description'} />
+        <title>Create Card - FuturistCards</title>
+        <meta name="description" content="Create your professional digital business card" />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
@@ -109,10 +109,10 @@ const CreateCardPage = () => {
               className="text-center mb-8"
             >
               <h1 className="text-4xl font-bold text-white mb-4">
-                {'title'}
+                Create Your Card
               </h1>
               <p className="text-xl text-gray-300">
-                {'subtitle'}
+                Design your professional digital business card
               </p>
             </motion.div>
 
@@ -124,18 +124,18 @@ const CreateCardPage = () => {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="bg-black/20 border border-white/20 rounded-2xl p-6 backdrop-blur-sm"
               >
-                <h2 className="text-2xl font-bold text-white mb-6">{'card Details'}</h2>
+                <h2 className="text-2xl font-bold text-white mb-6">Card Details</h2>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Image Upload */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'profile Image'}
+                      Profile Image
                     </label>
                     <div className="flex items-center space-x-4 space-x-reverse">
                       <div className="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
                         {imagePreview ? (
-                          <img src={imagePreview} alt={'image Preview'} className="w-full h-full object-cover" />
+                          <img src={imagePreview} alt="Image Preview" className="w-full h-full object-cover" />
                         ) : (
                           <PhotoIcon className="w-8 h-8 text-gray-400" />
                         )}
@@ -147,7 +147,7 @@ const CreateCardPage = () => {
                           onChange={handleImageChange}
                           className="hidden"
                         />
-                        {'select Image'}
+                        Select Image
                       </label>
                     </div>
                   </div>
@@ -155,7 +155,7 @@ const CreateCardPage = () => {
                   {/* Name */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'full Name'} *
+                      Full Name *
                     </label>
                     <div className="relative">
                       <UserIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -166,7 +166,7 @@ const CreateCardPage = () => {
                         onChange={handleInputChange}
                         required
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={'full Name Placeholder'}
+                        placeholder="Enter your full name"
                       />
                     </div>
                   </div>
@@ -174,7 +174,7 @@ const CreateCardPage = () => {
                   {/* Title */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'job Title'} *
+                      Job Title *
                     </label>
                     <input
                       type="text"
@@ -183,14 +183,14 @@ const CreateCardPage = () => {
                       onChange={handleInputChange}
                       required
                       className="w-full px-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={'job Title Placeholder'}
+                      placeholder="Enter your job title"
                     />
                   </div>
 
                   {/* Company */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'company'}
+                      Company
                     </label>
                     <div className="relative">
                       <BuildingOfficeIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -200,7 +200,7 @@ const CreateCardPage = () => {
                         value={formData.company}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={'company Placeholder'}
+                        placeholder="Enter company name"
                       />
                     </div>
                   </div>
@@ -208,7 +208,7 @@ const CreateCardPage = () => {
                   {/* Email */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'email'} *
+                      Email *
                     </label>
                     <div className="relative">
                       <EnvelopeIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -219,7 +219,7 @@ const CreateCardPage = () => {
                         onChange={handleInputChange}
                         required
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={'email Placeholder'}
+                        placeholder="Enter your email"
                       />
                     </div>
                   </div>
@@ -227,7 +227,7 @@ const CreateCardPage = () => {
                   {/* Phone */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'phone'}
+                      Phone
                     </label>
                     <div className="relative">
                       <PhoneIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -237,7 +237,7 @@ const CreateCardPage = () => {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={'phone Placeholder'}
+                        placeholder="Enter phone number"
                       />
                     </div>
                   </div>
@@ -245,7 +245,7 @@ const CreateCardPage = () => {
                   {/* Website */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'website'}
+                      Website
                     </label>
                     <div className="relative">
                       <GlobeAltIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -255,7 +255,7 @@ const CreateCardPage = () => {
                         value={formData.website}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={'website Placeholder'}
+                        placeholder="https://yourwebsite.com"
                       />
                     </div>
                   </div>
@@ -263,7 +263,7 @@ const CreateCardPage = () => {
                   {/* Address */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'address'}
+                      Address
                     </label>
                     <div className="relative">
                       <MapPinIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -273,7 +273,7 @@ const CreateCardPage = () => {
                         value={formData.address}
                         onChange={handleInputChange}
                         className="w-full pr-10 pl-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder={'address Placeholder'}
+                        placeholder="Enter your address"
                       />
                     </div>
                   </div>
@@ -281,7 +281,7 @@ const CreateCardPage = () => {
                   {/* Description */}
                   <div className="space-y-2">
                     <label className="block text-sm font-medium text-gray-300">
-                      {'description'}
+                      Description
                     </label>
                     <textarea
                       name="description"
@@ -289,17 +289,17 @@ const CreateCardPage = () => {
                       onChange={handleInputChange}
                       rows={3}
                       className="w-full px-4 py-3 bg-black/20 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                      placeholder={'description Placeholder'}
+                      placeholder="Brief description about yourself"
                     />
                   </div>
 
                   {/* Color Customization */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-semibold text-white">{'card Design'}</h3>
+                    <h3 className="text-lg font-semibold text-white">Card Design</h3>
                     <div className="grid grid-cols-3 gap-4">
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-300">
-                          {'background Color'}
+                          Background
                         </label>
                         <input
                           type="color"
@@ -311,7 +311,7 @@ const CreateCardPage = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-300">
-                          {'text Color'}
+                          Text Color
                         </label>
                         <input
                           type="color"
@@ -323,7 +323,7 @@ const CreateCardPage = () => {
                       </div>
                       <div className="space-y-2">
                         <label className="block text-sm font-medium text-gray-300">
-                          {'accent Color'}
+                          Accent
                         </label>
                         <input
                           type="color"
@@ -347,12 +347,12 @@ const CreateCardPage = () => {
                     {isSubmitting ? (
                       <div className="flex items-center justify-center">
                         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white ml-2"></div>
-                        {'creating'}
+                        Creating...
                       </div>
                     ) : (
                       <div className="flex items-center justify-center">
                         <PlusIcon className="w-5 h-5 ml-2" />
-                        {'create Button'}
+                        Create Card
                       </div>
                     )}
                   </motion.button>
@@ -366,7 +366,7 @@ const CreateCardPage = () => {
                 transition={{ duration: 0.6, delay: 0.4 }}
                 className="bg-black/20 border border-white/20 rounded-2xl p-6 backdrop-blur-sm"
               >
-                <h2 className="text-2xl font-bold text-white mb-6">{'preview'}</h2>
+                <h2 className="text-2xl font-bold text-white mb-6">Preview</h2>
                 
                 {/* Card Preview */}
                 <div className="relative">
@@ -378,7 +378,7 @@ const CreateCardPage = () => {
                       {/* Profile Image */}
                       <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden bg-gray-300">
                         {imagePreview ? (
-                          <img src={imagePreview} alt={'profile Image'} className="w-full h-full object-cover" />
+                          <img src={imagePreview} alt="Profile" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full bg-gray-400 flex items-center justify-center">
                             <UserIcon className="w-8 h-8 text-gray-600" />
@@ -391,7 +391,7 @@ const CreateCardPage = () => {
                         className="text-xl font-bold mb-1"
                         style={{ color: formData.textColor }}
                       >
-                        {formData.name || 'full Name Preview'}
+                        {formData.name || 'Your Name'}
                       </h3>
 
                       {/* Title */}
@@ -399,7 +399,7 @@ const CreateCardPage = () => {
                         className="text-sm mb-2"
                         style={{ color: formData.accentColor }}
                       >
-                        {formData.title || 'job Title Preview'}
+                        {formData.title || 'Job Title'}
                       </p>
 
                       {/* Company */}
