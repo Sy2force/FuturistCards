@@ -191,16 +191,10 @@ const Navbar = ({ onCreateCard }) => {
               {/* Site Title */}
               <div className="flex flex-col">
                 <span 
-                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wider"
-                  style={{ 
-                    background: 'linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}
+                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wider bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent"
                   data-testid="site-title"
                 >
-                  FUTURIST<span style={{ color: '#60a5fa', WebkitTextFillColor: '#60a5fa' }}>CARDS</span>
+                  FUTURISTCARDS
                 </span>
                 <span 
                   className="text-[10px] text-gray-400 tracking-widest uppercase"
