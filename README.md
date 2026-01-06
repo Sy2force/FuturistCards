@@ -1,30 +1,31 @@
 # 🎴 FuturistCards - Digital Business Cards Platform
 
 [![React](https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react)](https://reactjs.org/)
-[![Vite](https://img.shields.io/badge/Vite-4.5.0-646CFF?logo=vite)](https://vitejs.dev/)
+[![Vite](https://img.shields.io/badge/Vite-5.4.21-646CFF?logo=vite)](https://vitejs.dev/)
 [![Tailwind](https://img.shields.io/badge/Tailwind-3.4.0-06B6D4?logo=tailwindcss)](https://tailwindcss.com/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248?logo=mongodb)](https://www.mongodb.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb)](https://www.mongodb.com/)
+[![Deployment](https://img.shields.io/badge/Status-Production%20Ready-success)](https://futuristcards.vercel.app)
 
 ## 🎯 Description
 
-**FuturistCards** est une plateforme moderne de cartes de visite numériques avec authentification JWT, gestion de rôles (User/Business/Admin), et interface glassmorphism responsive. Application full-stack React + Node.js + MongoDB validée et prête pour production.
+**FuturistCards** est une plateforme full-stack moderne de cartes de visite numériques avec authentification JWT, gestion de rôles (User/Business/Admin), et design glassmorphism. Application React 18 + Vite + Express + MongoDB Atlas déployée sur Vercel (frontend) et Render (backend).
 
 ## ✅ Status du Projet
 
-**Date de vérification** : 5 Janvier 2026  
-**Status** : ✅ **PRODUCTION READY**
+**Date de validation** : 6 Janvier 2026  
+**Status** : 🏆 **PRODUCTION READY - DÉPLOYÉ**
 
 ### Frontend
-- ✅ Build : 3.89s, 0 erreurs de compilation
-- ✅ Bundle : 210 kB gzippé (optimisé)
-- ✅ ESLint : 96% d'amélioration (220 → 8 erreurs)
-- ✅ Preview : Fonctionnel sur http://localhost:3010
+- ✅ Build : 1.69s, 492 modules transformés
+- ✅ Bundle : 201KB vendor + 103KB UI (gzippé: ~142KB total)
+- ✅ Déploiement : Vercel (https://futuristcards.vercel.app)
+- ✅ Routing SPA : Fonctionnel sans erreurs 404
 
 ### Backend
-- ✅ Serveur : Port 5001, MongoDB connecté
-- ✅ Syntaxe : 17 fichiers validés
-- ✅ Endpoints : 7/7 testés avec succès
+- ✅ Serveur : Render (https://futuristcards-backend.onrender.com)
+- ✅ MongoDB : Atlas connecté et opérationnel
+- ✅ API : 7 endpoints testés et fonctionnels
 - ✅ Sécurité : JWT + CORS + Rate Limiting + Helmet
 
 ## 🚀 Installation Rapide
@@ -169,7 +170,7 @@ VITE_API_URL=http://localhost:5001/api
 NODE_ENV=development
 
 # Production (set in Vercel dashboard)
-VITE_API_URL=https://futuristcards.onrender.com/api
+VITE_API_URL=https://futuristcards-backend.onrender.com/api
 NODE_ENV=production
 ```
 
