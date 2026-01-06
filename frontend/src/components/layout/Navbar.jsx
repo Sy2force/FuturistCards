@@ -191,13 +191,13 @@ const Navbar = ({ onCreateCard }) => {
               {/* Site Title */}
               <div className="flex flex-col">
                 <span 
-                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wide bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
+                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wide text-white"
                   data-testid="site-title"
                 >
                   FuturistCards
                 </span>
                 <span 
-                  className="text-xs opacity-75 text-center text-gray-400"
+                  className="text-xs text-gray-400"
                 >
                   Digital Business Cards
                 </span>
