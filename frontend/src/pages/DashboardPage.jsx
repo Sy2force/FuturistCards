@@ -1,122 +1,97 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
-import { useRoleTheme } from '../context/ThemeProvider';
-import apiService from '../services/api';
 import { 
   CreditCardIcon, 
   HeartIcon, 
   EyeIcon, 
   PlusIcon,
-  ChartBarIcon,
-  UserIcon,
   ClockIcon,
-  ArrowTrendingUpIcon,
-  StarIcon,
-  CalendarIcon
+  ArrowPathIcon
 } from '@heroicons/react/24/outline';
 import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
+import toast from 'react-hot-toast';
+
+const API_URL = 'https://futuristcards.onrender.com/api';
 
 const DashboardPage = () => {
   const { user } = useAuth();
   const { favorites } = useFavorites();
-  const { currentTheme } = useRoleTheme();
-  const [stats, setStats] = useState({
-    totalCards: 0,
-    totalViews: 0,
-    totalLikes: 0,
-    favoriteCards: 0
-  });
-  const [recentCards, setRecentCards] = useState([]);
-  const [recentActivity, setRecentActivity] = useState([]);
+  const [myCards, setMyCards] = useState([]);
+  const [allCards, setAllCards] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
+  // Fetch real data from API
+  const fetchData = async (showToast = false) => {
+    setRefreshing(true);
     try {
-      setLoading(true);
-      
-      // Fetch user's cards
-      const response = await apiService.getMyCards();
-      const myCards = response.cards || response.data || [];
-      
-      // Calculate stats
-      const totalCards = myCards.length;
-      const totalViews = myCards.reduce((acc, card) => acc + (card.views || 0), 0);
-      const totalLikes = myCards.reduce((acc, card) => acc + (card.likes || 0), 0);
-      const favoriteCards = favorites.length;
-      
-      setStats({
-        totalCards,
-        totalViews,
-        totalLikes,
-        favoriteCards
-      });
-      
-      // Recent cards (last 3)
-      const sortedCards = [...myCards].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setRecentCards(sortedCards.slice(0, 3));
-      
-      // Generate activity from cards (since we don't have an activity API yet)
-      const activities = sortedCards.slice(0, 5).map(card => ({
-        id: `create-${card._id}`,
-        type: 'card_created',
-        message: `Created card "${card.title}"`,
-        time: new Date(card.createdAt).toLocaleDateString(),
-        icon: PlusIcon
-      }));
-      
-      setRecentActivity(activities);
-      
+      // Fetch all cards (public)
+      const cardsRes = await fetch(`${API_URL}/cards`);
+      if (cardsRes.ok) {
+        const data = await cardsRes.json();
+        const cards = data.cards || [];
+        setAllCards(cards);
+        
+        // Filter my cards (cards created by current user)
+        const userCards = cards.filter(c => 
+          c.user?._id === user?._id || 
+          c.user === user?._id ||
+          c.email === user?.email
+        );
+        setMyCards(userCards);
+      }
+
+      // Also fetch from localStorage for cards created locally
+      const localCards = JSON.parse(localStorage.getItem('userCards') || '[]');
+      if (localCards.length > 0) {
+        setMyCards(prev => {
+          const combined = [...prev];
+          localCards.forEach(lc => {
+            if (!combined.find(c => c._id === lc.id || c.id === lc.id)) {
+              combined.push({ ...lc, _id: lc.id });
+            }
+          });
+          return combined;
+        });
+      }
+
+      setLastUpdate(new Date());
+      if (showToast) toast.success('Data refreshed!');
     } catch (error) {
-      console.error('Error fetching dashboard data:', error);
+      if (showToast) toast.error('Failed to refresh');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
-  const statCards = [
-    {
-      "title": 'Total Cards',
-      "value": stats.totalCards,
-      "icon": CreditCardIcon,
-      "color": 'from-blue-500 to-cyan-500',
-      "change": '+12%'
-    },
-    {
-      "title": 'Total Views',
-      "value": stats.totalViews,
-      "icon": EyeIcon,
-      "color": 'from-green-500 to-emerald-500',
-      "change": '+8%'
-    },
-    {
-      "title": 'Total Likes',
-      "value": stats.totalLikes,
-      "icon": HeartIcon,
-      "color": 'from-pink-500 to-rose-500',
-      "change": '+15%'
-    },
-    {
-      "title": 'Favorites',
-      "value": stats.favoriteCards,
-      "icon": HeartIcon,
-      "color": 'from-purple-500 to-violet-500',
-      "change": '+5%'
-    }
-  ];
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(() => fetchData(), 30000);
+    return () => clearInterval(interval);
+  }, [user]);
+
+  // Calculate REAL stats from actual data
+  const totalCards = myCards.length;
+  const totalViews = myCards.reduce((sum, c) => sum + (c.views || 0), 0);
+  const totalLikes = myCards.reduce((sum, c) => sum + (c.likes?.length || c.likesCount || 0), 0);
+  const favoriteCards = favorites?.length || 0;
+
+  // Recent cards (last 5)
+  const recentCards = [...myCards]
+    .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
+    .slice(0, 5);
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent"></div>
       </div>
     );
   }
@@ -125,7 +100,7 @@ const DashboardPage = () => {
     <>
       <Helmet>
         <title>Dashboard - FuturistCards</title>
-        <meta name="description" content="Your personal dashboard with statistics, recent cards, and quick actions" />
+        <meta name="description" content="Your personal dashboard" />
       </Helmet>
       
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
@@ -134,35 +109,81 @@ const DashboardPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-8 flex justify-between items-start"
           >
-            <h1 className="text-4xl font-bold text-white mb-2">
-              Welcome to your Dashboard, {user?.firstName || user?.name}!
-            </h1>
-            <p className="text-gray-300">
-              Here's an overview of your business cards and recent activity
-            </p>
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-2">
+                Welcome, {user?.firstName || user?.name || 'User'}!
+              </h1>
+              <p className="text-gray-300">
+                Here is an overview of your business cards
+              </p>
+              <p className="text-xs text-gray-500 mt-1">
+                Last update: {lastUpdate.toLocaleTimeString()} • Auto-refresh: 30s
+              </p>
+            </div>
+            <motion.button
+              onClick={() => fetchData(true)}
+              disabled={refreshing}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
+            >
+              <ArrowPathIcon className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </motion.button>
           </motion.div>
 
-          {/* Stats Grid */}
+          {/* Stats Grid - REAL DATA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
           >
-            {statCards.map((stat, index) => (
-              <GlassCard key={index} className="p-6 hover:scale-105 transition-transform">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-gray-300 text-sm">{stat.title}</p>
-                    <p className="text-3xl font-bold text-white">{stat.value}</p>
-                    <p className="text-xs text-green-400 mt-1">{stat.change} monthly growth</p>
-                  </div>
-                  <stat.icon className={`h-8 w-8 ${stat.color}`} />
+            <GlassCard className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">My Cards</p>
+                  <p className="text-4xl font-bold text-white">{totalCards}</p>
+                  <p className="text-xs text-blue-400 mt-1">Cards you created</p>
                 </div>
-              </GlassCard>
-            ))}
+                <CreditCardIcon className="h-10 w-10 text-blue-400" />
+              </div>
+            </GlassCard>
+
+            <GlassCard className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">Total Views</p>
+                  <p className="text-4xl font-bold text-white">{totalViews}</p>
+                  <p className="text-xs text-green-400 mt-1">On your cards</p>
+                </div>
+                <EyeIcon className="h-10 w-10 text-green-400" />
+              </div>
+            </GlassCard>
+
+            <GlassCard className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">Total Likes</p>
+                  <p className="text-4xl font-bold text-white">{totalLikes}</p>
+                  <p className="text-xs text-red-400 mt-1">On your cards</p>
+                </div>
+                <HeartIcon className="h-10 w-10 text-red-400" />
+              </div>
+            </GlassCard>
+
+            <GlassCard className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">Favorites</p>
+                  <p className="text-4xl font-bold text-white">{favoriteCards}</p>
+                  <p className="text-xs text-purple-400 mt-1">Cards you saved</p>
+                </div>
+                <HeartIcon className="h-10 w-10 text-purple-400" />
+              </div>
+            </GlassCard>
           </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
@@ -174,11 +195,9 @@ const DashboardPage = () => {
               className="lg:col-span-2"
             >
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-white">
-                  Recent Cards
-                </h2>
+                <h2 className="text-2xl font-bold text-white">My Recent Cards</h2>
                 <Link to="/my-cards" className="text-blue-400 hover:text-blue-300 text-sm">
-                  View All Cards
+                  View All →
                 </Link>
               </div>
               <div className="space-y-4">
@@ -188,183 +207,129 @@ const DashboardPage = () => {
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-white mb-2">
-                            {card.title}
+                            {card.title || card.fullName || 'Untitled'}
                           </h3>
-                          <p className="text-gray-300 text-sm mb-4">
-                            {card.description}
+                          <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                            {card.description || card.email || 'No description'}
                           </p>
-                          <div className="flex justify-between items-center text-sm text-gray-400">
-                            <span className="flex items-center">
-                              <EyeIcon className="h-4 w-4 ml-1" />
+                          <div className="flex gap-4 text-sm text-gray-500">
+                            <span className="flex items-center gap-1">
+                              <EyeIcon className="h-4 w-4" />
                               {card.views || 0} views
                             </span>
-                            <span className="flex items-center">
-                              <ClockIcon className="h-4 w-4 ml-1" />
-                              {new Date(card.createdAt).toLocaleDateString()}
+                            <span className="flex items-center gap-1">
+                              <HeartIcon className="h-4 w-4" />
+                              {card.likes?.length || 0} likes
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <ClockIcon className="h-4 w-4" />
+                              {card.createdAt ? new Date(card.createdAt).toLocaleDateString() : 'N/A'}
                             </span>
                           </div>
-                        </div>
-                        <div className="flex space-x-2 mr-4">
-                          <button className="text-blue-400 hover:text-blue-300">
-                            <EyeIcon className="h-5 w-5" />
-                          </button>
-                          <button className="text-yellow-400 hover:text-yellow-300">
-                            <StarIcon className="h-5 w-5" />
-                          </button>
                         </div>
                       </div>
                     </GlassCard>
                   ))
                 ) : (
-                  <div className="text-center py-12">
-                    <CreditCardIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-300 text-lg">
-                      No cards yet
-                    </p>
+                  <GlassCard className="p-12 text-center">
+                    <CreditCardIcon className="h-16 w-16 text-gray-500 mx-auto mb-4" />
+                    <p className="text-gray-400 text-lg mb-4">No cards yet</p>
                     <Link to="/create-card">
-                      <GlassButton className="mt-4">
-                        Create Your First Card
-                      </GlassButton>
+                      <GlassButton>Create Your First Card</GlassButton>
                     </Link>
-                  </div>
+                  </GlassCard>
                 )}
               </div>
             </motion.div>
 
-            {/* Recent Activity */}
+            {/* Quick Actions */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
             >
-              <h2 className="text-2xl font-bold text-white mb-6">
-                Recent Activity
-              </h2>
+              <h2 className="text-2xl font-bold text-white mb-6">Quick Actions</h2>
               <div className="space-y-4">
-                {recentActivity.map((activity) => (
-                  <GlassCard key={activity.id} className="p-4">
-                    <div className="flex items-center space-x-3">
-                      <activity.icon className="h-6 w-6 text-blue-400 flex-shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-medium">
-                          {activity.message}
-                        </p>
-                        <p className="text-gray-400 text-xs">
-                          {activity.time}
-                        </p>
+                <Link to="/create-card">
+                  <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <PlusIcon className="h-8 w-8 text-blue-400" />
+                      <div>
+                        <h3 className="text-white font-semibold">Create Card</h3>
+                        <p className="text-gray-400 text-sm">Design a new card</p>
                       </div>
                     </div>
                   </GlassCard>
-                ))}
+                </Link>
+
+                <Link to="/cards">
+                  <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <EyeIcon className="h-8 w-8 text-green-400" />
+                      <div>
+                        <h3 className="text-white font-semibold">Browse Cards</h3>
+                        <p className="text-gray-400 text-sm">{allCards.length} cards available</p>
+                      </div>
+                    </div>
+                  </GlassCard>
+                </Link>
+
+                <Link to="/favorites">
+                  <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <HeartIcon className="h-8 w-8 text-red-400" />
+                      <div>
+                        <h3 className="text-white font-semibold">Favorites</h3>
+                        <p className="text-gray-400 text-sm">{favoriteCards} saved cards</p>
+                      </div>
+                    </div>
+                  </GlassCard>
+                </Link>
+
+                <Link to="/analytics">
+                  <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
+                    <div className="flex items-center gap-4">
+                      <svg className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                      <div>
+                        <h3 className="text-white font-semibold">Analytics</h3>
+                        <p className="text-gray-400 text-sm">View performance</p>
+                      </div>
+                    </div>
+                  </GlassCard>
+                </Link>
               </div>
             </motion.div>
           </div>
 
-          {/* Quick Actions */}
+          {/* Performance Summary */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <h2 className="text-2xl font-bold text-white mb-6">
-              Quick Actions
-            </h2>
+            <h2 className="text-2xl font-bold text-white mb-6">Performance Summary</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Link to="/create-card">
-                <GlassCard className="p-6 hover:scale-105 transition-all cursor-pointer group">
-                  <PlusIcon className="h-8 w-8 text-blue-400 mb-4 group-hover:scale-110 transition-transform" />
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    Create New Card
-                  </h3>
-                  <p className="text-gray-300 text-sm">
-                    Design and create a new digital business card
-                  </p>
-                </GlassCard>
-              </Link>
-
-              <Link to="/cards">
-                <GlassCard className="p-6 hover:scale-105 transition-all cursor-pointer group">
-                  <EyeIcon className="h-8 w-8 text-green-400 mb-4 group-hover:scale-110 transition-transform" />
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    Browse Cards
-                  </h3>
-                  <p className="text-gray-300 text-sm">
-                    Explore and discover amazing business cards
-                  </p>
-                </GlassCard>
-              </Link>
-
-              <Link to="/favorites">
-                <GlassCard className="p-6 hover:scale-105 transition-all cursor-pointer group">
-                  <HeartIcon className="h-8 w-8 text-red-400 mb-4 group-hover:scale-110 transition-transform" />
-                  <h3 className="text-lg font-semibold text-white mb-2">
-                    View Favorites
-                  </h3>
-                  <p className="text-gray-300 text-sm">
-                    Access your saved and liked business cards
-                  </p>
-                </GlassCard>
-              </Link>
-            </div>
-          </motion.div>
-
-          {/* Analytics Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-8"
-          >
-            <h2 className="text-2xl font-bold text-white mb-6">
-              Performance Analysis
-            </h2>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <GlassCard className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Weekly Views</h3>
-                  <ArrowTrendingUpIcon className="h-6 w-6 text-green-400" />
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Sunday</span>
-                    <span className="text-white">45 views</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Monday</span>
-                    <span className="text-white">67 views</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">Tuesday</span>
-                    <span className="text-white">89 views</span>
-                  </div>
-                </div>
+              <GlassCard className="p-6 text-center">
+                <p className="text-4xl font-bold text-blue-400">
+                  {totalCards > 0 ? (totalViews / totalCards).toFixed(1) : 0}
+                </p>
+                <p className="text-gray-400 mt-2">Avg. Views per Card</p>
               </GlassCard>
 
-              <GlassCard className="p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">Monthly Goals</h3>
-                  <CalendarIcon className="h-6 w-6 text-blue-400" />
-                </div>
-                <div className="space-y-4">
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-gray-300">Views</span>
-                      <span className="text-white">1,247 / 2,000</span>
-                    </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div className="bg-blue-400 h-2 rounded-full" style={{width: '62%'}}></div>
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-gray-300">Likes</span>
-                      <span className="text-white">89 / 150</span>
-                    </div>
-                    <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div className="bg-red-400 h-2 rounded-full" style={{width: '59%'}}></div>
-                    </div>
-                  </div>
-                </div>
+              <GlassCard className="p-6 text-center">
+                <p className="text-4xl font-bold text-green-400">
+                  {totalCards > 0 ? (totalLikes / totalCards).toFixed(1) : 0}
+                </p>
+                <p className="text-gray-400 mt-2">Avg. Likes per Card</p>
+              </GlassCard>
+
+              <GlassCard className="p-6 text-center">
+                <p className="text-4xl font-bold text-purple-400">
+                  {totalViews > 0 ? ((totalLikes / totalViews) * 100).toFixed(1) : 0}%
+                </p>
+                <p className="text-gray-400 mt-2">Engagement Rate</p>
               </GlassCard>
             </div>
           </motion.div>
