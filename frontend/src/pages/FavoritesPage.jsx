@@ -321,7 +321,7 @@ const FavoritesPage = () => {
               >
                 <div className="mb-6">
                   <p className="text-gray-600 dark:text-gray-400">
-                    <span className="font-medium text-blue-600 dark:text-blue-400">{cards.length}</span> {t('favorites.cardCount', { count: cards.length })}
+                    <span className="font-medium text-blue-600 dark:text-blue-400">{cards.length}</span> cards in your favorites
                   </p>
                 </div>
                 
@@ -342,7 +342,7 @@ const FavoritesPage = () => {
                 {searchTerm && (
                   <div className="mt-4 text-center">
                     <span className={`text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                      {t('favorites.searchResults', { count: filteredCards.length, term: searchTerm })}
+                      {filteredCards.length} results for "{searchTerm}"
                     </span>
                   </div>
                 )}

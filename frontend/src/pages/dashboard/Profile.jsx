@@ -249,7 +249,7 @@ const Profile = () => {
                   {user?.firstName || 'First Name'} {user?.lastName || 'last Name'}
                 </h1>
                 <p className={`${isDark ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
-                  {user?.position || 'position'} {user?.company && t('profile.atCompany', { company: user.company })}
+                  {user?.position || 'position'} {user?.company ? `at ${user.company}` : ''}
                 </p>
                 <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-white ${getRoleColor(user?.role)}`}>
                   {getRoleLabel(user?.role)}
