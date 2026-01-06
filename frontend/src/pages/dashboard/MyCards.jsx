@@ -17,6 +17,7 @@ import {
 } from '@heroicons/react/24/outline';
 import GlassCard from '../../components/ui/GlassCard';
 import GlassButton from '../../components/ui/GlassButton';
+import toast from 'react-hot-toast';
 
 const MyCardsPage = () => {
   const { user } = useAuth();
@@ -59,9 +60,12 @@ const MyCardsPage = () => {
       if (!card?.isDemo) {
         try {
           await apiService.deleteCard(cardId);
+          toast.success('Card deleted successfully! 🗑️');
         } catch (apiError) {
-          // Server delete failed, continuing with local delete
+          toast.error('Failed to delete from server, removed locally');
         }
+      } else {
+        toast.success('Demo card removed!');
       }
       
       // Delete from localStorage
@@ -73,7 +77,7 @@ const MyCardsPage = () => {
       setCards(cards.filter(card => card._id !== cardId));
       setDeleteModal({ isOpen: false, cardId: null, cardName: '' });
     } catch (error) {
-      // Error handled silently in production
+      toast.error('Error deleting card');
     }
   };
 
