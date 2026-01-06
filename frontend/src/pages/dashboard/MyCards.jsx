@@ -131,8 +131,8 @@ const MyCardsPage = () => {
   return (
     <>
       <Helmet>
-        <title>{'title'} - FuturistCards</title>
-        <meta name="description" content={'subtitle'} />
+        <title>My Cards - FuturistCards</title>
+        <meta name="description" content="Manage your digital business cards" />
       </Helmet>
       
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
@@ -146,16 +146,16 @@ const MyCardsPage = () => {
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h1 className="text-4xl font-bold text-white mb-2">
-                  {'title'}
+                  My Cards
                 </h1>
                 <p className="text-gray-300">
-                  {'subtitle'}
+                  Manage your digital business cards
                 </p>
               </div>
               <Link to="/create-card">
                 <GlassButton className="flex items-center">
                   <PlusIcon className="h-5 w-5 ml-2" />
-                  {'create New'}
+                  Create New
                 </GlassButton>
               </Link>
             </div>
@@ -171,7 +171,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{'total Cards'}</p>
+                  <p className="text-gray-300 text-sm">Total Cards</p>
                   <p className="text-3xl font-bold text-white">{cards.length}</p>
                 </div>
                 <ChartBarIcon className="h-8 w-8 text-blue-400" />
@@ -181,7 +181,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{'total Views'}</p>
+                  <p className="text-gray-300 text-sm">Total Views</p>
                   <p className="text-3xl font-bold text-white">
                     {cards.reduce((sum, card) => sum + (card.views || 0), 0)}
                   </p>
@@ -193,7 +193,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{'total Likes'}</p>
+                  <p className="text-gray-300 text-sm">Total Likes</p>
                   <p className="text-3xl font-bold text-white">
                     {cards.reduce((sum, card) => sum + (card.likes || 0), 0)}
                   </p>
@@ -205,7 +205,7 @@ const MyCardsPage = () => {
             <GlassCard className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">{'active Cards'}</p>
+                  <p className="text-gray-300 text-sm">Active Cards</p>
                   <p className="text-3xl font-bold text-white">
                     {cards.filter(card => card.status === 'active').length}
                   </p>
@@ -235,15 +235,15 @@ const MyCardsPage = () => {
               <GlassCard className="p-12 max-w-md mx-auto">
                 <PlusIcon className="h-16 w-16 text-gray-400 mx-auto mb-6" />
                 <h3 className="text-2xl font-semibold text-white mb-4">
-                  {'no Cards'}
+                  No Cards Yet
                 </h3>
                 <p className="text-gray-300 mb-8">
-                  {'create First'}
+                  Create Your First Card
                 </p>
                 <Link to="/create-card">
                   <GlassButton className="flex items-center mx-auto">
                     <PlusIcon className="h-5 w-5 ml-2" />
-                    {'create First'}
+                    Create Your First Card
                   </GlassButton>
                 </Link>
               </GlassCard>
@@ -309,7 +309,7 @@ const MyCardsPage = () => {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handleEditCard(card._id)}
                         className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
-                        title={'edit Card'}
+                        title="Edit Card"
                         disabled={card.isDemo}
                       >
                         <PencilIcon className="w-4 h-4" />
@@ -319,7 +319,7 @@ const MyCardsPage = () => {
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
                         className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
-                        title={'share Card'}
+                        title="Share Card"
                       >
                         <ShareIcon className="w-4 h-4" />
                       </motion.button>
@@ -329,7 +329,7 @@ const MyCardsPage = () => {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => openDeleteModal(card)}
                         className="p-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                        title={'delete Card'}
+                        title="Delete Card"
                         disabled={card.isDemo}
                       >
                         <TrashIcon className="w-4 h-4" />
@@ -353,7 +353,7 @@ const MyCardsPage = () => {
             >
               <div className="flex items-center mb-4">
                 <ExclamationTriangleIcon className="w-8 h-8 text-red-500 ml-3" />
-                <h3 className="text-xl font-bold text-white">{'delete Confirm'}</h3>
+                <h3 className="text-xl font-bold text-white">Confirm Delete</h3>
               </div>
               
               <p className="text-gray-300 mb-6">
@@ -369,7 +369,7 @@ const MyCardsPage = () => {
                   onClick={() => handleDeleteCard(deleteModal.cardId)}
                   className="flex-1 bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
                 >
-                  {'Delete'}
+                  Delete
                 </motion.button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -377,7 +377,7 @@ const MyCardsPage = () => {
                   onClick={closeDeleteModal}
                   className="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
                 >
-                  {'Cancel'}
+                  Cancel
                 </motion.button>
               </div>
             </motion.div>

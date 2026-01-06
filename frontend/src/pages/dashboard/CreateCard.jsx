@@ -208,10 +208,10 @@ const CreateCardPage = () => {
               </svg>
             </div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-              {'title'}
+              Create Your Card
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              {'description'}
+              Design your professional digital business card
             </p>
           </div>
 
@@ -224,7 +224,7 @@ const CreateCardPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                {'preview'}
+                Preview
               </h3>
                 <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl border border-gray-200 dark:border-gray-700">
                 <div className="text-center">
@@ -232,7 +232,7 @@ const CreateCardPage = () => {
                     {imagePreview ? (
                       <img
                         src={imagePreview}
-                        alt={'preview'}
+                        alt=Preview
                         className="w-24 h-24 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800"
                       />
                     ) : (
@@ -287,17 +287,17 @@ const CreateCardPage = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                       </svg>
                     </div>
-                    <h2 className="text-3xl font-bold text-white">{'title'}</h2>
+                    <h2 className="text-3xl font-bold text-white">Create Your Card</h2>
                   </div>
-                  <p className="text-xl text-white opacity-90">{'subtitle'}</p>
+                  <p className="text-xl text-white opacity-90">Fill in your professional details</p>
                   <div className="flex items-center mt-3 text-sm text-blue-200">
                     <span className="inline-flex items-center mr-4">
                       <span className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-                      {'unlimited Creation'}
+                      Unlimited Creation
                     </span>
                     <span className="inline-flex items-center">
                       <span className="w-2 h-2 bg-yellow-400 rounded-full mr-2 animate-pulse"></span>
-                      {'instant Publication'}
+                      Instant Publication
                     </span>
                   </div>
                 </div>
@@ -313,7 +313,7 @@ const CreateCardPage = () => {
                 {/* Photo Upload */}
                 <div className="text-center">
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
-                    {'profile Photo'}
+                    Profile Photo
                   </label>
                   <div className="relative inline-block">
                     <input
@@ -327,7 +327,7 @@ const CreateCardPage = () => {
                       <div className="relative">
                         <img
                           src={imagePreview}
-                          alt={'preview'}
+                          alt=Preview
                           className="w-32 h-32 rounded-full object-cover border-4 border-blue-200 dark:border-blue-800 shadow-lg"
                         />
                         <button
@@ -352,14 +352,14 @@ const CreateCardPage = () => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                           </svg>
                           <p className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-500">
-                            {'add Photo'}
+                            Add Photo
                           </p>
                         </div>
                       </button>
                     )}
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                    {'file Formats'}
+                    JPG, PNG or GIF (max 5MB)
                   </p>
                 </div>
 
@@ -370,7 +370,7 @@ const CreateCardPage = () => {
                       <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                       </svg>
-                      {'full Name'} *
+                      Full Name *
                     </label>
                     <input
                       type="text"
@@ -379,7 +379,7 @@ const CreateCardPage = () => {
                       value={formData.title}
                       onChange={handleChange}
                       required
-                      placeholder={'name Placeholder'}
+                      placeholder="Enter your full name"
                       className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
                         validationErrors.title 
                           ? 'border-red-500 dark:border-red-400' 
@@ -396,7 +396,7 @@ const CreateCardPage = () => {
                       <svg className="w-4 h-4 inline mr-1 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
                       </svg>
-                      {'title Position'}
+                      Job Title
                     </label>
                     <input
                       type="text"
@@ -404,7 +404,7 @@ const CreateCardPage = () => {
                       data-testid="input-position"
                       value={formData.subtitle}
                       onChange={handleChange}
-                      placeholder={'role Placeholder'}
+                      placeholder="e.g. Software Engineer"
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                     />
                   </div>
@@ -418,7 +418,7 @@ const CreateCardPage = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
                       </svg>
                     </div>
-{'professional Details'}
+Professional Details
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -426,7 +426,7 @@ const CreateCardPage = () => {
                         <svg className="w-4 h-4 inline mr-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                         </svg>
-{'company'}
+Company
                       </label>
                       <input
                         type="text"
@@ -434,7 +434,7 @@ const CreateCardPage = () => {
                         data-testid="input-company"
                         value={formData.company}
                         onChange={handleChange}
-                        placeholder={'company Placeholder'}
+                        placeholder="Your company name"
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                       />
                     </div>
@@ -443,7 +443,7 @@ const CreateCardPage = () => {
                         <svg className="w-4 h-4 inline mr-1 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
                         </svg>
-                        {'position'}
+                        Position
                       </label>
                       <input
                         type="text"
@@ -451,7 +451,7 @@ const CreateCardPage = () => {
                         data-testid="input-position-detail"
                         value={formData.position}
                         onChange={handleChange}
-                        placeholder={'position Placeholder'}
+                        placeholder="Your position"
                         className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                       />
                     </div>
@@ -461,7 +461,7 @@ const CreateCardPage = () => {
                 {/* Description */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    {'description'}
+                    Design your professional digital business card
                   </label>
                   <textarea
                     name="description"
@@ -469,7 +469,7 @@ const CreateCardPage = () => {
                     value={formData.description}
                     onChange={handleChange}
                     rows={4}
-                    placeholder={'description Placeholder'}
+                    placeholder="Tell us about yourself..."
                     className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all resize-none ${
                       validationErrors.description 
                         ? 'border-red-500 dark:border-red-400' 
@@ -488,7 +488,7 @@ const CreateCardPage = () => {
                       <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
-                      {'email'}
+                      Email
                     </label>
                     <input
                       type="email"
@@ -496,7 +496,7 @@ const CreateCardPage = () => {
                       data-testid="input-email"
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder={'email Placeholder'}
+                      placeholder="your@email.com"
                       className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
                         validationErrors.email 
                           ? 'border-red-500 dark:border-red-400' 
@@ -513,7 +513,7 @@ const CreateCardPage = () => {
                       <svg className="w-4 h-4 inline mr-1 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a1 1 0 001-1V4a1 1 0 00-1-1H8a1 1 0 00-1 1v16a1 1 0 001 1z" />
                       </svg>
-                      {'phone'}
+                      Phone
                     </label>
                     <input
                       type="tel"
@@ -521,7 +521,7 @@ const CreateCardPage = () => {
                       data-testid="input-phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder={'phone Placeholder'}
+                      placeholder="+1 234 567 890"
                       className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
                         validationErrors.phone 
                           ? 'border-red-500 dark:border-red-400' 
@@ -541,14 +541,14 @@ const CreateCardPage = () => {
                       <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                       </svg>
-                      {'website'}
+                      Website
                     </label>
                     <input
                       type="url"
                       name="website"
                       value={formData.website}
                       onChange={handleChange}
-                      placeholder={'website Placeholder'}
+                      placeholder="https://yourwebsite.com"
                       className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all ${
                         validationErrors.website 
                           ? 'border-red-500 dark:border-red-400' 
@@ -562,7 +562,7 @@ const CreateCardPage = () => {
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {'category'}
+                      Category
                     </label>
                     <select
                       name="category"
@@ -583,7 +583,7 @@ const CreateCardPage = () => {
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     <span className="mr-1">📍</span>
-                    {'address'}
+                    Address
                   </label>
                   <input
                     type="text"
@@ -591,7 +591,7 @@ const CreateCardPage = () => {
                     data-testid="input-address"
                     value={formData.address}
                     onChange={handleChange}
-                    placeholder={'address Placeholder'}
+                    placeholder="Your address"
                     className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-all"
                   />
                 </div>
@@ -604,7 +604,7 @@ const CreateCardPage = () => {
                     className="px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gray-300 dark:hover:bg-gray-600 transition-all hover:scale-105 font-medium"
                   >
                     <span className="mr-2">←</span>
-                    {'Cancel'}
+                    Cancel
                   </button>
                   <button
                     type="submit"
@@ -615,12 +615,12 @@ const CreateCardPage = () => {
                     {loading ? (
                       <>
                         <div className="rounded-full h-5 w-5 border-b-2 border-white mr-2 animate-spin"></div>
-{'creating In Progress'}
+Creating...
                       </>
                     ) : (
                       <>
                         <span className="mr-2">✓</span>
-                        {'Create'}
+                        Create Card
                       </>
                     )}
                   </button>

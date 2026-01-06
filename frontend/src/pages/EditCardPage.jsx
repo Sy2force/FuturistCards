@@ -368,7 +368,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         <UserIcon className="w-4 h-4 inline ml-1" />
-                        {'full Name'} *
+                        Full Name *
                       </label>
                       <input
                         type="text"
@@ -376,13 +376,13 @@ const EditCardPage = () => {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        placeholder={'Enter full name'}
+                        placeholder="Enter full name"
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
-                        {'job Title'} *
+                        Job Title *
                       </label>
                       <input
                         type="text"
@@ -390,7 +390,7 @@ const EditCardPage = () => {
                         value={formData.title}
                         onChange={handleChange}
                         required
-                        placeholder={'Enter job title'}
+                        placeholder="Enter job title"
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
@@ -399,7 +399,7 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       <BuildingOfficeIcon className="w-4 h-4 inline ml-1" />
-                      {'company'} *
+                      Company *
                     </label>
                     <input
                       type="text"
@@ -407,21 +407,21 @@ const EditCardPage = () => {
                       value={formData.company}
                       onChange={handleChange}
                       required
-                      placeholder={'Enter company name'}
+                      placeholder="Enter company name"
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                     />
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      {'description'}
+                      Description
                     </label>
                     <textarea
                       name="description"
                       value={formData.description}
                       onChange={handleChange}
                       rows={4}
-                      placeholder={'Enter description'}
+                      placeholder="Enter description"
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all resize-none"
                     />
                   </div>
@@ -430,7 +430,7 @@ const EditCardPage = () => {
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         <EnvelopeIcon className="w-4 h-4 inline ml-1" />
-                        {'email'} *
+                        Email *
                       </label>
                       <input
                         type="email"
@@ -438,14 +438,14 @@ const EditCardPage = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        placeholder={'Enter email address'}
+                        placeholder="Enter email address"
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         <PhoneIcon className="w-4 h-4 inline ml-1" />
-                        {'phone'} *
+                        Phone *
                       </label>
                       <input
                         type="tel"
@@ -453,7 +453,7 @@ const EditCardPage = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         required
-                        placeholder={'Enter phone number'}
+                        placeholder="Enter phone number"
                         className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                       />
                     </div>
@@ -462,14 +462,14 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       <GlobeAltIcon className="w-4 h-4 inline ml-1" />
-                      {'website'}
+                      Website
                     </label>
                     <input
                       type="url"
                       name="website"
                       value={formData.website}
                       onChange={handleChange}
-                      placeholder={'website Placeholder'}
+                      placeholder="https://yourwebsite.com"
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                     />
                   </div>
@@ -477,14 +477,14 @@ const EditCardPage = () => {
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       <MapPinIcon className="w-4 h-4 inline ml-1" />
-                      {'address'}
+                      Address
                     </label>
                     <input
                       type="text"
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
-                      placeholder={'address Placeholder'}
+                      placeholder="Your address"
                       className="w-full px-4 py-3 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-700/50 text-white placeholder-gray-400 transition-all"
                     />
                   </div>
@@ -492,7 +492,7 @@ const EditCardPage = () => {
                   {/* Color Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-4">
-                      {'select Card Colors'}
+                      Select Card Colors
                     </label>
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                       {colorOptions.map((option, index) => (
@@ -543,7 +543,7 @@ const EditCardPage = () => {
                       whileHover={{ scale: 1.02 }}
                     >
                       <ArrowLeftIcon className="w-5 h-5 ml-2 inline" />
-                      {'cancel'}
+                      Cancel
                     </motion.button>
                     <motion.button
                       type="submit"
@@ -558,12 +558,12 @@ const EditCardPage = () => {
                             animate={{ rotate: 360 }}
                             transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                           />
-                          {'updating'}
+                          Updating...
                         </>
                       ) : (
                         <>
                           <DocumentCheckIcon className="w-5 h-5 ml-2" />
-                          {'save Changes'}
+                          Save Changes
                         </>
                       )}
                     </motion.button>

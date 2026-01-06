@@ -37,10 +37,10 @@ const AdminPanel = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-red-600 mb-4">
-            {'title'}
+            Access Denied
           </h2>
           <p className="text-gray-600 dark:text-gray-400">
-            {'message'}
+            You don't have permission to access this page
           </p>
         </div>
       </div>
@@ -53,10 +53,10 @@ const AdminPanel = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className={`text-4xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            {'Admin Dashboard'}
+            Admin Dashboard
           </h1>
           <p className={`text-xl ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            {'subtitle'}
+            Manage your platform
           </p>
         </div>
 
@@ -65,7 +65,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-blue-600 font-medium">{'users'}</p>
+                <p className="text-sm text-blue-600 font-medium">Users</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.users.total}
                 </p>
@@ -79,7 +79,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-green-600 font-medium">{'cards'}</p>
+                <p className="text-sm text-green-600 font-medium">Cards</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.cards.total}
                 </p>
@@ -93,7 +93,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-purple-600 font-medium">{'business'}</p>
+                <p className="text-sm text-purple-600 font-medium">Business</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.users.business}
                 </p>
@@ -109,7 +109,7 @@ const AdminPanel = () => {
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} p-6 rounded-xl shadow-lg`}>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-red-600 font-medium">{'admins'}</p>
+                <p className="text-sm text-red-600 font-medium">Admins</p>
                 <p className={`text-3xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
                   {loading ? '...' : stats.users.admin}
                 </p>
@@ -126,27 +126,27 @@ const AdminPanel = () => {
           {/* User Management */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              👥 {'title'}
+              👥 Access Denied
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {'role Distribution'}
+                  Role Distribution
                 </h3>
                 <div className="mt-2 space-y-1">
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {'users'}: {loading ? '...' : stats.users.user}
+                    Users: {loading ? '...' : stats.users.user}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {'business'}: {loading ? '...' : stats.users.business}
+                    Business: {loading ? '...' : stats.users.business}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {'admins'}: {loading ? '...' : stats.users.admin}
+                    Admins: {loading ? '...' : stats.users.admin}
                   </p>
                 </div>
               </div>
               <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {'manage Users'}
+                Manage Users
               </button>
             </div>
           </div>
@@ -154,24 +154,24 @@ const AdminPanel = () => {
           {/* Content Management */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              📇 {'title'}
+              📇 Access Denied
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {'card Stats'}
+                  Card Stats
                 </h3>
                 <div className="mt-2 space-y-1">
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {'total'}: {loading ? '...' : stats.cards.total}
+                    Total: {loading ? '...' : stats.cards.total}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {'published'}: {loading ? '...' : stats.cards.published}
+                    Published: {loading ? '...' : stats.cards.published}
                   </p>
                 </div>
               </div>
               <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {'manage Cards'}
+                Manage Cards
               </button>
             </div>
           </div>
@@ -179,24 +179,24 @@ const AdminPanel = () => {
           {/* System Settings */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              ⚙️ {'title'}
+              ⚙️ Access Denied
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {'system'}
+                  System
                 </h3>
                 <div className="mt-2 space-y-1">
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {'version'}: {loading ? '...' : stats.system.version}
+                    Version: {loading ? '...' : stats.system.version}
                   </p>
                   <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {'uptime'}: {loading ? '...' : Math.floor(stats.system.uptime / 60)} min
+                    Uptime: {loading ? '...' : Math.floor(stats.system.uptime / 60)} min
                   </p>
                 </div>
               </div>
               <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {'settings'}
+                Settings
               </button>
             </div>
           </div>
@@ -204,19 +204,19 @@ const AdminPanel = () => {
           {/* Analytics */}
           <div className={`${isDark ? 'bg-gray-800' : 'bg-white'} rounded-xl shadow-lg p-6`}>
             <h2 className={`text-2xl font-bold mb-4 ${isDark ? 'text-white' : 'text-gray-900'}`}>
-              📊 {'title'}
+              📊 Access Denied
             </h2>
             <div className="space-y-4">
               <div className={`p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
                 <h3 className={`font-semibold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {'reports'}
+                  Reports
                 </h3>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {'description'}
+                  View analytics and reports
                 </p>
               </div>
               <button className="w-full bg-orange-600 hover:bg-orange-700 text-white py-2 px-4 rounded-lg transition-colors">
-                {'view Reports'}
+                View Reports
               </button>
             </div>
           </div>
@@ -228,7 +228,7 @@ const AdminPanel = () => {
             <svg className="w-8 h-8 inline mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
-            {'title'}
+            Access Denied
           </h2>
           <div className="space-y-4">
             <div className={`flex items-center p-4 rounded-lg ${isDark ? 'bg-gray-700' : 'bg-gray-50'}`}>
@@ -239,10 +239,10 @@ const AdminPanel = () => {
               </div>
               <div>
                 <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {'new User'}
+                  New User
                 </p>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {'two Hours Ago'}
+                  2 hours ago
                 </p>
               </div>
             </div>
@@ -250,10 +250,10 @@ const AdminPanel = () => {
               <span className="text-2xl mr-4">📇</span>
               <div>
                 <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {'new Card'}
+                  New Card
                 </p>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {'four Hours Ago'}
+                  4 hours ago
                 </p>
               </div>
             </div>
@@ -261,10 +261,10 @@ const AdminPanel = () => {
               <span className="text-2xl mr-4">⚠️</span>
               <div>
                 <p className={`font-medium ${isDark ? 'text-white' : 'text-gray-900'}`}>
-                  {'reported Content'}
+                  Reported Content
                 </p>
                 <p className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
-                  {'six Hours Ago'}
+                  6 hours ago
                 </p>
               </div>
             </div>

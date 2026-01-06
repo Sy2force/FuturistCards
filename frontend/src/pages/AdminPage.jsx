@@ -153,7 +153,7 @@ const AdminPage = () => {
             <div className="mb-6">
               <input
                 type="text"
-                placeholder={'Search ' + activeTab + '...'}
+                placeholder={`Search ${activeTab}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full max-w-md px-4 py-3 rounded-lg border focus:outline-none focus:ring-2"

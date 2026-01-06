@@ -37,7 +37,7 @@ const NotFound = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
-            {'title'}
+            Page Not Found
           </motion.h2>
           
           <motion.p 
@@ -47,7 +47,7 @@ const NotFound = () => {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
           >
-            {'description'}
+            The page you're looking for doesn't exist or has been moved.
           </motion.p>
           
           <motion.div 
@@ -60,14 +60,14 @@ const NotFound = () => {
               to="/"
               className="glass-button glass-button-primary inline-block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {'Back'}
+              Go Back
             </Link>
             
             <Link
               to="/cards"
               className="glass-button glass-button-secondary block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              {'Business Cards'}
+              Browse Cards
             </Link>
           </motion.div>
         </div>
