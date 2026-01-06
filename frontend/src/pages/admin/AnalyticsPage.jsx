@@ -3,10 +3,18 @@ import { useAuth } from '../../context/AuthContext';
 import { useRoleTheme } from '../../context/ThemeProvider';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
+import {
+  CreditCardIcon,
+  EyeIcon,
+  HeartIcon,
+  UserIcon,
+  CalendarIcon,
+  ChartBarIcon
+} from '@heroicons/react/24/outline';
 
 const API_URL = 'https://futuristcards.onrender.com/api';
 
-const StatCard = ({ title, value, icon, color, change, theme }) => (
+const StatCard = ({ title, value, icon: Icon, color, theme }) => (
   <motion.div
     className="p-6 rounded-xl backdrop-blur-md border"
     style={{
@@ -26,17 +34,9 @@ const StatCard = ({ title, value, icon, color, change, theme }) => (
         <p className="text-3xl font-bold mt-2" style={{ color: theme?.colors?.text?.primary || '#ffffff' }}>
           {typeof value === 'number' ? value.toLocaleString() : value}
         </p>
-        {change !== undefined && (
-          <p className={`text-sm mt-1 ${change >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-            {change >= 0 ? '+' : ''}{change}% from last month
-          </p>
-        )}
       </div>
-      <div
-        className="w-12 h-12 rounded-lg flex items-center justify-center"
-        style={{ backgroundColor: color + '20' }}
-      >
-        <span className="text-2xl">{icon}</span>
+      <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${color}`}>
+        <Icon className="w-6 h-6 text-white" />
       </div>
     </div>
   </motion.div>
@@ -49,7 +49,6 @@ const AnalyticsPage = () => {
   const [cards, setCards] = useState([]);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  // Fetch real data
   const fetchData = async () => {
     try {
       const res = await fetch(`${API_URL}/cards`);
@@ -118,7 +117,7 @@ const AnalyticsPage = () => {
               Monitor your cards performance and engagement
             </p>
             <p className="text-xs mt-1" style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}>
-              Last update: {lastUpdate.toLocaleTimeString()} • Auto-refresh: 30s
+              Last update: {lastUpdate.toLocaleTimeString()} - Auto-refresh: 30s
             </p>
           </div>
 
@@ -127,29 +126,29 @@ const AnalyticsPage = () => {
             <StatCard
               title="Total Cards"
               value={totalCards}
-              icon="💳"
-              color={currentTheme?.colors?.primary || '#6366f1'}
+              icon={CreditCardIcon}
+              color="bg-blue-500"
               theme={currentTheme}
             />
             <StatCard
               title="My Cards"
               value={myCards}
-              icon="📇"
-              color={currentTheme?.colors?.accent || '#8b5cf6'}
+              icon={UserIcon}
+              color="bg-purple-500"
               theme={currentTheme}
             />
             <StatCard
               title="Total Views"
               value={totalViews}
-              icon="👁️"
-              color="#10B981"
+              icon={EyeIcon}
+              color="bg-green-500"
               theme={currentTheme}
             />
             <StatCard
               title="Total Likes"
               value={totalLikes}
-              icon="❤️"
-              color="#EF4444"
+              icon={HeartIcon}
+              color="bg-red-500"
               theme={currentTheme}
             />
           </div>
@@ -165,9 +164,12 @@ const AnalyticsPage = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
             >
-              <h3 className="text-xl font-semibold mb-4" style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}>
-                Cards Created (Last 7 Days)
-              </h3>
+              <div className="flex items-center gap-2 mb-4">
+                <ChartBarIcon className="w-5 h-5 text-purple-400" />
+                <h3 className="text-xl font-semibold" style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}>
+                  Cards Created (Last 7 Days)
+                </h3>
+              </div>
               <div className="h-48 flex items-end space-x-2">
                 {cardsByDay.map((value, index) => (
                   <motion.div
@@ -196,9 +198,12 @@ const AnalyticsPage = () => {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
             >
-              <h3 className="text-xl font-semibold mb-4" style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}>
-                Recent Cards
-              </h3>
+              <div className="flex items-center gap-2 mb-4">
+                <CreditCardIcon className="w-5 h-5 text-blue-400" />
+                <h3 className="text-xl font-semibold" style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}>
+                  Recent Cards
+                </h3>
+              </div>
               <div className="space-y-3">
                 {cards.slice(0, 5).map((card, index) => (
                   <div
@@ -210,13 +215,20 @@ const AnalyticsPage = () => {
                       <p style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}>
                         {card.title || card.fullName || 'Untitled'}
                       </p>
-                      <p className="text-sm" style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}>
+                      <p className="text-sm flex items-center gap-1" style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}>
+                        <CalendarIcon className="w-3 h-3" />
                         {card.createdAt ? new Date(card.createdAt).toLocaleDateString() : 'N/A'}
                       </p>
                     </div>
                     <div className="flex gap-3 text-sm" style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}>
-                      <span>👁️ {card.views || 0}</span>
-                      <span>❤️ {card.likes?.length || 0}</span>
+                      <span className="flex items-center gap-1">
+                        <EyeIcon className="w-4 h-4" />
+                        {card.views || 0}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <HeartIcon className="w-4 h-4" />
+                        {card.likes?.length || 0}
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -242,19 +254,19 @@ const AnalyticsPage = () => {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center">
-                <p className="text-4xl font-bold" style={{ color: currentTheme?.colors?.primary || '#6366f1' }}>
+                <p className="text-4xl font-bold text-blue-400">
                   {totalCards > 0 ? (totalViews / totalCards).toFixed(1) : 0}
                 </p>
                 <p style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}>Avg. Views per Card</p>
               </div>
               <div className="text-center">
-                <p className="text-4xl font-bold" style={{ color: '#10B981' }}>
+                <p className="text-4xl font-bold text-green-400">
                   {totalCards > 0 ? (totalLikes / totalCards).toFixed(1) : 0}
                 </p>
                 <p style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}>Avg. Likes per Card</p>
               </div>
               <div className="text-center">
-                <p className="text-4xl font-bold" style={{ color: '#F59E0B' }}>
+                <p className="text-4xl font-bold text-purple-400">
                   {totalViews > 0 ? ((totalLikes / totalViews) * 100).toFixed(1) : 0}%
                 </p>
                 <p style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}>Engagement Rate</p>

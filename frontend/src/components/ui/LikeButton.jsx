@@ -20,7 +20,6 @@ const LikeButton = ({
   const [loading, setLoading] = useState(false);
   const [showParticles, setShowParticles] = useState(false);
 
-  // Check if current user has liked
   const isLiked = user && likes.some(like => 
     like === user._id || 
     like === user.id || 
@@ -30,7 +29,6 @@ const LikeButton = ({
 
   const likeCount = likes.length;
 
-  // Sync with initialLikes prop
   useEffect(() => {
     if (Array.isArray(initialLikes)) {
       setLikes(initialLikes);
@@ -51,7 +49,6 @@ const LikeButton = ({
     try {
       const token = localStorage.getItem('token');
       
-      // Call API to toggle like
       const res = await fetch(`${API_URL}/cards/${cardId}/like`, {
         method: 'POST',
         headers: {
@@ -71,20 +68,18 @@ const LikeButton = ({
           like._id === user._id
         );
 
-        // Show particles animation on like
         if (nowLiked) {
           setShowParticles(true);
           setTimeout(() => setShowParticles(false), 1000);
-          toast.success('Liked! ❤️', { duration: 1500 });
+          toast.success('Liked!', { duration: 1500 });
         } else {
-          toast('Unliked', { duration: 1500, icon: '💔' });
+          toast('Unliked', { duration: 1500 });
         }
 
         if (onLikeChange) {
           onLikeChange({ isLiked: nowLiked, likesCount: newLikes.length, likes: newLikes });
         }
       } else {
-        // Fallback to optimistic update if API fails
         const willBeLiked = !isLiked;
         const newLikes = willBeLiked 
           ? [...likes, user._id]
@@ -95,13 +90,12 @@ const LikeButton = ({
         if (willBeLiked) {
           setShowParticles(true);
           setTimeout(() => setShowParticles(false), 1000);
-          toast.success('Liked! ❤️', { duration: 1500 });
+          toast.success('Liked!', { duration: 1500 });
         } else {
-          toast('Unliked', { duration: 1500, icon: '💔' });
+          toast('Unliked', { duration: 1500 });
         }
       }
     } catch (error) {
-      // Optimistic update on error
       const willBeLiked = !isLiked;
       const newLikes = willBeLiked 
         ? [...likes, user._id]
@@ -118,7 +112,6 @@ const LikeButton = ({
     }
   };
 
-  // Size configurations
   const sizeConfig = {
     sm: { icon: 'w-5 h-5', text: 'text-sm', padding: 'px-3 py-1.5', gap: 'gap-1.5' },
     md: { icon: 'w-6 h-6', text: 'text-base', padding: 'px-4 py-2', gap: 'gap-2' },
@@ -188,7 +181,6 @@ const LikeButton = ({
         )}
       </motion.button>
 
-      {/* Floating hearts particles animation */}
       <AnimatePresence>
         {showParticles && (
           <motion.div className="absolute inset-0 pointer-events-none overflow-visible">

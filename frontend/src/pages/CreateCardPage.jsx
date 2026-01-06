@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
@@ -60,9 +60,8 @@ const CreateCardPage = () => {
     try {
       const token = localStorage.getItem('token');
       
-      // Create card data
       const cardData = {
-        fullName: formData.fullName || formData.name,
+        fullName: formData.fullName,
         title: formData.title,
         company: formData.company,
         email: formData.email,
@@ -78,7 +77,6 @@ const CreateCardPage = () => {
         }
       };
 
-      // Try to save to API
       const res = await fetch(`${API_URL}/cards`, {
         method: 'POST',
         headers: {
@@ -89,11 +87,10 @@ const CreateCardPage = () => {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        toast.success('Card created successfully! 🎉');
+        toast.success('Card created successfully!');
         navigate('/my-cards');
       } else {
-        // Fallback to localStorage if API fails
+        // Fallback to localStorage
         const newCard = {
           id: Date.now().toString(),
           _id: Date.now().toString(),
@@ -109,11 +106,10 @@ const CreateCardPage = () => {
         existingCards.push(newCard);
         localStorage.setItem('userCards', JSON.stringify(existingCards));
         
-        toast.success('Card saved locally! 📝');
+        toast.success('Card saved locally!');
         navigate('/my-cards');
       }
     } catch (error) {
-      // Fallback to localStorage on error
       const newCard = {
         id: Date.now().toString(),
         _id: Date.now().toString(),
@@ -142,7 +138,7 @@ const CreateCardPage = () => {
       existingCards.push(newCard);
       localStorage.setItem('userCards', JSON.stringify(existingCards));
       
-      toast.success('Card saved locally! 📝');
+      toast.success('Card saved locally!');
       navigate('/my-cards');
     } finally {
       setIsSubmitting(false);
@@ -159,7 +155,6 @@ const CreateCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
-            {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -170,14 +165,12 @@ const CreateCardPage = () => {
             </motion.div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Form */}
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"
               >
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* Full Name */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Full Name *</label>
                     <div className="relative">
@@ -194,7 +187,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Title */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Job Title *</label>
                     <input
@@ -208,7 +200,6 @@ const CreateCardPage = () => {
                     />
                   </div>
 
-                  {/* Company */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Company</label>
                     <div className="relative">
@@ -224,7 +215,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Email */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Email *</label>
                     <div className="relative">
@@ -241,7 +231,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Phone */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Phone</label>
                     <div className="relative">
@@ -257,7 +246,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Website */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Website</label>
                     <div className="relative">
@@ -273,7 +261,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Address */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Address</label>
                     <div className="relative">
@@ -289,7 +276,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Description */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Description</label>
                     <textarea
@@ -302,7 +288,6 @@ const CreateCardPage = () => {
                     />
                   </div>
 
-                  {/* Image Upload */}
                   <div>
                     <label className="block text-white text-sm font-medium mb-2">Profile Image</label>
                     <div className="relative">
@@ -323,7 +308,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Color Pickers */}
                   <div className="grid grid-cols-3 gap-4">
                     <div>
                       <label className="block text-white text-sm font-medium mb-2">Background</label>
@@ -357,7 +341,6 @@ const CreateCardPage = () => {
                     </div>
                   </div>
 
-                  {/* Submit Button */}
                   <motion.button
                     type="submit"
                     disabled={isSubmitting}
@@ -370,7 +353,6 @@ const CreateCardPage = () => {
                 </form>
               </motion.div>
 
-              {/* Preview */}
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -407,10 +389,30 @@ const CreateCardPage = () => {
                     </p>
                   )}
                   <div className="space-y-2 text-sm" style={{ color: formData.textColor, opacity: 0.9 }}>
-                    {formData.email && <p>📧 {formData.email}</p>}
-                    {formData.phone && <p>📱 {formData.phone}</p>}
-                    {formData.website && <p>🌐 {formData.website}</p>}
-                    {formData.address && <p>📍 {formData.address}</p>}
+                    {formData.email && (
+                      <p className="flex items-center gap-2">
+                        <EnvelopeIcon className="w-4 h-4" style={{ color: formData.accentColor }} />
+                        {formData.email}
+                      </p>
+                    )}
+                    {formData.phone && (
+                      <p className="flex items-center gap-2">
+                        <PhoneIcon className="w-4 h-4" style={{ color: formData.accentColor }} />
+                        {formData.phone}
+                      </p>
+                    )}
+                    {formData.website && (
+                      <p className="flex items-center gap-2">
+                        <GlobeAltIcon className="w-4 h-4" style={{ color: formData.accentColor }} />
+                        {formData.website}
+                      </p>
+                    )}
+                    {formData.address && (
+                      <p className="flex items-center gap-2">
+                        <MapPinIcon className="w-4 h-4" style={{ color: formData.accentColor }} />
+                        {formData.address}
+                      </p>
+                    )}
                   </div>
                   {formData.description && (
                     <p className="mt-4 text-sm" style={{ color: formData.textColor, opacity: 0.7 }}>

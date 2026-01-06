@@ -4,7 +4,18 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
 import toast from 'react-hot-toast';
-import { TrashIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { 
+  TrashIcon, 
+  ArrowPathIcon,
+  UserGroupIcon,
+  CreditCardIcon,
+  EyeIcon,
+  HeartIcon,
+  UserIcon,
+  ShieldCheckIcon,
+  BuildingOfficeIcon,
+  MagnifyingGlassIcon
+} from '@heroicons/react/24/outline';
 
 const API_URL = 'https://futuristcards.onrender.com/api';
 
@@ -20,14 +31,12 @@ const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [cards, setCards] = useState([]);
 
-  // Fetch data on mount and every 30 seconds
   const fetchData = async (showToast = false) => {
     setRefreshing(true);
     let cardsLoaded = false;
-    let usersLoaded = false;
     
     try {
-      // Fetch cards (public endpoint - always works)
+      // Fetch cards (public endpoint)
       try {
         const cardsRes = await fetch(`${API_URL}/cards`);
         if (cardsRes.ok) {
@@ -35,11 +44,9 @@ const AdminPage = () => {
           setCards(cardsData.cards || []);
           cardsLoaded = true;
         }
-      } catch (e) {
-        
-      }
+      } catch (e) {}
 
-      // Fetch users (admin endpoint - requires valid admin token)
+      // Fetch users (admin endpoint)
       const token = localStorage.getItem('token');
       if (token) {
         try {
@@ -52,23 +59,15 @@ const AdminPage = () => {
           if (usersRes.ok) {
             const usersData = await usersRes.json();
             setUsers(usersData.users || []);
-            usersLoaded = true;
           }
-        } catch (e) {
-          
-        }
+        } catch (e) {}
       }
 
       setLastUpdate(new Date());
-      if (showToast) {
-        if (cardsLoaded) {
-          toast.success(`Data refreshed! ${cards.length} cards loaded`);
-        } else {
-          toast.error('Could not load data');
-        }
+      if (showToast && cardsLoaded) {
+        toast.success('Data refreshed!');
       }
     } catch (error) {
-      console.error('Fetch error:', error);
       if (showToast) toast.error('Failed to refresh');
     } finally {
       setLoading(false);
@@ -136,7 +135,7 @@ const AdminPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
         <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent"></div>
       </div>
     );
@@ -145,18 +144,18 @@ const AdminPage = () => {
   return (
     <>
       <Helmet>
-        <title>Admin Dashboard - FuturistCards</title>
+        <title>Admin Panel | FuturistCards</title>
       </Helmet>
 
-      <div className="min-h-screen pt-20 pb-10 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20 pb-10">
         <div className="container mx-auto px-4">
           {/* Header */}
           <div className="flex justify-between items-start mb-8">
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
-              <p className="text-gray-400">Welcome, {user?.name || user?.firstName || 'Admin'}</p>
+              <h1 className="text-4xl font-bold text-white mb-2">Admin Panel</h1>
+              <p className="text-gray-400">Manage users and cards</p>
               <p className="text-xs text-gray-500 mt-1">
-                Last update: {lastUpdate.toLocaleTimeString()} • Auto-refresh: 30s
+                Last update: {lastUpdate.toLocaleTimeString()} - Auto-refresh: 30s
               </p>
             </div>
             <motion.button
@@ -164,185 +163,232 @@ const AdminPage = () => {
               disabled={refreshing}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium"
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg"
             >
               <ArrowPathIcon className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
-              {refreshing ? 'Refreshing...' : 'Refresh'}
+              Refresh
             </motion.button>
           </div>
 
-          {/* Stats Cards - REAL DATA */}
+          {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="p-6 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-              <p className="text-gray-400 text-sm">Total Users</p>
-              <p className="text-4xl font-bold text-white">{totalUsers}</p>
-              <p className="text-blue-400 text-sm mt-1">{totalUsers} registered</p>
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">Total Users</p>
+                  <p className="text-4xl font-bold text-white">{totalUsers}</p>
+                </div>
+                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <UserGroupIcon className="w-6 h-6 text-white" />
+                </div>
+              </div>
             </div>
-            <div className="p-6 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-              <p className="text-gray-400 text-sm">Total Cards</p>
-              <p className="text-4xl font-bold text-white">{totalCards}</p>
-              <p className="text-green-400 text-sm mt-1">{totalCards} created</p>
+
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">Total Cards</p>
+                  <p className="text-4xl font-bold text-white">{totalCards}</p>
+                </div>
+                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <CreditCardIcon className="w-6 h-6 text-white" />
+                </div>
+              </div>
             </div>
-            <div className="p-6 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-              <p className="text-gray-400 text-sm">Total Likes</p>
-              <p className="text-4xl font-bold text-white">{totalLikes}</p>
-              <p className="text-red-400 text-sm mt-1">All time</p>
+
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">Total Views</p>
+                  <p className="text-4xl font-bold text-white">{totalViews}</p>
+                </div>
+                <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                  <EyeIcon className="w-6 h-6 text-white" />
+                </div>
+              </div>
             </div>
-            <div className="p-6 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-              <p className="text-gray-400 text-sm">Total Views</p>
-              <p className="text-4xl font-bold text-white">{totalViews}</p>
-              <p className="text-purple-400 text-sm mt-1">All cards</p>
+
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm">Total Likes</p>
+                  <p className="text-4xl font-bold text-white">{totalLikes}</p>
+                </div>
+                <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                  <HeartIcon className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* User Roles Distribution */}
+          <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20 mb-8">
+            <h3 className="text-xl font-semibold text-white mb-4">User Roles Distribution</h3>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center p-4 bg-white/5 rounded-lg">
+                <div className="w-10 h-10 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <ShieldCheckIcon className="w-5 h-5 text-red-400" />
+                </div>
+                <p className="text-2xl font-bold text-white">{adminUsers}</p>
+                <p className="text-gray-400 text-sm">Admins</p>
+              </div>
+              <div className="text-center p-4 bg-white/5 rounded-lg">
+                <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <BuildingOfficeIcon className="w-5 h-5 text-purple-400" />
+                </div>
+                <p className="text-2xl font-bold text-white">{businessUsers}</p>
+                <p className="text-gray-400 text-sm">Business</p>
+              </div>
+              <div className="text-center p-4 bg-white/5 rounded-lg">
+                <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-2">
+                  <UserIcon className="w-5 h-5 text-blue-400" />
+                </div>
+                <p className="text-2xl font-bold text-white">{regularUsers}</p>
+                <p className="text-gray-400 text-sm">Users</p>
+              </div>
             </div>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-2 mb-8">
+          <div className="flex gap-4 mb-6">
             {['overview', 'users', 'cards'].map(tab => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 rounded-lg font-medium capitalize transition-all ${
+                className={`px-6 py-2 rounded-lg font-medium transition-all ${
                   activeTab === tab
                     ? 'bg-purple-600 text-white'
-                    : 'bg-white/10 text-gray-400 hover:bg-white/20'
+                    : 'bg-white/10 text-gray-300 hover:bg-white/20'
                 }`}
               >
-                {tab} {tab === 'users' && `(${totalUsers})`} {tab === 'cards' && `(${totalCards})`}
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
               </button>
             ))}
           </div>
 
           {/* Search */}
-          {(activeTab === 'users' || activeTab === 'cards') && (
-            <input
-              type="text"
-              placeholder={`Search ${activeTab}...`}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full max-w-md px-4 py-3 mb-6 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            />
+          {activeTab !== 'overview' && (
+            <div className="relative mb-6">
+              <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+            </div>
           )}
 
-          {/* Overview Tab */}
+          {/* Content */}
           {activeTab === 'overview' && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="p-6 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-                <h3 className="text-xl font-bold text-white mb-4">User Distribution</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Admin Users</span>
-                    <span className="text-red-400 font-bold">{adminUsers}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Business Users</span>
-                    <span className="text-purple-400 font-bold">{businessUsers}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-400">Regular Users</span>
-                    <span className="text-blue-400 font-bold">{regularUsers}</span>
-                  </div>
-                  <div className="flex justify-between border-t border-white/20 pt-4">
-                    <span className="text-white font-medium">Total</span>
-                    <span className="text-white font-bold">{totalUsers}</span>
-                  </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Recent Users */}
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                  <UserGroupIcon className="w-5 h-5 text-blue-400" />
+                  Recent Users
+                </h3>
+                <div className="space-y-3">
+                  {users.slice(0, 5).map(u => (
+                    <div key={u._id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div>
+                        <p className="text-white font-medium">{u.name || u.email}</p>
+                        <p className="text-gray-400 text-sm">{u.role}</p>
+                      </div>
+                    </div>
+                  ))}
+                  {users.length === 0 && <p className="text-gray-400">No users found</p>}
                 </div>
               </div>
-              <div className="p-6 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-                <h3 className="text-xl font-bold text-white mb-4">System Status</h3>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Backend API</span>
-                    <span className="flex items-center gap-2 text-green-400">
-                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                      Online
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Database</span>
-                    <span className="flex items-center gap-2 text-green-400">
-                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                      Connected
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-400">Real-time Sync</span>
-                    <span className="flex items-center gap-2 text-green-400">
-                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                      Active (30s)
-                    </span>
-                  </div>
+
+              {/* Recent Cards */}
+              <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+                  <CreditCardIcon className="w-5 h-5 text-purple-400" />
+                  Recent Cards
+                </h3>
+                <div className="space-y-3">
+                  {cards.slice(0, 5).map(c => (
+                    <div key={c._id} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                      <div>
+                        <p className="text-white font-medium">{c.title || c.fullName || 'Untitled'}</p>
+                        <div className="flex gap-3 text-gray-400 text-sm">
+                          <span className="flex items-center gap-1"><EyeIcon className="w-3 h-3" /> {c.views || 0}</span>
+                          <span className="flex items-center gap-1"><HeartIcon className="w-3 h-3" /> {c.likes?.length || 0}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {cards.length === 0 && <p className="text-gray-400">No cards found</p>}
                 </div>
               </div>
             </div>
           )}
 
-          {/* Users Tab */}
           {activeTab === 'users' && (
-            <div className="rounded-xl bg-white/10 backdrop-blur-md border border-white/20 overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-black/20">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-white">Name</th>
-                    <th className="px-6 py-4 text-left text-white">Email</th>
-                    <th className="px-6 py-4 text-left text-white">Role</th>
-                    <th className="px-6 py-4 text-left text-white">Created</th>
-                    <th className="px-6 py-4 text-left text-white">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.length === 0 ? (
-                    <tr><td colSpan="5" className="px-6 py-8 text-center text-gray-400">No users found</td></tr>
-                  ) : (
-                    filteredUsers.map(u => (
-                      <tr key={u._id} className="border-t border-white/10">
-                        <td className="px-6 py-4 text-white">{u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || 'N/A'}</td>
-                        <td className="px-6 py-4 text-gray-400">{u.email}</td>
-                        <td className="px-6 py-4">
-                          <span className={`px-3 py-1 rounded-full text-sm ${
-                            u.role === 'admin' ? 'bg-red-500/20 text-red-400' :
-                            u.role === 'business' ? 'bg-purple-500/20 text-purple-400' :
-                            'bg-blue-500/20 text-blue-400'
-                          }`}>{u.role}</span>
-                        </td>
-                        <td className="px-6 py-4 text-gray-400">{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
-                        <td className="px-6 py-4">
-                          <button onClick={() => handleDeleteUser(u._id)} className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30">
-                            <TrashIcon className="w-4 h-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* Cards Tab */}
-          {activeTab === 'cards' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredCards.length === 0 ? (
-                <div className="col-span-full text-center py-12 text-gray-400">No cards found</div>
-              ) : (
-                filteredCards.map(card => (
-                  <div key={card._id} className="p-6 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
-                    <div className="flex justify-between items-start mb-4">
-                      <h3 className="text-lg font-bold text-white">{card.title || card.fullName || 'Untitled'}</h3>
-                      <button onClick={() => handleDeleteCard(card._id)} className="p-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30">
-                        <TrashIcon className="w-4 h-4" />
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="space-y-3">
+                {filteredUsers.map(u => (
+                  <div key={u._id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-purple-500/20 rounded-full flex items-center justify-center">
+                        <UserIcon className="w-5 h-5 text-purple-400" />
+                      </div>
+                      <div>
+                        <p className="text-white font-medium">{u.name || 'No name'}</p>
+                        <p className="text-gray-400 text-sm">{u.email}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                        u.role === 'admin' ? 'bg-red-500/20 text-red-400' :
+                        u.role === 'business' ? 'bg-purple-500/20 text-purple-400' :
+                        'bg-blue-500/20 text-blue-400'
+                      }`}>
+                        {u.role}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteUser(u._id)}
+                        className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+                      >
+                        <TrashIcon className="w-5 h-5" />
                       </button>
                     </div>
-                    <p className="text-gray-400 text-sm mb-2">{card.email || card.company || 'No details'}</p>
-                    <div className="flex gap-4 text-sm text-gray-400">
-                      <span>👁️ {card.views || 0}</span>
-                      <span>❤️ {card.likes?.length || 0}</span>
-                    </div>
-                    <p className="text-xs text-gray-500 mt-2">
-                      Created: {card.createdAt ? new Date(card.createdAt).toLocaleDateString() : 'N/A'}
-                    </p>
                   </div>
-                ))
-              )}
+                ))}
+                {filteredUsers.length === 0 && <p className="text-gray-400 text-center py-8">No users found</p>}
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'cards' && (
+            <div className="bg-white/10 backdrop-blur-md rounded-xl p-6 border border-white/20">
+              <div className="space-y-3">
+                {filteredCards.map(c => (
+                  <div key={c._id} className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-blue-500/20 rounded-full flex items-center justify-center">
+                        <CreditCardIcon className="w-5 h-5 text-blue-400" />
+                      </div>
+                      <div>
+                        <p className="text-white font-medium">{c.title || c.fullName || 'Untitled'}</p>
+                        <div className="flex gap-3 text-gray-400 text-sm">
+                          <span className="flex items-center gap-1"><EyeIcon className="w-3 h-3" /> {c.views || 0} views</span>
+                          <span className="flex items-center gap-1"><HeartIcon className="w-3 h-3" /> {c.likes?.length || 0} likes</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => handleDeleteCard(c._id)}
+                      className="p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+                    >
+                      <TrashIcon className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))}
+                {filteredCards.length === 0 && <p className="text-gray-400 text-center py-8">No cards found</p>}
+              </div>
             </div>
           )}
         </div>
