@@ -13,18 +13,18 @@ const SimpleHomePage = () => {
   const features = [
     {
       icon: RocketLaunchIcon,
-      title: 'title',
-      description: 'description'
+      title: 'Fast & Easy',
+      description: 'Create your digital business card in minutes'
     },
     {
       icon: GlobeAltIcon,
-      title: 'title',
-      description: 'description'
+      title: 'Share Anywhere',
+      description: 'Share your card via QR code, link, or NFC'
     },
     {
       icon: ShieldCheckIcon,
-      title: 'title',
-      description: 'description'
+      title: 'Secure & Private',
+      description: 'Your data is protected with enterprise-grade security'
     }
   ];
 
@@ -38,10 +38,10 @@ const SimpleHomePage = () => {
           className="text-center mb-16"
         >
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-            👋 {'title'}
+            👋 Welcome to FuturistCards
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            {'subtitle'}
+            Create stunning digital business cards that leave a lasting impression
           </p>
         </motion.div>
         
@@ -76,14 +76,14 @@ const SimpleHomePage = () => {
             to="/register"
             className="group inline-flex items-center bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
           >
-            {'create Card'}
+            Create Your Card
             <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
             to="/about"
             className="group inline-flex items-center glass-card text-white px-8 py-4 rounded-lg font-semibold transition-all duration-300 hover:bg-white/10"
           >
-            {'learn More'}
+            Learn More
             <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
           </Link>
         </motion.div>

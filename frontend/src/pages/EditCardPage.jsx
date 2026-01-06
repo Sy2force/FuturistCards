@@ -166,16 +166,16 @@ const EditCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white mb-4">
-            {'access Denied'}
+            Access Denied
           </h1>
           <p className="text-gray-300 mb-6">
-            {'business Account Required'}
+            You need a business account to edit cards.
           </p>
           <button 
             onClick={() => navigate('/my-cards')}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
           >
-            {'back To My Cards'}
+            Back to My Cards
           </button>
         </div>
       </div>
@@ -187,7 +187,7 @@ const EditCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p className="text-gray-300">{'Loading...'}</p>
+          <p className="text-gray-300">Loading...</p>
         </div>
       </div>
     );
@@ -198,16 +198,16 @@ const EditCardPage = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center px-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-white mb-4">
-            {'card Not Found Title'}
+            Card Not Found
           </h2>
           <p className="text-gray-300 mb-6">
-            {'card Not Found Message'}
+            The card you're looking for doesn't exist or has been deleted.
           </p>
           <button 
             onClick={() => navigate('/my-cards')}
             className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg"
           >
-            {'back To My Cards'}
+            Back to My Cards
           </button>
         </div>
       </div>
@@ -244,10 +244,10 @@ const EditCardPage = () => {
               <PencilIcon className="w-8 h-8 text-white" />
             </motion.div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
-              {'title'}
+              Edit Your Card
             </h1>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              {'subtitle'}
+              Update your digital business card information
             </p>
           </motion.div>
 
@@ -262,7 +262,7 @@ const EditCardPage = () => {
               <div className="sticky top-8">
                 <h3 className="text-lg font-semibold text-white mb-4 flex items-center">
                   <PhotoIcon className="w-5 h-5 ml-2" />
-                  {'preview'}
+                  Preview
                 </h3>
                 <motion.div 
                   className="rounded-2xl p-6 shadow-xl border border-white/10 backdrop-blur-lg"
@@ -276,7 +276,7 @@ const EditCardPage = () => {
                       {imagePreview ? (
                         <img
                           src={imagePreview}
-                          alt={'profile Image'}
+                          alt="Profile"
                           className="w-24 h-24 rounded-full object-cover border-4"
                           style={{ borderColor: formData.accentColor }}
                         />
@@ -290,16 +290,16 @@ const EditCardPage = () => {
                       )}
                     </div>
                     <h4 className="text-xl font-bold mb-1" style={{ color: formData.textColor }}>
-                      {formData.name || 'your Name'}
+                      {formData.name || 'Your Name'}
                     </h4>
                     <p className="font-medium mb-1" style={{ color: formData.accentColor }}>
-                      {formData.title || 'your Title'}
+                      {formData.title || 'Your Title'}
                     </p>
                     <p className="text-sm mb-3" style={{ color: `${formData.textColor}80` }}>
-                      {formData.company || 'your Company'}
+                      {formData.company || 'Your Company'}
                     </p>
                     <p className="text-sm mb-4" style={{ color: `${formData.textColor}90` }}>
-                      {formData.description || 'your Description'}
+                      {formData.description || 'Your Description'}
                     </p>
                   </div>
                 </motion.div>
@@ -319,7 +319,7 @@ const EditCardPage = () => {
                   {/* Image Upload */}
                   <div className="text-center">
                     <label className="block text-sm font-medium text-gray-300 mb-4">
-                      {'profile Image'}
+                      Profile Image
                     </label>
                     <div className="relative inline-block">
                       <input
@@ -333,7 +333,7 @@ const EditCardPage = () => {
                         <div className="relative">
                           <img
                             src={imagePreview}
-                            alt={'preview Alt'}
+                            alt="Preview"
                             className="w-32 h-32 rounded-full object-cover border-4 shadow-lg"
                             style={{ borderColor: formData.accentColor }}
                           />
@@ -355,7 +355,7 @@ const EditCardPage = () => {
                           <div className="text-center">
                             <PhotoIcon className="w-8 h-8 text-gray-400 group-hover:text-blue-400 mx-auto mb-2" />
                             <p className="text-xs text-gray-400 group-hover:text-blue-400">
-                              {'add Image'}
+                              Add Image
                             </p>
                           </div>
                         </button>
