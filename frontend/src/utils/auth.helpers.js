@@ -1,6 +1,6 @@
 // Auth utility functions and constants
 export const AUTH_CONFIG = {
-  API_URL: import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api',
+  API_URL: 'https://futuristcards.onrender.com/api',
   STORAGE_KEY: 'futuristcards_user'
 };
 
