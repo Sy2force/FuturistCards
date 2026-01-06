@@ -75,24 +75,24 @@ const useApi = (apiCall, dependencies = [], immediate = true) => {
     error,
     refetch,
     
-    // Méthodes HTTP
+    // HTTP methods
     get,
     post,
     put,
     delete: del,
     
-    // Méthodes utilitaires
+    // Utility methods
     clearError,
     clearData,
     reset,
     
-    // Appel API générique
+    // Generic API call
     execute
   };
 };
 
 /**
- * Hook spécialisé pour les appels API avec pagination
+ * Specialized hook for API calls with pagination
  */
 export const useApiPagination = (initialPage = 1, initialLimit = 12) => {
   const [page, setPage] = useState(initialPage);
@@ -167,7 +167,7 @@ export const useApiPagination = (initialPage = 1, initialLimit = 12) => {
 };
 
 /**
- * Hook pour les opérations CRUD sur une ressource
+ * Hook for CRUD operations on a resource
  */
 export const useCrud = (resourceEndpoint) => {
   const api = useApi();

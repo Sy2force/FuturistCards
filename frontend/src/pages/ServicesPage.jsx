@@ -30,7 +30,6 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 
 const ServicesPage = () => {
-  const { t } = useTranslation();
   const language = 'en'; // Fixed language to English
   const { user } = useAuth();
   const { currentTheme } = useRoleTheme();

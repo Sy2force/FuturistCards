@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import { useRoleTheme } from '../../context/ThemeProvider';
 
 const Profile = () => {
-  const { t } = useTranslation();
   const { user, updateProfile } = useAuth();
   const { isDark } = useRoleTheme();
   
@@ -389,7 +387,7 @@ const Profile = () => {
                       <svg className="w-4 h-4 inline mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 01-2 2H10a2 2 0 01-2-2V6m8 0H8" />
                       </svg>
-                      Poste
+                      Job Title
                     </label>
                     <input
                       name="position"
@@ -407,7 +405,7 @@ const Profile = () => {
                       <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                       </svg>
-                      Site web
+                      Website
                     </label>
                     <input
                       name="website"
@@ -415,14 +413,14 @@ const Profile = () => {
                       onChange={handleChange}
                       type="url"
                       className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all`}
-                      placeholder={'website Placeholder'}
+                      placeholder={'Website Placeholder'}
                     />
                   </div>
 
                   {/* Bio */}
                   <div className="md:col-span-2">
                     <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-                      📝 À propos de vous
+                      About You
                     </label>
                     <textarea
                       name="bio"
@@ -430,7 +428,7 @@ const Profile = () => {
                       onChange={handleChange}
                       rows={4}
                       className={`w-full px-4 py-3 border ${isDark ? 'border-gray-600' : 'border-gray-300'} rounded-lg ${isDark ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'} focus:ring-2 focus:ring-blue-500 transition-all resize-none`}
-                      placeholder={'bio Placeholder'}
+                      placeholder={'Bio Placeholder'}
                     />
                   </div>
                 </div>
@@ -446,7 +444,7 @@ const Profile = () => {
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    {'Cancel'}
+                    Cancel
                   </button>
                   <button
                     type="submit"
@@ -456,14 +454,14 @@ const Profile = () => {
                     {isLoading ? (
                       <>
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2 inline-block"></div>
-                        {'saving'}
+                        Saving
                       </>
                     ) : (
                       <>
                         <svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
-                        Enregistrer
+                        Save
                       </>
                     )}
                   </button>
@@ -477,13 +475,13 @@ const Profile = () => {
                     <svg className="w-5 h-5 inline mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
-                    Informations de Contact
+                    Contact Information
                   </h3>
                   <div className="space-y-4">
                     <div className="flex items-center space-x-3">
-                      <span className="mr-2">{'Email'}</span>
+                      <span className="mr-2">Email</span>
                       <div>
-                        <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'Email'}</span>
+                        <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Email</span>
                         <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>{user?.email}</p>
                       </div>
                     </div>
@@ -493,7 +491,7 @@ const Profile = () => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a1 1 0 001-1V4a1 1 0 00-1-1H8a1 1 0 00-1 1v16a1 1 0 001 1z" />
                         </svg>
                         <div>
-                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'Phone'}</span>
+                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Phone</span>
                           <p className={`${isDark ? 'text-white' : 'text-gray-900'} font-medium`}>{user.phone}</p>
                         </div>
                       </div>
@@ -501,10 +499,10 @@ const Profile = () => {
                     {user?.website && (
                       <div className="flex items-center space-x-3">
                         <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 919-9" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                         </svg>
                         <div>
-                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{'website'}</span>
+                          <span className={`text-sm ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>Website</span>
                           <a 
                             href={user.website} 
                             target="_blank" 
@@ -525,7 +523,7 @@ const Profile = () => {
                       <svg className="w-5 h-5 inline mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
-                      Informations Professionnelles
+                      Professional Information
                     </h3>
                     <div className="space-y-4">
                       {user?.company && (
@@ -557,7 +555,7 @@ const Profile = () => {
                 {user?.bio && (
                   <div className="md:col-span-2">
                     <h3 className={`text-lg font-semibold ${isDark ? 'text-white' : 'text-gray-900'} mb-4`}>
-                      📝 À propos
+                      📝 About
                     </h3>
                     <p className={`${isDark ? 'text-gray-300 bg-gray-700' : 'text-gray-700 bg-gray-50'} leading-relaxed p-4 rounded-lg`}>
                       {user.bio}

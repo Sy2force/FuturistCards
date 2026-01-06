@@ -7,7 +7,6 @@ import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { PlusIcon, FunnelIcon, MagnifyingGlassIcon, HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
-import { mockCards } from '../data/mockCards';
 import LikeButton from '../components/ui/LikeButton';
 
 const CardsPage = () => {
@@ -30,9 +29,13 @@ const CardsPage = () => {
   const loadCards = async () => {
     try {
       setLoading(true);
-      // Utiliser les données centralisées
-      setCards(mockCards);
+      // Fetch cards from API
+      const response = await apiService.getCards();
+      // Handle both array response and object with cards property
+      const cardsData = Array.isArray(response) ? response : (response.cards || []);
+      setCards(cardsData);
     } catch (error) {
+      console.error('Error loading cards:', error);
       // Error handled silently in production
     } finally {
       setLoading(false);

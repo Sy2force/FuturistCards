@@ -44,41 +44,39 @@ const AdminPage = () => {
     try {
       setLoading(true);
       
-      // Récupérer les vraies données du localStorage
-      const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      const localCards = JSON.parse(localStorage.getItem('userCards') || '[]');
+      // Fetch users and cards from API
+      const [usersResponse, cardsResponse] = await Promise.all([
+        apiService.getUsers().catch(() => ({ users: [] })),
+        apiService.getAdminCards().catch(() => ({ cards: [] }))
+      ]);
       
-      // Transformer les données pour l'affichage admin
-      const realUsers = registeredUsers.map(user => ({
-        _id: user.id || user.email,
-        name: `${user.firstName} ${user.lastName}`,
+      const realUsers = (usersResponse.users || usersResponse.data || []).map(user => ({
+        _id: user._id || user.id,
+        name: user.name || `${user.firstName} ${user.lastName}`,
         email: user.email,
         role: user.role || 'user',
-        status: 'active',
-        createdAt: new Date(user.createdAt || Date.now())
+        status: user.status || 'active',
+        createdAt: new Date(user.createdAt || Date.now()),
+        cardsCount: user.cardsCount || 0
       }));
       
-      const realCards = localCards.map(card => ({
-        _id: card.id,
-        title: card.name || card.title || 'card No Name',
-        owner: card.createdBy || 'user',
-        status: 'active',
-        views: card.views || Math.floor(Math.random() * 200),
-        likes: card.likes || Math.floor(Math.random() * 50),
-        createdAt: new Date(card.createdAt || Date.now())
+      const realCards = (cardsResponse.cards || cardsResponse.data || []).map(card => ({
+        _id: card._id || card.id,
+        title: card.title || 'Untitled',
+        owner: card.user?.name || card.user?.email || 'Unknown',
+        status: card.status || 'active',
+        views: card.views || 0,
+        likes: card.likes || 0,
+        createdAt: new Date(card.createdAt || Date.now()),
+        reports: card.reports || 0
       }));
-      
-      // Simuler quelques rapports
-      const mockReports = [
-        { _id: '1', type: 'inappropriate', cardId: realCards[0]?._id, reportedBy: 'anonymous User', status: 'pending', createdAt: new Date() },
-        { _id: '2', type: 'spam', cardId: realCards[1]?._id, reportedBy: 'registered User', status: 'resolved', createdAt: new Date() }
-      ];
       
       setUsers(realUsers);
       setCards(realCards);
-      setReports(mockReports);
+      // setReports(fetchedReports); // Implement reports if API available
+      
     } catch (error) {
-      // Error handled silently in production
+      console.error('Admin data fetch error:', error);
     } finally {
       setLoading(false);
     }
@@ -86,27 +84,36 @@ const AdminPage = () => {
 
   const handleUserAction = async (userId, action) => {
     try {
-      // Mock API call
-      setUsers(users.map(user => 
-        user.id === userId 
-          ? { ...user, status: action === 'suspend' ? 'suspended' : 'active' }
-          : user
-      ));
+      if (action === 'suspend' || action === 'activate') {
+        // Implement status update API call if available
+        // await apiService.updateUserStatus(userId, action);
+        
+        // Optimistic update
+        setUsers(users.map(user => 
+          (user._id === userId || user.id === userId)
+            ? { ...user, status: action === 'suspend' ? 'suspended' : 'active' }
+            : user
+        ));
+      }
     } catch (error) {
-      // Error handled silently in production
+      console.error('User action error:', error);
     }
   };
 
   const handleCardAction = async (cardId, action) => {
     try {
-      // Mock API call
-      setCards(cards.map(card => 
-        card.id === cardId 
-          ? { ...card, status: action === 'approve' ? 'active' : 'suspended' }
-          : card
-      ));
+      if (action === 'suspend' || action === 'approve') {
+        // Implement status update API call if available
+        // await apiService.updateCardStatus(cardId, action);
+        
+        setCards(cards.map(card => 
+          (card._id === cardId || card.id === cardId)
+            ? { ...card, status: action === 'approve' ? 'active' : 'suspended' }
+            : card
+        ));
+      }
     } catch (error) {
-      // Error handled silently in production
+      console.error('Card action error:', error);
     }
   };
 
@@ -493,7 +500,7 @@ const AdminPage = () => {
               {/* Cards Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredCards.map((card) => (
-                  <GlassCard key={card.id} className="p-6">
+                  <GlassCard key={card._id || card.id} className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <h3 className="text-lg font-bold text-white">{card.title}</h3>
                       <span className={`px-3 py-1 rounded-full text-sm ${
@@ -522,7 +529,7 @@ const AdminPage = () => {
                         {'view'}
                       </button>
                       <button
-                        onClick={() => handleCardAction(card.id, card.status === 'active' ? 'suspend' : 'approve')}
+                        onClick={() => handleCardAction(card._id || card.id, card.status === 'active' ? 'suspend' : 'approve')}
                         className={`flex-1 px-4 py-2 rounded transition-colors flex items-center justify-center ${
                           card.status === 'active'
                             ? 'bg-red-500/20 text-red-300 hover:bg-red-500/30'

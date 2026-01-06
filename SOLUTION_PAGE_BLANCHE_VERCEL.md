@@ -52,7 +52,7 @@ J'ai corrigé tous les bugs qui causaient la page blanche :
 2. **Ajoute cette variable (si elle n'existe pas) :**
    ```
    Name: VITE_API_URL
-   Value: https://futuristcards-backend.onrender.com/api
+   Value: https://futuristcards.onrender.com/api
    Environment: Production
    ```
 
@@ -134,7 +134,7 @@ Sur la page blanche, appuie sur **F12** → Onglet **Console**
 
 2. **`Failed to fetch` ou `Network Error`**
    - **Cause :** Backend Render inactif ou CORS bloqué
-   - **Solution :** Vérifie https://futuristcards-backend.onrender.com/api/health
+   - **Solution :** Vérifie https://futuristcards.onrender.com/api/health
 
 3. **`Cannot read properties of undefined`**
    - **Cause :** Context provider crash au démarrage
@@ -158,7 +158,7 @@ git push futuristcards main
 
 # 2. Va sur Vercel Dashboard
 # 3. Settings → Environment Variables
-# 4. Ajoute : VITE_API_URL=https://futuristcards-backend.onrender.com/api
+# 4. Ajoute : VITE_API_URL=https://futuristcards.onrender.com/api
 # 5. Deployments → Redeploy (sans cache)
 ```
 
@@ -186,7 +186,7 @@ git push futuristcards main
 **Va sur Vercel Dashboard et :**
 
 1. **Settings** → **Environment Variables**
-2. **Ajoute :** `VITE_API_URL` = `https://futuristcards-backend.onrender.com/api`
+2. **Ajoute :** `VITE_API_URL` = `https://futuristcards.onrender.com/api`
 3. **Deployments** → **Redeploy** (sans cache)
 
 **Attends 2-3 minutes que le build se termine.**

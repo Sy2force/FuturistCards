@@ -12,7 +12,7 @@ export { default as UnauthorizedPage } from './UnauthorizedPage';
 export { default as ErrorPage } from './ErrorPage';
 
 // Dashboard pages
-export { default as Dashboard } from './dashboard/Dashboard';
+export { default as Dashboard } from './DashboardPage';
 export { default as Profile } from './dashboard/Profile';
 export { default as CreateCard } from './dashboard/CreateCard';
 export { default as MyCards } from './dashboard/MyCards';

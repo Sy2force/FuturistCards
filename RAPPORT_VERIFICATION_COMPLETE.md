@@ -97,7 +97,7 @@ setChartData(prev => {
 
 3. **api.js**
    - ❌ `'https://futuristcards.onrender.com/api'` → URL incorrecte
-   - ✅ `'https://futuristcards-backend.onrender.com/api'` → URL correcte
+   - ✅ `'https://futuristcards.onrender.com/api'` → URL correcte
 
 **Tous les imports sont maintenant valides et fonctionnels.**
 
@@ -313,7 +313,7 @@ git push origin main
 
 **Configuration Vercel requise :**
 - Root Directory : `frontend`
-- Variables : `VITE_API_URL=https://futuristcards-backend.onrender.com/api`
+- Variables : `VITE_API_URL=https://futuristcards.onrender.com/api`
 
 ---
 

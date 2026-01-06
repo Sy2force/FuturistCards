@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { useRoleTheme } from '../context/ThemeProvider';
+import apiService from '../services/api';
 import { 
   CreditCardIcon, 
   HeartIcon, 
@@ -25,10 +26,10 @@ const DashboardPage = () => {
   const { favorites } = useFavorites();
   const { currentTheme } = useRoleTheme();
   const [stats, setStats] = useState({
-    totalCards: 5,
-    totalViews: 1247,
-    totalLikes: 89,
-    favoriteCards: favorites.length || 12
+    totalCards: 0,
+    totalViews: 0,
+    totalLikes: 0,
+    favoriteCards: 0
   });
   const [recentCards, setRecentCards] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -42,63 +43,40 @@ const DashboardPage = () => {
     try {
       setLoading(true);
       
-      // Mock data for demonstration
-      const mockRecentCards = [
-        {
-          "id": 1,
-          "title": 'Professional Business Card',
-          "description": 'Modern digital business card with contact information',
-          "views": 156,
-          "createdAt": 'Today',
-          "image": null
-        },
-        {
-          "id": 2,
-          "title": 'Creative Portfolio Card',
-          "description": 'Showcase your creative work and portfolio',
-          "views": 89,
-          "createdAt": 'Yesterday',
-          "image": null
-        },
-        {
-          "id": 3,
-          "title": 'Corporate Executive Card',
-          "description": 'Executive-level business card with company branding',
-          "views": 234,
-          "createdAt": '3 days ago',
-          "image": null
-        }
-      ];
-
-      const mockActivity = [
-        {
-          "id": 1,
-          "type": 'card_created',
-          "message": 'New card created successfully',
-          "time": '2 hours ago',
-          "icon": PlusIcon
-        },
-        {
-          "id": 2,
-          "type": 'card_viewed',
-          "message": 'Your card was viewed by someone',
-          "time": 'Today',
-          "icon": EyeIcon
-        },
-        {
-          "id": 3,
-          "type": 'favorite_added',
-          "message": 'Someone added your card to favorites',
-          "time": 'Yesterday',
-          "icon": HeartIcon
-        }
-      ];
-
-      setRecentCards(mockRecentCards);
-      setRecentActivity(mockActivity);
+      // Fetch user's cards
+      const response = await apiService.getMyCards();
+      const myCards = response.cards || response.data || [];
+      
+      // Calculate stats
+      const totalCards = myCards.length;
+      const totalViews = myCards.reduce((acc, card) => acc + (card.views || 0), 0);
+      const totalLikes = myCards.reduce((acc, card) => acc + (card.likes || 0), 0);
+      const favoriteCards = favorites.length;
+      
+      setStats({
+        totalCards,
+        totalViews,
+        totalLikes,
+        favoriteCards
+      });
+      
+      // Recent cards (last 3)
+      const sortedCards = [...myCards].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setRecentCards(sortedCards.slice(0, 3));
+      
+      // Generate activity from cards (since we don't have an activity API yet)
+      const activities = sortedCards.slice(0, 5).map(card => ({
+        id: `create-${card._id}`,
+        type: 'card_created',
+        message: `Created card "${card.title}"`,
+        time: new Date(card.createdAt).toLocaleDateString(),
+        icon: PlusIcon
+      }));
+      
+      setRecentActivity(activities);
       
     } catch (error) {
-      // Error handled silently in production
+      console.error('Error fetching dashboard data:', error);
     } finally {
       setLoading(false);
     }
@@ -206,7 +184,7 @@ const DashboardPage = () => {
               <div className="space-y-4">
                 {recentCards.length > 0 ? (
                   recentCards.map((card) => (
-                    <GlassCard key={card.id} className="p-6">
+                    <GlassCard key={card._id || card.id} className="p-6">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-white mb-2">
@@ -218,11 +196,11 @@ const DashboardPage = () => {
                           <div className="flex justify-between items-center text-sm text-gray-400">
                             <span className="flex items-center">
                               <EyeIcon className="h-4 w-4 ml-1" />
-                              {card.views} views
+                              {card.views || 0} views
                             </span>
                             <span className="flex items-center">
                               <ClockIcon className="h-4 w-4 ml-1" />
-                              {card.createdAt}
+                              {new Date(card.createdAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>

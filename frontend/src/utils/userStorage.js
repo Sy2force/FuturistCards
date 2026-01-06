@@ -1,8 +1,8 @@
-// Système de gestion des users avec localStorage
+// User management system with localStorage
 const USERS_KEY = 'futuristcards_users';
 const CURRENT_USER_KEY = 'futuristcards_current_user';
 
-// Users de test pré-enregistrés
+// Pre-registered test users
 const TEST_USERS = [
   {
     id: 'test-1',
@@ -10,7 +10,7 @@ const TEST_USERS = [
     lastName: 'Dupont',
     email: 'jean.dupont@futuristcards.com',
     password: 'test123',
-    bio: 'Développeur passionné avec 5 ans d\'expérience en React et Node.js',
+    bio: 'Passionate developer with 5 years of experience in React and Node.js',
     company: 'TechCorp',
     phone: '06 12 34 56 78',
     createdAt: new Date('2023-01-15').toISOString(),
@@ -23,7 +23,7 @@ const TEST_USERS = [
     lastName: 'Martin',
     email: 'marie.martin@futuristcards.com',
     password: 'test123',
-    bio: 'Designer UX/UI créative spécialisée dans les interfaces modernes',
+    bio: 'Creative UX/UI designer specializing in modern interfaces',
     company: 'Design Studio',
     phone: '06 87 65 43 21',
     createdAt: new Date('2023-02-20').toISOString(),
@@ -36,7 +36,7 @@ const TEST_USERS = [
     lastName: 'Durand',
     email: 'pierre.durand@futuristcards.com',
     password: 'test123',
-    bio: 'Chef de projet expérimenté dans le digital',
+    bio: 'Experienced project manager in digital fields',
     company: 'Digital Agency',
     phone: '06 98 76 54 32',
     createdAt: new Date('2023-03-10').toISOString(),
@@ -49,7 +49,7 @@ const TEST_USERS = [
     lastName: 'Bernard',
     email: 'sophie.bernard@futuristcards.com',
     password: 'test123',
-    bio: 'Consultante en transformation digitale',
+    bio: 'Digital transformation consultant',
     company: 'Consulting Plus',
     phone: '06 11 22 33 44',
     createdAt: new Date('2023-04-05').toISOString(),
@@ -58,7 +58,7 @@ const TEST_USERS = [
   }
 ];
 
-// Initialiser les comptes de test si pas déjà fait
+// Initialize test accounts if not already done
 export const initializeTestUsers = () => {
   const existingUsers = getStoredUsers();
   const testExists = TEST_USERS.some(testUser => 
@@ -71,7 +71,7 @@ export const initializeTestUsers = () => {
   }
 };
 
-// Récupérer tous les users stockés
+// Get all stored users
 export const getStoredUsers = () => {
   try {
     const users = localStorage.getItem(USERS_KEY);
@@ -81,7 +81,7 @@ export const getStoredUsers = () => {
   }
 };
 
-// Sauvegarder un nouvel user
+// Save a new user
 export const saveUser = (userData) => {
   const users = getStoredUsers();
   const newUser = {
@@ -100,13 +100,13 @@ export const saveUser = (userData) => {
   return newUser;
 };
 
-// Trouver un user par email
+// Find user by email
 export const findUserByEmail = (email) => {
   const users = getStoredUsers();
   return users.find(user => user.email === email);
 };
 
-// Connecter un user
+// Login user
 export const loginUser = (email, password) => {
   const user = findUserByEmail(email);
   
@@ -131,7 +131,7 @@ export const loginUser = (email, password) => {
   return null;
 };
 
-// Récupérer l'user connecté
+// Get current logged-in user
 export const getCurrentUser = () => {
   try {
     const user = localStorage.getItem(CURRENT_USER_KEY);
@@ -141,18 +141,18 @@ export const getCurrentUser = () => {
   }
 };
 
-// Déconnecter l'user
+// Logout user
 export const logoutUser = () => {
   localStorage.removeItem(CURRENT_USER_KEY);
   window.location.href = '/login';
 };
 
-// Supprimer l'user du localStorage
+// Remove user from localStorage
 export const removeUser = () => {
   localStorage.removeItem(CURRENT_USER_KEY);
 };
 
-// Fonction pour empêcher la navigation accidentelle (sauf déconnexion volontaire)
+// Function to prevent accidental navigation (except voluntary logout)
 export const setupNavigationProtection = () => {
   const handleBeforeUnload = (event) => {
     const user = getCurrentUser();
@@ -163,7 +163,7 @@ export const setupNavigationProtection = () => {
     }
   };
 
-  // Protection contre fermeture accidentelle
+  // Protection against accidental closure
   window.addEventListener('beforeunload', handleBeforeUnload);
   
   return () => {
@@ -171,12 +171,12 @@ export const setupNavigationProtection = () => {
   };
 };
 
-// Verify si un email existe déjà
+// Verify if email already exists
 export const emailExists = (email) => {
   return findUserByEmail(email) !== undefined;
 };
 
-// Mettre à jour le profil user
+// Update user profile
 export const updateUserProfile = (profileData) => {
   const currentUser = getCurrentUser();
   if (!currentUser) return null;
@@ -185,11 +185,11 @@ export const updateUserProfile = (profileData) => {
   const userIndex = users.findIndex(user => user.id === currentUser.id);
   
   if (userIndex !== -1) {
-    // Mettre à jour l'user dans la liste complète
+    // Update user in full list
     users[userIndex] = { ...users[userIndex], ...profileData };
     localStorage.setItem(USERS_KEY, JSON.stringify(users));
     
-    // Mettre à jour la session courante
+    // Update current session
     const updatedUser = { ...currentUser, ...profileData };
     localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updatedUser));
     
@@ -199,7 +199,7 @@ export const updateUserProfile = (profileData) => {
   return null;
 };
 
-// Obtenir les statistiques des users
+// Get user statistics
 export const getUserStats = () => {
   const users = getStoredUsers();
   return {

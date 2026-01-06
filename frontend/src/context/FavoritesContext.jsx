@@ -55,10 +55,10 @@ export const FavoritesProvider = ({ children }) => {
         [userId]: newUserFavorites
       };
       
-      // Sauvegarder dans localStorage
+      // Save to localStorage
       localStorage.setItem('allFavorites', JSON.stringify(newFavorites));
       
-      // Déclencher un événement personnalisé pour les mises à jour temps réel
+      // Trigger custom event for real-time updates
       window.dispatchEvent(new CustomEvent('favoriteToggled', {
         detail: { cardId, userId, isLiked: !isLiked, timestamp: new Date() }
       }));
@@ -67,21 +67,21 @@ export const FavoritesProvider = ({ children }) => {
     });
   }, [user]);
 
-  // Ajouter une carte aux favoris
+  // Add card to favorites
   const addToFavorites = (cardId) => {
     if (!user) return false;
     toggleFavorite(cardId);
     return true;
   };
 
-  // Retirer une carte des favoris
+  // Remove card from favorites
   const removeFromFavorites = (cardId) => {
     if (!user) return false;
     toggleFavorite(cardId);
     return true;
   };
 
-  // Verify si une carte est en favori
+  // Check if card is favorite
   const isFavorite = (cardId) => {
     if (!user) return false;
     const userId = user?.id || user?.email || 'anonymous';
@@ -89,7 +89,7 @@ export const FavoritesProvider = ({ children }) => {
     return userFavorites.includes(cardId);
   };
 
-  // Obtenir toutes les cartes favorites
+  // Get all favorite cards
   const getFavoriteCards = (allCards) => {
     if (!user || !allCards) return [];
     const userId = user?.id || user?.email || 'anonymous';

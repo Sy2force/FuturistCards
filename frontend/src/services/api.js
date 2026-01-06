@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { handleApiError } from '../utils/errorHandler';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards-backend.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api';
 
 
 // Create a centralized axios instance for all API calls

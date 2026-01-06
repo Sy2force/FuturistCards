@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../context/AuthContext';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useFavorites } from '../context/FavoritesContext';
+import apiService from '../services/api';
 import { ArrowLeftIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon, EyeIcon } from '@heroicons/react/24/solid';
 import LikeButton from '../components/ui/LikeButton';

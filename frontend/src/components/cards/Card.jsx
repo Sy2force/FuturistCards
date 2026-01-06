@@ -142,7 +142,7 @@ const Card = ({
         </div>
       </div>
 
-      {/* Aperçu de la carte - Removed unused component */}
+      {/* Card preview - Removed unused component */}
     </article>
   );
 };

@@ -11,7 +11,7 @@ const Dashboard = () => {
   });
 
   useEffect(() => {
-    // Simuler des statistiques pour le dashboard
+    // Simulate dashboard statistics
     const timer = setTimeout(() => {
       setStats({
         cards: 3,

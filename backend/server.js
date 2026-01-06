@@ -26,7 +26,7 @@ const PORT = process.env.PORT || 5001;
 const allowedOrigins = [
   // Production
   'https://futuristcards.vercel.app',
-  'https://futuristcards-backend.onrender.com',
+  'https://futuristcards.onrender.com',
   
   // Local development
   'http://localhost:3010',

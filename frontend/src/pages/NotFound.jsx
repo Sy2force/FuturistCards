@@ -7,7 +7,10 @@ const NotFound = () => {
   const { currentTheme } = useRoleTheme();
   
   // Set document title
-  
+  React.useEffect(() => {
+    document.title = 'Page Not Found - FuturistCards';
+  }, []);
+
   return (
     <div className="min-h-screen glass-gradient flex items-center justify-center px-4">
       <motion.div 

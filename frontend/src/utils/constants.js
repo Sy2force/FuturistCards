@@ -14,7 +14,6 @@ export const STORAGE_KEYS = {
   USER: 'futuristcards_user',
   TOKEN: 'token',
   THEME: 'futuristcards_theme',
-  OFFLINE_DATA: 'futuristcards_offline',
   FAVORITES: 'futuristcards_favorites',
   LAST_SYNC: 'futuristcards_last_sync'
 };

@@ -74,14 +74,14 @@ export const validateImageFile = (file) => {
   if (!allowedTypes.includes(file.type)) {
     return { 
       isValid: false, 
-      error: 'Format non supporté. Utilisez JPG, PNG ou WebP' 
+      error: 'Format not supported. Use JPG, PNG or WebP' 
     };
   }
 
   if (file.size > maxSize) {
     return { 
       isValid: false, 
-      error: 'Le fichier est trop volumineux (max 5MB)' 
+      error: 'File is too large (max 5MB)' 
     };
   }
 

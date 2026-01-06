@@ -23,7 +23,7 @@
 - ✅ Routing SPA : Fonctionnel sans erreurs 404
 
 ### Backend
-- ✅ Serveur : Render (https://futuristcards-backend.onrender.com)
+- ✅ Serveur : Render (https://futuristcards.onrender.com)
 - ✅ MongoDB : Atlas connecté et opérationnel
 - ✅ API : 7 endpoints testés et fonctionnels
 - ✅ Sécurité : JWT + CORS + Rate Limiting + Helmet
@@ -170,7 +170,7 @@ VITE_API_URL=http://localhost:5001/api
 NODE_ENV=development
 
 # Production (set in Vercel dashboard)
-VITE_API_URL=https://futuristcards-backend.onrender.com/api
+VITE_API_URL=https://futuristcards.onrender.com/api
 NODE_ENV=production
 ```
 

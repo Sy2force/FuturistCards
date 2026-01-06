@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import apiService from '../../services/api';
 
 const CreateCardPage = () => {
-  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     title: '',
     subtitle: '',
@@ -164,7 +163,7 @@ const CreateCardPage = () => {
       const cardData = {
         title: formData.title,
         subtitle: formData.subtitle || formData.position || '',
-        description: formData.description || t('createCard.defaultDescription', { company: formData.company || 'default Company' }),
+        description: formData.description || `Professional at ${formData.company || 'default Company'}`,
         email: formData.email,
         phone: formData.phone || '',
         website: formData.website || '',

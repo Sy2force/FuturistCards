@@ -69,7 +69,7 @@ const CreateCardPage = () => {
     setIsSubmitting(true);
 
     try {
-      // Simuler la création de la carte
+      // Simulate card creation
       const newCard = {
         id: Date.now().toString(),
         ...formData,
@@ -79,12 +79,12 @@ const CreateCardPage = () => {
         likes: 0
       };
 
-      // Sauvegarder dans localStorage pour la démo
+      // Save to localStorage for demo
       const existingCards = JSON.parse(localStorage.getItem('userCards') || '[]');
       existingCards.push(newCard);
       localStorage.setItem('userCards', JSON.stringify(existingCards));
 
-      // Rediriger vers la page des cartes
+      // Redirect to cards page
       navigate('/my-cards');
     } catch (error) {
       // Error handled silently in production

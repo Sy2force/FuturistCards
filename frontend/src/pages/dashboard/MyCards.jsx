@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../context/AuthContext';
 import apiService from '../../services/api';
 import {
@@ -36,43 +35,16 @@ const MyCardsPage = () => {
       
       try {
         const response = await apiService.getMyCards();
-        const serverCards = response.data.cards || [];
+        // Handle different response structures
+        const serverCards = response.cards || response.data || response.data?.cards || [];
+        
+        // Merge with local cards but prefer server cards (or handle duplicates if needed)
+        // For now just combining them, assuming IDs are different or we want both
         setCards([...localCards, ...serverCards]);
       } catch (apiError) {
-        // If server unavailable, use only local cards + demo
-        const mockCards = [
-          {
-            _id: 'demo-1',
-            title: 'title',
-            subtitle: 'subtitle',
-            company: 'company',
-            description: 'description',
-            image: null,
-            views: 245,
-            likes: 18,
-            createdAt: '2024-01-15T10:30:00Z',
-            backgroundColor: '#1e293b',
-            textColor: '#ffffff',
-            accentColor: '#3b82f6',
-            isDemo: true
-          },
-          {
-            _id: 'demo-2',
-            title: 'title',
-            subtitle: 'subtitle',
-            company: 'company',
-            description: 'description',
-            image: null,
-            views: 189,
-            likes: 24,
-            createdAt: '2024-01-10T14:20:00Z',
-            backgroundColor: '#7c3aed',
-            textColor: '#ffffff',
-            accentColor: '#f59e0b',
-            isDemo: true
-          }
-        ];
-        setCards([...localCards, ...mockCards]);
+        console.error('Failed to fetch cards from server:', apiError);
+        // If server unavailable, use only local cards
+        setCards(localCards);
       }
     } catch (error) {
       setError('load Error');
@@ -386,9 +358,9 @@ const MyCardsPage = () => {
               </div>
               
               <p className="text-gray-300 mb-6">
-                {t('myCards.deleteMessage', { cardName: deleteModal.cardName })}
+                Are you sure you want to delete "{deleteModal.cardName}"?
                 <br />
-                <span className="text-red-400 text-sm">{'delete Warning'}</span>
+                <span className="text-red-400 text-sm">This action cannot be undone.</span>
               </p>
               
               <div className="flex space-x-3 space-x-reverse">

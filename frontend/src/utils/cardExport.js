@@ -54,8 +54,8 @@ export const generateCardURL = (card) => {
 export const shareCard = async (card) => {
   const cardUrl = generateCardURL(card);
   const shareData = {
-    title: `Carte de ${card.title}`,
-    text: `Découvrez la carte professionnelle de ${card.title}`,
+    title: `Card of ${card.title}`,
+    text: `Discover the professional card of ${card.title}`,
     url: cardUrl,
   };
 

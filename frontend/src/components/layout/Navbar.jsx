@@ -89,7 +89,7 @@ const Navbar = ({ onCreateCard }) => {
 
   // Navigation links configuration by role
   const navigationByRole = {
-    // Public (non connecté) : Home, About, Cards, Login, Register
+    // Public (not connected) : Home, About, Cards, Login, Register
     public: [
       { path: '/', key: 'home', label: 'Home' },
       { path: '/about', key: 'about', label: 'About' },

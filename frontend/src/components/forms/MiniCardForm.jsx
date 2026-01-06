@@ -47,7 +47,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
     setIsSubmitting(true);
     try {
       // Direct API call for anonymous creation
-      const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards-backend.onrender.com/api';
+      const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api';
       const response = await fetch(`${API_URL}/cards/public`, {
         method: 'POST',
         headers: {

@@ -17,7 +17,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 const ContactPage = () => {
-  const { t } = useTranslation();
   const { currentTheme } = useRoleTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
