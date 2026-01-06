@@ -46,21 +46,31 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
   const handleFormSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      // Direct API call for anonymous creation
-      const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api';
+      // Direct API call for anonymous creation - always use production URL
+      const API_URL = 'https://futuristcards.onrender.com/api';
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      
       const response = await fetch(`${API_URL}/cards/public`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
-        throw new Error('Error creating card');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Error creating card');
       }
 
       const result = await response.json();
+      
+      toast.success('Card created successfully! 🎉');
       
       if (onSubmit) {
         await onSubmit(result.card);
@@ -75,7 +85,12 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
         onClose();
       }, 2000);
     } catch (error) {
-      toast.error('Failed to create card');
+      console.error('Card creation error:', error);
+      if (error.name === 'AbortError') {
+        toast.error('Request timeout - please try again');
+      } else {
+        toast.error(error.message || 'Failed to create card');
+      }
     } finally {
       setIsSubmitting(false);
     }
