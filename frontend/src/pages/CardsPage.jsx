@@ -5,10 +5,11 @@ import { Helmet } from 'react-helmet-async';
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
-import { PlusIcon, FunnelIcon, MagnifyingGlassIcon, HeartIcon, EyeIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, FunnelIcon, MagnifyingGlassIcon, HeartIcon, EyeIcon, TrashIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
 import LikeButton from '../components/ui/LikeButton';
 import apiService from '../services/api';
+import toast from 'react-hot-toast';
 
 const CardsPage = () => {
   const { isDark } = useRoleTheme();
