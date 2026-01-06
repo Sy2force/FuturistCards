@@ -253,7 +253,7 @@ const CardsPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6 lg:gap-8 xl:gap-10" 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" 
             data-testid="cards-grid"
           >
             {filteredCards.map((card, index) => (
@@ -267,7 +267,7 @@ const CardsPage = () => {
               >
                 {/* Card Image/Avatar */}
                 <div className="relative">
-                  <div className="aspect-[4/3] relative overflow-hidden">
+                  <div className="aspect-[16/10] relative overflow-hidden">
                     {card.image ? (
                       <img 
                         src={card.image} 
@@ -276,7 +276,7 @@ const CardsPage = () => {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 flex items-center justify-center">
-                        <span className="text-4xl font-bold text-white">
+                        <span className="text-6xl font-bold text-white drop-shadow-lg">
                           {card.title?.charAt(0) || 'C'}
                         </span>
                       </div>
@@ -313,10 +313,10 @@ const CardsPage = () => {
                 <Link to={`/cards/${card._id}`} className="block p-6">
                   {/* Title and Subtitle */}
                   <div className="mb-3">
-                    <h3 className="font-bold text-lg mb-1 text-white line-clamp-1">
+                    <h3 className="font-bold text-xl mb-2 text-white line-clamp-2">
                       {card.title}
                     </h3>
-                    <p className="text-sm text-gray-400 line-clamp-1">
+                    <p className="text-base text-gray-300 line-clamp-1">
                       {card.subtitle}
                     </p>
                   </div>
@@ -337,7 +337,7 @@ const CardsPage = () => {
 
                   {/* Description */}
                   {card.description && (
-                    <p className="text-sm text-gray-300 line-clamp-2 mb-4 leading-relaxed">
+                    <p className="text-sm text-gray-300 line-clamp-3 mb-4 leading-relaxed">
                       {card.description}
                     </p>
                   )}
