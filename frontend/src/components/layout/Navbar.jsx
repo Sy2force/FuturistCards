@@ -191,13 +191,19 @@ const Navbar = ({ onCreateCard }) => {
               {/* Site Title */}
               <div className="flex flex-col">
                 <span 
-                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wide text-white"
+                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wider"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
+                  }}
                   data-testid="site-title"
                 >
-                  FuturistCards
+                  FUTURIST<span style={{ color: '#60a5fa', WebkitTextFillColor: '#60a5fa' }}>CARDS</span>
                 </span>
                 <span 
-                  className="text-xs text-gray-400"
+                  className="text-[10px] text-gray-400 tracking-widest uppercase"
                 >
                   Digital Business Cards
                 </span>
