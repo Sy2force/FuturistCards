@@ -13,11 +13,13 @@ const RealTimeChart = ({ data, title, color = 'blue', type: _type = 'line' }) =>
         second: '2-digit'
       });
       
+      // Use functional update to avoid lint warning
       setChartData(prev => {
         const newData = [...prev, { value: data, time: timestamp }];
         return newData.slice(-maxDataPoints);
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   const maxValue = Math.max(...chartData.map(d => d.value), 1);

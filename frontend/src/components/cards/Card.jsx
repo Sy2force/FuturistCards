@@ -8,7 +8,7 @@ const Card = ({
   onEdit, 
   showActions = false 
 }) => {
-  const { toggleFavorite: _toggleFavorite, isFavorite: _isFavorite } = useFavorites();
+  const { toggleFavorite, isFavorite } = useFavorites();
   
   return (
     <article
