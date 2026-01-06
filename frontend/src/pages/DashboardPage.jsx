@@ -10,13 +10,16 @@ import {
   EyeIcon, 
   PlusIcon,
   ClockIcon,
-  ArrowPathIcon
+  ArrowPathIcon,
+  ChartBarIcon,
+  TrashIcon,
+  PencilIcon
 } from '@heroicons/react/24/outline';
 import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 import toast from 'react-hot-toast';
 
-const API_URL = "https://futuristcards.onrender.com/api"; // v2 - real-time data
+const API_URL = "https://futuristcards.onrender.com/api";
 
 const DashboardPage = () => {
   const { user } = useAuth();
@@ -27,18 +30,17 @@ const DashboardPage = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(new Date());
 
-  // Fetch real data from API
   const fetchData = async (showToast = false) => {
     setRefreshing(true);
     try {
-      // Fetch all cards (public)
+      // Fetch all cards from API
       const cardsRes = await fetch(`${API_URL}/cards`);
       if (cardsRes.ok) {
         const data = await cardsRes.json();
         const cards = data.cards || [];
         setAllCards(cards);
         
-        // Filter my cards (cards created by current user)
+        // Filter my cards
         const userCards = cards.filter(c => 
           c.user?._id === user?._id || 
           c.user === user?._id ||
@@ -47,7 +49,7 @@ const DashboardPage = () => {
         setMyCards(userCards);
       }
 
-      // Also fetch from localStorage for cards created locally
+      // Also get local cards
       const localCards = JSON.parse(localStorage.getItem('userCards') || '[]');
       if (localCards.length > 0) {
         setMyCards(prev => {
@@ -73,20 +75,25 @@ const DashboardPage = () => {
 
   useEffect(() => {
     fetchData();
-    const interval = setInterval(() => fetchData(), 30000);
+    const interval = setInterval(() => fetchData(), 15000); // Refresh every 15s
     return () => clearInterval(interval);
   }, [user]);
 
-  // Calculate REAL stats from actual data
+  // Calculate REAL stats
   const totalCards = myCards.length;
   const totalViews = myCards.reduce((sum, c) => sum + (c.views || 0), 0);
   const totalLikes = myCards.reduce((sum, c) => sum + (c.likes?.length || c.likesCount || 0), 0);
   const favoriteCards = favorites?.length || 0;
 
-  // Recent cards (last 5)
+  // Recent cards
   const recentCards = [...myCards]
     .sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0))
     .slice(0, 5);
+
+  // Performance metrics
+  const avgViews = totalCards > 0 ? (totalViews / totalCards).toFixed(1) : 0;
+  const avgLikes = totalCards > 0 ? (totalLikes / totalCards).toFixed(1) : 0;
+  const engagementRate = totalViews > 0 ? ((totalLikes / totalViews) * 100).toFixed(1) : 0;
 
   if (loading) {
     return (
@@ -100,7 +107,6 @@ const DashboardPage = () => {
     <>
       <Helmet>
         <title>Dashboard - FuturistCards</title>
-        <meta name="description" content="Your personal dashboard" />
       </Helmet>
       
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-20">
@@ -115,12 +121,13 @@ const DashboardPage = () => {
               <h1 className="text-4xl font-bold text-white mb-2">
                 Welcome, {user?.firstName || user?.name || 'User'}!
               </h1>
-              <p className="text-gray-300">
-                Here is an overview of your business cards
-              </p>
-              <p className="text-xs text-gray-500 mt-1">
-                Last update: {lastUpdate.toLocaleTimeString()} • Auto-refresh: 30s
-              </p>
+              <p className="text-gray-300">Here is an overview of your business cards</p>
+              <div className="flex items-center gap-2 mt-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <p className="text-xs text-green-400">
+                  Live - Last update: {lastUpdate.toLocaleTimeString()} - Auto-refresh: 15s
+                </p>
+              </div>
             </div>
             <motion.button
               onClick={() => fetchData(true)}
@@ -134,7 +141,7 @@ const DashboardPage = () => {
             </motion.button>
           </motion.div>
 
-          {/* Stats Grid - REAL DATA */}
+          {/* Stats Grid */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -148,7 +155,9 @@ const DashboardPage = () => {
                   <p className="text-4xl font-bold text-white">{totalCards}</p>
                   <p className="text-xs text-blue-400 mt-1">Cards you created</p>
                 </div>
-                <CreditCardIcon className="h-10 w-10 text-blue-400" />
+                <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+                  <CreditCardIcon className="h-6 w-6 text-white" />
+                </div>
               </div>
             </GlassCard>
 
@@ -159,7 +168,9 @@ const DashboardPage = () => {
                   <p className="text-4xl font-bold text-white">{totalViews}</p>
                   <p className="text-xs text-green-400 mt-1">On your cards</p>
                 </div>
-                <EyeIcon className="h-10 w-10 text-green-400" />
+                <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                  <EyeIcon className="h-6 w-6 text-white" />
+                </div>
               </div>
             </GlassCard>
 
@@ -170,7 +181,9 @@ const DashboardPage = () => {
                   <p className="text-4xl font-bold text-white">{totalLikes}</p>
                   <p className="text-xs text-red-400 mt-1">On your cards</p>
                 </div>
-                <HeartIcon className="h-10 w-10 text-red-400" />
+                <div className="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                  <HeartIcon className="h-6 w-6 text-white" />
+                </div>
               </div>
             </GlassCard>
 
@@ -181,7 +194,9 @@ const DashboardPage = () => {
                   <p className="text-4xl font-bold text-white">{favoriteCards}</p>
                   <p className="text-xs text-purple-400 mt-1">Cards you saved</p>
                 </div>
-                <HeartIcon className="h-10 w-10 text-purple-400" />
+                <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                  <HeartIcon className="h-6 w-6 text-white" />
+                </div>
               </div>
             </GlassCard>
           </motion.div>
@@ -203,7 +218,7 @@ const DashboardPage = () => {
               <div className="space-y-4">
                 {recentCards.length > 0 ? (
                   recentCards.map((card) => (
-                    <GlassCard key={card._id || card.id} className="p-6">
+                    <GlassCard key={card._id || card.id} className="p-6 group hover:scale-[1.02] transition-transform">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-white mb-2">
@@ -226,6 +241,18 @@ const DashboardPage = () => {
                               {card.createdAt ? new Date(card.createdAt).toLocaleDateString() : 'N/A'}
                             </span>
                           </div>
+                        </div>
+                        <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Link to={`/cards/${card._id}/edit`}>
+                            <button className="p-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30">
+                              <PencilIcon className="w-4 h-4" />
+                            </button>
+                          </Link>
+                          <Link to={`/cards/${card._id}`}>
+                            <button className="p-2 bg-purple-600/20 text-purple-400 rounded-lg hover:bg-purple-600/30">
+                              <EyeIcon className="w-4 h-4" />
+                            </button>
+                          </Link>
                         </div>
                       </div>
                     </GlassCard>
@@ -253,7 +280,9 @@ const DashboardPage = () => {
                 <Link to="/create-card">
                   <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
                     <div className="flex items-center gap-4">
-                      <PlusIcon className="h-8 w-8 text-blue-400" />
+                      <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <PlusIcon className="h-6 w-6 text-white" />
+                      </div>
                       <div>
                         <h3 className="text-white font-semibold">Create Card</h3>
                         <p className="text-gray-400 text-sm">Design a new card</p>
@@ -265,7 +294,9 @@ const DashboardPage = () => {
                 <Link to="/cards">
                   <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
                     <div className="flex items-center gap-4">
-                      <EyeIcon className="h-8 w-8 text-green-400" />
+                      <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                        <EyeIcon className="h-6 w-6 text-white" />
+                      </div>
                       <div>
                         <h3 className="text-white font-semibold">Browse Cards</h3>
                         <p className="text-gray-400 text-sm">{allCards.length} cards available</p>
@@ -277,7 +308,9 @@ const DashboardPage = () => {
                 <Link to="/favorites">
                   <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
                     <div className="flex items-center gap-4">
-                      <HeartIcon className="h-8 w-8 text-red-400" />
+                      <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+                        <HeartIcon className="h-6 w-6 text-white" />
+                      </div>
                       <div>
                         <h3 className="text-white font-semibold">Favorites</h3>
                         <p className="text-gray-400 text-sm">{favoriteCards} saved cards</p>
@@ -289,9 +322,9 @@ const DashboardPage = () => {
                 <Link to="/analytics">
                   <GlassCard className="p-6 hover:scale-105 transition-transform cursor-pointer">
                     <div className="flex items-center gap-4">
-                      <svg className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                      </svg>
+                      <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+                        <ChartBarIcon className="h-6 w-6 text-white" />
+                      </div>
                       <div>
                         <h3 className="text-white font-semibold">Analytics</h3>
                         <p className="text-gray-400 text-sm">View performance</p>
@@ -312,23 +345,17 @@ const DashboardPage = () => {
             <h2 className="text-2xl font-bold text-white mb-6">Performance Summary</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <GlassCard className="p-6 text-center">
-                <p className="text-4xl font-bold text-blue-400">
-                  {totalCards > 0 ? (totalViews / totalCards).toFixed(1) : 0}
-                </p>
+                <p className="text-4xl font-bold text-blue-400">{avgViews}</p>
                 <p className="text-gray-400 mt-2">Avg. Views per Card</p>
               </GlassCard>
 
               <GlassCard className="p-6 text-center">
-                <p className="text-4xl font-bold text-green-400">
-                  {totalCards > 0 ? (totalLikes / totalCards).toFixed(1) : 0}
-                </p>
+                <p className="text-4xl font-bold text-green-400">{avgLikes}</p>
                 <p className="text-gray-400 mt-2">Avg. Likes per Card</p>
               </GlassCard>
 
               <GlassCard className="p-6 text-center">
-                <p className="text-4xl font-bold text-purple-400">
-                  {totalViews > 0 ? ((totalLikes / totalViews) * 100).toFixed(1) : 0}%
-                </p>
+                <p className="text-4xl font-bold text-purple-400">{engagementRate}%</p>
                 <p className="text-gray-400 mt-2">Engagement Rate</p>
               </GlassCard>
             </div>
