@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { handleApiError } from '../utils/errorHandler';
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards-backend.onrender.com/api';
 
 
-// Create une instance axios centralisée pour tous les appels API
+// Create a centralized axios instance for all API calls
 const api = axios.create({
   baseURL: API_URL,
   withCredentials: false, // Disable credentials for CORS issues
@@ -14,7 +14,7 @@ const api = axios.create({
   }
 });
 
-// Intercepteur pour ajouter le token
+// Interceptor to add token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');

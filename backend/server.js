@@ -26,6 +26,7 @@ const PORT = process.env.PORT || 5001;
 const allowedOrigins = [
   // Production
   'https://futuristcards.vercel.app',
+  'https://futuristcards-backend.onrender.com',
   
   // Local development
   'http://localhost:3010',
@@ -59,7 +60,7 @@ const corsOptions = {
       callback(null, false); // Properly reject unauthorized origins
     }
   },
-  credentials: false,
+  credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: [
     'Content-Type', 

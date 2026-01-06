@@ -19,14 +19,14 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  // Validation schema pour création rapide
+  // Validation schema for quick creation
   const schema = yup.object({
-    title: yup.string().required('title Required'),
-    description: yup.string().min(10, 'description Min').required('description Required'),
-    email: yup.string().email('email Invalid').required('email Required'),
-    phone: yup.string().required('phone Required'),
+    title: yup.string().required('Title is required'),
+    description: yup.string().min(10, 'Description must be at least 10 characters').required('Description is required'),
+    email: yup.string().email('Invalid email address').required('Email is required'),
+    phone: yup.string().required('Phone number is required'),
     company: yup.string(),
-    website: yup.string().url('website Invalid'),
+    website: yup.string().url('Invalid website URL'),
     address: yup.string()
   });
 
@@ -46,8 +46,9 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
   const handleFormSubmit = async (data) => {
     setIsSubmitting(true);
     try {
-      // Appel API direct pour création anonyme
-      const response = await fetch('/api/cards/public', {
+      // Direct API call for anonymous creation
+      const API_URL = import.meta.env.VITE_API_URL || 'https://futuristcards-backend.onrender.com/api';
+      const response = await fetch(`${API_URL}/cards/public`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -56,7 +57,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
       });
 
       if (!response.ok) {
-        throw new Error('error');
+        throw new Error('Error creating card');
       }
 
       const result = await response.json();
@@ -68,13 +69,13 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
       setSubmitSuccess(true);
       reset();
       
-      // Fermer le formulaire après succès
+      // Close form after success
       setTimeout(() => {
         setSubmitSuccess(false);
         onClose();
       }, 2000);
     } catch (error) {
-      toast.error('error Message');
+      toast.error('Failed to create card');
     } finally {
       setIsSubmitting(false);
     }
@@ -106,10 +107,10 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             </div>
             <div>
               <h2 className="text-2xl font-bold text-white" data-testid="mini-card-modal-title">
-                {'title'}
+                Create Mini Card
               </h2>
               <p className="text-gray-300 text-sm">
-                {'subtitle'}
+                Create a quick digital card
               </p>
             </div>
           </div>
@@ -135,7 +136,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
               <p className="text-green-400 font-medium">
-                {'success Message'}
+                Card created successfully!
               </p>
             </div>
           </motion.div>
@@ -143,12 +144,12 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-          {/* Titre & Description */}
+          {/* Title & Description */}
           <div className="grid grid-cols-1 gap-4">
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <UserIcon className="w-4 h-4 mr-2" />
-                {'title'} *
+                Title *
               </label>
               <input
                 {...register('title')}
@@ -156,7 +157,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="title"
                 data-testid="mini-card-title"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={'title'}
+                placeholder="e.g., Senior Developer"
               />
               {errors.title && (
                 <p className="mt-1 text-sm text-red-400">{errors.title.message}</p>
@@ -166,7 +167,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <SparklesIcon className="w-4 h-4 mr-2" />
-                {'description'} *
+                Description *
               </label>
               <textarea
                 {...register('description')}
@@ -174,7 +175,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="description"
                 data-testid="mini-card-description"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all resize-none"
-                placeholder={'description'}
+                placeholder="Brief description of your role or services..."
               />
               {errors.description && (
                 <p className="mt-1 text-sm text-red-400">{errors.description.message}</p>
@@ -187,7 +188,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <EnvelopeIcon className="w-4 h-4 mr-2" />
-                {'email'} *
+                Email *
               </label>
               <input
                 {...register('email')}
@@ -195,7 +196,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="email"
                 data-testid="mini-card-email"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={'email'}
+                placeholder="your@email.com"
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
@@ -205,7 +206,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <PhoneIcon className="w-4 h-4 mr-2" />
-                {'phone'} *
+                Phone *
               </label>
               <input
                 {...register('phone')}
@@ -213,7 +214,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="phone"
                 data-testid="mini-card-phone"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={'phone'}
+                placeholder="+1 (555) 000-0000"
               />
               {errors.phone && (
                 <p className="mt-1 text-sm text-red-400">{errors.phone.message}</p>
@@ -221,12 +222,12 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
             </div>
           </div>
 
-          {/* Infos optionnelles */}
+          {/* Optional Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <BuildingOfficeIcon className="w-4 h-4 mr-2" />
-                {'company'}
+                Company
               </label>
               <input
                 {...register('company')}
@@ -234,14 +235,14 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="company"
                 data-testid="mini-card-company"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={'company'}
+                placeholder="Your Company Name"
               />
             </div>
 
             <div>
               <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
                 <GlobeAltIcon className="w-4 h-4 mr-2" />
-                {'website'}
+                Website
               </label>
               <input
                 {...register('website')}
@@ -249,7 +250,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
                 name="website"
                 data-testid="mini-card-website"
                 className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-                placeholder={'website'}
+                placeholder="https://yourwebsite.com"
               />
               {errors.website && (
                 <p className="mt-1 text-sm text-red-400">{errors.website.message}</p>
@@ -260,7 +261,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
           <div>
             <label className="flex items-center text-sm font-medium text-gray-300 mb-2">
               <MapPinIcon className="w-4 h-4 mr-2" />
-              {'address'}
+              Address
             </label>
             <input
               {...register('address')}
@@ -268,11 +269,11 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               name="address"
               data-testid="mini-card-address"
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400/20 transition-all"
-              placeholder={'address'}
+              placeholder="Your Business Address"
             />
           </div>
 
-          {/* Info */}
+          {/* Preview Info */}
           <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
             <div className="flex items-start">
               <svg className="w-5 h-5 text-blue-400 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -280,10 +281,10 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               </svg>
               <div>
                 <p className="text-blue-400 text-sm font-medium mb-1">
-                  {'title'}
+                  Preview Info
                 </p>
                 <p className="text-blue-300 text-sm">
-                  {'description'}
+                  This card will be created as a public mini-card. You can upgrade to a full account later to claim it.
                 </p>
               </div>
             </div>
@@ -302,12 +303,12 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               {isSubmitting ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  {'submitting'}
+                  Creating...
                 </div>
               ) : (
                 <div className="flex items-center justify-center">
                   <PlusIcon className="w-5 h-5 mr-2" />
-                  {'submit'}
+                  Create Card
                 </div>
               )}
             </motion.button>
@@ -320,7 +321,7 @@ const MiniCardForm = ({ onSubmit, onClose, isOpen = false }) => {
               className="px-6 py-3 bg-white/10 border border-white/20 text-white rounded-lg font-semibold hover:bg-white/20 transition-all duration-300"
               data-testid="cancel-button"
             >
-              {'cancel'}
+              Cancel
             </motion.button>
           </div>
         </form>
