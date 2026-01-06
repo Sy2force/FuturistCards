@@ -102,11 +102,12 @@ const Navbar = ({ onCreateCard }) => {
       { path: '/create-card', key: 'create-card', label: 'Create Card' },
       { path: '/favorites', key: 'favorites', label: 'Favorites' },
     ],
-    // Business : Dashboard, My Cards, Create Card, Analytics, Logout  
+    // Business : Dashboard, My Cards, Create Card, All Cards, Analytics, Logout  
     business: [
       { path: '/dashboard', key: 'dashboard', label: 'Dashboard' },
       { path: '/my-cards', key: 'my-cards', label: 'My Cards' },
       { path: '/create-card', key: 'create-card', label: 'Create Card' },
+      { path: '/cards', key: 'all-cards', label: 'All Cards' },
       { path: '/analytics', key: 'analytics', label: 'Analytics' },
     ],
     // Admin : Admin Panel, Manage Users, Logs, Logout
