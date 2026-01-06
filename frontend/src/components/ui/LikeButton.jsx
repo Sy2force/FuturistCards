@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HeartIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartSolidIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../../context/AuthContext';
 import { useFavorites } from '../../context/FavoritesContext';
+import toast from 'react-hot-toast';
 
 const LikeButton = ({ 
   cardId, 
+  initialLikes = 0,
   size = 'md', 
   showCount = true, 
   className = '',
@@ -15,45 +17,61 @@ const LikeButton = ({
   const { user } = useAuth();
   const { toggleFavorite, isFavorite } = useFavorites();
   const [likeCount, setLikeCount] = useState(() => {
-    // Get initial like count from localStorage or generate random
     const savedLikes = localStorage.getItem(`card_likes_${cardId}`);
-    return savedLikes ? parseInt(savedLikes) : Math.floor(Math.random() * 50);
+    return savedLikes ? parseInt(savedLikes) : (initialLikes || Math.floor(Math.random() * 100) + 10);
   });
   const [loading, setLoading] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [showParticles, setShowParticles] = useState(false);
 
-  // Use favorites context to determine if card is liked
   const isLiked = isFavorite(cardId);
+
+  // Sync with initialLikes prop
+  useEffect(() => {
+    if (initialLikes > 0 && !localStorage.getItem(`card_likes_${cardId}`)) {
+      setLikeCount(initialLikes);
+    }
+  }, [initialLikes, cardId]);
 
   const handleLikeClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (!user) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000);
+      toast.error('Please login to like cards');
       return;
     }
 
     setLoading(true);
+    
     try {
       const willBeLiked = !isLiked;
-      const newLikeCount = willBeLiked ? likeCount + 1 : likeCount - 1;
+      const newLikeCount = willBeLiked ? likeCount + 1 : Math.max(0, likeCount - 1);
       
+      // Optimistic update
       setLikeCount(newLikeCount);
-      
-      // Save like count to localStorage
       localStorage.setItem(`card_likes_${cardId}`, newLikeCount.toString());
+      
+      // Show particles animation on like
+      if (willBeLiked) {
+        setShowParticles(true);
+        setTimeout(() => setShowParticles(false), 1000);
+      }
       
       // Toggle favorite in context
       toggleFavorite(cardId);
+      
+      // Show toast feedback
+      if (willBeLiked) {
+        toast.success('Added to favorites! ❤️', { duration: 1500 });
+      } else {
+        toast('Removed from favorites', { duration: 1500, icon: '💔' });
+      }
       
       if (onLikeChange) {
         onLikeChange({ isLiked: willBeLiked, likesCount: newLikeCount });
       }
     } catch (error) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000);
+      toast.error('Failed to update like');
     } finally {
       setLoading(false);
     }
@@ -62,21 +80,21 @@ const LikeButton = ({
   // Size configurations
   const sizeConfig = {
     sm: {
-      icon: 'w-4 h-4',
-      text: 'text-xs',
-      padding: 'p-1',
-      gap: 'gap-1'
-    },
-    md: {
       icon: 'w-5 h-5',
       text: 'text-sm',
-      padding: 'p-2',
+      padding: 'px-3 py-1.5',
+      gap: 'gap-1.5'
+    },
+    md: {
+      icon: 'w-6 h-6',
+      text: 'text-base',
+      padding: 'px-4 py-2',
       gap: 'gap-2'
     },
     lg: {
-      icon: 'w-6 h-6',
-      text: 'text-base',
-      padding: 'p-3',
+      icon: 'w-7 h-7',
+      text: 'text-lg',
+      padding: 'px-5 py-2.5',
       gap: 'gap-2'
     }
   };
@@ -90,49 +108,48 @@ const LikeButton = ({
         disabled={loading}
         className={`
           flex items-center ${config.gap} ${config.padding}
-          rounded-full transition-all duration-200
+          rounded-full font-semibold transition-all duration-300
+          backdrop-blur-sm border-2 shadow-lg
           ${isLiked 
-            ? 'bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30' 
-            : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700'
+            ? 'bg-gradient-to-r from-red-500 to-pink-500 border-red-400 text-white shadow-red-500/30' 
+            : 'bg-white/10 border-white/20 text-white hover:bg-white/20 hover:border-white/40'
           }
-          ${loading ? 'opacity-60 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}
-          ${!user ? 'cursor-pointer' : ''}
-          ${className}
+          ${loading ? 'opacity-70 cursor-wait' : 'hover:scale-110 active:scale-95'}
         `}
-        whileHover={{ scale: loading ? 1 : 1.05 }}
-        whileTap={{ scale: loading ? 1 : 0.95 }}
-        initial={false}
-        title={!user ? 'login Required' : (isLiked ? 'unlike' : 'like')}
+        whileHover={{ scale: loading ? 1 : 1.1 }}
+        whileTap={{ scale: loading ? 1 : 0.9 }}
+        title={!user ? 'Login to like' : (isLiked ? 'Remove from favorites' : 'Add to favorites')}
         data-testid="like-button-action"
       >
         <AnimatePresence mode="wait">
           {loading ? (
             <motion.div
               key="loading"
-              initial={{ opacity: 0, rotate: 0 }}
+              initial={{ opacity: 0 }}
               animate={{ opacity: 1, rotate: 360 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, repeat: Infinity, ease: "linear" }}
+              transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}
               className={`${config.icon} border-2 border-current border-t-transparent rounded-full`}
             />
           ) : (
             <motion.div
               key="heart"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0 }}
-              transition={{ duration: 0.2 }}
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring", stiffness: 500, damping: 15 }}
             >
               {isLiked ? (
                 <motion.div
-                  initial={{ scale: 1 }}
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ duration: 0.3 }}
+                  animate={{ 
+                    scale: [1, 1.3, 1],
+                  }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
-                  <HeartSolidIcon className={`${config.icon} text-red-500`} />
+                  <HeartSolidIcon className={`${config.icon} drop-shadow-lg`} />
                 </motion.div>
               ) : (
-                <HeartIcon className={config.icon} />
+                <HeartIcon className={`${config.icon} stroke-2`} />
               )}
             </motion.div>
           )}
@@ -143,60 +160,41 @@ const LikeButton = ({
             key={likeCount}
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className={`${config.text} font-medium tabular-nums`}
+            className={`${config.text} font-bold tabular-nums`}
           >
             {likeCount}
           </motion.span>
         )}
       </motion.button>
 
-      {/* Error Tooltip */}
+      {/* Floating hearts particles animation */}
       <AnimatePresence>
-        {showError && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.8 }}
-            className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 z-50"
-          >
-            <div className="bg-red-600 text-white text-xs px-3 py-2 rounded-lg shadow-lg whitespace-nowrap">
-              {!user ? 'login Required' : 'Error'}
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-red-600"></div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Floating hearts animation on like */}
-      <AnimatePresence>
-        {isLiked && (
-          <motion.div className="absolute inset-0 pointer-events-none">
-            {[...Array(3)].map((_, i) => (
+        {showParticles && (
+          <motion.div className="absolute inset-0 pointer-events-none overflow-visible">
+            {[...Array(6)].map((_, i) => (
               <motion.div
                 key={i}
                 initial={{ 
                   opacity: 1, 
                   scale: 0, 
                   x: 0, 
-                  y: 0,
-                  rotate: 0 
+                  y: 0 
                 }}
                 animate={{ 
-                  opacity: 0, 
-                  scale: [0, 1, 0.5], 
-                  x: (i - 1) * 20, 
-                  y: -30 - i * 10,
-                  rotate: (i - 1) * 45
+                  opacity: [1, 1, 0], 
+                  scale: [0, 1.2, 0.8], 
+                  x: (i % 2 === 0 ? 1 : -1) * (15 + i * 8), 
+                  y: -40 - i * 12,
+                  rotate: (i % 2 === 0 ? 1 : -1) * (20 + i * 15)
                 }}
-                exit={{ opacity: 0 }}
                 transition={{ 
-                  duration: 1.5, 
-                  delay: i * 0.1,
+                  duration: 1, 
+                  delay: i * 0.08,
                   ease: "easeOut"
                 }}
-                className="absolute left-1/2 top-1/2"
+                className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
               >
-                <HeartSolidIcon className="w-3 h-3 text-red-400" />
+                <HeartSolidIcon className={`w-4 h-4 ${i % 3 === 0 ? 'text-red-400' : i % 3 === 1 ? 'text-pink-400' : 'text-rose-300'}`} />
               </motion.div>
             ))}
           </motion.div>
