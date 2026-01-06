@@ -24,6 +24,7 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 import RealTimeChart from '../components/admin/RealTimeChart';
 import ActivityFeed from '../components/admin/ActivityFeed';
+import apiService from '../services/api';
 
 const AdminPage = () => {
   const { user } = useAuth();
@@ -172,7 +173,7 @@ const AdminPage = () => {
                   {'Admin Dashboard'}
                 </h1>
                 <p className="text-gray-300">
-                  {t('admin.welcome', { name: user?.name })}
+                  Welcome, {user?.name || 'Admin'}
                 </p>
               </div>
               <GlassButton 
