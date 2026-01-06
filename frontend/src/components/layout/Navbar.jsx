@@ -35,7 +35,7 @@ const ThemeToggle = () => {
     <motion.button
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
       className="glass-button p-2 rounded-md transition-colors duration-200"
-      style={{ color: currentTheme.colors.text.primary }}
+      style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
       data-testid="dark-mode-toggle"
@@ -159,7 +159,7 @@ const Navbar = ({ onCreateCard }) => {
             <Link 
               to="/" 
               className="flex items-center gap-2 transition-colors duration-200"
-              style={{ color: currentTheme.colors.text.primary }}
+              style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}
               aria-label="Home"
               data-testid="navbar-logo"
             >
@@ -168,7 +168,7 @@ const Navbar = ({ onCreateCard }) => {
                 <div 
                   className="w-8 h-8 rounded-lg flex items-center justify-center shadow-lg"
                   style={{
-                    background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.accent})`,
+                    background: `linear-gradient(135deg, ${currentTheme?.colors?.primary || '#6366f1'}, ${currentTheme?.colors?.accent || '#8b5cf6'})`,
                   }}
                 >
                   {/* Futuristic Card Icon */}
@@ -191,22 +191,13 @@ const Navbar = ({ onCreateCard }) => {
               {/* Site Title */}
               <div className="flex flex-col">
                 <span 
-                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wide"
-                  style={{ 
-                    background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.accent})`,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    color: currentTheme.colors.primary,
-                    textShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                  }}
+                  className="text-xl font-bold leading-tight whitespace-nowrap tracking-wide bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent"
                   data-testid="site-title"
                 >
                   FuturistCards
                 </span>
                 <span 
-                  className="text-xs opacity-75 text-center"
-                  style={{ color: currentTheme.colors.text.secondary }}
+                  className="text-xs opacity-75 text-center text-gray-400"
                 >
                   Digital Business Cards
                 </span>
@@ -303,7 +294,7 @@ const Navbar = ({ onCreateCard }) => {
                     to="/register"
                     className="glass-button px-4 py-2 rounded-md text-sm font-medium transition-all duration-200"
                     style={{
-                      background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.accent})`,
+                      background: `linear-gradient(135deg, ${currentTheme?.colors?.primary || '#6366f1'}, ${currentTheme?.colors?.accent || '#8b5cf6'})`,
                       color: '#ffffff'
                     }}
                     data-testid="link-register"
@@ -320,7 +311,7 @@ const Navbar = ({ onCreateCard }) => {
             <motion.button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="glass-button p-2 rounded-md transition-colors duration-200"
-              style={{ color: currentTheme.colors.text.primary }}
+              style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               data-testid="mobile-menu-toggle"
@@ -401,7 +392,7 @@ const Navbar = ({ onCreateCard }) => {
                         to="/register"
                         className="block px-3 py-2 rounded-md text-base font-medium transition-all duration-200"
                         style={{
-                          background: `linear-gradient(135deg, ${currentTheme.colors.primary}, ${currentTheme.colors.accent})`,
+                          background: `linear-gradient(135deg, ${currentTheme?.colors?.primary || '#6366f1'}, ${currentTheme?.colors?.accent || '#8b5cf6'})`,
                           color: '#ffffff'
                         }}
                         data-testid="mobile-link-register"
