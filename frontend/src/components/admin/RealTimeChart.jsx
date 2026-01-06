@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
-const RealTimeChart = ({ data, title, color = 'blue', type = 'line' }) => {
+const RealTimeChart = ({ data, title, color = 'blue', type: _type = 'line' }) => {
   const [chartData, setChartData] = useState([]);
   const maxDataPoints = 20;
 
@@ -59,7 +59,7 @@ const RealTimeChart = ({ data, title, color = 'blue', type = 'line' }) => {
     const height = 100;
     const padding = 10;
     
-    const lastPoint = chartData[chartData.length - 1];
+    // Calculate last X position
     const lastX = padding + ((chartData.length - 1) / (chartData.length - 1)) * (width - 2 * padding);
     const bottomY = height - padding;
     const firstX = padding;

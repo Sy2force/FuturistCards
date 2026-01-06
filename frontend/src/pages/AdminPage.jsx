@@ -36,7 +36,7 @@ const AdminPage = () => {
           cardsLoaded = true;
         }
       } catch (e) {
-        console.log('Cards fetch failed');
+        
       }
 
       // Fetch users (admin endpoint - requires valid admin token)
@@ -55,7 +55,7 @@ const AdminPage = () => {
             usersLoaded = true;
           }
         } catch (e) {
-          console.log('Users fetch failed - admin access required');
+          
         }
       }
 
