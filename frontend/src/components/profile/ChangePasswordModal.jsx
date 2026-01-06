@@ -98,7 +98,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
       <div className={`${isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white/90 border-gray-200'} backdrop-blur-lg rounded-2xl p-6 w-full max-w-md shadow-3d border`}>
         <div className="flex justify-between items-center mb-6">
           <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            {'change Password'}
+            Change Password
           </h2>
           <button
             onClick={onClose}
@@ -119,7 +119,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'current Password'}
+              Current Password
             </label>
             <div className="relative">
               <input
@@ -134,7 +134,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                       ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                       : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-                placeholder={'current Password Placeholder'}
+                placeholder="Enter current password"
               />
               <button
                 type="button"
@@ -160,7 +160,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'new Password'}
+              New Password
             </label>
             <div className="relative">
               <input
@@ -175,7 +175,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                       ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                       : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-                placeholder={'new Password Placeholder'}
+                placeholder="Enter new password"
               />
               <button
                 type="button"
@@ -198,13 +198,13 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
               <p className="mt-1 text-sm text-red-400">{errors.newPassword}</p>
             )}
             <p className={`mt-1 text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-              {'password Requirements Text'}
+              Password must be at least 8 characters
             </p>
           </div>
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'confirm Password'}
+              Confirm Password
             </label>
             <div className="relative">
               <input
@@ -219,7 +219,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                       ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                       : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
                 } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-                placeholder={'confirm Password Placeholder'}
+                placeholder="Confirm new password"
               />
               <button
                 type="button"
@@ -253,7 +253,7 @@ const ChangePasswordModal = ({ isOpen, onClose, onSave }) => {
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300'
               } transition-colors`}
             >
-              {'Cancel'}
+              Cancel
             </button>
             <button
               type="submit"

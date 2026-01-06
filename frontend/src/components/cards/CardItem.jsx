@@ -66,7 +66,7 @@ const CardItem = ({ card, onLike, showActions = true, onClick }) => {
         {/* Demo Badge */}
         {card.isDemo && (
           <div className="absolute top-3 left-3 bg-yellow-400 text-gray-800 px-2 py-1 rounded-full text-xs font-medium">
-            {'demo'}
+            Demo
           </div>
         )}
       </div>
@@ -150,7 +150,7 @@ const CardItem = ({ card, onLike, showActions = true, onClick }) => {
             className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium text-center transition-colors"
             data-testid="card-view-details"
           >
-            {'view Details'}
+            View Details
           </Link>
           
           {canEdit && (

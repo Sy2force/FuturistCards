@@ -76,7 +76,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
       <div className={`${isDark ? 'bg-gray-800/90 border-gray-700' : 'bg-white/90 border-gray-200'} backdrop-blur-lg rounded-2xl p-6 w-full max-w-md shadow-3d border`}>
         <div className="flex justify-between items-center mb-6">
           <h2 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-900'}`}>
-            {'edit Profile'}
+            Edit Profile
           </h2>
           <button
             onClick={onClose}
@@ -97,7 +97,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'First Name'}
+              First Name
             </label>
             <input
               type="text"
@@ -111,7 +111,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                     ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                     : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={'first Name Placeholder'}
+              placeholder="Enter your first name"
             />
             {errors.firstName && (
               <p className="mt-1 text-sm text-red-400">{errors.firstName}</p>
@@ -120,7 +120,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'Last Name'}
+              Last Name
             </label>
             <input
               type="text"
@@ -134,7 +134,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                     ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                     : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={'last Name Placeholder'}
+              placeholder="Enter your last name"
             />
             {errors.lastName && (
               <p className="mt-1 text-sm text-red-400">{errors.lastName}</p>
@@ -143,7 +143,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'Email'}
+              Email
             </label>
             <input
               type="email"
@@ -157,7 +157,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                     ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                     : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={'email Placeholder'}
+              placeholder="Enter your email"
             />
             {errors.email && (
               <p className="mt-1 text-sm text-red-400">{errors.email}</p>
@@ -166,7 +166,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'Phone'} ({'Optional'})
+              Phone (Optional)
             </label>
             <input
               type="tel"
@@ -178,13 +178,13 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                   ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                   : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors`}
-              placeholder={'phone Placeholder'}
+              placeholder="Enter your phone"
             />
           </div>
 
           <div>
             <label className={`block text-sm font-medium ${isDark ? 'text-gray-300' : 'text-gray-700'} mb-2`}>
-              {'bio'} ({'Optional'})
+              Bio (Optional)
             </label>
             <textarea
               name="bio"
@@ -196,7 +196,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                   ? 'border-gray-600 focus:border-blue-500 bg-gray-700/50 text-white' 
                   : 'border-gray-300 focus:border-blue-500 bg-white text-gray-900'
               } focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors resize-none`}
-              placeholder={'bio Placeholder'}
+              placeholder="Tell us about yourself"
             />
           </div>
 
@@ -210,7 +210,7 @@ const EditProfileModal = ({ isOpen, onClose, user, onSave }) => {
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-900 border border-gray-300'
               } transition-colors`}
             >
-              {'Cancel'}
+              Cancel
             </button>
             <button
               type="submit"

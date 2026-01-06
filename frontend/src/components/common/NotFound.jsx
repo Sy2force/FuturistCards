@@ -29,10 +29,10 @@ const NotFound = () => {
           className="mb-8"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            {'title'}
+            Page Not Found
           </h2>
           <p className="text-gray-300 text-lg max-w-md mx-auto">
-            {'description'}
+            The page you're looking for doesn't exist.
           </p>
         </motion.div>
 
@@ -46,7 +46,7 @@ const NotFound = () => {
             to="/"
             className="inline-block bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-600 hover:to-purple-600 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
-            {'back To Home'}
+            Back to Home
           </Link>
           
           <div className="mt-6">
@@ -54,7 +54,7 @@ const NotFound = () => {
               to="/cards"
               className="text-cyan-400 hover:text-cyan-300 underline transition-colors duration-300"
             >
-              {'Business Cards'}
+              Browse Cards
             </Link>
           </div>
         </motion.div>
@@ -66,7 +66,7 @@ const NotFound = () => {
           className="mt-12"
         >
           <div className="text-gray-400 text-sm">
-            <p>FuturistCards • {'title'}</p>
+            <p>FuturistCards • Page Not Found</p>
           </div>
         </motion.div>
       </motion.div>

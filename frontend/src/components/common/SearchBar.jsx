@@ -143,7 +143,7 @@ const SearchBar = ({
               animate={{ opacity: 1, scale: 1 }}
               onClick={onFilterToggle}
               className="mr-2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-              title={'filters'}
+              title="Filters"
             >
               <AdjustmentsHorizontalIcon className="h-5 w-5" />
             </motion.button>
@@ -156,7 +156,7 @@ const SearchBar = ({
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={clearSearch}
               className="mr-3 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-              title={'clear'}
+              title="Clear"
             >
               <XMarkIcon className="h-5 w-5" />
             </motion.button>
@@ -171,7 +171,7 @@ const SearchBar = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          {'searching'}: &quot;{searchTerm}&quot;
+          Searching: &quot;{searchTerm}&quot;
         </motion.div>
       )}
       
@@ -207,7 +207,7 @@ const SearchBar = ({
                 animate={{ opacity: 1 }}
                 className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-100 dark:border-gray-700"
               >
-                {'press Enter'}: &quot;{searchTerm}&quot;
+                Press Enter to search: &quot;{searchTerm}&quot;
               </motion.div>
             )}
           </motion.div>

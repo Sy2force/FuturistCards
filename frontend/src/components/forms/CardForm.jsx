@@ -146,12 +146,12 @@ const CardForm = ({
       {/* Basic Information */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {'basic Information'}
+          Basic Information
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={'Business Cards'}
+            label="Title"
             name="title"
             value={formData.title}
             onChange={handleChange}
@@ -163,7 +163,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'Discover amazing digital business cards'}
+            label="Subtitle"
             name="subtitle"
             value={formData.subtitle}
             onChange={handleChange}
@@ -176,7 +176,7 @@ const CardForm = ({
         </div>
 
         <FormField
-          label={'description'}
+          label="Description"
           name="description"
           type="textarea"
           value={formData.description}
@@ -190,7 +190,7 @@ const CardForm = ({
         />
 
         <FormField
-          label={'category'}
+          label="Category"
           name="category"
           type="select"
           value={formData.category}
@@ -204,12 +204,12 @@ const CardForm = ({
       {/* Contact Information */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {'contact Information'}
+          Contact Information
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={'phone'}
+            label="Phone"
             name="phone"
             type="tel"
             value={formData.phone}
@@ -222,7 +222,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'email'}
+            label="Email"
             name="email"
             type="email"
             value={formData.email}
@@ -236,7 +236,7 @@ const CardForm = ({
         </div>
 
         <FormField
-          label={'website'}
+          label="Website"
           name="web"
           type="url"
           value={formData.web}
@@ -251,12 +251,12 @@ const CardForm = ({
       {/* Image */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {'image'}
+          Image
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={'image Url'}
+            label="Image URL"
             name="image.url"
             type="url"
             value={formData.image?.url || ''}
@@ -268,7 +268,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'image Alt'}
+            label="Image Alt Text"
             name="image.alt"
             value={formData.image?.alt || ''}
             onChange={handleChange}
@@ -282,12 +282,12 @@ const CardForm = ({
       {/* Address */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-          {'address'}
+          Address
         </h3>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
-            label={'state'}
+            label="State"
             name="address.state"
             value={formData.address?.state || ''}
             onChange={handleChange}
@@ -299,7 +299,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'country'}
+            label="Country"
             name="address.country"
             value={formData.address?.country || ''}
             onChange={handleChange}
@@ -311,7 +311,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'city'}
+            label="City"
             name="address.city"
             value={formData.address?.city || ''}
             onChange={handleChange}
@@ -323,7 +323,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'street'}
+            label="Street"
             name="address.street"
             value={formData.address?.street || ''}
             onChange={handleChange}
@@ -335,7 +335,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'house Number'}
+            label="House Number"
             name="address.houseNumber"
             value={formData.address?.houseNumber || ''}
             onChange={handleChange}
@@ -347,7 +347,7 @@ const CardForm = ({
           />
           
           <FormField
-            label={'zip Code'}
+            label="Zip Code"
             name="address.zip"
             value={formData.address?.zip || ''}
             onChange={handleChange}
@@ -371,7 +371,7 @@ const CardForm = ({
           {loading ? (
             <div className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              {'Loading...'}
+              Loading...
             </div>
           ) : (
             submitText || (mode === 'edit' ? 'update Card' : 'create Card')

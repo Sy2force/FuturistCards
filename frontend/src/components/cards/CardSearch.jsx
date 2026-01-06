@@ -138,7 +138,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
             {/* Category Filter */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                {'category'}
+                Category
               </label>
               <select
                 value={filters.category}
@@ -159,7 +159,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
                 onClick={clearFilters}
                 className="w-full px-4 py-2 bg-gray-100 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
               >
-                {'clear'}
+                Clear
               </button>
             </div>
           </div>
@@ -170,7 +170,7 @@ const CardSearch = ({ onSearch, initialQuery = '', initialFilters = {}, resultsC
       {(query || filters.category || filters.sortBy !== 'newest') && (
         <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
           <span className="text-sm text-gray-600 dark:text-gray-400 mr-2">
-            {'active Filters'}:
+            Active Filters:
           </span>
           {query && (
             <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">

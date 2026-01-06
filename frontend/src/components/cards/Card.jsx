@@ -102,7 +102,7 @@ const Card = ({
               <svg className="w-4 h-4 inline mr-1 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
               </svg>
-              <span className="truncate max-w-[60px]">{'website'}</span>
+              <span className="truncate max-w-[60px]">Website</span>
             </div>
           )}
         </div>
@@ -122,7 +122,7 @@ const Card = ({
                   onClick={() => onEdit(card._id || card.id)}
                   data-testid="edit-card-btn"
                   className="p-2 text-blue-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all duration-200 shadow-sm hover:scale-110"
-                  aria-label={'edit Card'}
+                  aria-label="Edit Card"
                 >
                   <span className="text-lg">✏️</span>
                 </button>
@@ -132,7 +132,7 @@ const Card = ({
                   onClick={() => onDelete(card._id || card.id)}
                   data-testid="delete-card-btn"
                   className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200 shadow-sm hover:scale-110"
-                  aria-label={'delete Card'}
+                  aria-label="Delete Card"
                 >
                   <span className="text-lg">🗑️</span>
                 </button>
