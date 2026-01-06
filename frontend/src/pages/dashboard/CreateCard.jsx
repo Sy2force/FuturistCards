@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
@@ -30,7 +30,7 @@ const CreateCardPage = () => {
 
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { isDark } = useRoleTheme();
+  const { isDark: _isDark } = useRoleTheme();
 
   // Auto-fill with user information
   useEffect(() => {
