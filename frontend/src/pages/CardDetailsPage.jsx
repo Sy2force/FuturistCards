@@ -12,8 +12,7 @@ import { HeartIcon as HeartIconSolid, StarIcon as StarIconSolid } from '@heroico
 import { useRoleTheme } from '../context/ThemeProvider';
 import { useFavorites } from '../context/FavoritesContext';
 import { useAuth } from '../context/AuthContext';
-import { api } from '../services/api';
-import { mockCards } from '../data/mockCards';
+import { api, apiService } from '../services/api';
 import LikeButton from '../components/ui/LikeButton';
 
 const CardDetailsPage = () => {
@@ -33,21 +32,23 @@ const CardDetailsPage = () => {
     try {
       setLoading(true);
       
-      // Utiliser les données centralisées
-      const foundCard = mockCards.find(card => card._id === id);
-      if (foundCard) {
-        setCard(foundCard);
+      // Fetch card from API
+      const response = await apiService.getCard(id);
+      if (response && response.card) {
+        setCard(response.card);
+      } else if (response && response._id) {
+        // Handle case where response is the card object directly
+        setCard(response);
       } else {
-        toast.error('card Not Found');
-        navigate('/cards');
+        throw new Error('Card not found');
       }
     } catch (error) {
-      toast.error('load Error');
+      toast.error('Failed to load card');
       navigate('/cards');
     } finally {
       setLoading(false);
     }
-  }, [id, navigate, t]);
+  }, [id, navigate]);
 
   const checkIfFavorite = useCallback(async () => {
     try {
@@ -74,16 +75,16 @@ const CardDetailsPage = () => {
 
     try {
       if (isFavorite) {
-        await api.delete(`/favorites/${id}`);
+        await apiService.removeFavorite(id);
         setIsFavorite(false);
-        toast.success('removed');
+        toast.success('Removed from favorites');
       } else {
-        await api.post(`/favorites/${id}`);
+        await apiService.addFavorite(id);
         setIsFavorite(true);
-        toast.success('added');
+        toast.success('Added to favorites');
       }
     } catch (error) {
-      toast.error('manage Error');
+      toast.error('Failed to update favorites');
     }
   };
 
@@ -91,8 +92,8 @@ const CardDetailsPage = () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: `${card.fullName} - ${'site Name'}`,
-          text: t('cardDetails.shareText', { name: card.fullName }),
+          title: `${card.fullName} - FuturistCards`,
+          text: `Check out ${card.fullName}'s digital business card on FuturistCards`,
           url: window.location.href,
         });
       } catch (error) {
@@ -157,12 +158,8 @@ const CardDetailsPage = () => {
   return (
     <>
       <Helmet>
-        <title>{card.title || card.fullName} - {'site Name'}</title>
-        <meta name="description" content={t('cardDetails.metaDescription', { 
-          name: card.title || card.fullName, 
-          subtitle: card.subtitle || card.jobTitle, 
-          company: card.company 
-        })} />
+        <title>{card.title || card.fullName} - FuturistCards</title>
+        <meta name="description" content={`Digital business card for ${card.title || card.fullName} - ${card.subtitle || card.jobTitle} at ${card.company}`} />
       </Helmet>
 
       <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' : 'bg-gradient-to-br from-blue-50 via-white to-purple-50'}`}>
