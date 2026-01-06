@@ -16,7 +16,7 @@ import GlassCard from '../components/ui/GlassCard';
 import GlassButton from '../components/ui/GlassButton';
 import toast from 'react-hot-toast';
 
-const API_URL = 'https://futuristcards.onrender.com/api';
+const API_URL = "https://futuristcards.onrender.com/api"; // v2 - real-time data
 
 const DashboardPage = () => {
   const { user } = useAuth();
