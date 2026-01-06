@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import {
   UserIcon,
@@ -16,7 +15,6 @@ import {
 } from '@heroicons/react/24/outline';
 
 const CreateCardPage = () => {
-  const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
   
