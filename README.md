@@ -137,7 +137,7 @@ DELETE /api/favorites/:id
 
 ## Live Demo
 
-- **App**: https://futuristcards.vercel.app
+- **App**: https://frontend-olive-omega-14.vercel.app
 - **API**: https://futuristcards.onrender.com
 
 ## License
