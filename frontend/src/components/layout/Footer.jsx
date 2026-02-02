@@ -247,7 +247,7 @@ const Footer = () => {
             </div>
 
             <div className="text-white/60 text-sm">
-              Made with <HeartIcon className="w-4 h-4 inline text-red-400" /> in France
+              Made by Shay Acoca
             </div>
           </div>
         </motion.div>

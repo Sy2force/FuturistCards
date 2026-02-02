@@ -4,7 +4,7 @@
 
 // API Configuration
 export const API_CONFIG = {
-  BASE_URL: 'https://futuristcards.onrender.com/api',
+  BASE_URL: import.meta.env.VITE_API_URL || 'https://futuristcards.onrender.com/api',
   TIMEOUT: 10000, // 10 seconds
   RETRY_ATTEMPTS: 3
 };
@@ -14,6 +14,7 @@ export const STORAGE_KEYS = {
   USER: 'futuristcards_user',
   TOKEN: 'token',
   THEME: 'futuristcards_theme',
+  OFFLINE_DATA: 'futuristcards_offline',
   FAVORITES: 'futuristcards_favorites',
   LAST_SYNC: 'futuristcards_last_sync'
 };
@@ -230,7 +231,7 @@ export const DEMO_ACCOUNTS = {
 
 // Feature Flags
 export const FEATURE_FLAGS = {
-  OFFLINE_MODE: true,
+  OFFLINE_MODE: false,
   DARK_MODE: true,
   MULTI_LANGUAGE: true,
   SOCIAL_SHARING: true,

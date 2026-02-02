@@ -13,7 +13,7 @@ const CardItem = ({ card, onLike, showActions = true, onClick }) => {
   // Mock card stats - using useMemo to prevent re-renders
   const cardStats = useMemo(() => {
     // Generate deterministic stats based on card ID
-    const seed = card._id ? card._id.length : 0;
+    const seed = card.id ? card.id.length : 0;
     return {
       views: Math.floor((seed * 17) % 100) + 10,
       likes: Math.floor((seed * 7) % 50) + 1

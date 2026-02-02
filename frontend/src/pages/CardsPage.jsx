@@ -353,10 +353,15 @@ const CardsPage = () => {
                       <LikeButton cardId={card._id} size="sm" showCount={false}
                         onLikeChange={(data) => setCards(prev => prev.map(c => c._id === card._id ? { ...c, likes: data.likesCount } : c))} />
                     </div>
-                    <div className="absolute top-3 left-3">
+                    <div className="absolute top-3 left-3 flex gap-2">
                       <span className="px-3 py-1 text-xs font-semibold rounded-full bg-black/40 backdrop-blur-sm text-white">
                         {card.category || 'General'}
                       </span>
+                      {card.isDemo && (
+                        <span className="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-500/80 text-black">
+                          Demo
+                        </span>
+                      )}
                     </div>
                   </div>
 

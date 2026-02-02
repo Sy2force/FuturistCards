@@ -22,7 +22,7 @@ const NotFound = () => {
         <div className="glass-card p-8">
           <motion.div 
             className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6"
-            style={{ backgroundColor: currentTheme.colors.primary }}
+            style={{ backgroundColor: currentTheme?.colors?.primary || '#6366f1' }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
@@ -32,7 +32,7 @@ const NotFound = () => {
           
           <motion.h2 
             className="text-2xl font-semibold mb-4"
-            style={{ color: currentTheme.colors.text.primary }}
+            style={{ color: currentTheme?.colors?.text?.primary || '#ffffff' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
@@ -42,7 +42,7 @@ const NotFound = () => {
           
           <motion.p 
             className="mb-8"
-            style={{ color: currentTheme.colors.text.secondary }}
+            style={{ color: currentTheme?.colors?.text?.secondary || '#a0aec0' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
@@ -60,7 +60,7 @@ const NotFound = () => {
               to="/"
               className="glass-button glass-button-primary inline-block px-6 py-3 rounded-lg font-semibold transition-all duration-300"
             >
-              Go Back
+              Back to Home
             </Link>
             
             <Link

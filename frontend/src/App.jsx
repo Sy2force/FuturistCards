@@ -155,13 +155,13 @@ function App() {
                 <AdminPage />
               </ProtectedRoute>
             } />
-            <Route path="/analytics" element={
-              <ProtectedRoute requiredRoles={["business", "admin"]}>
+            <Route path="/admin/analytics" element={
+              <ProtectedRoute requiredRoles={['admin']}>
                 <AnalyticsPage />
               </ProtectedRoute>
             } />
-            <Route path="/admin/analytics" element={
-              <ProtectedRoute requiredRoles={['admin']}>
+            <Route path="/analytics" element={
+              <ProtectedRoute requiredRoles={['business', 'admin']}>
                 <AnalyticsPage />
               </ProtectedRoute>
             } />
